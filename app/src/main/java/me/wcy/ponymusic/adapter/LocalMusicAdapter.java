@@ -55,6 +55,8 @@ public class LocalMusicAdapter extends BaseAdapter {
         Bitmap cover = CoverLoader.getInstance().loadThumbnail(MusicUtils.sMusicList.get(position).getCoverUri());
         if (cover != null) {
             holder.ivCover.setImageBitmap(cover);
+        } else {
+            holder.ivCover.setImageResource(R.drawable.ic_default_cover);
         }
         holder.tvTitle.setText(MusicUtils.sMusicList.get(position).getTitle());
         String artist = MusicUtils.sMusicList.get(position).getArtist() + " - " + MusicUtils.sMusicList.get(position).getAlbum();

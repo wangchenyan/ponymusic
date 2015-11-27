@@ -16,8 +16,11 @@ public abstract class BaseFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
         init();
+        setListener();
         super.onViewCreated(view, savedInstanceState);
     }
 
     protected abstract void init();
+
+    protected abstract void setListener();
 }

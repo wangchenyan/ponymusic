@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import me.wcy.ponymusic.R;
-import me.wcy.ponymusic.utils.MusicUtils;
+import me.wcy.ponymusic.service.PlayService;
 
 public class SplashActivity extends Activity {
 
@@ -20,16 +20,14 @@ public class SplashActivity extends Activity {
 
             @Override
             public void run() {
-                init();
                 Intent intent = new Intent();
+                intent.setClass(SplashActivity.this, PlayService.class);
+                startService(intent);
+                intent = new Intent();
                 intent.setClass(SplashActivity.this, MusicActivity.class);
                 SplashActivity.this.startActivity(intent);
                 SplashActivity.this.finish();
             }
         }, 1000);
-    }
-
-    private void init() {
-        MusicUtils.scanMusic(this);
     }
 }

@@ -23,4 +23,9 @@ public class OnlineMusicFragment extends BaseFragment {
     protected void init() {
 
     }
+
+    @Override
+    protected void setListener() {
+
+    }
 }

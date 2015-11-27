@@ -29,4 +29,9 @@ public class LocalMusicFragment extends BaseFragment {
         LocalMusicAdapter adapter = new LocalMusicAdapter(getContext());
         lvLocalMusic.setAdapter(adapter);
     }
+
+    @Override
+    protected void setListener() {
+
+    }
 }

@@ -11,6 +11,7 @@ import java.util.List;
 import me.wcy.ponymusic.model.MusicInfo;
 
 /**
+ * 歌曲工具类
  * Created by wcy on 2015/11/27.
  */
 public class MusicUtils {

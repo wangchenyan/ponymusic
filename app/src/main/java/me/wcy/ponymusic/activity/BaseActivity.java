@@ -31,7 +31,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void setContentView(View view) {
         super.setContentView(view);
         ButterKnife.bind(this);
+        setListener();
     }
+
+    protected abstract void setListener();
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
