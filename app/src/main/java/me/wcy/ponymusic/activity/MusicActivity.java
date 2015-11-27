@@ -12,7 +12,7 @@ import me.wcy.ponymusic.adapter.FragmentAdapter;
 import me.wcy.ponymusic.fragment.LocalMusicFragment;
 import me.wcy.ponymusic.fragment.OnlineMusicFragment;
 
-public class MainActivity extends BaseActivity {
+public class MusicActivity extends BaseActivity {
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
     @Bind(R.id.tabs)
@@ -25,7 +25,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_music);
 
         setSupportActionBar(mToolbar);
         setupViewPager();
