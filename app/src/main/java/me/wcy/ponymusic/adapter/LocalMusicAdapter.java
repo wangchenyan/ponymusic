@@ -18,9 +18,11 @@ import me.wcy.ponymusic.utils.MusicUtils;
  */
 public class LocalMusicAdapter extends BaseAdapter {
     private Context mContext;
+    private int mPlayingPosition;
 
-    public LocalMusicAdapter(Context context) {
+    public LocalMusicAdapter(Context context, int playingPosition) {
         mContext = context;
+        mPlayingPosition = playingPosition;
     }
 
     @Override
@@ -42,8 +44,9 @@ public class LocalMusicAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.fragment_local_music_item, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.fragment_local_music_list_item, null);
             holder = new ViewHolder();
+            holder.ivPlaying = (ImageView) convertView.findViewById(R.id.iv_playing);
             holder.ivCover = (ImageView) convertView.findViewById(R.id.iv_cover);
             holder.tvTitle = (TextView) convertView.findViewById(R.id.tv_title);
             holder.tvArtist = (TextView) convertView.findViewById(R.id.tv_artist);
@@ -51,6 +54,11 @@ public class LocalMusicAdapter extends BaseAdapter {
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
+        }
+        if (position == mPlayingPosition) {
+            holder.ivPlaying.setVisibility(View.VISIBLE);
+        } else {
+            holder.ivPlaying.setVisibility(View.GONE);
         }
         Bitmap cover = CoverLoader.getInstance().loadThumbnail(MusicUtils.sMusicList.get(position).getCoverUri());
         if (cover != null) {
@@ -64,7 +72,12 @@ public class LocalMusicAdapter extends BaseAdapter {
         return convertView;
     }
 
+    public void setPlayingPosition(int position) {
+        mPlayingPosition = position;
+    }
+
     class ViewHolder {
+        ImageView ivPlaying;
         ImageView ivCover;
         TextView tvTitle;
         TextView tvArtist;

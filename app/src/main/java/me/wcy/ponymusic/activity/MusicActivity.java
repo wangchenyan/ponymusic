@@ -4,16 +4,17 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import butterknife.Bind;
@@ -22,7 +23,10 @@ import me.wcy.ponymusic.adapter.FragmentAdapter;
 import me.wcy.ponymusic.fragment.LocalMusicFragment;
 import me.wcy.ponymusic.fragment.OnlineMusicFragment;
 import me.wcy.ponymusic.fragment.PlayingFragment;
+import me.wcy.ponymusic.model.MusicInfo;
 import me.wcy.ponymusic.service.PlayService;
+import me.wcy.ponymusic.utils.CoverLoader;
+import me.wcy.ponymusic.utils.MusicUtils;
 
 public class MusicActivity extends BaseActivity implements View.OnClickListener, PlayService.OnPlayEventListener {
     @Bind(R.id.toolbar)
@@ -43,10 +47,13 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     ImageView ivPlayBarPlay;
     @Bind(R.id.iv_playbar_next)
     ImageView ivPlayBarNext;
-    private Fragment mLocalMusicFragment;
-    private Fragment mOnlineMusicFragment;
-    private Fragment mPlayingFragment;
+    @Bind(R.id.pb)
+    ProgressBar pb;
+    private LocalMusicFragment mLocalMusicFragment;
+    private OnlineMusicFragment mOnlineMusicFragment;
+    private PlayingFragment mPlayingFragment;
     private PlayService mPlayService;
+    private PlayServiceConnection mPlayServiceConnection;
     private boolean isPlayingFragmentShow = false;
 
     @Override
@@ -55,7 +62,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         setContentView(R.layout.activity_music);
 
         setSupportActionBar(mToolbar);
-        setupViewPager();
     }
 
     @Override
@@ -63,13 +69,17 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         super.onResume();
         Intent intent = new Intent();
         intent.setClass(this, PlayService.class);
-        PlayServiceConnection conn = new PlayServiceConnection();
-        bindService(intent, conn, Context.BIND_AUTO_CREATE);
+        mPlayServiceConnection = new PlayServiceConnection();
+        bindService(intent, mPlayServiceConnection, Context.BIND_AUTO_CREATE);
+
+        setupViewPager();
     }
 
     @Override
     protected void setListener() {
         llPlayBar.setOnClickListener(this);
+        ivPlayBarPlay.setOnClickListener(this);
+        ivPlayBarNext.setOnClickListener(this);
     }
 
     private void setupViewPager() {
@@ -83,13 +93,67 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
-    public void onPublish(int percent) {
-
+    public void onPublish(int progress) {
+        pb.setProgress(progress);
     }
 
     @Override
     public void onChange(int position) {
+        onPlay(position);
+    }
 
+    public void onPlay(int position) {
+        if (MusicUtils.sMusicList.isEmpty() || position < 0) {
+            return;
+        }
+
+        pb.setMax(getPlayService().getDuration());
+
+        MusicInfo musicInfo = MusicUtils.sMusicList.get(position);
+        Bitmap cover = CoverLoader.getInstance().loadThumbnail(musicInfo.getCoverUri());
+        if (cover == null) {
+            ivPlayBarCover.setImageResource(R.drawable.ic_default_cover);
+        } else {
+            ivPlayBarCover.setImageBitmap(cover);
+        }
+        tvPlayBarTitle.setText(musicInfo.getTitle());
+        tvPlayBarArtist.setText(musicInfo.getArtist());
+        if (getPlayService().isPlaying()) {
+            ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_pause);
+        } else {
+            ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_play);
+        }
+
+        mLocalMusicFragment.onItemPlay(position);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ll_playbar:
+                showPlayingFragment();
+                break;
+            case R.id.iv_playbar_play:
+                if (getPlayService().isPlaying()) {//正在播放
+                    //onPlay(getPlayService().pause());
+                    getPlayService().pause();
+                    ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_play);
+                } else {
+                    if (getPlayService().isPause()) {//暂停
+                        onPlay(getPlayService().resume());
+                    } else {//还未开始播放
+                        onPlay(getPlayService().play(getPlayService().getPlayingPosition()));
+                    }
+                }
+                break;
+            case R.id.iv_playbar_next:
+                getPlayService().next();
+                break;
+        }
+    }
+
+    public PlayService getPlayService() {
+        return mPlayService;
     }
 
     private class PlayServiceConnection implements ServiceConnection {
@@ -103,15 +167,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ll_playbar:
-                showPlayingFragment();
-                break;
         }
     }
 
@@ -140,7 +195,14 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         if (mPlayingFragment != null && isPlayingFragmentShow) {
             hidePlayingFragment();
         } else {
-            moveTaskToBack(false);
+            //moveTaskToBack(false);
+            finish();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        unbindService(mPlayServiceConnection);
+        super.onDestroy();
     }
 }
