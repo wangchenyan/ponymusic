@@ -19,7 +19,7 @@ import me.wcy.ponymusic.utils.SpUtils;
  */
 public class PlayService extends Service implements MediaPlayer.OnCompletionListener {
     private MediaPlayer mPlayer;
-    private OnPlayEventListener mListener;
+    private OnPlayerEventListener mListener;
     private PublishProgressThread mThread;
     private int mPlayingPosition;
     private boolean mIsPause = false;
@@ -46,7 +46,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         next();
     }
 
-    public void setOnPlayEventListener(OnPlayEventListener l) {
+    public void setOnPlayEventListener(OnPlayerEventListener l) {
         mListener = l;
     }
 
@@ -82,6 +82,9 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         }
         mPlayer.pause();
         mIsPause = true;
+        if (mListener != null) {
+            mListener.onPlayerPause();
+        }
         return mPlayingPosition;
     }
 
@@ -90,6 +93,9 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
             return -1;
         }
         start();
+        if (mListener != null) {
+            mListener.onPlayerResume();
+        }
         return mPlayingPosition;
     }
 
@@ -107,6 +113,24 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         return play(mPlayingPosition - 1);
     }
 
+    /**
+     * 跳转到指定的时间位置
+     *
+     * @param msec 时间
+     */
+    public void seekTo(int msec) {
+        int progress;
+        if (isPlaying() || isPause()) {
+            mPlayer.seekTo(msec);
+            progress = msec;
+        } else {
+            progress = 0;
+        }
+        if (mListener != null) {
+            mListener.onPublish(progress);
+        }
+    }
+
     public boolean isPlaying() {
         return mPlayer != null && mPlayer.isPlaying();
     }
@@ -117,13 +141,6 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
     public int getPlayingPosition() {
         return mPlayingPosition;
-    }
-
-    public int getDuration() {
-        if (!isPlaying()) {
-            return 0;
-        }
-        return mPlayer.getDuration();
     }
 
     @Override
@@ -145,14 +162,18 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
                 if (isPlaying() && mListener != null) {
                     mListener.onPublish(mPlayer.getCurrentPosition());
                 }
-                SystemClock.sleep(200);
+                SystemClock.sleep(1000);
             }
         }
     }
 
-    public interface OnPlayEventListener {
+    public interface OnPlayerEventListener {
         void onPublish(int progress);
 
         void onChange(int position);
+
+        void onPlayerPause();
+
+        void onPlayerResume();
     }
 }

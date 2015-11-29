@@ -37,6 +37,7 @@ public class CoverLoader {
         Bitmap bmp = mThumbnailCache.get(uri);
         if (bmp == null) {
             bmp = BitmapFactory.decodeFile(uri);
+            bmp = ImageUtils.boxBlurFilter(bmp);
             mThumbnailCache.put(uri, bmp);
         }
         return bmp;

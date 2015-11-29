@@ -28,7 +28,7 @@ import me.wcy.ponymusic.service.PlayService;
 import me.wcy.ponymusic.utils.CoverLoader;
 import me.wcy.ponymusic.utils.MusicUtils;
 
-public class MusicActivity extends BaseActivity implements View.OnClickListener, PlayService.OnPlayEventListener {
+public class MusicActivity extends BaseActivity implements View.OnClickListener, PlayService.OnPlayerEventListener {
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
     @Bind(R.id.tabs)
@@ -61,17 +61,12 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
 
-        setSupportActionBar(mToolbar);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         Intent intent = new Intent();
         intent.setClass(this, PlayService.class);
         mPlayServiceConnection = new PlayServiceConnection();
         bindService(intent, mPlayServiceConnection, Context.BIND_AUTO_CREATE);
 
+        setSupportActionBar(mToolbar);
         setupViewPager();
     }
 
@@ -92,22 +87,63 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
+    /**
+     * execute in worker thread
+     *
+     * @param progress 播放进度
+     */
     @Override
     public void onPublish(int progress) {
         pb.setProgress(progress);
+        if (mPlayingFragment != null && mPlayingFragment.isAdded()) {
+            mPlayingFragment.onPublish(progress);
+        }
     }
 
     @Override
     public void onChange(int position) {
         onPlay(position);
+        pb.setProgress(0);
+        if (mPlayingFragment != null && mPlayingFragment.isAdded()) {
+            mPlayingFragment.onChange(position);
+        }
+    }
+
+    @Override
+    public void onPlayerPause() {
+        ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_play);
+        if (mPlayingFragment != null && mPlayingFragment.isAdded()) {
+            mPlayingFragment.onPlayerPause();
+        }
+    }
+
+    @Override
+    public void onPlayerResume() {
+        ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_pause);
+        if (mPlayingFragment != null && mPlayingFragment.isAdded()) {
+            mPlayingFragment.onPlayerResume();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ll_playbar:
+                showPlayingFragment();
+                break;
+            case R.id.iv_playbar_play:
+                play();
+                break;
+            case R.id.iv_playbar_next:
+                next();
+                break;
+        }
     }
 
     public void onPlay(int position) {
         if (MusicUtils.sMusicList.isEmpty() || position < 0) {
             return;
         }
-
-        pb.setMax(getPlayService().getDuration());
 
         MusicInfo musicInfo = MusicUtils.sMusicList.get(position);
         Bitmap cover = CoverLoader.getInstance().loadThumbnail(musicInfo.getCoverUri());
@@ -123,33 +159,25 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         } else {
             ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_play);
         }
+        pb.setMax((int) musicInfo.getDuration());
 
         mLocalMusicFragment.onItemPlay(position);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ll_playbar:
-                showPlayingFragment();
-                break;
-            case R.id.iv_playbar_play:
-                if (getPlayService().isPlaying()) {//正在播放
-                    //onPlay(getPlayService().pause());
-                    getPlayService().pause();
-                    ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_play);
-                } else {
-                    if (getPlayService().isPause()) {//暂停
-                        onPlay(getPlayService().resume());
-                    } else {//还未开始播放
-                        onPlay(getPlayService().play(getPlayService().getPlayingPosition()));
-                    }
-                }
-                break;
-            case R.id.iv_playbar_next:
-                getPlayService().next();
-                break;
+    private void play() {
+        if (getPlayService().isPlaying()) {//正在播放
+            getPlayService().pause();
+        } else {
+            if (getPlayService().isPause()) {//暂停
+                getPlayService().resume();
+            } else {//还未开始播放
+                getPlayService().play(getPlayService().getPlayingPosition());
+            }
         }
+    }
+
+    private void next() {
+        getPlayService().next();
     }
 
     public PlayService getPlayService() {

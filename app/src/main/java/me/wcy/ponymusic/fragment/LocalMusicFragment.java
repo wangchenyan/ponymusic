@@ -28,12 +28,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
 
     @Override
     protected void init() {
-        int playingPosition;
-        if (mActivity.getPlayService() != null) {
-            playingPosition = mActivity.getPlayService().getPlayingPosition();
-        } else {
-            playingPosition = -1;
-        }
+        int playingPosition = mActivity.getPlayService() == null ? -1 : mActivity.getPlayService().getPlayingPosition();
         adapter = new LocalMusicAdapter(getContext(), playingPosition);
         lvLocalMusic.setAdapter(adapter);
     }
