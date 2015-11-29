@@ -58,7 +58,7 @@ public class LocalMusicAdapter extends BaseAdapter {
         if (position == mPlayingPosition) {
             holder.ivPlaying.setVisibility(View.VISIBLE);
         } else {
-            holder.ivPlaying.setVisibility(View.GONE);
+            holder.ivPlaying.setVisibility(View.INVISIBLE);
         }
         Bitmap cover = CoverLoader.getInstance().loadThumbnail(MusicUtils.sMusicList.get(position).getCoverUri());
         if (cover != null) {

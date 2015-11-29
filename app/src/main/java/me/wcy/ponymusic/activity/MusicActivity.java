@@ -12,8 +12,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -35,8 +35,8 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     TabLayout mTabLayout;
     @Bind(R.id.viewpager)
     ViewPager mViewPager;
-    @Bind(R.id.ll_playbar)
-    LinearLayout llPlayBar;
+    @Bind(R.id.fl_playbar)
+    FrameLayout flPlayBar;
     @Bind(R.id.iv_playbar_cover)
     ImageView ivPlayBarCover;
     @Bind(R.id.tv_playbar_title)
@@ -72,7 +72,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     protected void setListener() {
-        llPlayBar.setOnClickListener(this);
+        flPlayBar.setOnClickListener(this);
         ivPlayBarPlay.setOnClickListener(this);
         ivPlayBarNext.setOnClickListener(this);
     }
@@ -95,7 +95,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onPublish(int progress) {
         pb.setProgress(progress);
-        if (mPlayingFragment != null && mPlayingFragment.isAdded()) {
+        if (mPlayingFragment != null) {
             mPlayingFragment.onPublish(progress);
         }
     }
@@ -104,7 +104,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     public void onChange(int position) {
         onPlay(position);
         pb.setProgress(0);
-        if (mPlayingFragment != null && mPlayingFragment.isAdded()) {
+        if (mPlayingFragment != null) {
             mPlayingFragment.onChange(position);
         }
     }
@@ -112,7 +112,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onPlayerPause() {
         ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_play);
-        if (mPlayingFragment != null && mPlayingFragment.isAdded()) {
+        if (mPlayingFragment != null) {
             mPlayingFragment.onPlayerPause();
         }
     }
@@ -120,7 +120,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onPlayerResume() {
         ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_pause);
-        if (mPlayingFragment != null && mPlayingFragment.isAdded()) {
+        if (mPlayingFragment != null) {
             mPlayingFragment.onPlayerResume();
         }
     }
@@ -128,7 +128,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ll_playbar:
+            case R.id.fl_playbar:
                 showPlayingFragment();
                 break;
             case R.id.iv_playbar_play:

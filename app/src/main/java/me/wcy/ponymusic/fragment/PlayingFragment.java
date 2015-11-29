@@ -74,11 +74,11 @@ public class PlayingFragment extends BaseFragment implements View.OnClickListene
     }
 
     public void onPlayerPause() {
-        ivPlay.setImageResource(R.drawable.ic_play_btn_play);
+        ivPlay.setImageResource(R.drawable.ic_play_btn_play_selector);
     }
 
     public void onPlayerResume() {
-        ivPlay.setImageResource(R.drawable.ic_play_btn_pause);
+        ivPlay.setImageResource(R.drawable.ic_play_btn_pause_selector);
     }
 
     @Override
@@ -119,9 +119,9 @@ public class PlayingFragment extends BaseFragment implements View.OnClickListene
         tvArtist.setText(musicInfo.getArtist());
         seekBar.setMax((int) musicInfo.getDuration());
         if (mActivity.getPlayService().isPlaying()) {
-            ivPlay.setImageResource(R.drawable.ic_play_btn_pause);
+            ivPlay.setImageResource(R.drawable.ic_play_btn_pause_selector);
         } else {
-            ivPlay.setImageResource(R.drawable.ic_play_btn_play);
+            ivPlay.setImageResource(R.drawable.ic_play_btn_play_selector);
         }
     }
 
