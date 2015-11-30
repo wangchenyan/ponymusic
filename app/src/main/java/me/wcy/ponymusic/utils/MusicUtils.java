@@ -3,8 +3,10 @@ package me.wcy.ponymusic.utils;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +45,7 @@ public class MusicUtils {
             String url = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
             long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
             String coverUri = getCoverUri(context, albumId);
+            String fileName = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)));
             MusicInfo musicInfo = new MusicInfo();
             musicInfo.setId(id);
             musicInfo.setTitle(title);
@@ -51,6 +54,7 @@ public class MusicUtils {
             musicInfo.setDuration(duration);
             musicInfo.setUri(url);
             musicInfo.setCoverUri(coverUri);
+            musicInfo.setFileName(fileName);
             sMusicList.add(musicInfo);
         }
         cursor.close();
@@ -67,5 +71,27 @@ public class MusicUtils {
             cursor.close();
         }
         return result;
+    }
+
+    private static String getAppDir() {
+        return Environment.getExternalStorageDirectory() + File.separator + "PonyMusic" + File.separator;
+    }
+
+    public static String getLrcDir() {
+        String dir = getAppDir() + "Lyric" + File.separator;
+        return mkdirs(dir);
+    }
+
+    public static String getMusicDir() {
+        String dir = getAppDir() + "Music" + File.separator;
+        return mkdirs(dir);
+    }
+
+    private static String mkdirs(String dir) {
+        File file = new File(dir);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return dir;
     }
 }

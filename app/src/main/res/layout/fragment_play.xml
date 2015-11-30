@@ -4,16 +4,17 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/iv_playing_bg"
+        android:id="@+id/iv_play_page_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_playing_default_bg" />
+        android:src="@drawable/ic_play_page_default_bg" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/translucent_black"
         android:orientation="vertical"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin">
@@ -59,49 +60,19 @@
         </LinearLayout>
 
         <android.support.v4.view.ViewPager
+            android:id="@+id/vp_play_page"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:overScrollMode="never" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <me.wcy.ponymusic.widget.IndicatorLayout
+            android:id="@+id/il_indicator"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp" />
 
-            <SeekBar
-                android:id="@+id/seekbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxHeight="2dp"
-                android:progressDrawable="@drawable/ic_seek_bar_style" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/iv_prev"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/iv_play"
-                    android:src="@drawable/ic_play_btn_prev_selector" />
-
-                <ImageView
-                    android:id="@+id/iv_play"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/ic_play_btn_play_selector" />
-
-                <ImageView
-                    android:id="@+id/iv_next"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/iv_play"
-                    android:src="@drawable/ic_play_btn_next_selector" />
-            </RelativeLayout>
-        </LinearLayout>
+        <include layout="@layout/include_play_page_controller" />
     </LinearLayout>
 </FrameLayout>

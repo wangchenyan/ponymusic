@@ -162,7 +162,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
                 if (isPlaying() && mListener != null) {
                     mListener.onPublish(mPlayer.getCurrentPosition());
                 }
-                SystemClock.sleep(1000);
+                SystemClock.sleep(100);
             }
         }
     }

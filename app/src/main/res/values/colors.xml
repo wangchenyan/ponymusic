@@ -6,7 +6,8 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="grey">#9E9E9E</color>
-    <color name="white_grey">#E0E0E0</color>
+    <color name="grey_300">#E0E0E0</color>
     <color name="transparent">#00000000</color>
     <color name="translucent_white">#7FFFFFFF</color>
+    <color name="translucent_black">#7F000000</color>
 </resources>

@@ -18,6 +18,8 @@ public class MusicInfo {
     private String uri;
     // 专辑封面路径
     private String coverUri;
+    // 文件名
+    private String fileName;
 
     public long getId() {
         return id;
@@ -73,5 +75,13 @@ public class MusicInfo {
 
     public void setCoverUri(String coverUri) {
         this.coverUri = coverUri;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

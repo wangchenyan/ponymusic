@@ -22,7 +22,7 @@ import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.adapter.FragmentAdapter;
 import me.wcy.ponymusic.fragment.LocalMusicFragment;
 import me.wcy.ponymusic.fragment.OnlineMusicFragment;
-import me.wcy.ponymusic.fragment.PlayingFragment;
+import me.wcy.ponymusic.fragment.PlayFragment;
 import me.wcy.ponymusic.model.MusicInfo;
 import me.wcy.ponymusic.service.PlayService;
 import me.wcy.ponymusic.utils.CoverLoader;
@@ -51,7 +51,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     ProgressBar pb;
     private LocalMusicFragment mLocalMusicFragment;
     private OnlineMusicFragment mOnlineMusicFragment;
-    private PlayingFragment mPlayingFragment;
+    private PlayFragment mPlayFragment;
     private PlayService mPlayService;
     private PlayServiceConnection mPlayServiceConnection;
     private boolean isPlayingFragmentShow = false;
@@ -95,8 +95,8 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onPublish(int progress) {
         pb.setProgress(progress);
-        if (mPlayingFragment != null) {
-            mPlayingFragment.onPublish(progress);
+        if (mPlayFragment != null) {
+            mPlayFragment.onPublish(progress);
         }
     }
 
@@ -104,24 +104,24 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     public void onChange(int position) {
         onPlay(position);
         pb.setProgress(0);
-        if (mPlayingFragment != null) {
-            mPlayingFragment.onChange(position);
+        if (mPlayFragment != null) {
+            mPlayFragment.onChange(position);
         }
     }
 
     @Override
     public void onPlayerPause() {
         ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_play);
-        if (mPlayingFragment != null) {
-            mPlayingFragment.onPlayerPause();
+        if (mPlayFragment != null) {
+            mPlayFragment.onPlayerPause();
         }
     }
 
     @Override
     public void onPlayerResume() {
         ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_pause);
-        if (mPlayingFragment != null) {
-            mPlayingFragment.onPlayerResume();
+        if (mPlayFragment != null) {
+            mPlayFragment.onPlayerResume();
         }
     }
 
@@ -200,12 +200,12 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     private void showPlayingFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        if (mPlayingFragment == null) {
-            mPlayingFragment = new PlayingFragment();
-            ft.replace(android.R.id.content, mPlayingFragment);
+        if (mPlayFragment == null) {
+            mPlayFragment = new PlayFragment();
+            ft.replace(android.R.id.content, mPlayFragment);
             ft.addToBackStack(null);
         } else {
-            ft.show(mPlayingFragment);
+            ft.show(mPlayFragment);
         }
         ft.commit();
         isPlayingFragmentShow = true;
@@ -213,14 +213,14 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     private void hidePlayingFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.hide(mPlayingFragment);
+        ft.hide(mPlayFragment);
         ft.commit();
         isPlayingFragmentShow = false;
     }
 
     @Override
     public void onBackPressed() {
-        if (mPlayingFragment != null && isPlayingFragmentShow) {
+        if (mPlayFragment != null && isPlayingFragmentShow) {
             hidePlayingFragment();
         } else {
             //moveTaskToBack(false);

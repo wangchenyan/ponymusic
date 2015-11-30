@@ -3,6 +3,7 @@ package me.wcy.ponymusic.fragment;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,18 +11,24 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.Bind;
 import me.wcy.ponymusic.R;
+import me.wcy.ponymusic.adapter.PlayPagerAdapter;
 import me.wcy.ponymusic.model.MusicInfo;
 import me.wcy.ponymusic.utils.CoverLoader;
 import me.wcy.ponymusic.utils.MusicUtils;
+import me.wcy.ponymusic.widget.IndicatorLayout;
+import me.wcy.ponymusic.widget.LrcView;
 
 /**
  * 正在播放界面
  * Created by wcy on 2015/11/27.
  */
-public class PlayingFragment extends BaseFragment implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
-    @Bind(R.id.iv_playing_bg)
+public class PlayFragment extends BaseFragment implements View.OnClickListener, ViewPager.OnPageChangeListener, SeekBar.OnSeekBarChangeListener {
+    @Bind(R.id.iv_play_page_bg)
     ImageView ivPlayingBg;
     @Bind(R.id.iv_back)
     ImageView ivBack;
@@ -29,7 +36,11 @@ public class PlayingFragment extends BaseFragment implements View.OnClickListene
     TextView tvTitle;
     @Bind(R.id.tv_artist)
     TextView tvArtist;
-    @Bind(R.id.seekbar)
+    @Bind(R.id.vp_play_page)
+    ViewPager vpPlay;
+    @Bind(R.id.il_indicator)
+    IndicatorLayout ilIdicator;
+    @Bind(R.id.seek_bar)
     SeekBar seekBar;
     @Bind(R.id.iv_prev)
     ImageView ivPrev;
@@ -37,15 +48,19 @@ public class PlayingFragment extends BaseFragment implements View.OnClickListene
     ImageView ivPlay;
     @Bind(R.id.iv_next)
     ImageView ivNext;
+    private LrcView lvFullLrc;
+    private List<View> mViewPagerContent;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_playing, container, false);
+        return inflater.inflate(R.layout.fragment_play, container, false);
     }
 
     @Override
     protected void init() {
+        initViewPager();
+        ilIdicator.create(mViewPagerContent.size());
         onChange(mActivity.getPlayService().getPlayingPosition());
     }
 
@@ -56,6 +71,18 @@ public class PlayingFragment extends BaseFragment implements View.OnClickListene
         ivPrev.setOnClickListener(this);
         ivNext.setOnClickListener(this);
         seekBar.setOnSeekBarChangeListener(this);
+        vpPlay.setOnPageChangeListener(this);
+    }
+
+    private void initViewPager() {
+        View coverView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_play_page_cover, null);
+        View lrcView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_play_page_lrc, null);
+        lvFullLrc = (LrcView) lrcView.findViewById(R.id.lrc_view);
+        mViewPagerContent = new ArrayList<>(2);
+        mViewPagerContent.add(coverView);
+        mViewPagerContent.add(lrcView);
+        PlayPagerAdapter adapter = new PlayPagerAdapter(mViewPagerContent);
+        vpPlay.setAdapter(adapter);
     }
 
     /**
@@ -64,12 +91,19 @@ public class PlayingFragment extends BaseFragment implements View.OnClickListene
      * @param progress 播放进度
      */
     public void onPublish(int progress) {
+        if (seekBar == null || lvFullLrc == null) {
+            return;
+        }
         seekBar.setProgress(progress);
+        if (lvFullLrc.hasLrc()) {
+            lvFullLrc.updateTime(progress);
+        }
     }
 
     public void onChange(int position) {
         onPlay(position);
         setBackground(position);
+        setLrc(position);
         seekBar.setProgress(0);
     }
 
@@ -100,6 +134,19 @@ public class PlayingFragment extends BaseFragment implements View.OnClickListene
     }
 
     @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        ilIdicator.setCurrent(position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+    }
+
+    @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
     }
 
@@ -111,6 +158,7 @@ public class PlayingFragment extends BaseFragment implements View.OnClickListene
     public void onStopTrackingTouch(SeekBar seekBar) {
         int progress = seekBar.getProgress();
         mActivity.getPlayService().seekTo(progress);
+        lvFullLrc.onDrag(progress);
     }
 
     private void onPlay(int position) {
@@ -149,9 +197,15 @@ public class PlayingFragment extends BaseFragment implements View.OnClickListene
         MusicInfo musicInfo = MusicUtils.sMusicList.get(position);
         Bitmap bmp = CoverLoader.getInstance().load(musicInfo.getCoverUri());
         if (bmp == null) {
-            ivPlayingBg.setImageResource(R.drawable.ic_playing_default_bg);
+            ivPlayingBg.setImageResource(R.drawable.ic_play_page_default_bg);
         } else {
             ivPlayingBg.setImageBitmap(bmp);
         }
+    }
+
+    private void setLrc(int position) {
+        MusicInfo musicInfo = MusicUtils.sMusicList.get(position);
+        String lrcPath = MusicUtils.getLrcDir() + musicInfo.getFileName().replace(".mp3", ".lrc");
+        lvFullLrc.loadLrc(lrcPath);
     }
 }

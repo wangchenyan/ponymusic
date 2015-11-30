@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LrcView">
+        <attr name="textSize" format="dimension" />
+        <attr name="dividerHeight" format="dimension" />
+        <attr name="normalTextColor" format="reference|color" />
+        <attr name="currentTextColor" format="reference|color" />
+        <attr name="animationDuration" format="integer" />
+    </declare-styleable>
+</resources>
