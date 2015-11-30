@@ -1,23 +1,21 @@
 package me.wcy.ponymusic.utils;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 
 /**
  * 图像工具类
  * Created by wcy on 2015/11/29.
  */
 public class ImageUtils {
-    /**
-     * 水平方向模糊度
-     */
+    //水平方向模糊度
     private static float hRadius = 10;
-    /**
-     * 竖直方向模糊度
-     */
+    //竖直方向模糊度
     private static float vRadius = 10;
-    /**
-     * 模糊迭代度
-     */
+    //模糊迭代度
     private static int iterations = 7;
 
     /**
@@ -136,5 +134,21 @@ public class ImageUtils {
             return bmp;
         }
         return Bitmap.createBitmap(bmp, 1, 1, width, height);
+    }
+
+    public static Bitmap createCircleImage(Bitmap source) {
+        int length = MusicUtils.getScreenWidth() / 2;
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        Bitmap target = Bitmap.createBitmap(length, length, Bitmap.Config.ARGB_8888);
+        //产生一个同样大小的画布
+        Canvas canvas = new Canvas(target);
+        //首先绘制圆形
+        canvas.drawCircle(length / 2, length / 2, length / 2, paint);
+        //使用SRC_IN
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        //绘制图片
+        canvas.drawBitmap(source, 0, 0, paint);
+        return target;
     }
 }

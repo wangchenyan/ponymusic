@@ -20,6 +20,7 @@ import me.wcy.ponymusic.adapter.PlayPagerAdapter;
 import me.wcy.ponymusic.model.MusicInfo;
 import me.wcy.ponymusic.utils.CoverLoader;
 import me.wcy.ponymusic.utils.MusicUtils;
+import me.wcy.ponymusic.widget.AlbumCoverView;
 import me.wcy.ponymusic.widget.IndicatorLayout;
 import me.wcy.ponymusic.widget.LrcView;
 
@@ -48,6 +49,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     ImageView ivPlay;
     @Bind(R.id.iv_next)
     ImageView ivNext;
+    private AlbumCoverView mAlbumCoverView;
     private LrcView lvFullLrc;
     private List<View> mViewPagerContent;
 
@@ -77,6 +79,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     private void initViewPager() {
         View coverView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_play_page_cover, null);
         View lrcView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_play_page_lrc, null);
+        mAlbumCoverView = (AlbumCoverView) coverView.findViewById(R.id.album_cover_view);
         lvFullLrc = (LrcView) lrcView.findViewById(R.id.lrc_view);
         mViewPagerContent = new ArrayList<>(2);
         mViewPagerContent.add(coverView);
@@ -102,17 +105,17 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     public void onChange(int position) {
         onPlay(position);
-        setBackground(position);
-        setLrc(position);
         seekBar.setProgress(0);
     }
 
     public void onPlayerPause() {
         ivPlay.setImageResource(R.drawable.ic_play_btn_play_selector);
+        mAlbumCoverView.pause();
     }
 
     public void onPlayerResume() {
         ivPlay.setImageResource(R.drawable.ic_play_btn_pause_selector);
+        mAlbumCoverView.start();
     }
 
     @Override
@@ -166,10 +169,15 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         tvTitle.setText(musicInfo.getTitle());
         tvArtist.setText(musicInfo.getArtist());
         seekBar.setMax((int) musicInfo.getDuration());
+        setBackground(position);
+        setAlbumCover(position);
+        setLrc(position);
         if (mActivity.getPlayService().isPlaying()) {
             ivPlay.setImageResource(R.drawable.ic_play_btn_pause_selector);
+            mAlbumCoverView.start();
         } else {
             ivPlay.setImageResource(R.drawable.ic_play_btn_play_selector);
+            mAlbumCoverView.pause();
         }
     }
 
@@ -195,12 +203,18 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     private void setBackground(int position) {
         MusicInfo musicInfo = MusicUtils.sMusicList.get(position);
-        Bitmap bmp = CoverLoader.getInstance().load(musicInfo.getCoverUri());
+        Bitmap bmp = CoverLoader.getInstance().loadNormal(musicInfo.getCoverUri());
         if (bmp == null) {
             ivPlayingBg.setImageResource(R.drawable.ic_play_page_default_bg);
         } else {
             ivPlayingBg.setImageBitmap(bmp);
         }
+    }
+
+    private void setAlbumCover(int position) {
+        MusicInfo musicInfo = MusicUtils.sMusicList.get(position);
+        Bitmap bitmap = CoverLoader.getInstance().loadRound(musicInfo.getCoverUri());
+        mAlbumCoverView.setCoverBitmap(bitmap);
     }
 
     private void setLrc(int position) {

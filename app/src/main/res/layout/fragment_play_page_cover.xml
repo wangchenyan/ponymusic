@@ -4,4 +4,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <me.wcy.ponymusic.widget.AlbumCoverView
+        android:id="@+id/album_cover_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

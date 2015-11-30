@@ -5,11 +5,13 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.WindowManager;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.wcy.ponymusic.application.MusicApplication;
 import me.wcy.ponymusic.model.MusicInfo;
 
 /**
@@ -71,6 +73,11 @@ public class MusicUtils {
             cursor.close();
         }
         return result;
+    }
+
+    public static int getScreenWidth() {
+        WindowManager wm = (WindowManager) MusicApplication.getInstance().getSystemService(Context.WINDOW_SERVICE);
+        return wm.getDefaultDisplay().getWidth();
     }
 
     private static String getAppDir() {
