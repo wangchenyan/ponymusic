@@ -39,7 +39,7 @@ public class LrcView extends View {
     private float mTextSize;
     private float mDividerHeight;
     private long mAnimationDuration;
-    private long mNextTime = 0l;
+    private long mNextTime = 0L;
     private int mCurrentLine = 0;
     private float mAnimOffset;
     private boolean mIsEnd = false;
@@ -157,7 +157,7 @@ public class LrcView extends View {
         mLrcTexts.clear();
         mLrcTimes.clear();
         mCurrentLine = 0;
-        mNextTime = 0l;
+        mNextTime = 0L;
         mIsEnd = false;
     }
 

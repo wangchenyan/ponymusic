@@ -29,7 +29,7 @@ public class AlbumCoverView extends View {
     private Matrix mCoverMatrix;
     private Handler mHandler;
     private float mRotation = 0.0f;
-    private boolean mIsPlaying = false;
+    private boolean mIsRunning = false;
 
     public AlbumCoverView(Context context) {
         this(context, null);
@@ -64,25 +64,25 @@ public class AlbumCoverView extends View {
     }
 
     public void start() {
-        if (mIsPlaying) {
+        if (mIsRunning) {
             return;
         }
-        mIsPlaying = true;
+        mIsRunning = true;
         mHandler.sendEmptyMessageDelayed(MSG_UPDATE, TIME_UPDATE);
     }
 
     public void pause() {
-        if (!mIsPlaying) {
+        if (!mIsRunning) {
             return;
         }
-        mIsPlaying = false;
+        mIsRunning = false;
     }
 
     private class CoverHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == MSG_UPDATE) {
-                if (!mIsPlaying) {
+                if (!mIsRunning) {
                     return;
                 }
                 mRotation += ROTATION_INCREASE;

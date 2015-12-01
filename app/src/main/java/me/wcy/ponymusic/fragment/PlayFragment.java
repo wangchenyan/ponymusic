@@ -18,6 +18,7 @@ import butterknife.Bind;
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.adapter.PlayPagerAdapter;
 import me.wcy.ponymusic.model.MusicInfo;
+import me.wcy.ponymusic.utils.Constants;
 import me.wcy.ponymusic.utils.CoverLoader;
 import me.wcy.ponymusic.utils.MusicUtils;
 import me.wcy.ponymusic.widget.AlbumCoverView;
@@ -52,6 +53,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     private AlbumCoverView mAlbumCoverView;
     private LrcView lvFullLrc;
     private List<View> mViewPagerContent;
+    private int mPageSelection = 0;
 
     @Nullable
     @Override
@@ -94,9 +96,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
      * @param progress 播放进度
      */
     public void onPublish(int progress) {
-        if (seekBar == null || lvFullLrc == null) {
-            return;
-        }
         seekBar.setProgress(progress);
         if (lvFullLrc.hasLrc()) {
             lvFullLrc.updateTime(progress);
@@ -142,6 +141,12 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     public void onPageSelected(int position) {
         ilIdicator.setCurrent(position);
+        mPageSelection = position;
+        if (mPageSelection == 0 && mActivity.getPlayService().isPlaying()) {
+            mAlbumCoverView.start();
+        } else {
+            mAlbumCoverView.pause();
+        }
     }
 
     @Override
@@ -178,7 +183,9 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         setLrc(position);
         if (mActivity.getPlayService().isPlaying()) {
             ivPlay.setImageResource(R.drawable.ic_play_btn_pause_selector);
-            mAlbumCoverView.start();
+            if (mPageSelection == 0) {
+                mAlbumCoverView.start();
+            }
         } else {
             ivPlay.setImageResource(R.drawable.ic_play_btn_play_selector);
             mAlbumCoverView.pause();
@@ -219,7 +226,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     private void setLrc(int position) {
         MusicInfo musicInfo = MusicUtils.getMusicList().get(position);
-        String lrcPath = MusicUtils.getLrcDir() + musicInfo.getFileName().replace(".mp3", ".lrc");
+        String lrcPath = MusicUtils.getLrcDir() + musicInfo.getFileName().replace(Constants.FILENAME_MP3, Constants.FILENAME_LRC);
         lvFullLrc.loadLrc(lrcPath);
     }
 }

@@ -4,8 +4,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
-import android.os.SystemClock;
+import android.os.Message;
 import android.support.annotation.Nullable;
 
 import java.io.IOException;
@@ -18,9 +19,11 @@ import me.wcy.ponymusic.utils.SpUtils;
  * Created by wcy on 2015/11/27.
  */
 public class PlayService extends Service implements MediaPlayer.OnCompletionListener {
+    private static final int MSG_UPDATE = 0;
+    private static final long TIME_UPDATE = 100L;
     private MediaPlayer mPlayer;
     private OnPlayerEventListener mListener;
-    private PublishProgressThread mThread;
+    private Handler mHandler;
     private int mPlayingPosition;
     private boolean mIsPause = false;
 
@@ -34,8 +37,8 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         }
         mPlayer = new MediaPlayer();
         mPlayer.setOnCompletionListener(this);
-        mThread = new PublishProgressThread();
-        mThread.start();
+        mHandler = new PublishProgressHandler();
+        mHandler.sendEmptyMessageDelayed(MSG_UPDATE, TIME_UPDATE);
     }
 
     @Nullable
@@ -158,25 +161,37 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         }
     }
 
-    public class PublishProgressThread extends Thread {
+    private class PublishProgressHandler extends Handler {
         @Override
-        public void run() {
-            while (true) {
+        public void handleMessage(Message msg) {
+            if (msg.what == MSG_UPDATE) {
                 if (isPlaying() && mListener != null) {
                     mListener.onPublish(mPlayer.getCurrentPosition());
                 }
-                SystemClock.sleep(100);
+                mHandler.sendEmptyMessageDelayed(MSG_UPDATE, TIME_UPDATE);
             }
         }
     }
 
     public interface OnPlayerEventListener {
+        /**
+         * 更新进度
+         */
         void onPublish(int progress);
 
+        /**
+         * 切换歌曲
+         */
         void onChange(int position);
 
+        /**
+         * 暂停播放
+         */
         void onPlayerPause();
 
+        /**
+         * 继续播放
+         */
         void onPlayerResume();
     }
 }

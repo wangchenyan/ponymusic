@@ -95,7 +95,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onPublish(int progress) {
         pb.setProgress(progress);
-        if (mPlayFragment != null) {
+        if (mPlayFragment != null && mPlayFragment.isResumed()) {
             mPlayFragment.onPublish(progress);
         }
     }
@@ -103,7 +103,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onChange(int position) {
         onPlay(position);
-        if (mPlayFragment != null) {
+        if (mPlayFragment != null && mPlayFragment.isResumed()) {
             mPlayFragment.onChange(position);
         }
     }
@@ -111,7 +111,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onPlayerPause() {
         ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_play);
-        if (mPlayFragment != null) {
+        if (mPlayFragment != null && mPlayFragment.isResumed()) {
             mPlayFragment.onPlayerPause();
         }
     }
@@ -119,7 +119,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onPlayerResume() {
         ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_pause);
-        if (mPlayFragment != null) {
+        if (mPlayFragment != null && mPlayFragment.isResumed()) {
             mPlayFragment.onPlayerResume();
         }
     }
