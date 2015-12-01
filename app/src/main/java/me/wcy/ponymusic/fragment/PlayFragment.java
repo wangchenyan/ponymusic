@@ -105,7 +105,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     public void onChange(int position) {
         onPlay(position);
-        seekBar.setProgress(0);
     }
 
     public void onPlayerPause() {
@@ -165,10 +164,15 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void onPlay(int position) {
+        if (MusicUtils.sMusicList.isEmpty()) {
+            return;
+        }
+
         MusicInfo musicInfo = MusicUtils.sMusicList.get(position);
         tvTitle.setText(musicInfo.getTitle());
         tvArtist.setText(musicInfo.getArtist());
         seekBar.setMax((int) musicInfo.getDuration());
+        seekBar.setProgress(0);
         setBackground(position);
         setAlbumCover(position);
         setLrc(position);
@@ -203,12 +207,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     private void setBackground(int position) {
         MusicInfo musicInfo = MusicUtils.sMusicList.get(position);
-        Bitmap bmp = CoverLoader.getInstance().loadNormal(musicInfo.getCoverUri());
-        if (bmp == null) {
-            ivPlayingBg.setImageResource(R.drawable.ic_play_page_default_bg);
-        } else {
-            ivPlayingBg.setImageBitmap(bmp);
-        }
+        Bitmap bitmap = CoverLoader.getInstance().loadBlur(musicInfo.getCoverUri());
+        ivPlayingBg.setImageBitmap(bitmap);
     }
 
     private void setAlbumCover(int position) {

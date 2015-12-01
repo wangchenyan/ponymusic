@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import me.wcy.ponymusic.R;
+import me.wcy.ponymusic.utils.ImageUtils;
 import me.wcy.ponymusic.utils.MusicUtils;
 
 /**
@@ -18,6 +19,9 @@ import me.wcy.ponymusic.utils.MusicUtils;
  * Created by wcy on 2015/11/30.
  */
 public class AlbumCoverView extends View {
+    private static final int MSG_UPDATE = 0;
+    private static final long TIME_UPDATE = 50L;
+    private static final float ROTATION_INCREASE = 0.5f;
     private Bitmap mDiscBitmap;
     private Bitmap mCoverBitmap;
     private Matrix mDiscMatrix;
@@ -32,10 +36,8 @@ public class AlbumCoverView extends View {
 
     public AlbumCoverView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.outWidth = MusicUtils.getScreenWidth() * 3 / 4;
-        options.outHeight = MusicUtils.getScreenWidth() * 3 / 4;
-        mDiscBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_play_page_disc, options);
+        mDiscBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_play_page_disc);
+        mDiscBitmap = ImageUtils.resizeImage(mDiscBitmap, MusicUtils.getScreenWidth() * 3 / 4, MusicUtils.getScreenWidth() * 3 / 4);
         mDiscMatrix = new Matrix();
         mCoverMatrix = new Matrix();
         mHandler = new CoverHandler();
@@ -64,7 +66,7 @@ public class AlbumCoverView extends View {
             return;
         }
         mIsPlaying = true;
-        mHandler.sendEmptyMessageDelayed(0, 50);
+        mHandler.sendEmptyMessageDelayed(MSG_UPDATE, TIME_UPDATE);
     }
 
     public void pause() {
@@ -77,16 +79,16 @@ public class AlbumCoverView extends View {
     private class CoverHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == 0) {
+            if (msg.what == MSG_UPDATE) {
                 if (!mIsPlaying) {
                     return;
                 }
-                mRotation += 0.5f;
+                mRotation += ROTATION_INCREASE;
                 if (mRotation >= 360) {
                     mRotation = 0;
                 }
                 invalidate();
-                sendEmptyMessageDelayed(0, 50);
+                sendEmptyMessageDelayed(MSG_UPDATE, TIME_UPDATE);
             }
         }
     }

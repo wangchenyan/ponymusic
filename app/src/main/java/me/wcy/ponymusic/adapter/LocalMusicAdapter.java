@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import me.wcy.ponymusic.R;
+import me.wcy.ponymusic.model.MusicInfo;
 import me.wcy.ponymusic.utils.CoverLoader;
 import me.wcy.ponymusic.utils.MusicUtils;
 
@@ -60,14 +61,11 @@ public class LocalMusicAdapter extends BaseAdapter {
         } else {
             holder.ivPlaying.setVisibility(View.INVISIBLE);
         }
-        Bitmap cover = CoverLoader.getInstance().loadThumbnail(MusicUtils.sMusicList.get(position).getCoverUri());
-        if (cover != null) {
-            holder.ivCover.setImageBitmap(cover);
-        } else {
-            holder.ivCover.setImageResource(R.drawable.ic_default_cover);
-        }
-        holder.tvTitle.setText(MusicUtils.sMusicList.get(position).getTitle());
-        String artist = MusicUtils.sMusicList.get(position).getArtist() + " - " + MusicUtils.sMusicList.get(position).getAlbum();
+        MusicInfo musicInfo = MusicUtils.sMusicList.get(position);
+        Bitmap cover = CoverLoader.getInstance().loadThumbnail(musicInfo.getCoverUri());
+        holder.ivCover.setImageBitmap(cover);
+        holder.tvTitle.setText(musicInfo.getTitle());
+        String artist = musicInfo.getArtist() + " - " + musicInfo.getAlbum();
         holder.tvArtist.setText(artist);
         return convertView;
     }

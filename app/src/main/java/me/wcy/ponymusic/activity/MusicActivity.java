@@ -103,7 +103,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onChange(int position) {
         onPlay(position);
-        pb.setProgress(0);
         if (mPlayFragment != null) {
             mPlayFragment.onChange(position);
         }
@@ -141,17 +140,13 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     }
 
     public void onPlay(int position) {
-        if (MusicUtils.sMusicList.isEmpty() || position < 0) {
+        if (MusicUtils.sMusicList.isEmpty()) {
             return;
         }
 
         MusicInfo musicInfo = MusicUtils.sMusicList.get(position);
         Bitmap cover = CoverLoader.getInstance().loadThumbnail(musicInfo.getCoverUri());
-        if (cover == null) {
-            ivPlayBarCover.setImageResource(R.drawable.ic_default_cover);
-        } else {
-            ivPlayBarCover.setImageBitmap(cover);
-        }
+        ivPlayBarCover.setImageBitmap(cover);
         tvPlayBarTitle.setText(musicInfo.getTitle());
         tvPlayBarArtist.setText(musicInfo.getArtist());
         if (getPlayService().isPlaying()) {
@@ -160,6 +155,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
             ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_play);
         }
         pb.setMax((int) musicInfo.getDuration());
+        pb.setProgress(0);
 
         mLocalMusicFragment.onItemPlay(position);
     }

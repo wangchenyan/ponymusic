@@ -51,7 +51,13 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     }
 
     public int play(int position) {
-        if (position < 0 || position >= MusicUtils.sMusicList.size()) {
+        if (MusicUtils.sMusicList.isEmpty()) {
+            return -1;
+        }
+
+        if (position < 0) {
+            position = MusicUtils.sMusicList.size() - 1;
+        } else if (position >= MusicUtils.sMusicList.size()) {
             position = 0;
         }
         try {
@@ -100,16 +106,10 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     }
 
     public int next() {
-        if (mPlayingPosition + 1 >= MusicUtils.sMusicList.size()) {
-            return play(0);
-        }
         return play(mPlayingPosition + 1);
     }
 
     public int prev() {
-        if (mPlayingPosition - 1 < 0) {
-            return play(MusicUtils.sMusicList.size() - 1);
-        }
         return play(mPlayingPosition - 1);
     }
 

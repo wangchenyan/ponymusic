@@ -15,9 +15,10 @@ import me.wcy.ponymusic.application.MusicApplication;
  * Created by wcy on 2015/11/27.
  */
 public class CoverLoader {
+    private static final String KEY_NULL = "null";
     //缩略图LruCache，用于音乐列表
     private LruCache<String, Bitmap> mThumbnailCache;
-    private LruCache<String, Bitmap> mNormalCache;
+    private LruCache<String, Bitmap> mBlurCache;
     private LruCache<String, Bitmap> mRoundCache;
 
     private CoverLoader() {
@@ -28,7 +29,7 @@ public class CoverLoader {
                 return value.getRowBytes() * value.getHeight();
             }
         };
-        mNormalCache = new LruCache<String, Bitmap>(maxSize) {
+        mBlurCache = new LruCache<String, Bitmap>(maxSize) {
             @Override
             protected int sizeOf(String key, Bitmap value) {
                 return value.getRowBytes() * value.getHeight();
@@ -51,61 +52,98 @@ public class CoverLoader {
     }
 
     public Bitmap loadThumbnail(String uri) {
+        Bitmap bitmap;
         if (uri == null) {
-            return null;
-        }
-        Bitmap bitmap = mNormalCache.get(uri);
-        if (bitmap == null) {
-            try {
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true; // 仅获取大小
-                bitmap = BitmapFactory.decodeStream(new FileInputStream(uri), null, options);
-                //压缩尺寸，避免卡顿
-                int inSampleSize = options.outHeight / 100;
-                if (inSampleSize <= 1) {
-                    inSampleSize = 1;
+            bitmap = mThumbnailCache.get(KEY_NULL);
+            if (bitmap == null) {
+                bitmap = BitmapFactory.decodeResource(MusicApplication.getInstance().getResources(), R.drawable.ic_music_list_default_cover);
+                mThumbnailCache.put(KEY_NULL, bitmap);
+            }
+        } else {
+            bitmap = mThumbnailCache.get(uri);
+            if (bitmap == null) {
+                try {
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inJustDecodeBounds = true; // 仅获取大小
+                    bitmap = BitmapFactory.decodeStream(new FileInputStream(uri), null, options);
+                    //压缩尺寸，避免卡顿
+                    int inSampleSize = options.outHeight / (MusicUtils.getScreenWidth() / 10);
+                    if (inSampleSize <= 1) {
+                        inSampleSize = 1;
+                    }
+                    options.inSampleSize = inSampleSize;
+                    options.inJustDecodeBounds = false; // 获取bitmap
+                    bitmap = BitmapFactory.decodeStream(new FileInputStream(uri), null, options);
+                    mThumbnailCache.put(uri, bitmap);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 }
-                options.inSampleSize = inSampleSize;
-                options.inJustDecodeBounds = false; // 获取bitmap
-                bitmap = BitmapFactory.decodeStream(new FileInputStream(uri), null, options);
-                mNormalCache.put(uri, bitmap);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             }
         }
         return bitmap;
     }
 
-    public Bitmap loadNormal(String uri) {
+    public Bitmap loadBlur(String uri) {
+        Bitmap bitmap;
         if (uri == null) {
-            return null;
-        }
-        Bitmap bitmap = mThumbnailCache.get(uri);
-        if (bitmap == null) {
-            bitmap = BitmapFactory.decodeFile(uri);
-            bitmap = ImageUtils.boxBlurFilter(bitmap);
-            mThumbnailCache.put(uri, bitmap);
+            bitmap = mBlurCache.get(KEY_NULL);
+            if (bitmap == null) {
+                bitmap = BitmapFactory.decodeResource(MusicApplication.getInstance().getResources(), R.drawable.ic_play_page_default_bg);
+                mBlurCache.put(KEY_NULL, bitmap);
+            }
+        } else {
+            bitmap = mBlurCache.get(uri);
+            if (bitmap == null) {
+                bitmap = loadNormal(uri);
+                bitmap = ImageUtils.boxBlurFilter(bitmap);
+                mBlurCache.put(uri, bitmap);
+            }
         }
         return bitmap;
     }
 
     public Bitmap loadRound(String uri) {
+        Bitmap bitmap;
         if (uri == null) {
-            Bitmap bitmap = mRoundCache.get("null");
+            bitmap = mRoundCache.get(KEY_NULL);
             if (bitmap == null) {
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.outWidth = MusicUtils.getScreenWidth() / 2;
-                options.outHeight = MusicUtils.getScreenWidth() / 2;
-                bitmap = BitmapFactory.decodeResource(MusicApplication.getInstance().getResources(), R.drawable.ic_play_page_default_cover, options);
-                mRoundCache.put("null", bitmap);
+                bitmap = BitmapFactory.decodeResource(MusicApplication.getInstance().getResources(), R.drawable.ic_play_page_default_cover);
+                bitmap = ImageUtils.resizeImage(bitmap, MusicUtils.getScreenWidth() / 2, MusicUtils.getScreenWidth() / 2);
+                mRoundCache.put(KEY_NULL, bitmap);
             }
-            return bitmap;
+        } else {
+            bitmap = mRoundCache.get(uri);
+            if (bitmap == null) {
+                bitmap = loadNormal(uri);
+                bitmap = ImageUtils.resizeImage(bitmap, MusicUtils.getScreenWidth() / 2, MusicUtils.getScreenWidth() / 2);
+                bitmap = ImageUtils.createCircleImage(bitmap);
+                mRoundCache.put(uri, bitmap);
+            }
         }
-        Bitmap bitmap = mRoundCache.get(uri);
-        if (bitmap == null) {
-            bitmap = BitmapFactory.decodeFile(uri);
-            bitmap = ImageUtils.createCircleImage(bitmap);
-            mRoundCache.put(uri, bitmap);
+        return bitmap;
+    }
+
+    /**
+     * 获得最大宽度为屏幕一半的图片,如果超出，则缩放
+     */
+    private Bitmap loadNormal(String uri) {
+        Bitmap bitmap = null;
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            // 仅获取大小
+            options.inJustDecodeBounds = true;
+            bitmap = BitmapFactory.decodeStream(new FileInputStream(uri), null, options);
+            // 压缩尺寸，避免卡顿
+            int inSampleSize = options.outWidth / (MusicUtils.getScreenWidth() / 2);
+            if (inSampleSize <= 0) {
+                inSampleSize = 1;
+            }
+            options.inSampleSize = inSampleSize;
+            // 获取bitmap
+            options.inJustDecodeBounds = false;
+            bitmap = BitmapFactory.decodeStream(new FileInputStream(uri), null, options);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
         return bitmap;
     }
