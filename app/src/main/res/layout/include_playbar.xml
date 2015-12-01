@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="陪你度过漫长岁月"
+                android:text="无音乐"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_common" />
 
@@ -47,7 +47,6 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="陈奕迅 - 陪你度过漫长岁月"
                 android:textColor="@color/grey"
                 android:textSize="12sp" />
         </LinearLayout>

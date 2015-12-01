@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import me.wcy.ponymusic.R;
+import me.wcy.ponymusic.utils.CoverLoader;
 import me.wcy.ponymusic.utils.ImageUtils;
 import me.wcy.ponymusic.utils.MusicUtils;
 
@@ -38,6 +39,7 @@ public class AlbumCoverView extends View {
         super(context, attrs);
         mDiscBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_play_page_disc);
         mDiscBitmap = ImageUtils.resizeImage(mDiscBitmap, MusicUtils.getScreenWidth() * 3 / 4, MusicUtils.getScreenWidth() * 3 / 4);
+        mCoverBitmap = CoverLoader.getInstance().loadRound(null);
         mDiscMatrix = new Matrix();
         mCoverMatrix = new Matrix();
         mHandler = new CoverHandler();
