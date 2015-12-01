@@ -54,7 +54,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     private PlayFragment mPlayFragment;
     private PlayService mPlayService;
     private PlayServiceConnection mPlayServiceConnection;
-    private boolean isPlayingFragmentShow = false;
+    private boolean mIsPlayFragmentShow = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,7 +157,9 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         pb.setMax((int) musicInfo.getDuration());
         pb.setProgress(0);
 
-        mLocalMusicFragment.onItemPlay(position);
+        if (mLocalMusicFragment != null && mLocalMusicFragment.isResumed()) {
+            mLocalMusicFragment.onItemPlay(position);
+        }
     }
 
     private void play() {
@@ -204,19 +206,19 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
             ft.show(mPlayFragment);
         }
         ft.commit();
-        isPlayingFragmentShow = true;
+        mIsPlayFragmentShow = true;
     }
 
     private void hidePlayingFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.hide(mPlayFragment);
         ft.commit();
-        isPlayingFragmentShow = false;
+        mIsPlayFragmentShow = false;
     }
 
     @Override
     public void onBackPressed() {
-        if (mPlayFragment != null && isPlayingFragmentShow) {
+        if (mPlayFragment != null && mIsPlayFragmentShow) {
             hidePlayingFragment();
         } else {
             //moveTaskToBack(false);

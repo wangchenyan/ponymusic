@@ -51,9 +51,8 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     }
 
     public void onItemPlay(int position) {
-        if (adapter != null) {
-            adapter.setPlayingPosition(position);
-            adapter.notifyDataSetChanged();
-        }
+        adapter.setPlayingPosition(position);
+        adapter.notifyDataSetChanged();
+        lvLocalMusic.smoothScrollToPosition(position);
     }
 }

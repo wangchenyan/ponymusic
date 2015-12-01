@@ -41,7 +41,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     @Bind(R.id.vp_play_page)
     ViewPager vpPlay;
     @Bind(R.id.il_indicator)
-    IndicatorLayout ilIdicator;
+    IndicatorLayout ilIndicator;
     @Bind(R.id.seek_bar)
     SeekBar seekBar;
     @Bind(R.id.iv_prev)
@@ -54,7 +54,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     private LrcView mLrcViewSingle;
     private LrcView mLrcViewFull;
     private List<View> mViewPagerContent;
-    private int mPageSelection = 0;
 
     @Nullable
     @Override
@@ -65,7 +64,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     protected void init() {
         initViewPager();
-        ilIdicator.create(mViewPagerContent.size());
+        ilIndicator.create(mViewPagerContent.size());
         onChange(mActivity.getPlayService().getPlayingPosition());
     }
 
@@ -143,13 +142,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void onPageSelected(int position) {
-        ilIdicator.setCurrent(position);
-        mPageSelection = position;
-        if (mPageSelection == 0 && mActivity.getPlayService().isPlaying()) {
-            mAlbumCoverView.start();
-        } else {
-            mAlbumCoverView.pause();
-        }
+        ilIndicator.setCurrent(position);
     }
 
     @Override
@@ -187,9 +180,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         setLrc(position);
         if (mActivity.getPlayService().isPlaying()) {
             ivPlay.setImageResource(R.drawable.ic_play_btn_pause_selector);
-            if (mPageSelection == 0) {
-                mAlbumCoverView.start();
-            }
+            mAlbumCoverView.start();
         } else {
             ivPlay.setImageResource(R.drawable.ic_play_btn_play_selector);
             mAlbumCoverView.pause();
