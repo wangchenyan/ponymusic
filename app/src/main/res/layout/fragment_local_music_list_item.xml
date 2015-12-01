@@ -51,6 +51,7 @@
             android:id="@+id/iv_more"
             android:layout_width="50dp"
             android:layout_height="match_parent"
+            android:background="@drawable/ic_common_bg_selector"
             android:clickable="true"
             android:scaleType="centerInside"
             android:src="@drawable/ic_music_list_icon_more" />
