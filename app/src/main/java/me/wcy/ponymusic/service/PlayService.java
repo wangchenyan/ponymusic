@@ -29,6 +29,9 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         super.onCreate();
         MusicUtils.scanMusic(this);
         mPlayingPosition = (Integer) SpUtils.get(this, Constants.PLAY_POSITION, 0);
+        if (mPlayingPosition >= MusicUtils.getMusicList().size()) {
+            mPlayingPosition = 0;
+        }
         mPlayer = new MediaPlayer();
         mPlayer.setOnCompletionListener(this);
         mThread = new PublishProgressThread();
@@ -51,18 +54,18 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     }
 
     public int play(int position) {
-        if (MusicUtils.sMusicList.isEmpty()) {
+        if (MusicUtils.getMusicList().isEmpty()) {
             return -1;
         }
 
         if (position < 0) {
-            position = MusicUtils.sMusicList.size() - 1;
-        } else if (position >= MusicUtils.sMusicList.size()) {
+            position = MusicUtils.getMusicList().size() - 1;
+        } else if (position >= MusicUtils.getMusicList().size()) {
             position = 0;
         }
         try {
             mPlayer.reset();
-            mPlayer.setDataSource(MusicUtils.sMusicList.get(position).getUri());
+            mPlayer.setDataSource(MusicUtils.getMusicList().get(position).getUri());
             mPlayer.prepare();
             start();
             if (mListener != null) {

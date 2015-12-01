@@ -7,10 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import butterknife.Bind;
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.adapter.LocalMusicAdapter;
+import me.wcy.ponymusic.utils.MusicUtils;
 
 /**
  * Created by wcy on 2015/11/26.
@@ -18,6 +20,8 @@ import me.wcy.ponymusic.adapter.LocalMusicAdapter;
 public class LocalMusicFragment extends BaseFragment implements AdapterView.OnItemClickListener {
     @Bind(R.id.lv_local_music)
     ListView lvLocalMusic;
+    @Bind(R.id.tv_empty)
+    TextView tvEmpty;
     private LocalMusicAdapter adapter;
 
     @Nullable
@@ -31,6 +35,9 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         int playingPosition = mActivity.getPlayService() == null ? -1 : mActivity.getPlayService().getPlayingPosition();
         adapter = new LocalMusicAdapter(getContext(), playingPosition);
         lvLocalMusic.setAdapter(adapter);
+        if (MusicUtils.getMusicList().isEmpty()) {
+            tvEmpty.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

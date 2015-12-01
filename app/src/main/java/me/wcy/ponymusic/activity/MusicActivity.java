@@ -140,11 +140,11 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     }
 
     public void onPlay(int position) {
-        if (MusicUtils.sMusicList.isEmpty()) {
+        if (MusicUtils.getMusicList().isEmpty()) {
             return;
         }
 
-        MusicInfo musicInfo = MusicUtils.sMusicList.get(position);
+        MusicInfo musicInfo = MusicUtils.getMusicList().get(position);
         Bitmap cover = CoverLoader.getInstance().loadThumbnail(musicInfo.getCoverUri());
         ivPlayBarCover.setImageBitmap(cover);
         tvPlayBarTitle.setText(musicInfo.getTitle());

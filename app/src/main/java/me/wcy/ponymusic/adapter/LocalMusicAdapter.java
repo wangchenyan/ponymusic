@@ -28,12 +28,12 @@ public class LocalMusicAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return MusicUtils.sMusicList.size();
+        return MusicUtils.getMusicList().size();
     }
 
     @Override
     public Object getItem(int position) {
-        return MusicUtils.sMusicList.get(position);
+        return MusicUtils.getMusicList().get(position);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class LocalMusicAdapter extends BaseAdapter {
         } else {
             holder.ivPlaying.setVisibility(View.INVISIBLE);
         }
-        MusicInfo musicInfo = MusicUtils.sMusicList.get(position);
+        MusicInfo musicInfo = MusicUtils.getMusicList().get(position);
         Bitmap cover = CoverLoader.getInstance().loadThumbnail(musicInfo.getCoverUri());
         holder.ivCover.setImageBitmap(cover);
         holder.tvTitle.setText(musicInfo.getTitle());

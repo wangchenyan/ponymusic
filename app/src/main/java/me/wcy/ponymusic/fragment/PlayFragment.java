@@ -164,11 +164,11 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void onPlay(int position) {
-        if (MusicUtils.sMusicList.isEmpty()) {
+        if (MusicUtils.getMusicList().isEmpty()) {
             return;
         }
 
-        MusicInfo musicInfo = MusicUtils.sMusicList.get(position);
+        MusicInfo musicInfo = MusicUtils.getMusicList().get(position);
         tvTitle.setText(musicInfo.getTitle());
         tvArtist.setText(musicInfo.getArtist());
         seekBar.setMax((int) musicInfo.getDuration());
@@ -206,19 +206,19 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void setBackground(int position) {
-        MusicInfo musicInfo = MusicUtils.sMusicList.get(position);
+        MusicInfo musicInfo = MusicUtils.getMusicList().get(position);
         Bitmap bitmap = CoverLoader.getInstance().loadBlur(musicInfo.getCoverUri());
         ivPlayingBg.setImageBitmap(bitmap);
     }
 
     private void setAlbumCover(int position) {
-        MusicInfo musicInfo = MusicUtils.sMusicList.get(position);
+        MusicInfo musicInfo = MusicUtils.getMusicList().get(position);
         Bitmap bitmap = CoverLoader.getInstance().loadRound(musicInfo.getCoverUri());
         mAlbumCoverView.setCoverBitmap(bitmap);
     }
 
     private void setLrc(int position) {
-        MusicInfo musicInfo = MusicUtils.sMusicList.get(position);
+        MusicInfo musicInfo = MusicUtils.getMusicList().get(position);
         String lrcPath = MusicUtils.getLrcDir() + musicInfo.getFileName().replace(".mp3", ".lrc");
         lvFullLrc.loadLrc(lrcPath);
     }

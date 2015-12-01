@@ -20,7 +20,7 @@ import me.wcy.ponymusic.model.MusicInfo;
  */
 public class MusicUtils {
     // 存放歌曲列表
-    public static List<MusicInfo> sMusicList = new ArrayList<>();
+    private static List<MusicInfo> sMusicList = new ArrayList<>();
 
     /**
      * 扫描歌曲
@@ -73,6 +73,10 @@ public class MusicUtils {
             cursor.close();
         }
         return result;
+    }
+
+    public static List<MusicInfo> getMusicList() {
+        return sMusicList;
     }
 
     public static int getScreenWidth() {
