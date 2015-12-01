@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <me.wcy.ponymusic.widget.LrcView
-        android:id="@+id/lrc_view"
+        android:id="@+id/lrc_view_full"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         lrc:animationDuration="1000"

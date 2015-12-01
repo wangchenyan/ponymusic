@@ -51,7 +51,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     @Bind(R.id.iv_next)
     ImageView ivNext;
     private AlbumCoverView mAlbumCoverView;
-    private LrcView lvFullLrc;
+    private LrcView mLrcViewSingle;
+    private LrcView mLrcViewFull;
     private List<View> mViewPagerContent;
     private int mPageSelection = 0;
 
@@ -82,7 +83,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         View coverView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_play_page_cover, null);
         View lrcView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_play_page_lrc, null);
         mAlbumCoverView = (AlbumCoverView) coverView.findViewById(R.id.album_cover_view);
-        lvFullLrc = (LrcView) lrcView.findViewById(R.id.lrc_view);
+        mLrcViewSingle = (LrcView) coverView.findViewById(R.id.lrc_view_single);
+        mLrcViewFull = (LrcView) lrcView.findViewById(R.id.lrc_view_full);
         mViewPagerContent = new ArrayList<>(2);
         mViewPagerContent.add(coverView);
         mViewPagerContent.add(lrcView);
@@ -97,8 +99,9 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
      */
     public void onPublish(int progress) {
         seekBar.setProgress(progress);
-        if (lvFullLrc.hasLrc()) {
-            lvFullLrc.updateTime(progress);
+        if (mLrcViewSingle.hasLrc()) {
+            mLrcViewSingle.updateTime(progress);
+            mLrcViewFull.updateTime(progress);
         }
     }
 
@@ -165,7 +168,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     public void onStopTrackingTouch(SeekBar seekBar) {
         int progress = seekBar.getProgress();
         mActivity.getPlayService().seekTo(progress);
-        lvFullLrc.onDrag(progress);
+        mLrcViewSingle.onDrag(progress);
+        mLrcViewFull.onDrag(progress);
     }
 
     private void onPlay(int position) {
@@ -227,6 +231,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     private void setLrc(int position) {
         MusicInfo musicInfo = MusicUtils.getMusicList().get(position);
         String lrcPath = MusicUtils.getLrcDir() + musicInfo.getFileName().replace(Constants.FILENAME_MP3, Constants.FILENAME_LRC);
-        lvFullLrc.loadLrc(lrcPath);
+        mLrcViewSingle.loadLrc(lrcPath);
+        mLrcViewFull.loadLrc(lrcPath);
     }
 }
