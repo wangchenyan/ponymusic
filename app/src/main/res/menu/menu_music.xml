@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:actionbar="http://schemas.android.com/apk/res-auto">
+    <item
+        android:icon="@drawable/ic_menu_moreoverflow"
+        android:title="更多"
+        actionbar:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/action_setting"
+                android:title="设置" />
+            <item
+                android:id="@+id/action_share"
+                android:title="分享" />
+            <item
+                android:id="@+id/action_about"
+                android:title="关于" />
+        </menu>
+    </item>
+</menu>

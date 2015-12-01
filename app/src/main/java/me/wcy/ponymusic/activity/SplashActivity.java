@@ -58,4 +58,8 @@ public class SplashActivity extends BaseActivity {
         startActivity(intent);
         finish();
     }
+
+    @Override
+    public void onBackPressed() {
+    }
 }

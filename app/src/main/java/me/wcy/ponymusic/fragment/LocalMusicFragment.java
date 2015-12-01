@@ -15,6 +15,7 @@ import me.wcy.ponymusic.adapter.LocalMusicAdapter;
 import me.wcy.ponymusic.utils.MusicUtils;
 
 /**
+ * 本地音乐列表
  * Created by wcy on 2015/11/26.
  */
 public class LocalMusicFragment extends BaseFragment implements AdapterView.OnItemClickListener {
@@ -22,7 +23,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     ListView lvLocalMusic;
     @Bind(R.id.tv_empty)
     TextView tvEmpty;
-    private LocalMusicAdapter adapter;
+    private LocalMusicAdapter mAdapter;
 
     @Nullable
     @Override
@@ -32,12 +33,14 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
 
     @Override
     protected void init() {
-        int playingPosition = mActivity.getPlayService() == null ? -1 : mActivity.getPlayService().getPlayingPosition();
-        adapter = new LocalMusicAdapter(getContext(), playingPosition);
-        lvLocalMusic.setAdapter(adapter);
         if (MusicUtils.getMusicList().isEmpty()) {
             tvEmpty.setVisibility(View.VISIBLE);
+            return;
         }
+        int playingPosition = mActivity.getPlayService().getPlayingPosition();
+        mAdapter = new LocalMusicAdapter(getContext(), playingPosition);
+        lvLocalMusic.setAdapter(mAdapter);
+        lvLocalMusic.setSelection(playingPosition);
     }
 
     @Override
@@ -51,8 +54,8 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     }
 
     public void onItemPlay(int position) {
-        adapter.setPlayingPosition(position);
-        adapter.notifyDataSetChanged();
+        mAdapter.setPlayingPosition(position);
+        mAdapter.notifyDataSetChanged();
         lvLocalMusic.smoothScrollToPosition(position);
     }
 }

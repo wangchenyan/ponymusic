@@ -16,6 +16,7 @@ import me.wcy.ponymusic.utils.MusicUtils;
 import me.wcy.ponymusic.utils.SpUtils;
 
 /**
+ * 音乐播放后台服务
  * Created by wcy on 2015/11/27.
  */
 public class PlayService extends Service implements MediaPlayer.OnCompletionListener {

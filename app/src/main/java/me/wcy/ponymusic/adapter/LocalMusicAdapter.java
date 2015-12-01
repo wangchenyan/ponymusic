@@ -15,11 +15,12 @@ import me.wcy.ponymusic.utils.CoverLoader;
 import me.wcy.ponymusic.utils.MusicUtils;
 
 /**
+ * 本地音乐列表适配器
  * Created by wcy on 2015/11/27.
  */
 public class LocalMusicAdapter extends BaseAdapter {
     private Context mContext;
-    private int mPlayingPosition;
+    private int mPlayingPosition = -1;
 
     public LocalMusicAdapter(Context context, int playingPosition) {
         mContext = context;

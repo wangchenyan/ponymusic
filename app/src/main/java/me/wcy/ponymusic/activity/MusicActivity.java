@@ -1,5 +1,6 @@
 package me.wcy.ponymusic.activity;
 
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -54,6 +57,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     private PlayFragment mPlayFragment;
     private PlayService mPlayService;
     private PlayServiceConnection mPlayServiceConnection;
+    private ProgressDialog mProgressDialog;
     private boolean mIsPlayFragmentShow = false;
 
     @Override
@@ -61,13 +65,38 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
 
+        bindService();
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("请稍后…");
+        mProgressDialog.show();
+    }
+
+    private void bindService() {
         Intent intent = new Intent();
         intent.setClass(this, PlayService.class);
         mPlayServiceConnection = new PlayServiceConnection();
         bindService(intent, mPlayServiceConnection, Context.BIND_AUTO_CREATE);
+    }
 
+    private class PlayServiceConnection implements ServiceConnection {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mPlayService = ((PlayService.PlayBinder) service).getService();
+            mPlayService.setOnPlayEventListener(MusicActivity.this);
+            init();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+        }
+    }
+
+    private void init() {
         setSupportActionBar(mToolbar);
         setupViewPager();
+        onChange(mPlayService.getPlayingPosition());
+        mProgressDialog.cancel();
     }
 
     @Override
@@ -87,10 +116,14 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_music, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
     /**
-     * execute in worker thread
-     *
-     * @param progress 播放进度
+     * 更新播放进度
      */
     @Override
     public void onPublish(int progress) {
@@ -139,6 +172,20 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_setting:
+                return true;
+            case R.id.action_share:
+                return true;
+            case R.id.action_about:
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     public void onPlay(int position) {
         if (MusicUtils.getMusicList().isEmpty()) {
             return;
@@ -180,20 +227,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     public PlayService getPlayService() {
         return mPlayService;
-    }
-
-    private class PlayServiceConnection implements ServiceConnection {
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mPlayService = ((PlayService.PlayBinder) service).getService();
-            mPlayService.setOnPlayEventListener(MusicActivity.this);
-            onChange(mPlayService.getPlayingPosition());
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-        }
     }
 
     private void showPlayingFragment() {

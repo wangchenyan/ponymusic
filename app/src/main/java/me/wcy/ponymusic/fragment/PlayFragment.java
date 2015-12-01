@@ -92,9 +92,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     /**
-     * execute in worker thread
-     *
-     * @param progress 播放进度
+     * 更新播放进度
      */
     public void onPublish(int progress) {
         seekBar.setProgress(progress);
