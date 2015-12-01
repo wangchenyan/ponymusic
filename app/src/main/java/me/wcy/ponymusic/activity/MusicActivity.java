@@ -38,19 +38,19 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     TabLayout mTabLayout;
     @Bind(R.id.viewpager)
     ViewPager mViewPager;
-    @Bind(R.id.fl_playbar)
+    @Bind(R.id.fl_play_bar)
     FrameLayout flPlayBar;
-    @Bind(R.id.iv_playbar_cover)
+    @Bind(R.id.iv_play_bar_cover)
     ImageView ivPlayBarCover;
-    @Bind(R.id.tv_playbar_title)
+    @Bind(R.id.tv_play_bar_title)
     TextView tvPlayBarTitle;
-    @Bind(R.id.tv_playbar_artist)
+    @Bind(R.id.tv_play_bar_artist)
     TextView tvPlayBarArtist;
-    @Bind(R.id.iv_playbar_play)
+    @Bind(R.id.iv_play_bar_play)
     ImageView ivPlayBarPlay;
-    @Bind(R.id.iv_playbar_next)
+    @Bind(R.id.iv_play_bar_next)
     ImageView ivPlayBarNext;
-    @Bind(R.id.pb)
+    @Bind(R.id.pb_play_bar)
     ProgressBar pb;
     private LocalMusicFragment mLocalMusicFragment;
     private OnlineMusicFragment mOnlineMusicFragment;
@@ -160,13 +160,13 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.fl_playbar:
+            case R.id.fl_play_bar:
                 showPlayingFragment();
                 break;
-            case R.id.iv_playbar_play:
+            case R.id.iv_play_bar_play:
                 play();
                 break;
-            case R.id.iv_playbar_next:
+            case R.id.iv_play_bar_next:
                 next();
                 break;
         }

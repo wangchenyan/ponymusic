@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fl_playbar"
+    android:id="@+id/fl_play_bar"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="57dp"
     android:background="@drawable/ic_play_bar_bg_selector">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingBottom="6dp"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="6dp">
+        android:paddingRight="10dp">
 
         <ImageView
-            android:id="@+id/iv_playbar_cover"
+            android:id="@+id/iv_play_bar_cover"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:scaleType="fitXY"
@@ -32,7 +30,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_playbar_title"
+                android:id="@+id/tv_play_bar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -42,7 +40,7 @@
                 android:textSize="@dimen/text_size_common" />
 
             <TextView
-                android:id="@+id/tv_playbar_artist"
+                android:id="@+id/tv_play_bar_artist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -52,20 +50,20 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/iv_playbar_play"
+            android:id="@+id/iv_play_bar_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_playbar_btn_play" />
 
         <ImageView
-            android:id="@+id/iv_playbar_next"
+            android:id="@+id/iv_play_bar_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_playbar_btn_next" />
     </LinearLayout>
 
     <ProgressBar
-        android:id="@+id/pb"
+        android:id="@+id/pb_play_bar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="2dp"

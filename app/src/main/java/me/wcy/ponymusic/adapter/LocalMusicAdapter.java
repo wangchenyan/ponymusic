@@ -20,6 +20,7 @@ import me.wcy.ponymusic.utils.MusicUtils;
  */
 public class LocalMusicAdapter extends BaseAdapter {
     private Context mContext;
+    private OnMoreClickListener mListener;
     private int mPlayingPosition = -1;
 
     public LocalMusicAdapter(Context context, int playingPosition) {
@@ -43,7 +44,7 @@ public class LocalMusicAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.fragment_local_music_list_item, null);
@@ -68,11 +69,23 @@ public class LocalMusicAdapter extends BaseAdapter {
         holder.tvTitle.setText(musicInfo.getTitle());
         String artist = musicInfo.getArtist() + " - " + musicInfo.getAlbum();
         holder.tvArtist.setText(artist);
+        holder.ivMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onMoreClick(position);
+                }
+            }
+        });
         return convertView;
     }
 
     public void setPlayingPosition(int position) {
         mPlayingPosition = position;
+    }
+
+    public void setOnMoreClickListener(OnMoreClickListener listener) {
+        mListener = listener;
     }
 
     class ViewHolder {
@@ -81,6 +94,10 @@ public class LocalMusicAdapter extends BaseAdapter {
         TextView tvTitle;
         TextView tvArtist;
         ImageView ivMore;
+    }
+
+    public interface OnMoreClickListener {
+        void onMoreClick(int position);
     }
 
 }

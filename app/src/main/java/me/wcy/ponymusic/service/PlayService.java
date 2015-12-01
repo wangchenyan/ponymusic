@@ -53,8 +53,8 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         next();
     }
 
-    public void setOnPlayEventListener(OnPlayerEventListener l) {
-        mListener = l;
+    public void setOnPlayEventListener(OnPlayerEventListener listener) {
+        mListener = listener;
     }
 
     public int play(int position) {

@@ -18,7 +18,7 @@ import me.wcy.ponymusic.utils.MusicUtils;
  * 本地音乐列表
  * Created by wcy on 2015/11/26.
  */
-public class LocalMusicFragment extends BaseFragment implements AdapterView.OnItemClickListener {
+public class LocalMusicFragment extends BaseFragment implements AdapterView.OnItemClickListener, LocalMusicAdapter.OnMoreClickListener {
     @Bind(R.id.lv_local_music)
     ListView lvLocalMusic;
     @Bind(R.id.tv_empty)
@@ -39,6 +39,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         }
         int playingPosition = mActivity.getPlayService().getPlayingPosition();
         mAdapter = new LocalMusicAdapter(getContext(), playingPosition);
+        mAdapter.setOnMoreClickListener(this);
         lvLocalMusic.setAdapter(mAdapter);
         lvLocalMusic.setSelection(playingPosition);
     }
@@ -51,6 +52,11 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         mActivity.getPlayService().play(position);
+    }
+
+    @Override
+    public void onMoreClick(int position) {
+        System.out.println("onMoreClick:" + position);
     }
 
     public void onItemPlay(int position) {
