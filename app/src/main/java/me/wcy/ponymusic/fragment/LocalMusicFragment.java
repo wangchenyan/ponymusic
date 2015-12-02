@@ -37,8 +37,8 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
             tvEmpty.setVisibility(View.VISIBLE);
             return;
         }
-        int playingPosition = mActivity.getPlayService().getPlayingPosition();
-        mAdapter = new LocalMusicAdapter(getContext(), playingPosition);
+        int playingPosition = getPlayService().getPlayingPosition();
+        mAdapter = new LocalMusicAdapter(getActivity(), playingPosition);
         mAdapter.setOnMoreClickListener(this);
         lvLocalMusic.setAdapter(mAdapter);
         lvLocalMusic.setSelection(playingPosition);
@@ -51,12 +51,11 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mActivity.getPlayService().play(position);
+        getPlayService().play(position);
     }
 
     @Override
     public void onMoreClick(int position) {
-        System.out.println("onMoreClick:" + position);
     }
 
     public void onItemPlay(int position) {

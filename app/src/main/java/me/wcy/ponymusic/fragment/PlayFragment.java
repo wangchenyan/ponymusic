@@ -65,7 +65,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     protected void init() {
         initViewPager();
         ilIndicator.create(mViewPagerContent.size());
-        onChange(mActivity.getPlayService().getPlayingPosition());
+        onChange(getPlayService().getPlayingPosition());
     }
 
     @Override
@@ -120,7 +120,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_back:
-                mActivity.onBackPressed();
+                getActivity().onBackPressed();
                 break;
             case R.id.iv_play:
                 play();
@@ -158,7 +158,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         int progress = seekBar.getProgress();
-        mActivity.getPlayService().seekTo(progress);
+        getPlayService().seekTo(progress);
         mLrcViewSingle.onDrag(progress);
         mLrcViewFull.onDrag(progress);
     }
@@ -176,7 +176,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         setBackground(position);
         setAlbumCover(position);
         setLrc(position);
-        if (mActivity.getPlayService().isPlaying()) {
+        if (getPlayService().isPlaying()) {
             ivPlay.setImageResource(R.drawable.ic_play_btn_pause_selector);
             mAlbumCoverView.start();
         } else {
@@ -186,23 +186,23 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void play() {
-        if (mActivity.getPlayService().isPlaying()) {//正在播放
-            mActivity.getPlayService().pause();
+        if (getPlayService().isPlaying()) {//正在播放
+            getPlayService().pause();
         } else {
-            if (mActivity.getPlayService().isPause()) {//暂停
-                mActivity.getPlayService().resume();
+            if (getPlayService().isPause()) {//暂停
+                getPlayService().resume();
             } else {//还未开始播放
-                mActivity.getPlayService().play(mActivity.getPlayService().getPlayingPosition());
+                getPlayService().play(getPlayService().getPlayingPosition());
             }
         }
     }
 
     private void prev() {
-        mActivity.getPlayService().prev();
+        getPlayService().prev();
     }
 
     private void next() {
-        mActivity.getPlayService().next();
+        getPlayService().next();
     }
 
     private void setBackground(int position) {

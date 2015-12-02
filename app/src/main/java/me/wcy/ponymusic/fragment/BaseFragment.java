@@ -8,12 +8,14 @@ import android.view.View;
 
 import butterknife.ButterKnife;
 import me.wcy.ponymusic.activity.MusicActivity;
+import me.wcy.ponymusic.service.PlayService;
 
 /**
+ * 基类
  * Created by wcy on 2015/11/26.
  */
 public abstract class BaseFragment extends Fragment {
-    protected MusicActivity mActivity;
+    private PlayService mPlayService;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -26,7 +28,11 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mActivity = (MusicActivity) activity;
+        mPlayService = ((MusicActivity) activity).getPlayService();
+    }
+
+    protected PlayService getPlayService() {
+        return mPlayService;
     }
 
     protected abstract void init();

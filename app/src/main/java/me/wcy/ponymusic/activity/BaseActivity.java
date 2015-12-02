@@ -9,6 +9,7 @@ import android.view.View;
 import butterknife.ButterKnife;
 
 /**
+ * 基类
  * Created by wcy on 2015/11/26.
  */
 public abstract class BaseActivity extends AppCompatActivity {
