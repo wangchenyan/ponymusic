@@ -51,7 +51,8 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
             return;
         }
         int playingPosition = getPlayService().getPlayingPosition();
-        mAdapter = new LocalMusicAdapter(getActivity(), playingPosition);
+        mAdapter = new LocalMusicAdapter(getActivity());
+        mAdapter.updatePlayingPosition();
         mAdapter.setOnMoreClickListener(this);
         lvLocalMusic.setAdapter(mAdapter);
         lvLocalMusic.setSelection(playingPosition);
@@ -72,7 +73,8 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         MusicInfo musicInfo = MusicUtils.getMusicList().get(position);
         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         dialog.setTitle(musicInfo.getTitle());
-        dialog.setItems(R.array.music_list_dialog, new DialogInterface.OnClickListener() {
+        int itemsId = position == getPlayService().getPlayingPosition() ? R.array.music_list_dialog_no_delete : R.array.music_list_dialog;
+        dialog.setItems(itemsId, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
@@ -83,6 +85,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
                         setRingtone(position);
                         break;
                     case 2:
+                        deleteMusic(position);
                         break;
                 }
             }
@@ -91,7 +94,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     }
 
     public void onItemPlay(int position) {
-        mAdapter.setPlayingPosition(position);
+        mAdapter.updatePlayingPosition();
         mAdapter.notifyDataSetChanged();
         lvLocalMusic.smoothScrollToPosition(position);
     }
@@ -131,8 +134,38 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
             getActivity().getContentResolver().update(uri, values, MediaStore.MediaColumns.DATA + "=?", new String[]{musicInfo.getUri()});
             Uri newUri = ContentUris.withAppendedId(uri, Long.valueOf(_id));
             RingtoneManager.setActualDefaultRingtoneUri(getActivity(), RingtoneManager.TYPE_RINGTONE, newUri);
-            Toast.makeText(getActivity(), "设置铃声成功", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.setting_ringtone_success, Toast.LENGTH_SHORT).show();
         }
         cursor.close();
+    }
+
+    /**
+     * 删除音乐
+     */
+    private void deleteMusic(final int position) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+        String title = MusicUtils.getMusicList().get(position).getTitle();
+        String msg = getString(R.string.delete_music);
+        msg = String.format(msg, title);
+        dialog.setMessage(msg);
+        dialog.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                MusicInfo musicInfo = MusicUtils.getMusicList().remove(position);
+                File file = new File(musicInfo.getUri());
+                if (file.delete()) {
+                    if (position < getPlayService().getPlayingPosition()) {
+                        getPlayService().setPlayingPosition(getPlayService().getPlayingPosition() - 1);
+                        mAdapter.updatePlayingPosition();
+                    }
+                    mAdapter.notifyDataSetChanged();
+                    //刷新媒体库
+                    Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + musicInfo.getUri()));
+                    getActivity().sendBroadcast(intent);
+                }
+            }
+        });
+        dialog.setNegativeButton(R.string.cancel, null);
+        dialog.show();
     }
 }

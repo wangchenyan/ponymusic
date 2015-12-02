@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import me.wcy.ponymusic.R;
+import me.wcy.ponymusic.activity.MusicActivity;
 import me.wcy.ponymusic.model.MusicInfo;
 import me.wcy.ponymusic.utils.CoverLoader;
 import me.wcy.ponymusic.utils.MusicUtils;
@@ -21,11 +22,10 @@ import me.wcy.ponymusic.utils.MusicUtils;
 public class LocalMusicAdapter extends BaseAdapter {
     private Context mContext;
     private OnMoreClickListener mListener;
-    private int mPlayingPosition = -1;
+    private int mPlayingPosition;
 
-    public LocalMusicAdapter(Context context, int playingPosition) {
+    public LocalMusicAdapter(Context context) {
         mContext = context;
-        mPlayingPosition = playingPosition;
     }
 
     @Override
@@ -80,8 +80,8 @@ public class LocalMusicAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public void setPlayingPosition(int position) {
-        mPlayingPosition = position;
+    public void updatePlayingPosition() {
+        mPlayingPosition = ((MusicActivity) mContext).getPlayService().getPlayingPosition();
     }
 
     public void setOnMoreClickListener(OnMoreClickListener listener) {

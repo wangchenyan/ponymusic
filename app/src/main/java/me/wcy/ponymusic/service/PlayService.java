@@ -67,19 +67,21 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         } else if (position >= MusicUtils.getMusicList().size()) {
             position = 0;
         }
+
+        mPlayingPosition = position;
+
         try {
             mPlayer.reset();
-            mPlayer.setDataSource(MusicUtils.getMusicList().get(position).getUri());
+            mPlayer.setDataSource(MusicUtils.getMusicList().get(mPlayingPosition).getUri());
             mPlayer.prepare();
             start();
             if (mListener != null) {
-                mListener.onChange(position);
+                mListener.onChange(mPlayingPosition);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        mPlayingPosition = position;
         SpUtils.put(this, Constants.PLAY_POSITION, mPlayingPosition);
         return mPlayingPosition;
     }
@@ -148,6 +150,10 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
     public int getPlayingPosition() {
         return mPlayingPosition;
+    }
+
+    public void setPlayingPosition(int position) {
+        mPlayingPosition = position;
     }
 
     @Override

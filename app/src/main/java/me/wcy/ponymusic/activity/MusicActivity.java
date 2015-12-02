@@ -51,7 +51,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Bind(R.id.iv_play_bar_next)
     ImageView ivPlayBarNext;
     @Bind(R.id.pb_play_bar)
-    ProgressBar pb;
+    ProgressBar mProgressBar;
     private LocalMusicFragment mLocalMusicFragment;
     private OnlineMusicFragment mOnlineMusicFragment;
     private PlayFragment mPlayFragment;
@@ -67,7 +67,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
         bindService();
         mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage("请稍后…");
+        mProgressDialog.setMessage(getResources().getString(R.string.loading));
         mProgressDialog.show();
     }
 
@@ -127,7 +127,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
      */
     @Override
     public void onPublish(int progress) {
-        pb.setProgress(progress);
+        mProgressBar.setProgress(progress);
         if (mPlayFragment != null && mPlayFragment.isResumed()) {
             mPlayFragment.onPublish(progress);
         }
@@ -201,8 +201,8 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         } else {
             ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_play);
         }
-        pb.setMax((int) musicInfo.getDuration());
-        pb.setProgress(0);
+        mProgressBar.setMax((int) musicInfo.getDuration());
+        mProgressBar.setProgress(0);
 
         if (mLocalMusicFragment != null && mLocalMusicFragment.isResumed()) {
             mLocalMusicFragment.onItemPlay(position);
