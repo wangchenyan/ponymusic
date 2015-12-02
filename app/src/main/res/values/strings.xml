@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">伯尼音乐</string>
+    <string name="app_name">波尼音乐</string>
+    <string name="sure">确定</string>
+    <string name="cancel">取消</string>
+    <string name="share">分享</string>
+    <string name="about">关于</string>
 </resources>

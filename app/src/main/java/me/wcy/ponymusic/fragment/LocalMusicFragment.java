@@ -1,6 +1,15 @@
 package me.wcy.ponymusic.fragment;
 
+import android.app.AlertDialog;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,10 +17,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.File;
 
 import butterknife.Bind;
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.adapter.LocalMusicAdapter;
+import me.wcy.ponymusic.model.MusicInfo;
 import me.wcy.ponymusic.utils.MusicUtils;
 
 /**
@@ -55,12 +68,71 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     }
 
     @Override
-    public void onMoreClick(int position) {
+    public void onMoreClick(final int position) {
+        MusicInfo musicInfo = MusicUtils.getMusicList().get(position);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+        dialog.setTitle(musicInfo.getTitle());
+        dialog.setItems(R.array.music_list_dialog, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        shareMusic(position);
+                        break;
+                    case 1:
+                        setRingtone(position);
+                        break;
+                    case 2:
+                        break;
+                }
+            }
+        });
+        dialog.show();
     }
 
     public void onItemPlay(int position) {
         mAdapter.setPlayingPosition(position);
         mAdapter.notifyDataSetChanged();
         lvLocalMusic.smoothScrollToPosition(position);
+    }
+
+    /**
+     * 分享音乐
+     */
+    private void shareMusic(int position) {
+        MusicInfo musicInfo = MusicUtils.getMusicList().get(position);
+        File file = new File(musicInfo.getUri());
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("audio/*");
+        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+        startActivity(Intent.createChooser(intent, getString(R.string.share)));
+    }
+
+    /**
+     * 设置铃声
+     */
+    private void setRingtone(int position) {
+        MusicInfo musicInfo = MusicUtils.getMusicList().get(position);
+        Uri uri = MediaStore.Audio.Media.getContentUriForPath(musicInfo.getUri());
+        // 查询音乐文件在媒体库是否存在
+        Cursor cursor = getActivity().getContentResolver().query(uri, null,
+                MediaStore.MediaColumns.DATA + "=?", new String[]{musicInfo.getUri()}, null);
+        if (cursor == null) {
+            return;
+        }
+        if (cursor.moveToFirst() && cursor.getCount() > 0) {
+            String _id = cursor.getString(0);
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Audio.Media.IS_RINGTONE, true);
+            values.put(MediaStore.Audio.Media.IS_NOTIFICATION, false);
+            values.put(MediaStore.Audio.Media.IS_ALARM, false);
+            values.put(MediaStore.Audio.Media.IS_MUSIC, false);
+
+            getActivity().getContentResolver().update(uri, values, MediaStore.MediaColumns.DATA + "=?", new String[]{musicInfo.getUri()});
+            Uri newUri = ContentUris.withAppendedId(uri, Long.valueOf(_id));
+            RingtoneManager.setActualDefaultRingtoneUri(getActivity(), RingtoneManager.TYPE_RINGTONE, newUri);
+            Toast.makeText(getActivity(), "设置铃声成功", Toast.LENGTH_SHORT).show();
+        }
+        cursor.close();
     }
 }
