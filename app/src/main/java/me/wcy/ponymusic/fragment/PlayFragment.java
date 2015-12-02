@@ -11,7 +11,9 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -44,6 +46,10 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     IndicatorLayout ilIndicator;
     @Bind(R.id.seek_bar)
     SeekBar seekBar;
+    @Bind(R.id.tv_current_time)
+    TextView tvCurrentTime;
+    @Bind(R.id.tv_total_time)
+    TextView tvTotalTime;
     @Bind(R.id.iv_prev)
     ImageView ivPrev;
     @Bind(R.id.iv_play)
@@ -54,6 +60,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     private LrcView mLrcViewSingle;
     private LrcView mLrcViewFull;
     private List<View> mViewPagerContent;
+    private int mLastProgress;
 
     @Nullable
     @Override
@@ -99,6 +106,11 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         if (mLrcViewSingle.hasLrc()) {
             mLrcViewSingle.updateTime(progress);
             mLrcViewFull.updateTime(progress);
+        }
+        //更新当前播放时间
+        if (progress - mLastProgress >= 1000) {
+            tvCurrentTime.setText(formateTime(progress));
+            mLastProgress = progress;
         }
     }
 
@@ -161,6 +173,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         getPlayService().seekTo(progress);
         mLrcViewSingle.onDrag(progress);
         mLrcViewFull.onDrag(progress);
+        tvCurrentTime.setText(formateTime(progress));
+        mLastProgress = progress;
     }
 
     private void onPlay(int position) {
@@ -173,6 +187,9 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         tvArtist.setText(musicInfo.getArtist());
         seekBar.setMax((int) musicInfo.getDuration());
         seekBar.setProgress(0);
+        mLastProgress = 0;
+        tvCurrentTime.setText("00:00");
+        tvTotalTime.setText(formateTime(musicInfo.getDuration()));
         setBackground(position);
         setAlbumCover(position);
         setLrc(position);
@@ -222,5 +239,11 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         String lrcPath = MusicUtils.getLrcDir() + musicInfo.getFileName().replace(Constants.FILENAME_MP3, Constants.FILENAME_LRC);
         mLrcViewSingle.loadLrc(lrcPath);
         mLrcViewFull.loadLrc(lrcPath);
+    }
+
+    private String formateTime(long lTime) {
+        SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
+        Date date = new Date(lTime);
+        return sdf.format(date);
     }
 }
