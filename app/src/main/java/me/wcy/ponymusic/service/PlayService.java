@@ -154,6 +154,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
     public void setPlayingPosition(int position) {
         mPlayingPosition = position;
+        SpUtils.put(this, Constants.PLAY_POSITION, mPlayingPosition);
     }
 
     @Override

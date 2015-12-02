@@ -6,6 +6,8 @@
     <string name="about">关于</string>
     <string name="delete">删除</string>
     <string name="loading">请稍后…</string>
+    <string name="local_music">本地音乐</string>
+    <string name="online_music">在线音乐</string>
     <string name="delete_music">删除%s？</string>
     <string name="setting_ringtone_success">设置铃声成功</string>
 </resources>

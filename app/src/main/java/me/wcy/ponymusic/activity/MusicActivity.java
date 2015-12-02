@@ -67,7 +67,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
         bindService();
         mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage(getResources().getString(R.string.loading));
+        mProgressDialog.setMessage(getString(R.string.loading));
         mProgressDialog.show();
     }
 
@@ -110,8 +110,8 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         mLocalMusicFragment = new LocalMusicFragment();
         mOnlineMusicFragment = new OnlineMusicFragment();
         FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
-        adapter.addFragment(mLocalMusicFragment, "本地音乐");
-        adapter.addFragment(mOnlineMusicFragment, "在线音乐");
+        adapter.addFragment(mLocalMusicFragment, getString(R.string.local_music));
+        adapter.addFragment(mOnlineMusicFragment, getString(R.string.online_music));
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);
     }
