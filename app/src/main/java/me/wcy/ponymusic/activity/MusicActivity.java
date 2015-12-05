@@ -231,10 +231,10 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     private void showPlayingFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.fragment_slide_up, 0);
         if (mPlayFragment == null) {
             mPlayFragment = new PlayFragment();
-            ft.replace(android.R.id.content, mPlayFragment);
-            ft.addToBackStack(null);
+            ft.add(android.R.id.content, mPlayFragment);
         } else {
             ft.show(mPlayFragment);
         }
@@ -244,6 +244,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     private void hidePlayingFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.setCustomAnimations(0, R.anim.fragment_slide_down);
         ft.hide(mPlayFragment);
         ft.commit();
         mIsPlayFragmentShow = false;
