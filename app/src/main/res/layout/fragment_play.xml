@@ -12,6 +12,7 @@
         android:src="@drawable/ic_play_page_default_bg" />
 
     <LinearLayout
+        android:id="@+id/ll_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/translucent_black"

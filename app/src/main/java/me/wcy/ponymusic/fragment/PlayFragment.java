@@ -1,6 +1,7 @@
 package me.wcy.ponymusic.fragment;
 
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -32,6 +34,8 @@ import me.wcy.ponymusic.widget.LrcView;
  * Created by wcy on 2015/11/27.
  */
 public class PlayFragment extends BaseFragment implements View.OnClickListener, ViewPager.OnPageChangeListener, SeekBar.OnSeekBarChangeListener {
+    @Bind(R.id.ll_content)
+    LinearLayout llContent;
     @Bind(R.id.iv_play_page_bg)
     ImageView ivPlayingBg;
     @Bind(R.id.iv_back)
@@ -70,6 +74,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     protected void init() {
+        initSystemBar();
         initViewPager();
         ilIndicator.create(mViewPagerContent.size());
         onChange(getPlayService().getPlayingPosition());
@@ -83,6 +88,16 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         ivNext.setOnClickListener(this);
         seekBar.setOnSeekBarChangeListener(this);
         vpPlay.setOnPageChangeListener(this);
+    }
+
+    /**
+     * 沉浸式状态栏
+     */
+    private void initSystemBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            int top = MusicUtils.getSystemBarHeight(getActivity());
+            llContent.setPadding(0, top, 0, 0);
+        }
     }
 
     private void initViewPager() {
