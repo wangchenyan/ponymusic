@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.application.MusicApplication;
 import me.wcy.ponymusic.model.MusicInfo;
 
@@ -42,6 +43,8 @@ public class MusicUtils {
             long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
             String title = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)));
             String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
+            String unknown = context.getString(R.string.unknown);
+            artist = artist.equals("<unknown>") ? unknown : artist;
             String album = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)));
             long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
             String url = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
