@@ -11,10 +11,22 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    signingConfigs {
+        release {
+            storeFile file("wangchenyan.keystore")
+            storePassword System.console() == null ? null : new String(System.console().readPassword("\nKeystore password:"))
+            keyAlias "wangchenyan"
+            keyPassword System.console() == null ? null : new String(System.console().readPassword("\nKey password:"))
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //打包签名命令：gradle assembleRelease
+            signingConfig signingConfigs.release
         }
     }
 }
