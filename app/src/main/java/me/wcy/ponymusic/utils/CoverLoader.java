@@ -74,10 +74,11 @@ public class CoverLoader {
                     options.inSampleSize = inSampleSize;
                     options.inJustDecodeBounds = false; // 获取bitmap
                     bitmap = BitmapFactory.decodeStream(new FileInputStream(uri), null, options);
-                    mThumbnailCache.put(uri, bitmap);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
+                    bitmap = loadThumbnail(null);
                 }
+                mThumbnailCache.put(uri, bitmap);
             }
         }
         return bitmap;
@@ -95,7 +96,11 @@ public class CoverLoader {
             bitmap = mBlurCache.get(uri);
             if (bitmap == null) {
                 bitmap = loadNormal(uri);
-                bitmap = ImageUtils.boxBlurFilter(bitmap);
+                if (bitmap == null) {
+                    bitmap = loadBlur(null);
+                } else {
+                    bitmap = ImageUtils.boxBlurFilter(bitmap);
+                }
                 mBlurCache.put(uri, bitmap);
             }
         }
@@ -115,8 +120,12 @@ public class CoverLoader {
             bitmap = mRoundCache.get(uri);
             if (bitmap == null) {
                 bitmap = loadNormal(uri);
-                bitmap = ImageUtils.resizeImage(bitmap, MusicUtils.getScreenWidth() / 2, MusicUtils.getScreenWidth() / 2);
-                bitmap = ImageUtils.createCircleImage(bitmap);
+                if (bitmap == null) {
+                    bitmap = loadRound(null);
+                } else {
+                    bitmap = ImageUtils.resizeImage(bitmap, MusicUtils.getScreenWidth() / 2, MusicUtils.getScreenWidth() / 2);
+                    bitmap = ImageUtils.createCircleImage(bitmap);
+                }
                 mRoundCache.put(uri, bitmap);
             }
         }
