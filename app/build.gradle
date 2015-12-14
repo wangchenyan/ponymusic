@@ -19,6 +19,9 @@ android {
             keyAlias "wangchenyan"
             keyPassword System.console() == null ? null : new String(System.console().readPassword("\nKey password:"))
         }
+        debug {
+            storeFile file("debug.keystore")
+        }
     }
 
     buildTypes {
@@ -27,6 +30,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             //打包签名命令：gradle assembleRelease
             signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.debug
         }
     }
 }
