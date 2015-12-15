@@ -179,7 +179,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
                 .setContentIntent(pendingIntent)
                 .setContentTitle(title)
                 .setContentText(subtitle)
-                .setSmallIcon(R.drawable.icon)
+                .setSmallIcon(R.drawable.icon_notification)
                 .setLargeIcon(bitmap)
                 .setOngoing(true);
         Notification notification = builder.getNotification();
