@@ -124,7 +124,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         }
         //更新当前播放时间
         if (progress - mLastProgress >= 1000) {
-            tvCurrentTime.setText(formateTime(progress));
+            tvCurrentTime.setText(formatTime(progress));
             mLastProgress = progress;
         }
     }
@@ -184,12 +184,16 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        int progress = seekBar.getProgress();
-        getPlayService().seekTo(progress);
-        mLrcViewSingle.onDrag(progress);
-        mLrcViewFull.onDrag(progress);
-        tvCurrentTime.setText(formateTime(progress));
-        mLastProgress = progress;
+        if (getPlayService().isPlaying() || getPlayService().isPause()) {
+            int progress = seekBar.getProgress();
+            getPlayService().seekTo(progress);
+            mLrcViewSingle.onDrag(progress);
+            mLrcViewFull.onDrag(progress);
+            tvCurrentTime.setText(formatTime(progress));
+            mLastProgress = progress;
+        } else {
+            seekBar.setProgress(0);
+        }
     }
 
     private void onPlay(int position) {
@@ -204,7 +208,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         seekBar.setProgress(0);
         mLastProgress = 0;
         tvCurrentTime.setText("00:00");
-        tvTotalTime.setText(formateTime(musicInfo.getDuration()));
+        tvTotalTime.setText(formatTime(musicInfo.getDuration()));
         setBackground(position);
         setAlbumCover(position);
         setLrc(position);
@@ -256,7 +260,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         mLrcViewFull.loadLrc(lrcPath);
     }
 
-    private String formateTime(long lTime) {
+    private String formatTime(long lTime) {
         SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
         Date date = new Date(lTime);
         return sdf.format(date);

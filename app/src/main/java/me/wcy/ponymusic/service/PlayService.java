@@ -140,15 +140,11 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
      * @param msec 时间
      */
     public void seekTo(int msec) {
-        int progress;
         if (isPlaying() || isPause()) {
             mPlayer.seekTo(msec);
-            progress = msec;
-        } else {
-            progress = 0;
-        }
-        if (mListener != null) {
-            mListener.onPublish(progress);
+            if (mListener != null) {
+                mListener.onPublish(msec);
+            }
         }
     }
 
