@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -70,8 +69,7 @@ public class LrcView extends View {
 
         mLrcTimes = new ArrayList<>();
         mLrcTexts = new ArrayList<>();
-        WeakReference<LrcView> lrcViewRef = new WeakReference<>(this);
-        mHandler = new LrcHandler(lrcViewRef);
+        mHandler = new LrcHandler();
         mNormalPaint = new Paint();
         mCurrentPaint = new Paint();
         mNormalPaint.setColor(normalColor);
@@ -263,24 +261,14 @@ public class LrcView extends View {
         animator.start();
     }
 
-    private static class LrcHandler extends Handler {
-        private WeakReference<LrcView> mLrcViewRef;
-
-        public LrcHandler(WeakReference<LrcView> lrcViewRef) {
-            mLrcViewRef = lrcViewRef;
-        }
-
+    private class LrcHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_NEW_LINE:
-                    LrcView lrcView = mLrcViewRef.get();
-                    if (lrcView != null) {
-                        lrcView.newLineAnim();
-                    }
+                    newLineAnim();
                     break;
             }
-            super.handleMessage(msg);
         }
     }
 }
