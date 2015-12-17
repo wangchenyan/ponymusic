@@ -1,23 +1,23 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    compileSdkVersion Integer.parseInt(COMPILE_SDK_VERSION)
+    buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
         applicationId "me.wcy.ponymusic"
-        minSdkVersion 15
-        targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion Integer.parseInt(MIN_SDK_VERSION)
+        targetSdkVersion Integer.parseInt(TARGET_SDK_VERSION)
+        versionCode Integer.parseInt(VERSION_CODE)
+        versionName VERSION_NAME
     }
 
     signingConfigs {
         release {
             storeFile file("wangchenyan.keystore")
-            storePassword System.console() == null ? null : new String(System.console().readPassword("\nKeystore password:"))
+            storePassword System.console() == null ? null : new String(System.console().readPassword("\nKeystore password: "))
             keyAlias "wangchenyan"
-            keyPassword System.console() == null ? null : new String(System.console().readPassword("\nKey password:"))
+            keyPassword System.console() == null ? null : new String(System.console().readPassword("\nKey password: "))
         }
         debug {
             storeFile file("debug.keystore")
