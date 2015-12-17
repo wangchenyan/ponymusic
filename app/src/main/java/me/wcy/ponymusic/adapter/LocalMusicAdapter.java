@@ -95,9 +95,4 @@ public class LocalMusicAdapter extends BaseAdapter {
         TextView tvArtist;
         ImageView ivMore;
     }
-
-    public interface OnMoreClickListener {
-        void onMoreClick(int position);
-    }
-
 }

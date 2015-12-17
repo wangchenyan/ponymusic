@@ -222,26 +222,4 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
             }
         }
     }
-
-    public interface OnPlayerEventListener {
-        /**
-         * 更新进度
-         */
-        void onPublish(int progress);
-
-        /**
-         * 切换歌曲
-         */
-        void onChange(int position);
-
-        /**
-         * 暂停播放
-         */
-        void onPlayerPause();
-
-        /**
-         * 继续播放
-         */
-        void onPlayerResume();
-    }
 }

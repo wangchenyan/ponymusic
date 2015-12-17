@@ -27,11 +27,12 @@ import me.wcy.ponymusic.fragment.LocalMusicFragment;
 import me.wcy.ponymusic.fragment.OnlineMusicFragment;
 import me.wcy.ponymusic.fragment.PlayFragment;
 import me.wcy.ponymusic.model.MusicInfo;
+import me.wcy.ponymusic.service.OnPlayerEventListener;
 import me.wcy.ponymusic.service.PlayService;
 import me.wcy.ponymusic.utils.CoverLoader;
 import me.wcy.ponymusic.utils.MusicUtils;
 
-public class MusicActivity extends BaseActivity implements View.OnClickListener, PlayService.OnPlayerEventListener {
+public class MusicActivity extends BaseActivity implements View.OnClickListener, OnPlayerEventListener {
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
     @Bind(R.id.tabs)

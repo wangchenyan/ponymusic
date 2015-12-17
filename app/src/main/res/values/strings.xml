@@ -6,7 +6,7 @@
     <string name="about">关于</string>
     <string name="delete">删除</string>
     <string name="loading">请稍后…</string>
-    <string name="local_music">本地音乐</string>
+    <string name="local_music">我的音乐</string>
     <string name="online_music">在线音乐</string>
     <string name="unknown">未知</string>
     <string name="delete_music">删除%s？</string>

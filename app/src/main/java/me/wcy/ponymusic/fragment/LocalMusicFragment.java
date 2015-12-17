@@ -24,6 +24,7 @@ import java.io.File;
 import butterknife.Bind;
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.adapter.LocalMusicAdapter;
+import me.wcy.ponymusic.adapter.OnMoreClickListener;
 import me.wcy.ponymusic.model.MusicInfo;
 import me.wcy.ponymusic.utils.MusicUtils;
 
@@ -31,7 +32,7 @@ import me.wcy.ponymusic.utils.MusicUtils;
  * 本地音乐列表
  * Created by wcy on 2015/11/26.
  */
-public class LocalMusicFragment extends BaseFragment implements AdapterView.OnItemClickListener, LocalMusicAdapter.OnMoreClickListener {
+public class LocalMusicFragment extends BaseFragment implements AdapterView.OnItemClickListener, OnMoreClickListener {
     @Bind(R.id.lv_local_music)
     ListView lvLocalMusic;
     @Bind(R.id.tv_empty)
