@@ -235,7 +235,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         ft.setCustomAnimations(R.anim.fragment_slide_up, 0);
         if (mPlayFragment == null) {
             mPlayFragment = new PlayFragment();
-            ft.add(android.R.id.content, mPlayFragment);
+            ft.replace(android.R.id.content, mPlayFragment);
         } else {
             ft.show(mPlayFragment);
         }
