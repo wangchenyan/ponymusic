@@ -42,4 +42,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.zhy:okhttputils:2.0.2'
+    compile 'com.alibaba:fastjson:1.2.7'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 }

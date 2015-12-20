@@ -13,7 +13,7 @@ import java.util.List;
 
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.application.MusicApplication;
-import me.wcy.ponymusic.model.MusicInfo;
+import me.wcy.ponymusic.model.LocalMusic;
 
 /**
  * 歌曲工具类
@@ -21,7 +21,7 @@ import me.wcy.ponymusic.model.MusicInfo;
  */
 public class MusicUtils {
     // 存放歌曲列表
-    private static List<MusicInfo> sMusicList = new ArrayList<>();
+    private static List<LocalMusic> sMusicList = new ArrayList<>();
 
     /**
      * 扫描歌曲
@@ -51,16 +51,16 @@ public class MusicUtils {
             long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
             String coverUri = getCoverUri(context, albumId);
             String fileName = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)));
-            MusicInfo musicInfo = new MusicInfo();
-            musicInfo.setId(id);
-            musicInfo.setTitle(title);
-            musicInfo.setArtist(artist);
-            musicInfo.setAlbum(album);
-            musicInfo.setDuration(duration);
-            musicInfo.setUri(url);
-            musicInfo.setCoverUri(coverUri);
-            musicInfo.setFileName(fileName);
-            sMusicList.add(musicInfo);
+            LocalMusic localMusic = new LocalMusic();
+            localMusic.setId(id);
+            localMusic.setTitle(title);
+            localMusic.setArtist(artist);
+            localMusic.setAlbum(album);
+            localMusic.setDuration(duration);
+            localMusic.setUri(url);
+            localMusic.setCoverUri(coverUri);
+            localMusic.setFileName(fileName);
+            sMusicList.add(localMusic);
         }
         cursor.close();
     }
@@ -78,7 +78,7 @@ public class MusicUtils {
         return result;
     }
 
-    public static List<MusicInfo> getMusicList() {
+    public static List<LocalMusic> getMusicList() {
         return sMusicList;
     }
 

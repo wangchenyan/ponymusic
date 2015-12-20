@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="music_list_dialog">
+    <string-array name="local_music_list_dialog">
         <item>分享</item>
         <item>设为铃声</item>
         <item>删除</item>
     </string-array>
-    <string-array name="music_list_dialog_no_delete">
+    <string-array name="local_music_list_dialog_no_delete">
         <item>分享</item>
         <item>设为铃声</item>
+    </string-array>
+    <integer-array name="online_music_list_icon">
+        <item>@drawable/icon</item>
+        <item>@drawable/icon</item>
+    </integer-array>
+    <string-array name="online_music_list_title">
+        <item>百度新歌榜</item>
+        <item>百度热歌榜</item>
+    </string-array>
+    <string-array name="online_music_list_type">
+        <item>1</item>
+        <item>2</item>
     </string-array>
 </resources>

@@ -16,7 +16,7 @@ import java.io.IOException;
 
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.activity.SplashActivity;
-import me.wcy.ponymusic.model.MusicInfo;
+import me.wcy.ponymusic.model.LocalMusic;
 import me.wcy.ponymusic.utils.Constants;
 import me.wcy.ponymusic.utils.CoverLoader;
 import me.wcy.ponymusic.utils.MusicUtils;
@@ -169,10 +169,10 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
      * 更新通知栏
      */
     private void updateNotification(int position) {
-        MusicInfo musicInfo = MusicUtils.getMusicList().get(position);
-        String title = musicInfo.getTitle();
-        String subtitle = musicInfo.getArtist() + " - " + musicInfo.getAlbum();
-        Bitmap bitmap = CoverLoader.getInstance().loadThumbnail(musicInfo.getCoverUri());
+        LocalMusic localMusic = MusicUtils.getMusicList().get(position);
+        String title = localMusic.getTitle();
+        String subtitle = localMusic.getArtist() + " - " + localMusic.getAlbum();
+        Bitmap bitmap = CoverLoader.getInstance().loadThumbnail(localMusic.getCoverUri());
         Intent intent = new Intent(this, SplashActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         Notification.Builder builder = new Notification.Builder(this)

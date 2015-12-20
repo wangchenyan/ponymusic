@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.activity.MusicActivity;
-import me.wcy.ponymusic.model.MusicInfo;
+import me.wcy.ponymusic.model.LocalMusic;
 import me.wcy.ponymusic.utils.CoverLoader;
 import me.wcy.ponymusic.utils.MusicUtils;
 
@@ -63,11 +63,11 @@ public class LocalMusicAdapter extends BaseAdapter {
         } else {
             holder.ivPlaying.setVisibility(View.INVISIBLE);
         }
-        MusicInfo musicInfo = MusicUtils.getMusicList().get(position);
-        Bitmap cover = CoverLoader.getInstance().loadThumbnail(musicInfo.getCoverUri());
+        LocalMusic localMusic = MusicUtils.getMusicList().get(position);
+        Bitmap cover = CoverLoader.getInstance().loadThumbnail(localMusic.getCoverUri());
         holder.ivCover.setImageBitmap(cover);
-        holder.tvTitle.setText(musicInfo.getTitle());
-        String artist = musicInfo.getArtist() + " - " + musicInfo.getAlbum();
+        holder.tvTitle.setText(localMusic.getTitle());
+        String artist = localMusic.getArtist() + " - " + localMusic.getAlbum();
         holder.tvArtist.setText(artist);
         holder.ivMore.setOnClickListener(new View.OnClickListener() {
             @Override

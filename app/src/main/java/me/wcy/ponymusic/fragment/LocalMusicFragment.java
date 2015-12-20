@@ -25,7 +25,7 @@ import butterknife.Bind;
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.adapter.LocalMusicAdapter;
 import me.wcy.ponymusic.adapter.OnMoreClickListener;
-import me.wcy.ponymusic.model.MusicInfo;
+import me.wcy.ponymusic.model.LocalMusic;
 import me.wcy.ponymusic.utils.MusicUtils;
 
 /**
@@ -71,10 +71,10 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
 
     @Override
     public void onMoreClick(final int position) {
-        MusicInfo musicInfo = MusicUtils.getMusicList().get(position);
+        LocalMusic localMusic = MusicUtils.getMusicList().get(position);
         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-        dialog.setTitle(musicInfo.getTitle());
-        int itemsId = position == getPlayService().getPlayingPosition() ? R.array.music_list_dialog_no_delete : R.array.music_list_dialog;
+        dialog.setTitle(localMusic.getTitle());
+        int itemsId = position == getPlayService().getPlayingPosition() ? R.array.local_music_list_dialog_no_delete : R.array.local_music_list_dialog;
         dialog.setItems(itemsId, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -104,8 +104,8 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
      * 分享音乐
      */
     private void shareMusic(int position) {
-        MusicInfo musicInfo = MusicUtils.getMusicList().get(position);
-        File file = new File(musicInfo.getUri());
+        LocalMusic localMusic = MusicUtils.getMusicList().get(position);
+        File file = new File(localMusic.getUri());
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("audio/*");
         intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
@@ -116,11 +116,11 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
      * 设置铃声
      */
     private void setRingtone(int position) {
-        MusicInfo musicInfo = MusicUtils.getMusicList().get(position);
-        Uri uri = MediaStore.Audio.Media.getContentUriForPath(musicInfo.getUri());
+        LocalMusic localMusic = MusicUtils.getMusicList().get(position);
+        Uri uri = MediaStore.Audio.Media.getContentUriForPath(localMusic.getUri());
         // 查询音乐文件在媒体库是否存在
         Cursor cursor = getActivity().getContentResolver().query(uri, null,
-                MediaStore.MediaColumns.DATA + "=?", new String[]{musicInfo.getUri()}, null);
+                MediaStore.MediaColumns.DATA + "=?", new String[]{localMusic.getUri()}, null);
         if (cursor == null) {
             return;
         }
@@ -132,7 +132,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
             values.put(MediaStore.Audio.Media.IS_ALARM, false);
             values.put(MediaStore.Audio.Media.IS_MUSIC, false);
 
-            getActivity().getContentResolver().update(uri, values, MediaStore.MediaColumns.DATA + "=?", new String[]{musicInfo.getUri()});
+            getActivity().getContentResolver().update(uri, values, MediaStore.MediaColumns.DATA + "=?", new String[]{localMusic.getUri()});
             Uri newUri = ContentUris.withAppendedId(uri, Long.valueOf(_id));
             RingtoneManager.setActualDefaultRingtoneUri(getActivity(), RingtoneManager.TYPE_RINGTONE, newUri);
             Toast.makeText(getActivity(), R.string.setting_ringtone_success, Toast.LENGTH_SHORT).show();
@@ -152,8 +152,8 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         dialog.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                MusicInfo musicInfo = MusicUtils.getMusicList().remove(position);
-                File file = new File(musicInfo.getUri());
+                LocalMusic localMusic = MusicUtils.getMusicList().remove(position);
+                File file = new File(localMusic.getUri());
                 if (file.delete()) {
                     if (position < getPlayService().getPlayingPosition()) {
                         getPlayService().setPlayingPosition(getPlayService().getPlayingPosition() - 1);
@@ -161,7 +161,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
                     }
                     mAdapter.notifyDataSetChanged();
                     //刷新媒体库
-                    Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + musicInfo.getUri()));
+                    Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + localMusic.getUri()));
                     getActivity().sendBroadcast(intent);
                 }
             }

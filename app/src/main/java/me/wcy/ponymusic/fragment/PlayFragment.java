@@ -21,7 +21,7 @@ import java.util.List;
 import butterknife.Bind;
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.adapter.PlayPagerAdapter;
-import me.wcy.ponymusic.model.MusicInfo;
+import me.wcy.ponymusic.model.LocalMusic;
 import me.wcy.ponymusic.utils.Constants;
 import me.wcy.ponymusic.utils.CoverLoader;
 import me.wcy.ponymusic.utils.MusicUtils;
@@ -201,14 +201,14 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
             return;
         }
 
-        MusicInfo musicInfo = MusicUtils.getMusicList().get(position);
-        tvTitle.setText(musicInfo.getTitle());
-        tvArtist.setText(musicInfo.getArtist());
-        seekBar.setMax((int) musicInfo.getDuration());
+        LocalMusic localMusic = MusicUtils.getMusicList().get(position);
+        tvTitle.setText(localMusic.getTitle());
+        tvArtist.setText(localMusic.getArtist());
+        seekBar.setMax((int) localMusic.getDuration());
         seekBar.setProgress(0);
         mLastProgress = 0;
         tvCurrentTime.setText("00:00");
-        tvTotalTime.setText(formatTime(musicInfo.getDuration()));
+        tvTotalTime.setText(formatTime(localMusic.getDuration()));
         setBackground(position);
         setAlbumCover(position);
         setLrc(position);
@@ -242,20 +242,20 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void setBackground(int position) {
-        MusicInfo musicInfo = MusicUtils.getMusicList().get(position);
-        Bitmap bitmap = CoverLoader.getInstance().loadBlur(musicInfo.getCoverUri());
+        LocalMusic localMusic = MusicUtils.getMusicList().get(position);
+        Bitmap bitmap = CoverLoader.getInstance().loadBlur(localMusic.getCoverUri());
         ivPlayingBg.setImageBitmap(bitmap);
     }
 
     private void setAlbumCover(int position) {
-        MusicInfo musicInfo = MusicUtils.getMusicList().get(position);
-        Bitmap bitmap = CoverLoader.getInstance().loadRound(musicInfo.getCoverUri());
+        LocalMusic localMusic = MusicUtils.getMusicList().get(position);
+        Bitmap bitmap = CoverLoader.getInstance().loadRound(localMusic.getCoverUri());
         mAlbumCoverView.setCoverBitmap(bitmap);
     }
 
     private void setLrc(int position) {
-        MusicInfo musicInfo = MusicUtils.getMusicList().get(position);
-        String lrcPath = MusicUtils.getLrcDir() + musicInfo.getFileName().replace(Constants.FILENAME_MP3, Constants.FILENAME_LRC);
+        LocalMusic localMusic = MusicUtils.getMusicList().get(position);
+        String lrcPath = MusicUtils.getLrcDir() + localMusic.getFileName().replace(Constants.FILENAME_MP3, Constants.FILENAME_LRC);
         mLrcViewSingle.loadLrc(lrcPath);
         mLrcViewFull.loadLrc(lrcPath);
     }

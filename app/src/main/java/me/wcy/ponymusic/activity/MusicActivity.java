@@ -26,7 +26,7 @@ import me.wcy.ponymusic.adapter.FragmentAdapter;
 import me.wcy.ponymusic.fragment.LocalMusicFragment;
 import me.wcy.ponymusic.fragment.OnlineMusicFragment;
 import me.wcy.ponymusic.fragment.PlayFragment;
-import me.wcy.ponymusic.model.MusicInfo;
+import me.wcy.ponymusic.model.LocalMusic;
 import me.wcy.ponymusic.service.OnPlayerEventListener;
 import me.wcy.ponymusic.service.PlayService;
 import me.wcy.ponymusic.utils.CoverLoader;
@@ -192,17 +192,17 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
             return;
         }
 
-        MusicInfo musicInfo = MusicUtils.getMusicList().get(position);
-        Bitmap cover = CoverLoader.getInstance().loadThumbnail(musicInfo.getCoverUri());
+        LocalMusic localMusic = MusicUtils.getMusicList().get(position);
+        Bitmap cover = CoverLoader.getInstance().loadThumbnail(localMusic.getCoverUri());
         ivPlayBarCover.setImageBitmap(cover);
-        tvPlayBarTitle.setText(musicInfo.getTitle());
-        tvPlayBarArtist.setText(musicInfo.getArtist());
+        tvPlayBarTitle.setText(localMusic.getTitle());
+        tvPlayBarArtist.setText(localMusic.getArtist());
         if (getPlayService().isPlaying()) {
             ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_pause);
         } else {
             ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_play);
         }
-        mProgressBar.setMax((int) musicInfo.getDuration());
+        mProgressBar.setMax((int) localMusic.getDuration());
         mProgressBar.setProgress(0);
 
         if (mLocalMusicFragment != null && mLocalMusicFragment.isResumed()) {
