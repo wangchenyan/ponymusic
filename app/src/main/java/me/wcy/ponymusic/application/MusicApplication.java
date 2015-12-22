@@ -26,7 +26,10 @@ public class MusicApplication extends Application {
         client.setConnectTimeout(1000 * 30, TimeUnit.MILLISECONDS);
 
         // ImageLoader
-        ImageLoaderConfiguration configuration = ImageLoaderConfiguration.createDefault(this);
+        ImageLoaderConfiguration configuration = new ImageLoaderConfiguration.Builder(this)
+                .memoryCacheSize(2 * 1024 * 1024)
+                .diskCacheSize(50 * 1024 * 1024)
+                .build();
         ImageLoader.getInstance().init(configuration);
     }
 
