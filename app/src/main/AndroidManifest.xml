@@ -29,7 +29,10 @@
             android:name=".activity.MusicActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.OnlineMusicListActivity"></activity>
+        <activity
+            android:name=".activity.OnlineMusicListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

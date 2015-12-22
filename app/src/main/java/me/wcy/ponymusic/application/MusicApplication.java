@@ -2,6 +2,8 @@ package me.wcy.ponymusic.application;
 
 import android.app.Application;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.squareup.okhttp.OkHttpClient;
 import com.zhy.http.okhttp.OkHttpUtils;
 
@@ -19,8 +21,13 @@ public class MusicApplication extends Application {
         super.onCreate();
         instance = this;
 
+        // OkHttp
         OkHttpClient client = OkHttpUtils.getInstance().getOkHttpClient();
         client.setConnectTimeout(1000 * 30, TimeUnit.MILLISECONDS);
+
+        // ImageLoader
+        ImageLoaderConfiguration configuration = ImageLoaderConfiguration.createDefault(this);
+        ImageLoader.getInstance().init(configuration);
     }
 
     public static MusicApplication getInstance() {

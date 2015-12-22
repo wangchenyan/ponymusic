@@ -1,7 +1,6 @@
 package me.wcy.ponymusic.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,33 +8,46 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.util.List;
+
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.activity.MusicActivity;
-import me.wcy.ponymusic.model.LocalMusic;
-import me.wcy.ponymusic.utils.CoverLoader;
-import me.wcy.ponymusic.utils.MusicUtils;
+import me.wcy.ponymusic.model.OnlineMusic;
 
 /**
- * 本地音乐列表适配器
- * Created by wcy on 2015/11/27.
+ * 歌单适配器
+ * Created by wcy on 2015/12/22.
  */
-public class LocalMusicAdapter extends BaseAdapter {
+public class OnlineMusicListAdapter extends BaseAdapter {
     private Context mContext;
+    private List<OnlineMusic> mData;
     private OnMoreClickListener mListener;
-    private int mPlayingPosition;
+    private DisplayImageOptions mOptions;
+    private int mPlayingPosition = -1;
 
-    public LocalMusicAdapter(Context context) {
-        mContext = context;
+    public OnlineMusicListAdapter(Context context, List<OnlineMusic> data) {
+        this.mContext = context;
+        this.mData = data;
+        mOptions = new DisplayImageOptions.Builder()
+                .showStubImage(R.drawable.ic_music_list_default_cover)
+                .showImageForEmptyUri(R.drawable.ic_music_list_default_cover)
+                .showImageOnFail(R.drawable.ic_music_list_default_cover)
+                .cacheInMemory(true)
+                .cacheOnDisc(true)
+                .build();
     }
 
     @Override
     public int getCount() {
-        return MusicUtils.getMusicList().size();
+        return mData.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return MusicUtils.getMusicList().get(position);
+        return mData.get(position);
     }
 
     @Override
@@ -63,18 +75,15 @@ public class LocalMusicAdapter extends BaseAdapter {
         } else {
             holder.ivPlaying.setVisibility(View.INVISIBLE);
         }
-        LocalMusic localMusic = MusicUtils.getMusicList().get(position);
-        Bitmap cover = CoverLoader.getInstance().loadThumbnail(localMusic.getCoverUri());
-        holder.ivCover.setImageBitmap(cover);
-        holder.tvTitle.setText(localMusic.getTitle());
-        String artist = localMusic.getArtist() + " - " + localMusic.getAlbum();
+        OnlineMusic onlineMusic = mData.get(position);
+        ImageLoader.getInstance().displayImage(onlineMusic.getPic_small(), holder.ivCover, mOptions);
+        holder.tvTitle.setText(onlineMusic.getTitle());
+        String artist = onlineMusic.getArtist_name() + " - " + onlineMusic.getAlbum_title();
         holder.tvArtist.setText(artist);
         holder.ivMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onMoreClick(position);
-                }
+                mListener.onMoreClick(position);
             }
         });
         return convertView;
