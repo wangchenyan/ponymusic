@@ -1,5 +1,6 @@
 package me.wcy.ponymusic.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,7 +11,7 @@ import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.service.PlayService;
 import me.wcy.ponymusic.utils.MusicUtils;
 
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,10 +29,6 @@ public class SplashActivity extends BaseActivity {
                 startMusicActivity();
             }
         }, 500);
-    }
-
-    @Override
-    protected void setListener() {
     }
 
     private void startService() {

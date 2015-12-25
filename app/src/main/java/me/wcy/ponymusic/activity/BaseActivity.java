@@ -5,25 +5,27 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
+import me.wcy.ponymusic.R;
 
 /**
  * 基类
  * Created by wcy on 2015/11/26.
  */
 public abstract class BaseActivity extends AppCompatActivity {
+    @Bind(R.id.toolbar)
+    Toolbar mToolbar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setSystemBarTransparent();
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
     }
 
     @Override
@@ -36,7 +38,17 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void setContentView(View view) {
         super.setContentView(view);
         ButterKnife.bind(this);
+        // setup toolbar
+        setSupportActionBar(mToolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    @Override
+    protected void onStart() {
         setListener();
+        super.onStart();
     }
 
     protected abstract void setListener();

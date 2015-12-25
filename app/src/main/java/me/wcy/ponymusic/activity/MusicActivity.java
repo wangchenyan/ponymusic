@@ -15,7 +15,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,8 +40,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     DrawerLayout drawerLayout;
     @Bind(R.id.navigation_view)
     NavigationView navigationView;
-    @Bind(R.id.toolbar)
-    Toolbar mToolbar;
     @Bind(R.id.tabs)
     TabLayout mTabLayout;
     @Bind(R.id.viewpager)
@@ -117,10 +114,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void setupView() {
-        // setup toolbar
-        setSupportActionBar(mToolbar);
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
         }
 

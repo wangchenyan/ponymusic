@@ -1,7 +1,6 @@
 package me.wcy.ponymusic.activity;
 
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -27,8 +26,6 @@ import me.wcy.ponymusic.utils.Extras;
 
 public class OnlineMusicActivity extends BaseActivity implements OnItemClickListener, OnMoreClickListener {
     private static final int MUSIC_LIST_SIZE = 20;
-    @Bind(R.id.toolbar)
-    Toolbar mToolbar;
     @Bind(R.id.lv_online_music_list)
     ListView lvOnlineMusic;
     private OnlineMusicListInfo mListInfo;
@@ -42,20 +39,19 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online_music_list);
 
-        setSupportActionBar(mToolbar);
         mListInfo = (OnlineMusicListInfo) getIntent().getSerializableExtra(Extras.ONLINE_MUSIC_LIST_TYPE);
+        setTitle(mListInfo.getTitle());
         mMusicList = new ArrayList<>();
         mAdapter = new OnlineMusicAdapter(this, mMusicList);
         lvOnlineMusic.setAdapter(mAdapter);
-        lvOnlineMusic.setOnItemClickListener(this);
-        mAdapter.setOnMoreClickListener(this);
 
         getMusic(mOffset);
     }
 
     @Override
     protected void setListener() {
-
+        lvOnlineMusic.setOnItemClickListener(this);
+        mAdapter.setOnMoreClickListener(this);
     }
 
     private void getMusic(int offset) {

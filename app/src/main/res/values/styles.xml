@@ -16,4 +16,7 @@
 
     <style name="AppTheme.NoActionBar" parent="AppBaseTheme.NoActionBar" />
 
+    <style name="AppTheme.Splash" parent="android:Theme.NoTitleBar.Fullscreen">
+        <item name="android:windowBackground">@drawable/ic_splash</item>
+    </style>
 </resources>
