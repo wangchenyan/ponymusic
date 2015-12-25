@@ -15,7 +15,7 @@ import java.util.List;
 import butterknife.Bind;
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.activity.OnlineMusicActivity;
-import me.wcy.ponymusic.adapter.OnlineMusicListAdapter;
+import me.wcy.ponymusic.adapter.SongListAdapter;
 import me.wcy.ponymusic.model.OnlineMusicListInfo;
 import me.wcy.ponymusic.utils.Extras;
 
@@ -23,7 +23,7 @@ import me.wcy.ponymusic.utils.Extras;
  * 在线音乐
  * Created by wcy on 2015/11/26.
  */
-public class OnlineMusicFragment extends BaseFragment implements AdapterView.OnItemClickListener {
+public class SongListFragment extends BaseFragment implements AdapterView.OnItemClickListener {
     @Bind(R.id.lv_online_music)
     ListView lvOnlineMusic;
     private List<OnlineMusicListInfo> mData;
@@ -31,7 +31,7 @@ public class OnlineMusicFragment extends BaseFragment implements AdapterView.OnI
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_online_music, container, false);
+        return inflater.inflate(R.layout.fragment_song_list, container, false);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class OnlineMusicFragment extends BaseFragment implements AdapterView.OnI
             info.setType(types[i]);
             mData.add(info);
         }
-        OnlineMusicListAdapter mAdapter = new OnlineMusicListAdapter(getContext(), mData);
+        SongListAdapter mAdapter = new SongListAdapter(getContext(), mData);
         lvOnlineMusic.setAdapter(mAdapter);
     }
 

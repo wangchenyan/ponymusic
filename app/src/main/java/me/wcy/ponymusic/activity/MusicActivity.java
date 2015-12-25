@@ -27,7 +27,7 @@ import butterknife.Bind;
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.adapter.FragmentAdapter;
 import me.wcy.ponymusic.fragment.LocalMusicFragment;
-import me.wcy.ponymusic.fragment.OnlineMusicFragment;
+import me.wcy.ponymusic.fragment.SongListFragment;
 import me.wcy.ponymusic.fragment.PlayFragment;
 import me.wcy.ponymusic.model.LocalMusic;
 import me.wcy.ponymusic.service.OnPlayerEventListener;
@@ -60,7 +60,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     ProgressBar mProgressBar;
     private View navigationHeader;
     private LocalMusicFragment mLocalMusicFragment;
-    private OnlineMusicFragment mOnlineMusicFragment;
+    private SongListFragment mSongListFragment;
     private PlayFragment mPlayFragment;
     private PlayService mPlayService;
     private PlayServiceConnection mPlayServiceConnection;
@@ -124,10 +124,10 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
         // setup view pager
         mLocalMusicFragment = new LocalMusicFragment();
-        mOnlineMusicFragment = new OnlineMusicFragment();
+        mSongListFragment = new SongListFragment();
         FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
         adapter.addFragment(mLocalMusicFragment, getString(R.string.local_music));
-        adapter.addFragment(mOnlineMusicFragment, getString(R.string.online_music));
+        adapter.addFragment(mSongListFragment, getString(R.string.online_music));
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);
     }

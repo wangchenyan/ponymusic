@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         lrc:animationDuration="1000"
-        lrc:currentTextColor="@color/white"
+        lrc:currentTextColor="@android:color/white"
         lrc:dividerHeight="24dp"
         lrc:normalTextColor="@color/translucent_white"
         lrc:textSize="@dimen/text_size_common" />

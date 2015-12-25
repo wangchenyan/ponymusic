@@ -18,7 +18,7 @@ import me.wcy.ponymusic.activity.MusicActivity;
 import me.wcy.ponymusic.model.JOnlineMusic;
 
 /**
- * 歌单适配器
+ * 在线音乐列表适配器
  * Created by wcy on 2015/12/22.
  */
 public class OnlineMusicAdapter extends BaseAdapter {
@@ -59,7 +59,7 @@ public class OnlineMusicAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.fragment_local_music_list_item, parent, false);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.music_list_item, parent, false);
             holder = new ViewHolder();
             holder.ivPlaying = (ImageView) convertView.findViewById(R.id.iv_playing);
             holder.ivCover = (ImageView) convertView.findViewById(R.id.iv_cover);

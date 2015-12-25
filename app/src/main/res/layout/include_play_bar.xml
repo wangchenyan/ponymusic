@@ -36,7 +36,7 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="无音乐"
-                android:textColor="@color/black"
+                android:textColor="@android:color/black"
                 android:textSize="@dimen/text_size_common" />
 
             <TextView

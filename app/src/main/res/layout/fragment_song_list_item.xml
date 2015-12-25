@@ -58,10 +58,10 @@
         </LinearLayout>
     </LinearLayout>
 
-    <View
+    <include
+        layout="@layout/include_divider"
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_gravity="bottom"
-        android:layout_marginLeft="110dp"
-        android:background="@color/grey_400" />
+        android:layout_marginLeft="110dp" />
 </FrameLayout>

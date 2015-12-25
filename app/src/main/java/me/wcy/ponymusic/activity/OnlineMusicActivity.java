@@ -37,7 +37,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_online_music_list);
+        setContentView(R.layout.activity_online_music);
 
         mListInfo = (OnlineMusicListInfo) getIntent().getSerializableExtra(Extras.ONLINE_MUSIC_LIST_TYPE);
         setTitle(mListInfo.getTitle());

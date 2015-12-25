@@ -3,13 +3,10 @@
     <color name="colorPrimary">#CE3D3A</color>
     <color name="colorPrimaryDark">#D32F2F</color>
     <color name="colorAccent">#FFFFFF</color>
-    <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
     <color name="grey">#9E9E9E</color>
     <color name="grey_300">#E0E0E0</color>
     <color name="grey_400">#BDBDBD</color>
     <color name="grey_600">#757575</color>
-    <color name="transparent">#00000000</color>
     <color name="translucent_white">#80FFFFFF</color>
     <color name="translucent_white_32">#20FFFFFF</color>
     <color name="translucent_black">#80000000</color>

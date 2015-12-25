@@ -19,9 +19,9 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         lrc:animationDuration="1000"
-        lrc:currentTextColor="@color/white"
+        lrc:currentTextColor="@android:color/white"
         lrc:dividerHeight="10dp"
-        lrc:normalTextColor="@color/white"
+        lrc:normalTextColor="@android:color/white"
         lrc:textSize="@dimen/text_size_common" />
 
 </LinearLayout>

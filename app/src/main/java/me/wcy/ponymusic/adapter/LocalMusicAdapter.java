@@ -47,7 +47,7 @@ public class LocalMusicAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.fragment_local_music_list_item, parent, false);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.music_list_item, parent, false);
             holder = new ViewHolder();
             holder.ivPlaying = (ImageView) convertView.findViewById(R.id.iv_playing);
             holder.ivCover = (ImageView) convertView.findViewById(R.id.iv_cover);

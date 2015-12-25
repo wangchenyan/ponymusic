@@ -26,14 +26,14 @@ import me.wcy.ponymusic.utils.Constants;
  * 歌单列表适配器
  * Created by wcy on 2015/12/19.
  */
-public class OnlineMusicListAdapter extends BaseAdapter {
+public class SongListAdapter extends BaseAdapter {
     private static final int TYPE_PROFILE = 0;
     private static final int TYPE_MUSIC_LIST = 1;
     private Context mContext;
     private List<OnlineMusicListInfo> mData;
     private DisplayImageOptions mOptions;
 
-    public OnlineMusicListAdapter(Context context, List<OnlineMusicListInfo> data) {
+    public SongListAdapter(Context context, List<OnlineMusicListInfo> data) {
         mContext = context;
         mData = data;
         mOptions = new DisplayImageOptions.Builder()
@@ -88,7 +88,7 @@ public class OnlineMusicListAdapter extends BaseAdapter {
         switch (itemViewType) {
             case TYPE_PROFILE:
                 if (convertView == null) {
-                    convertView = LayoutInflater.from(mContext).inflate(R.layout.fragment_online_music_list_item_profile, parent, false);
+                    convertView = LayoutInflater.from(mContext).inflate(R.layout.fragment_song_list_item_profile, parent, false);
                     holderProfile = new ViewHolderProfile();
                     holderProfile.tvProfile = (TextView) convertView.findViewById(R.id.tv_profile);
                     convertView.setTag(holderProfile);
@@ -99,7 +99,7 @@ public class OnlineMusicListAdapter extends BaseAdapter {
                 break;
             case TYPE_MUSIC_LIST:
                 if (convertView == null) {
-                    convertView = LayoutInflater.from(mContext).inflate(R.layout.fragment_online_music_list_item, parent, false);
+                    convertView = LayoutInflater.from(mContext).inflate(R.layout.fragment_song_list_item, parent, false);
                     holderMusicList = new ViewHolderMusicList();
                     holderMusicList.ivCover = (ImageView) convertView.findViewById(R.id.iv_cover);
                     holderMusicList.tvMusic1 = (TextView) convertView.findViewById(R.id.tv_music_1);
