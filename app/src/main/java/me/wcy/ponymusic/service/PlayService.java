@@ -17,10 +17,9 @@ import java.io.IOException;
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.activity.SplashActivity;
 import me.wcy.ponymusic.model.LocalMusic;
-import me.wcy.ponymusic.utils.Constants;
 import me.wcy.ponymusic.utils.CoverLoader;
 import me.wcy.ponymusic.utils.MusicUtils;
-import me.wcy.ponymusic.utils.SpUtils;
+import me.wcy.ponymusic.utils.Preferences;
 
 /**
  * 音乐播放后台服务
@@ -40,7 +39,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     public void onCreate() {
         super.onCreate();
         MusicUtils.scanMusic(this);
-        mPlayingPosition = (Integer) SpUtils.get(this, Constants.PLAY_POSITION, 0);
+        mPlayingPosition = (Integer) Preferences.get(this, Preferences.PLAY_POSITION, 0);
         if (mPlayingPosition >= MusicUtils.getMusicList().size()) {
             mPlayingPosition = 0;
         }
@@ -92,7 +91,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
         updateNotification(mPlayingPosition);
 
-        SpUtils.put(this, Constants.PLAY_POSITION, mPlayingPosition);
+        Preferences.put(this, Preferences.PLAY_POSITION, mPlayingPosition);
         return mPlayingPosition;
     }
 
@@ -162,7 +161,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
     public void setPlayingPosition(int position) {
         mPlayingPosition = position;
-        SpUtils.put(this, Constants.PLAY_POSITION, mPlayingPosition);
+        Preferences.put(this, Preferences.PLAY_POSITION, mPlayingPosition);
     }
 
     /**

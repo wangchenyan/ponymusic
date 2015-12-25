@@ -1,9 +1,10 @@
 package me.wcy.ponymusic.model;
 
 /**
+ * JavaBean
  * Created by wcy on 2015/12/20.
  */
-public class OnlineMusic {
+public class JOnlineMusic {
     String artist_id;
     String pic_big;
     String pic_small;

@@ -17,22 +17,24 @@ import java.util.List;
 import butterknife.Bind;
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.adapter.OnMoreClickListener;
-import me.wcy.ponymusic.adapter.OnlineMusicListAdapter;
-import me.wcy.ponymusic.model.OnlineMusic;
-import me.wcy.ponymusic.model.OnlineMusicList;
+import me.wcy.ponymusic.adapter.OnlineMusicAdapter;
+import me.wcy.ponymusic.callback.JsonCallback;
+import me.wcy.ponymusic.model.JOnlineMusic;
+import me.wcy.ponymusic.model.JOnlineMusicList;
 import me.wcy.ponymusic.model.OnlineMusicListInfo;
 import me.wcy.ponymusic.utils.Constants;
-import me.wcy.ponymusic.utils.JsonCallback;
+import me.wcy.ponymusic.utils.Extras;
 
-public class OnlineMusicListActivity extends BaseActivity implements OnItemClickListener, OnMoreClickListener {
+public class OnlineMusicActivity extends BaseActivity implements OnItemClickListener, OnMoreClickListener {
+    private static final int MUSIC_LIST_SIZE = 20;
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
     @Bind(R.id.lv_online_music_list)
     ListView lvOnlineMusic;
     private OnlineMusicListInfo mListInfo;
-    private OnlineMusicList mOnlineMusicList;
-    private List<OnlineMusic> mMusicList;
-    private OnlineMusicListAdapter mAdapter;
+    private JOnlineMusicList jOnlineMusicList;
+    private List<JOnlineMusic> mMusicList;
+    private OnlineMusicAdapter mAdapter;
     private int mOffset = 0;
 
     @Override
@@ -41,9 +43,9 @@ public class OnlineMusicListActivity extends BaseActivity implements OnItemClick
         setContentView(R.layout.activity_online_music_list);
 
         setSupportActionBar(mToolbar);
-        mListInfo = (OnlineMusicListInfo) getIntent().getSerializableExtra(Constants.ONLINE_MUSIC_LIST_TYPE);
+        mListInfo = (OnlineMusicListInfo) getIntent().getSerializableExtra(Extras.ONLINE_MUSIC_LIST_TYPE);
         mMusicList = new ArrayList<>();
-        mAdapter = new OnlineMusicListAdapter(this, mMusicList);
+        mAdapter = new OnlineMusicAdapter(this, mMusicList);
         lvOnlineMusic.setAdapter(mAdapter);
         lvOnlineMusic.setOnItemClickListener(this);
         mAdapter.setOnMoreClickListener(this);
@@ -60,18 +62,18 @@ public class OnlineMusicListActivity extends BaseActivity implements OnItemClick
         OkHttpUtils.get().url(Constants.BASE_URL)
                 .addParams("method", Constants.METHOD_GET_MUSIC_LIST)
                 .addParams("type", mListInfo.getType())
-                .addParams("size", "10")
+                .addParams("size", String.valueOf(MUSIC_LIST_SIZE))
                 .addParams("offset", String.valueOf(offset))
                 .build()
-                .execute(new JsonCallback<OnlineMusicList>(OnlineMusicList.class) {
+                .execute(new JsonCallback<JOnlineMusicList>(JOnlineMusicList.class) {
                     @Override
                     public void onError(Request request, Exception e) {
 
                     }
 
                     @Override
-                    public void onResponse(OnlineMusicList response) {
-                        mOnlineMusicList = response;
+                    public void onResponse(JOnlineMusicList response) {
+                        jOnlineMusicList = response;
                         Collections.addAll(mMusicList, response.getSong_list());
                         mAdapter.notifyDataSetChanged();
                     }

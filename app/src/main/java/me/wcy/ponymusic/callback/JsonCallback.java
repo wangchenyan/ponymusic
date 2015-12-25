@@ -1,4 +1,4 @@
-package me.wcy.ponymusic.utils;
+package me.wcy.ponymusic.callback;
 
 import com.alibaba.fastjson.JSON;
 import com.squareup.okhttp.Response;

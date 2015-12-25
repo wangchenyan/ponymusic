@@ -8,7 +8,8 @@ import android.preference.PreferenceManager;
  * SharedPreferences工具类
  * Created by wcy on 2015/11/28.
  */
-public class SpUtils {
+public class Preferences {
+    public static final String PLAY_POSITION = "play_position";
 
     public static void put(Context context, String key, Object value) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);

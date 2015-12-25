@@ -10,27 +10,32 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.okhttp.Request;
+import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.List;
 
 import me.wcy.ponymusic.R;
-import me.wcy.ponymusic.activity.MusicActivity;
-import me.wcy.ponymusic.model.OnlineMusic;
+import me.wcy.ponymusic.callback.JsonCallback;
+import me.wcy.ponymusic.model.JOnlineMusic;
+import me.wcy.ponymusic.model.JOnlineMusicList;
+import me.wcy.ponymusic.model.OnlineMusicListInfo;
+import me.wcy.ponymusic.utils.Constants;
 
 /**
- * 歌单适配器
- * Created by wcy on 2015/12/22.
+ * 歌单列表适配器
+ * Created by wcy on 2015/12/19.
  */
 public class OnlineMusicListAdapter extends BaseAdapter {
+    private static final int TYPE_PROFILE = 0;
+    private static final int TYPE_MUSIC_LIST = 1;
     private Context mContext;
-    private List<OnlineMusic> mData;
-    private OnMoreClickListener mListener;
+    private List<OnlineMusicListInfo> mData;
     private DisplayImageOptions mOptions;
-    private int mPlayingPosition = -1;
 
-    public OnlineMusicListAdapter(Context context, List<OnlineMusic> data) {
-        this.mContext = context;
-        this.mData = data;
+    public OnlineMusicListAdapter(Context context, List<OnlineMusicListInfo> data) {
+        mContext = context;
+        mData = data;
         mOptions = new DisplayImageOptions.Builder()
                 .showStubImage(R.drawable.ic_music_list_default_cover)
                 .showImageForEmptyUri(R.drawable.ic_music_list_default_cover)
@@ -56,52 +61,101 @@ public class OnlineMusicListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-        if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.fragment_local_music_list_item, parent, false);
-            holder = new ViewHolder();
-            holder.ivPlaying = (ImageView) convertView.findViewById(R.id.iv_playing);
-            holder.ivCover = (ImageView) convertView.findViewById(R.id.iv_cover);
-            holder.tvTitle = (TextView) convertView.findViewById(R.id.tv_title);
-            holder.tvArtist = (TextView) convertView.findViewById(R.id.tv_artist);
-            holder.ivMore = (ImageView) convertView.findViewById(R.id.iv_more);
-            convertView.setTag(holder);
+    public boolean isEnabled(int position) {
+        return getItemViewType(position) == TYPE_MUSIC_LIST;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (mData.get(position).getType().equals("*")) {
+            return TYPE_PROFILE;
         } else {
-            holder = (ViewHolder) convertView.getTag();
+            return TYPE_MUSIC_LIST;
         }
-        if (position == mPlayingPosition) {
-            holder.ivPlaying.setVisibility(View.VISIBLE);
-        } else {
-            holder.ivPlaying.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 2;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolderProfile holderProfile;
+        ViewHolderMusicList holderMusicList;
+        OnlineMusicListInfo musicListInfo = mData.get(position);
+        int itemViewType = getItemViewType(position);
+        switch (itemViewType) {
+            case TYPE_PROFILE:
+                if (convertView == null) {
+                    convertView = LayoutInflater.from(mContext).inflate(R.layout.fragment_online_music_list_item_profile, parent, false);
+                    holderProfile = new ViewHolderProfile();
+                    holderProfile.tvProfile = (TextView) convertView.findViewById(R.id.tv_profile);
+                    convertView.setTag(holderProfile);
+                } else {
+                    holderProfile = (ViewHolderProfile) convertView.getTag();
+                }
+                holderProfile.tvProfile.setText(musicListInfo.getTitle());
+                break;
+            case TYPE_MUSIC_LIST:
+                if (convertView == null) {
+                    convertView = LayoutInflater.from(mContext).inflate(R.layout.fragment_online_music_list_item, parent, false);
+                    holderMusicList = new ViewHolderMusicList();
+                    holderMusicList.ivCover = (ImageView) convertView.findViewById(R.id.iv_cover);
+                    holderMusicList.tvMusic1 = (TextView) convertView.findViewById(R.id.tv_music_1);
+                    holderMusicList.tvMusic2 = (TextView) convertView.findViewById(R.id.tv_music_2);
+                    holderMusicList.tvMusic3 = (TextView) convertView.findViewById(R.id.tv_music_3);
+                    convertView.setTag(holderMusicList);
+                } else {
+                    holderMusicList = (ViewHolderMusicList) convertView.getTag();
+                }
+                getMusicListInfo(musicListInfo, holderMusicList);
+                break;
         }
-        OnlineMusic onlineMusic = mData.get(position);
-        ImageLoader.getInstance().displayImage(onlineMusic.getPic_small(), holder.ivCover, mOptions);
-        holder.tvTitle.setText(onlineMusic.getTitle());
-        String artist = onlineMusic.getArtist_name() + " - " + onlineMusic.getAlbum_title();
-        holder.tvArtist.setText(artist);
-        holder.ivMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onMoreClick(position);
-            }
-        });
         return convertView;
     }
 
-    public void updatePlayingPosition() {
-        mPlayingPosition = ((MusicActivity) mContext).getPlayService().getPlayingPosition();
+    private void getMusicListInfo(final OnlineMusicListInfo musicListInfo, final ViewHolderMusicList holderMusicList) {
+        if (musicListInfo.getCoverUrl() == null) {
+            OkHttpUtils.get().url(Constants.BASE_URL)
+                    .addParams("method", Constants.METHOD_GET_MUSIC_LIST)
+                    .addParams("type", musicListInfo.getType())
+                    .addParams("size", "3")
+                    .build()
+                    .execute(new JsonCallback<JOnlineMusicList>(JOnlineMusicList.class) {
+                        @Override
+                        public void onError(Request request, Exception e) {
+                        }
+
+                        @Override
+                        public void onResponse(JOnlineMusicList response) {
+                            JOnlineMusic[] jOnlineMusics = response.getSong_list();
+                            musicListInfo.setCoverUrl(response.getBillboard().getPic_s260());
+                            musicListInfo.setMusic1("1." + jOnlineMusics[0].getTitle() + " - " + jOnlineMusics[0].getArtist_name());
+                            musicListInfo.setMusic2("2." + jOnlineMusics[1].getTitle() + " - " + jOnlineMusics[1].getArtist_name());
+                            musicListInfo.setMusic3("3." + jOnlineMusics[2].getTitle() + " - " + jOnlineMusics[2].getArtist_name());
+                            ImageLoader.getInstance().displayImage(musicListInfo.getCoverUrl(), holderMusicList.ivCover, mOptions);
+                            holderMusicList.tvMusic1.setText(musicListInfo.getMusic1());
+                            holderMusicList.tvMusic2.setText(musicListInfo.getMusic2());
+                            holderMusicList.tvMusic3.setText(musicListInfo.getMusic3());
+                        }
+                    });
+        } else {
+            ImageLoader.getInstance().displayImage(musicListInfo.getCoverUrl(), holderMusicList.ivCover, mOptions);
+            holderMusicList.tvMusic1.setText(musicListInfo.getMusic1());
+            holderMusicList.tvMusic2.setText(musicListInfo.getMusic2());
+            holderMusicList.tvMusic3.setText(musicListInfo.getMusic3());
+        }
     }
 
-    public void setOnMoreClickListener(OnMoreClickListener listener) {
-        mListener = listener;
+    class ViewHolderProfile {
+        TextView tvProfile;
     }
 
-    class ViewHolder {
-        ImageView ivPlaying;
+    class ViewHolderMusicList {
         ImageView ivCover;
-        TextView tvTitle;
-        TextView tvArtist;
-        ImageView ivMore;
+        TextView tvMusic1;
+        TextView tvMusic2;
+        TextView tvMusic3;
     }
 }

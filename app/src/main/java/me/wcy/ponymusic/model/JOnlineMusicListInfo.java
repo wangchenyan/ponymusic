@@ -1,23 +1,17 @@
 package me.wcy.ponymusic.model;
 
 /**
- * Created by wcy on 2015/12/20.
+ * JavaBean
+ * Created by hzwangchenyan on 2015/12/25.
  */
-public class OnlineMusicList {
-    OnlineMusic[] song_list;
+public class JOnlineMusicListInfo {
     String update_date;
     String name;
     String comment;
     String pic_s640;
+    String pic_s444;
+    String pic_s260;
     String pic_s210;
-
-    public OnlineMusic[] getSong_list() {
-        return song_list;
-    }
-
-    public void setSong_list(OnlineMusic[] song_list) {
-        this.song_list = song_list;
-    }
 
     public String getUpdate_date() {
         return update_date;
@@ -49,6 +43,22 @@ public class OnlineMusicList {
 
     public void setPic_s640(String pic_s640) {
         this.pic_s640 = pic_s640;
+    }
+
+    public String getPic_s444() {
+        return pic_s444;
+    }
+
+    public void setPic_s444(String pic_s444) {
+        this.pic_s444 = pic_s444;
+    }
+
+    public String getPic_s260() {
+        return pic_s260;
+    }
+
+    public void setPic_s260(String pic_s260) {
+        this.pic_s260 = pic_s260;
     }
 
     public String getPic_s210() {

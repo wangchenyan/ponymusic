@@ -8,22 +8,36 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.util.List;
 
 import me.wcy.ponymusic.R;
-import me.wcy.ponymusic.model.OnlineMusicListInfo;
+import me.wcy.ponymusic.activity.MusicActivity;
+import me.wcy.ponymusic.model.JOnlineMusic;
 
 /**
- * 歌单列表适配器
- * Created by wcy on 2015/12/19.
+ * 歌单适配器
+ * Created by wcy on 2015/12/22.
  */
 public class OnlineMusicAdapter extends BaseAdapter {
     private Context mContext;
-    private List<OnlineMusicListInfo> mData;
+    private List<JOnlineMusic> mData;
+    private OnMoreClickListener mListener;
+    private DisplayImageOptions mOptions;
+    private int mPlayingPosition = -1;
 
-    public OnlineMusicAdapter(Context context, List<OnlineMusicListInfo> data) {
-        mContext = context;
-        mData = data;
+    public OnlineMusicAdapter(Context context, List<JOnlineMusic> data) {
+        this.mContext = context;
+        this.mData = data;
+        mOptions = new DisplayImageOptions.Builder()
+                .showStubImage(R.drawable.ic_music_list_default_cover)
+                .showImageForEmptyUri(R.drawable.ic_music_list_default_cover)
+                .showImageOnFail(R.drawable.ic_music_list_default_cover)
+                .cacheInMemory(true)
+                .cacheOnDisc(true)
+                .build();
     }
 
     @Override
@@ -42,24 +56,52 @@ public class OnlineMusicAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.fragment_online_music_list_item, parent, false);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.fragment_local_music_list_item, parent, false);
             holder = new ViewHolder();
-            holder.ivIcon = (ImageView) convertView.findViewById(R.id.iv_icon);
+            holder.ivPlaying = (ImageView) convertView.findViewById(R.id.iv_playing);
+            holder.ivCover = (ImageView) convertView.findViewById(R.id.iv_cover);
             holder.tvTitle = (TextView) convertView.findViewById(R.id.tv_title);
+            holder.tvArtist = (TextView) convertView.findViewById(R.id.tv_artist);
+            holder.ivMore = (ImageView) convertView.findViewById(R.id.iv_more);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.ivIcon.setImageResource(mData.get(position).getIcon());
-        holder.tvTitle.setText(mData.get(position).getTitle());
+        if (position == mPlayingPosition) {
+            holder.ivPlaying.setVisibility(View.VISIBLE);
+        } else {
+            holder.ivPlaying.setVisibility(View.INVISIBLE);
+        }
+        JOnlineMusic jOnlineMusic = mData.get(position);
+        ImageLoader.getInstance().displayImage(jOnlineMusic.getPic_small(), holder.ivCover, mOptions);
+        holder.tvTitle.setText(jOnlineMusic.getTitle());
+        String artist = jOnlineMusic.getArtist_name() + " - " + jOnlineMusic.getAlbum_title();
+        holder.tvArtist.setText(artist);
+        holder.ivMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onMoreClick(position);
+            }
+        });
         return convertView;
     }
 
+    public void updatePlayingPosition() {
+        mPlayingPosition = ((MusicActivity) mContext).getPlayService().getPlayingPosition();
+    }
+
+    public void setOnMoreClickListener(OnMoreClickListener listener) {
+        mListener = listener;
+    }
+
     class ViewHolder {
-        ImageView ivIcon;
+        ImageView ivPlaying;
+        ImageView ivCover;
         TextView tvTitle;
+        TextView tvArtist;
+        ImageView ivMore;
     }
 }
