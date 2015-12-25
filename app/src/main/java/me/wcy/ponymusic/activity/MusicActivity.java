@@ -7,12 +7,16 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -32,7 +36,11 @@ import me.wcy.ponymusic.service.PlayService;
 import me.wcy.ponymusic.utils.CoverLoader;
 import me.wcy.ponymusic.utils.MusicUtils;
 
-public class MusicActivity extends BaseActivity implements View.OnClickListener, OnPlayerEventListener {
+public class MusicActivity extends BaseActivity implements View.OnClickListener, OnPlayerEventListener, NavigationView.OnNavigationItemSelectedListener {
+    @Bind(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
+    @Bind(R.id.navigation_view)
+    NavigationView navigationView;
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
     @Bind(R.id.tabs)
@@ -53,6 +61,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     ImageView ivPlayBarNext;
     @Bind(R.id.pb_play_bar)
     ProgressBar mProgressBar;
+    private View navigationHeader;
     private LocalMusicFragment mLocalMusicFragment;
     private OnlineMusicFragment mOnlineMusicFragment;
     private PlayFragment mPlayFragment;
@@ -66,10 +75,10 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
 
-        bindService();
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.loading));
         mProgressDialog.show();
+        bindService();
     }
 
     private void bindService() {
@@ -94,8 +103,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void init() {
-        setSupportActionBar(mToolbar);
-        setupViewPager();
+        setupView();
         onChange(mPlayService.getPlayingPosition());
         mProgressDialog.cancel();
     }
@@ -105,9 +113,22 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         flPlayBar.setOnClickListener(this);
         ivPlayBarPlay.setOnClickListener(this);
         ivPlayBarNext.setOnClickListener(this);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void setupViewPager() {
+    private void setupView() {
+        // setup toolbar
+        setSupportActionBar(mToolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
+        }
+
+        // add navigation header
+        navigationHeader = LayoutInflater.from(this).inflate(R.layout.navigation_header, null);
+        navigationView.addHeaderView(navigationHeader);
+
+        // setup view pager
         mLocalMusicFragment = new LocalMusicFragment();
         mOnlineMusicFragment = new OnlineMusicFragment();
         FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
@@ -115,12 +136,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         adapter.addFragment(mOnlineMusicFragment, getString(R.string.online_music));
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_music, menu);
-        return super.onCreateOptionsMenu(menu);
     }
 
     /**
@@ -175,8 +190,25 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
+        if (item.getItemId() == android.R.id.home) {
+            drawerLayout.openDrawer(GravityCompat.START);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(final MenuItem item) {
+        drawerLayout.closeDrawers();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                item.setChecked(false);
+            }
+        }, 500);
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                return true;
             case R.id.action_setting:
                 return true;
             case R.id.action_share:
@@ -184,7 +216,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
             case R.id.action_about:
                 return true;
         }
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
     public void onPlay(int position) {
@@ -255,10 +287,14 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     public void onBackPressed() {
         if (mPlayFragment != null && mIsPlayFragmentShow) {
             hidePlayingFragment();
-        } else {
-            //moveTaskToBack(false);
-            finish();
+            return;
         }
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawers();
+            return;
+        }
+        //moveTaskToBack(false);
+        finish();
     }
 
     @Override
