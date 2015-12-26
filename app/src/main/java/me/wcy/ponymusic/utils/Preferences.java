@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
  */
 public class Preferences {
     public static final String PLAY_POSITION = "play_position";
+    public static final String PLAY_MODE = "play_mode";
 
     public static void put(Context context, String key, Object value) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);

@@ -13,12 +13,14 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 
 import java.io.IOException;
+import java.util.Random;
 
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.activity.SplashActivity;
 import me.wcy.ponymusic.model.LocalMusic;
 import me.wcy.ponymusic.utils.CoverLoader;
 import me.wcy.ponymusic.utils.MusicUtils;
+import me.wcy.ponymusic.utils.PlayModeEnum;
 import me.wcy.ponymusic.utils.Preferences;
 
 /**
@@ -126,11 +128,31 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     }
 
     public int next() {
-        return play(mPlayingPosition + 1);
+        PlayModeEnum mode = PlayModeEnum.valueOf((Integer) Preferences.get(this, Preferences.PLAY_MODE, 1));
+        switch (mode) {
+            case LOOP:
+                return play(mPlayingPosition + 1);
+            case SHUFFLE:
+                return play(new Random().nextInt(MusicUtils.getMusicList().size()));
+            case ONE:
+                return play(mPlayingPosition);
+            default:
+                return play(mPlayingPosition + 1);
+        }
     }
 
     public int prev() {
-        return play(mPlayingPosition - 1);
+        PlayModeEnum mode = PlayModeEnum.valueOf((Integer) Preferences.get(this, Preferences.PLAY_MODE, 1));
+        switch (mode) {
+            case LOOP:
+                return play(mPlayingPosition - 1);
+            case SHUFFLE:
+                return play(new Random().nextInt(MusicUtils.getMusicList().size()));
+            case ONE:
+                return play(mPlayingPosition);
+            default:
+                return play(mPlayingPosition - 1);
+        }
     }
 
     /**

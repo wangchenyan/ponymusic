@@ -11,4 +11,7 @@
     <string name="unknown">未知</string>
     <string name="delete_music">删除%s？</string>
     <string name="setting_ringtone_success">设置铃声成功</string>
+    <string name="mode_loop">列表循环</string>
+    <string name="mode_shuffle">随机播放</string>
+    <string name="mode_one">单曲循环</string>
 </resources>

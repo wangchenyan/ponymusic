@@ -25,6 +25,9 @@ import me.wcy.ponymusic.model.LocalMusic;
 import me.wcy.ponymusic.utils.Constants;
 import me.wcy.ponymusic.utils.CoverLoader;
 import me.wcy.ponymusic.utils.MusicUtils;
+import me.wcy.ponymusic.utils.PlayModeEnum;
+import me.wcy.ponymusic.utils.Preferences;
+import me.wcy.ponymusic.utils.ToastUtil;
 import me.wcy.ponymusic.widget.AlbumCoverView;
 import me.wcy.ponymusic.widget.IndicatorLayout;
 import me.wcy.ponymusic.widget.LrcView;
@@ -54,6 +57,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     TextView tvCurrentTime;
     @Bind(R.id.tv_total_time)
     TextView tvTotalTime;
+    @Bind(R.id.iv_mode)
+    ImageView ivMode;
     @Bind(R.id.iv_prev)
     ImageView ivPrev;
     @Bind(R.id.iv_play)
@@ -78,11 +83,13 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         initViewPager();
         ilIndicator.create(mViewPagerContent.size());
         onChange(getPlayService().getPlayingPosition());
+        initMode();
     }
 
     @Override
     protected void setListener() {
         ivBack.setOnClickListener(this);
+        ivMode.setOnClickListener(this);
         ivPlay.setOnClickListener(this);
         ivPrev.setOnClickListener(this);
         ivNext.setOnClickListener(this);
@@ -148,6 +155,9 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         switch (v.getId()) {
             case R.id.iv_back:
                 getActivity().onBackPressed();
+                break;
+            case R.id.iv_mode:
+                switchMode();
                 break;
             case R.id.iv_play:
                 play();
@@ -239,6 +249,41 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     private void next() {
         getPlayService().next();
+    }
+
+    private void initMode() {
+        PlayModeEnum mode = PlayModeEnum.valueOf((Integer) Preferences.get(getContext(), Preferences.PLAY_MODE, 1));
+        switch (mode) {
+            case LOOP:
+                ivMode.setImageResource(R.drawable.ic_play_btn_loop_selector);
+                break;
+            case SHUFFLE:
+                ivMode.setImageResource(R.drawable.ic_play_btn_shuffle_selector);
+                break;
+            case ONE:
+                ivMode.setImageResource(R.drawable.ic_play_btn_one_selector);
+                break;
+        }
+    }
+
+    private void switchMode() {
+        PlayModeEnum mode = PlayModeEnum.valueOf((Integer) Preferences.get(getContext(), Preferences.PLAY_MODE, 1));
+        switch (mode) {
+            case LOOP:
+                mode = PlayModeEnum.SHUFFLE;
+                ToastUtil.show(getString(R.string.mode_shuffle));
+                break;
+            case SHUFFLE:
+                mode = PlayModeEnum.ONE;
+                ToastUtil.show(getString(R.string.mode_one));
+                break;
+            case ONE:
+                mode = PlayModeEnum.LOOP;
+                ToastUtil.show(getString(R.string.mode_loop));
+                break;
+        }
+        Preferences.put(getContext(), Preferences.PLAY_MODE, mode.value());
+        initMode();
     }
 
     private void setBackground(int position) {
