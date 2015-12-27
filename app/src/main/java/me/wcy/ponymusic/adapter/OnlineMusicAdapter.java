@@ -14,8 +14,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.List;
 
 import me.wcy.ponymusic.R;
-import me.wcy.ponymusic.activity.MusicActivity;
 import me.wcy.ponymusic.model.JOnlineMusic;
+import me.wcy.ponymusic.utils.MusicUtils;
 
 /**
  * 在线音乐列表适配器
@@ -26,7 +26,6 @@ public class OnlineMusicAdapter extends BaseAdapter {
     private List<JOnlineMusic> mData;
     private OnMoreClickListener mListener;
     private DisplayImageOptions mOptions;
-    private int mPlayingPosition = -1;
 
     public OnlineMusicAdapter(Context context, List<JOnlineMusic> data) {
         this.mContext = context;
@@ -61,7 +60,6 @@ public class OnlineMusicAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.music_list_item, parent, false);
             holder = new ViewHolder();
-            holder.ivPlaying = (ImageView) convertView.findViewById(R.id.iv_playing);
             holder.ivCover = (ImageView) convertView.findViewById(R.id.iv_cover);
             holder.tvTitle = (TextView) convertView.findViewById(R.id.tv_title);
             holder.tvArtist = (TextView) convertView.findViewById(R.id.tv_artist);
@@ -70,15 +68,10 @@ public class OnlineMusicAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        if (position == mPlayingPosition) {
-            holder.ivPlaying.setVisibility(View.VISIBLE);
-        } else {
-            holder.ivPlaying.setVisibility(View.INVISIBLE);
-        }
         JOnlineMusic jOnlineMusic = mData.get(position);
         ImageLoader.getInstance().displayImage(jOnlineMusic.getPic_small(), holder.ivCover, mOptions);
         holder.tvTitle.setText(jOnlineMusic.getTitle());
-        String artist = jOnlineMusic.getArtist_name() + " - " + jOnlineMusic.getAlbum_title();
+        String artist = MusicUtils.getArtistAndAlbum(jOnlineMusic.getArtist_name(), jOnlineMusic.getAlbum_title());
         holder.tvArtist.setText(artist);
         holder.ivMore.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,16 +82,11 @@ public class OnlineMusicAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public void updatePlayingPosition() {
-        mPlayingPosition = ((MusicActivity) mContext).getPlayService().getPlayingPosition();
-    }
-
     public void setOnMoreClickListener(OnMoreClickListener listener) {
         mListener = listener;
     }
 
     class ViewHolder {
-        ImageView ivPlaying;
         ImageView ivCover;
         TextView tvTitle;
         TextView tvArtist;

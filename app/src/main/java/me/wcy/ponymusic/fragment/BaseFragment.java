@@ -16,19 +16,27 @@ import me.wcy.ponymusic.service.PlayService;
  */
 public abstract class BaseFragment extends Fragment {
     private PlayService mPlayService;
+    private boolean mResumed;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
         init();
         setListener();
+        mResumed = true;
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    public boolean isResume() {
+        return mResumed;
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mPlayService = ((MusicActivity) activity).getPlayService();
+        if (activity instanceof MusicActivity) {
+            mPlayService = ((MusicActivity) activity).getPlayService();
+        }
     }
 
     protected PlayService getPlayService() {

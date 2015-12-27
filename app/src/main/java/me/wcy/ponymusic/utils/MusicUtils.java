@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.WindowManager;
 
 import java.io.File;
@@ -13,7 +14,8 @@ import java.util.List;
 
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.application.MusicApplication;
-import me.wcy.ponymusic.model.LocalMusic;
+import me.wcy.ponymusic.enums.MusicTypeEnum;
+import me.wcy.ponymusic.model.Music;
 
 /**
  * 歌曲工具类
@@ -21,7 +23,7 @@ import me.wcy.ponymusic.model.LocalMusic;
  */
 public class MusicUtils {
     // 存放歌曲列表
-    private static List<LocalMusic> sMusicList = new ArrayList<>();
+    private static List<Music> sMusicList = new ArrayList<>();
 
     /**
      * 扫描歌曲
@@ -40,7 +42,6 @@ public class MusicUtils {
             if (isMusic == 0) {
                 continue;
             }
-            long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
             String title = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)));
             String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
             String unknown = context.getString(R.string.unknown);
@@ -51,16 +52,16 @@ public class MusicUtils {
             long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
             String coverUri = getCoverUri(context, albumId);
             String fileName = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)));
-            LocalMusic localMusic = new LocalMusic();
-            localMusic.setId(id);
-            localMusic.setTitle(title);
-            localMusic.setArtist(artist);
-            localMusic.setAlbum(album);
-            localMusic.setDuration(duration);
-            localMusic.setUri(url);
-            localMusic.setCoverUri(coverUri);
-            localMusic.setFileName(fileName);
-            sMusicList.add(localMusic);
+            Music music = new Music();
+            music.setType(MusicTypeEnum.LOACL);
+            music.setTitle(title);
+            music.setArtist(artist);
+            music.setAlbum(album);
+            music.setDuration(duration);
+            music.setUri(url);
+            music.setCoverUri(coverUri);
+            music.setFileName(fileName);
+            sMusicList.add(music);
         }
         cursor.close();
     }
@@ -78,7 +79,7 @@ public class MusicUtils {
         return result;
     }
 
-    public static List<LocalMusic> getMusicList() {
+    public static List<Music> getMusicList() {
         return sMusicList;
     }
 
@@ -119,6 +120,18 @@ public class MusicUtils {
             result = context.getResources().getDimensionPixelSize(resourceId);
         }
         return result;
+    }
+
+    public static String getArtistAndAlbum(String artist, String album) {
+        if (TextUtils.isEmpty(artist) && TextUtils.isEmpty(album)) {
+            return "";
+        } else if (!TextUtils.isEmpty(artist) && TextUtils.isEmpty(album)) {
+            return artist;
+        } else if (TextUtils.isEmpty(artist) && !TextUtils.isEmpty(album)) {
+            return album;
+        } else {
+            return artist + " - " + album;
+        }
     }
 
 }

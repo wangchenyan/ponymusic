@@ -1,4 +1,4 @@
-package me.wcy.ponymusic.utils;
+package me.wcy.ponymusic.enums;
 
 /**
  * 播放模式

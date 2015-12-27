@@ -11,8 +11,10 @@ import android.widget.TextView;
 
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.activity.MusicActivity;
-import me.wcy.ponymusic.model.LocalMusic;
+import me.wcy.ponymusic.model.Music;
+import me.wcy.ponymusic.service.PlayService;
 import me.wcy.ponymusic.utils.CoverLoader;
+import me.wcy.ponymusic.enums.MusicTypeEnum;
 import me.wcy.ponymusic.utils.MusicUtils;
 
 /**
@@ -63,11 +65,11 @@ public class LocalMusicAdapter extends BaseAdapter {
         } else {
             holder.ivPlaying.setVisibility(View.INVISIBLE);
         }
-        LocalMusic localMusic = MusicUtils.getMusicList().get(position);
-        Bitmap cover = CoverLoader.getInstance().loadThumbnail(localMusic.getCoverUri());
+        final Music music = MusicUtils.getMusicList().get(position);
+        Bitmap cover = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
         holder.ivCover.setImageBitmap(cover);
-        holder.tvTitle.setText(localMusic.getTitle());
-        String artist = localMusic.getArtist() + " - " + localMusic.getAlbum();
+        holder.tvTitle.setText(music.getTitle());
+        String artist = MusicUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum());
         holder.tvArtist.setText(artist);
         holder.ivMore.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,7 +83,12 @@ public class LocalMusicAdapter extends BaseAdapter {
     }
 
     public void updatePlayingPosition() {
-        mPlayingPosition = ((MusicActivity) mContext).getPlayService().getPlayingPosition();
+        PlayService playService = ((MusicActivity) mContext).getPlayService();
+        if (playService.getPlayingMusic() != null && playService.getPlayingMusic().getType() == MusicTypeEnum.LOACL) {
+            mPlayingPosition = playService.getPlayingPosition();
+        } else {
+            mPlayingPosition = -1;
+        }
     }
 
     public void setOnMoreClickListener(OnMoreClickListener listener) {

@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.File;
 
@@ -25,8 +24,10 @@ import butterknife.Bind;
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.adapter.LocalMusicAdapter;
 import me.wcy.ponymusic.adapter.OnMoreClickListener;
-import me.wcy.ponymusic.model.LocalMusic;
+import me.wcy.ponymusic.enums.MusicTypeEnum;
+import me.wcy.ponymusic.model.Music;
 import me.wcy.ponymusic.utils.MusicUtils;
+import me.wcy.ponymusic.utils.ToastUtil;
 
 /**
  * 本地音乐列表
@@ -47,21 +48,29 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
 
     @Override
     protected void init() {
-        if (MusicUtils.getMusicList().isEmpty()) {
-            tvEmpty.setVisibility(View.VISIBLE);
-            return;
-        }
-        int playingPosition = getPlayService().getPlayingPosition();
         mAdapter = new LocalMusicAdapter(getActivity());
-        mAdapter.updatePlayingPosition();
         mAdapter.setOnMoreClickListener(this);
         lvLocalMusic.setAdapter(mAdapter);
-        lvLocalMusic.setSelection(playingPosition);
+        if (getPlayService().getPlayingMusic() != null && getPlayService().getPlayingMusic().getType() == MusicTypeEnum.LOACL) {
+            lvLocalMusic.setSelection(getPlayService().getPlayingPosition());
+        }
     }
 
     @Override
     protected void setListener() {
         lvLocalMusic.setOnItemClickListener(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (MusicUtils.getMusicList().isEmpty()) {
+            tvEmpty.setVisibility(View.VISIBLE);
+        } else {
+            tvEmpty.setVisibility(View.GONE);
+        }
+        mAdapter.updatePlayingPosition();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -71,9 +80,9 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
 
     @Override
     public void onMoreClick(final int position) {
-        LocalMusic localMusic = MusicUtils.getMusicList().get(position);
+        Music music = MusicUtils.getMusicList().get(position);
         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-        dialog.setTitle(localMusic.getTitle());
+        dialog.setTitle(music.getTitle());
         int itemsId = position == getPlayService().getPlayingPosition() ? R.array.local_music_list_dialog_no_delete : R.array.local_music_list_dialog;
         dialog.setItems(itemsId, new DialogInterface.OnClickListener() {
             @Override
@@ -94,18 +103,20 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         dialog.show();
     }
 
-    public void onItemPlay(int position) {
+    public void onItemPlay() {
         mAdapter.updatePlayingPosition();
         mAdapter.notifyDataSetChanged();
-        lvLocalMusic.smoothScrollToPosition(position);
+        if (getPlayService().getPlayingMusic().getType() == MusicTypeEnum.LOACL) {
+            lvLocalMusic.smoothScrollToPosition(getPlayService().getPlayingPosition());
+        }
     }
 
     /**
      * 分享音乐
      */
     private void shareMusic(int position) {
-        LocalMusic localMusic = MusicUtils.getMusicList().get(position);
-        File file = new File(localMusic.getUri());
+        Music music = MusicUtils.getMusicList().get(position);
+        File file = new File(music.getUri());
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("audio/*");
         intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
@@ -116,11 +127,11 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
      * 设置铃声
      */
     private void setRingtone(int position) {
-        LocalMusic localMusic = MusicUtils.getMusicList().get(position);
-        Uri uri = MediaStore.Audio.Media.getContentUriForPath(localMusic.getUri());
+        Music music = MusicUtils.getMusicList().get(position);
+        Uri uri = MediaStore.Audio.Media.getContentUriForPath(music.getUri());
         // 查询音乐文件在媒体库是否存在
         Cursor cursor = getActivity().getContentResolver().query(uri, null,
-                MediaStore.MediaColumns.DATA + "=?", new String[]{localMusic.getUri()}, null);
+                MediaStore.MediaColumns.DATA + "=?", new String[]{music.getUri()}, null);
         if (cursor == null) {
             return;
         }
@@ -132,10 +143,10 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
             values.put(MediaStore.Audio.Media.IS_ALARM, false);
             values.put(MediaStore.Audio.Media.IS_MUSIC, false);
 
-            getActivity().getContentResolver().update(uri, values, MediaStore.MediaColumns.DATA + "=?", new String[]{localMusic.getUri()});
+            getActivity().getContentResolver().update(uri, values, MediaStore.MediaColumns.DATA + "=?", new String[]{music.getUri()});
             Uri newUri = ContentUris.withAppendedId(uri, Long.valueOf(_id));
             RingtoneManager.setActualDefaultRingtoneUri(getActivity(), RingtoneManager.TYPE_RINGTONE, newUri);
-            Toast.makeText(getActivity(), R.string.setting_ringtone_success, Toast.LENGTH_SHORT).show();
+            ToastUtil.show(R.string.setting_ringtone_success);
         }
         cursor.close();
     }
@@ -144,6 +155,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
      * 删除音乐
      */
     private void deleteMusic(final int position) {
+        final Music playingMusic = MusicUtils.getMusicList().get(getPlayService().getPlayingPosition());
         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         String title = MusicUtils.getMusicList().get(position).getTitle();
         String msg = getString(R.string.delete_music);
@@ -152,16 +164,13 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         dialog.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                LocalMusic localMusic = MusicUtils.getMusicList().remove(position);
-                File file = new File(localMusic.getUri());
+                Music music = MusicUtils.getMusicList().remove(position);
+                File file = new File(music.getUri());
                 if (file.delete()) {
-                    if (position < getPlayService().getPlayingPosition()) {
-                        getPlayService().setPlayingPosition(getPlayService().getPlayingPosition() - 1);
-                        mAdapter.updatePlayingPosition();
-                    }
-                    mAdapter.notifyDataSetChanged();
-                    //刷新媒体库
-                    Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + localMusic.getUri()));
+                    getPlayService().updatePlayingPosition(playingMusic);
+                    onResume();
+                    // 刷新媒体库
+                    Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + music.getUri()));
                     getActivity().sendBroadcast(intent);
                 }
             }

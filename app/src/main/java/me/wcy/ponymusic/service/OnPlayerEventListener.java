@@ -1,5 +1,7 @@
 package me.wcy.ponymusic.service;
 
+import me.wcy.ponymusic.model.Music;
+
 /**
  * 播放进度监听器
  * Created by hzwangchenyan on 2015/12/17.
@@ -13,7 +15,7 @@ public interface OnPlayerEventListener {
     /**
      * 切换歌曲
      */
-    void onChange(int position);
+    void onChange(Music music);
 
     /**
      * 暂停播放

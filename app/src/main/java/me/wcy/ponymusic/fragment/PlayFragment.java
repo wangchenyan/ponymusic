@@ -21,11 +21,13 @@ import java.util.List;
 import butterknife.Bind;
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.adapter.PlayPagerAdapter;
-import me.wcy.ponymusic.model.LocalMusic;
+import me.wcy.ponymusic.enums.MusicTypeEnum;
+import me.wcy.ponymusic.enums.PlayModeEnum;
+import me.wcy.ponymusic.model.Music;
 import me.wcy.ponymusic.utils.Constants;
 import me.wcy.ponymusic.utils.CoverLoader;
+import me.wcy.ponymusic.utils.ImageUtils;
 import me.wcy.ponymusic.utils.MusicUtils;
-import me.wcy.ponymusic.utils.PlayModeEnum;
 import me.wcy.ponymusic.utils.Preferences;
 import me.wcy.ponymusic.utils.ToastUtil;
 import me.wcy.ponymusic.widget.AlbumCoverView;
@@ -82,7 +84,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         initSystemBar();
         initViewPager();
         ilIndicator.create(mViewPagerContent.size());
-        onChange(getPlayService().getPlayingPosition());
+        onChange(getPlayService().getPlayingMusic());
         initMode();
     }
 
@@ -136,8 +138,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    public void onChange(int position) {
-        onPlay(position);
+    public void onChange(Music music) {
+        onPlay(music);
     }
 
     public void onPlayerPause() {
@@ -206,22 +208,19 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    private void onPlay(int position) {
-        if (MusicUtils.getMusicList().isEmpty()) {
+    private void onPlay(Music music) {
+        if (music == null) {
             return;
         }
-
-        LocalMusic localMusic = MusicUtils.getMusicList().get(position);
-        tvTitle.setText(localMusic.getTitle());
-        tvArtist.setText(localMusic.getArtist());
-        seekBar.setMax((int) localMusic.getDuration());
+        tvTitle.setText(music.getTitle());
+        tvArtist.setText(music.getArtist());
+        seekBar.setMax((int) music.getDuration());
         seekBar.setProgress(0);
         mLastProgress = 0;
-        tvCurrentTime.setText("00:00");
-        tvTotalTime.setText(formatTime(localMusic.getDuration()));
-        setBackground(position);
-        setAlbumCover(position);
-        setLrc(position);
+        tvCurrentTime.setText(R.string.play_time_start);
+        tvTotalTime.setText(formatTime(music.getDuration()));
+        setCoverAndBg(music);
+        setLrc(music);
         if (getPlayService().isPlaying()) {
             ivPlay.setImageResource(R.drawable.ic_play_btn_pause_selector);
             mAlbumCoverView.start();
@@ -271,36 +270,46 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         switch (mode) {
             case LOOP:
                 mode = PlayModeEnum.SHUFFLE;
-                ToastUtil.show(getString(R.string.mode_shuffle));
+                ToastUtil.show(R.string.mode_shuffle);
                 break;
             case SHUFFLE:
                 mode = PlayModeEnum.ONE;
-                ToastUtil.show(getString(R.string.mode_one));
+                ToastUtil.show(R.string.mode_one);
                 break;
             case ONE:
                 mode = PlayModeEnum.LOOP;
-                ToastUtil.show(getString(R.string.mode_loop));
+                ToastUtil.show(R.string.mode_loop);
                 break;
         }
         Preferences.put(getContext(), Preferences.PLAY_MODE, mode.value());
         initMode();
     }
 
-    private void setBackground(int position) {
-        LocalMusic localMusic = MusicUtils.getMusicList().get(position);
-        Bitmap bitmap = CoverLoader.getInstance().loadBlur(localMusic.getCoverUri());
-        ivPlayingBg.setImageBitmap(bitmap);
+    private void setCoverAndBg(Music music) {
+        if (music.getType() == MusicTypeEnum.LOACL) {
+            mAlbumCoverView.setCoverBitmap(CoverLoader.getInstance().loadRound(music.getCoverUri()));
+            ivPlayingBg.setImageBitmap(CoverLoader.getInstance().loadBlur(music.getCoverUri()));
+        } else {
+            if (music.getCover() == null) {
+                mAlbumCoverView.setCoverBitmap(CoverLoader.getInstance().loadRound(null));
+                ivPlayingBg.setImageResource(R.drawable.ic_play_page_default_bg);
+            } else {
+                Bitmap cover = ImageUtils.resizeImage(music.getCover(), MusicUtils.getScreenWidth() / 2, MusicUtils.getScreenWidth() / 2);
+                cover = ImageUtils.createCircleImage(cover);
+                mAlbumCoverView.setCoverBitmap(cover);
+                Bitmap bg = ImageUtils.boxBlurFilter(music.getCover());
+                ivPlayingBg.setImageBitmap(bg);
+            }
+        }
     }
 
-    private void setAlbumCover(int position) {
-        LocalMusic localMusic = MusicUtils.getMusicList().get(position);
-        Bitmap bitmap = CoverLoader.getInstance().loadRound(localMusic.getCoverUri());
-        mAlbumCoverView.setCoverBitmap(bitmap);
-    }
-
-    private void setLrc(int position) {
-        LocalMusic localMusic = MusicUtils.getMusicList().get(position);
-        String lrcPath = MusicUtils.getLrcDir() + localMusic.getFileName().replace(Constants.FILENAME_MP3, Constants.FILENAME_LRC);
+    private void setLrc(Music music) {
+        String lrcPath;
+        if (music.getType() == MusicTypeEnum.LOACL) {
+            lrcPath = MusicUtils.getLrcDir() + music.getFileName().replace(Constants.FILENAME_MP3, Constants.FILENAME_LRC);
+        } else {
+            lrcPath = MusicUtils.getLrcDir() + music.getArtist() + " - " + music.getTitle() + Constants.FILENAME_LRC;
+        }
         mLrcViewSingle.loadLrc(lrcPath);
         mLrcViewFull.loadLrc(lrcPath);
     }

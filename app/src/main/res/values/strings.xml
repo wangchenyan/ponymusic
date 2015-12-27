@@ -5,7 +5,7 @@
     <string name="share">分享</string>
     <string name="about">关于</string>
     <string name="delete">删除</string>
-    <string name="loading">请稍后…</string>
+    <string name="loading">正在加载…</string>
     <string name="local_music">我的音乐</string>
     <string name="online_music">在线音乐</string>
     <string name="unknown">未知</string>
@@ -14,4 +14,6 @@
     <string name="mode_loop">列表循环</string>
     <string name="mode_shuffle">随机播放</string>
     <string name="mode_one">单曲循环</string>
+    <string name="play_time_start">00:00</string>
+    <string name="now_play">正在播放：</string>
 </resources>

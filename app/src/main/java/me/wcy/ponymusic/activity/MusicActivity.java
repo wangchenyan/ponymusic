@@ -27,13 +27,12 @@ import butterknife.Bind;
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.adapter.FragmentAdapter;
 import me.wcy.ponymusic.fragment.LocalMusicFragment;
-import me.wcy.ponymusic.fragment.SongListFragment;
 import me.wcy.ponymusic.fragment.PlayFragment;
-import me.wcy.ponymusic.model.LocalMusic;
+import me.wcy.ponymusic.fragment.SongListFragment;
+import me.wcy.ponymusic.model.Music;
 import me.wcy.ponymusic.service.OnPlayerEventListener;
 import me.wcy.ponymusic.service.PlayService;
 import me.wcy.ponymusic.utils.CoverLoader;
-import me.wcy.ponymusic.utils.MusicUtils;
 
 public class MusicActivity extends BaseActivity implements View.OnClickListener, OnPlayerEventListener, NavigationView.OnNavigationItemSelectedListener {
     @Bind(R.id.drawer_layout)
@@ -81,6 +80,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     private void bindService() {
         Intent intent = new Intent();
         intent.setClass(this, PlayService.class);
+        intent.putExtra(MusicActivity.class.getName(), MusicActivity.class.getName());
         mPlayServiceConnection = new PlayServiceConnection();
         bindService(intent, mPlayServiceConnection, Context.BIND_AUTO_CREATE);
     }
@@ -101,7 +101,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     private void init() {
         setupView();
-        onChange(mPlayService.getPlayingPosition());
+        onChange(mPlayService.getPlayingMusic());
         mProgressDialog.cancel();
     }
 
@@ -138,23 +138,23 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onPublish(int progress) {
         mProgressBar.setProgress(progress);
-        if (mPlayFragment != null && mPlayFragment.isResumed()) {
+        if (mPlayFragment != null && mPlayFragment.isResume()) {
             mPlayFragment.onPublish(progress);
         }
     }
 
     @Override
-    public void onChange(int position) {
-        onPlay(position);
-        if (mPlayFragment != null && mPlayFragment.isResumed()) {
-            mPlayFragment.onChange(position);
+    public void onChange(Music music) {
+        onPlay(music);
+        if (mPlayFragment != null && mPlayFragment.isResume()) {
+            mPlayFragment.onChange(music);
         }
     }
 
     @Override
     public void onPlayerPause() {
         ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_play);
-        if (mPlayFragment != null && mPlayFragment.isResumed()) {
+        if (mPlayFragment != null && mPlayFragment.isResume()) {
             mPlayFragment.onPlayerPause();
         }
     }
@@ -162,7 +162,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onPlayerResume() {
         ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_pause);
-        if (mPlayFragment != null && mPlayFragment.isResumed()) {
+        if (mPlayFragment != null && mPlayFragment.isResume()) {
             mPlayFragment.onPlayerResume();
         }
     }
@@ -213,26 +213,29 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         return false;
     }
 
-    public void onPlay(int position) {
-        if (MusicUtils.getMusicList().isEmpty()) {
+    public void onPlay(Music music) {
+        if (music == null) {
             return;
         }
-
-        LocalMusic localMusic = MusicUtils.getMusicList().get(position);
-        Bitmap cover = CoverLoader.getInstance().loadThumbnail(localMusic.getCoverUri());
+        Bitmap cover;
+        if (music.getCover() == null) {
+            cover = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
+        } else {
+            cover = music.getCover();
+        }
         ivPlayBarCover.setImageBitmap(cover);
-        tvPlayBarTitle.setText(localMusic.getTitle());
-        tvPlayBarArtist.setText(localMusic.getArtist());
+        tvPlayBarTitle.setText(music.getTitle());
+        tvPlayBarArtist.setText(music.getArtist());
         if (getPlayService().isPlaying()) {
             ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_pause);
         } else {
             ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_play);
         }
-        mProgressBar.setMax((int) localMusic.getDuration());
+        mProgressBar.setMax((int) music.getDuration());
         mProgressBar.setProgress(0);
 
-        if (mLocalMusicFragment != null && mLocalMusicFragment.isResumed()) {
-            mLocalMusicFragment.onItemPlay(position);
+        if (mLocalMusicFragment != null && mLocalMusicFragment.isResume()) {
+            mLocalMusicFragment.onItemPlay();
         }
     }
 

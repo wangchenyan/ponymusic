@@ -16,11 +16,13 @@ import java.io.IOException;
 import java.util.Random;
 
 import me.wcy.ponymusic.R;
+import me.wcy.ponymusic.activity.MusicActivity;
 import me.wcy.ponymusic.activity.SplashActivity;
-import me.wcy.ponymusic.model.LocalMusic;
+import me.wcy.ponymusic.model.Music;
 import me.wcy.ponymusic.utils.CoverLoader;
+import me.wcy.ponymusic.enums.MusicTypeEnum;
 import me.wcy.ponymusic.utils.MusicUtils;
-import me.wcy.ponymusic.utils.PlayModeEnum;
+import me.wcy.ponymusic.enums.PlayModeEnum;
 import me.wcy.ponymusic.utils.Preferences;
 
 /**
@@ -34,6 +36,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     private MediaPlayer mPlayer;
     private OnPlayerEventListener mListener;
     private Handler mHandler;
+    private Music mPlayingMusic;
     private int mPlayingPosition;
     private boolean mIsPause = false;
 
@@ -42,9 +45,8 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         super.onCreate();
         MusicUtils.scanMusic(this);
         mPlayingPosition = (Integer) Preferences.get(this, Preferences.PLAY_POSITION, 0);
-        if (mPlayingPosition >= MusicUtils.getMusicList().size()) {
-            mPlayingPosition = 0;
-        }
+        mPlayingPosition = mPlayingPosition >= MusicUtils.getMusicList().size() ? 0 : mPlayingPosition;
+        mPlayingMusic = MusicUtils.getMusicList().isEmpty() ? null : MusicUtils.getMusicList().get(mPlayingPosition);
         mPlayer = new MediaPlayer();
         mPlayer.setOnCompletionListener(this);
         mHandler = new PublishProgressHandler();
@@ -78,28 +80,46 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         }
 
         mPlayingPosition = position;
+        mPlayingMusic = MusicUtils.getMusicList().get(mPlayingPosition);
 
         try {
             mPlayer.reset();
-            mPlayer.setDataSource(MusicUtils.getMusicList().get(mPlayingPosition).getUri());
+            mPlayer.setDataSource(mPlayingMusic.getUri());
             mPlayer.prepare();
             start();
             if (mListener != null) {
-                mListener.onChange(mPlayingPosition);
+                mListener.onChange(mPlayingMusic);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        updateNotification(mPlayingPosition);
+        updateNotification(mPlayingMusic);
 
         Preferences.put(this, Preferences.PLAY_POSITION, mPlayingPosition);
         return mPlayingPosition;
     }
 
+    public void play(Music music) {
+        mPlayingMusic = music;
+        try {
+            mPlayer.reset();
+            mPlayer.setDataSource(mPlayingMusic.getUri());
+            mPlayer.prepare();
+            start();
+            if (mListener != null) {
+                mListener.onChange(mPlayingMusic);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        updateNotification(mPlayingMusic);
+    }
+
     private void start() {
         mPlayer.start();
-        updateNotification(mPlayingPosition);
+        updateNotification(mPlayingMusic);
         mIsPause = false;
     }
 
@@ -133,7 +153,8 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
             case LOOP:
                 return play(mPlayingPosition + 1);
             case SHUFFLE:
-                return play(new Random().nextInt(MusicUtils.getMusicList().size()));
+                mPlayingPosition = new Random().nextInt(MusicUtils.getMusicList().size());
+                return play(mPlayingPosition);
             case ONE:
                 return play(mPlayingPosition);
             default:
@@ -147,7 +168,8 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
             case LOOP:
                 return play(mPlayingPosition - 1);
             case SHUFFLE:
-                return play(new Random().nextInt(MusicUtils.getMusicList().size()));
+                mPlayingPosition = new Random().nextInt(MusicUtils.getMusicList().size());
+                return play(mPlayingPosition);
             case ONE:
                 return play(mPlayingPosition);
             default:
@@ -181,7 +203,18 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         return mPlayingPosition;
     }
 
-    public void setPlayingPosition(int position) {
+    public Music getPlayingMusic() {
+        return mPlayingMusic;
+    }
+
+    public void updatePlayingPosition(Music playingMusic) {
+        int position = 0;
+        for (int i = 0; i < MusicUtils.getMusicList().size(); i++) {
+            if (MusicUtils.getMusicList().get(i).equals(playingMusic)) {
+                position = i;
+                break;
+            }
+        }
         mPlayingPosition = position;
         Preferences.put(this, Preferences.PLAY_POSITION, mPlayingPosition);
     }
@@ -189,11 +222,15 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     /**
      * 更新通知栏
      */
-    private void updateNotification(int position) {
-        LocalMusic localMusic = MusicUtils.getMusicList().get(position);
-        String title = localMusic.getTitle();
-        String subtitle = localMusic.getArtist() + " - " + localMusic.getAlbum();
-        Bitmap bitmap = CoverLoader.getInstance().loadThumbnail(localMusic.getCoverUri());
+    private void updateNotification(Music music) {
+        String title = music.getTitle();
+        String subtitle = music.getArtist() + " - " + music.getAlbum();
+        Bitmap bitmap;
+        if (music.getType() == MusicTypeEnum.LOACL) {
+            bitmap = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
+        } else {
+            bitmap = music.getCover();
+        }
         Intent intent = new Intent(this, SplashActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         Notification.Builder builder = new Notification.Builder(this)
@@ -216,7 +253,9 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
     @Override
     public boolean onUnbind(Intent intent) {
-        mListener = null;
+        if (MusicActivity.class.getName().equals(intent.getStringExtra(MusicActivity.class.getName()))) {
+            mListener = null;
+        }
         return true;
     }
 
