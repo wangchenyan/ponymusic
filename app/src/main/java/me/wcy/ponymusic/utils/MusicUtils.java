@@ -11,6 +11,8 @@ import android.view.WindowManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.application.MusicApplication;
@@ -142,6 +144,8 @@ public class MusicUtils {
     }
 
     public static String getMp3FileName(String artist, String title) {
+        artist = stringFilter(artist);
+        title = stringFilter(title);
         if (TextUtils.isEmpty(artist)) {
             artist = MusicApplication.getInstance().getString(R.string.unknown);
         }
@@ -152,6 +156,8 @@ public class MusicUtils {
     }
 
     public static String getLrcFileName(String artist, String title) {
+        artist = stringFilter(artist);
+        title = stringFilter(title);
         if (TextUtils.isEmpty(artist)) {
             artist = MusicApplication.getInstance().getString(R.string.unknown);
         }
@@ -159,5 +165,18 @@ public class MusicUtils {
             title = MusicApplication.getInstance().getString(R.string.unknown);
         }
         return artist + " - " + title + Constants.FILENAME_LRC;
+    }
+
+    /**
+     * 过滤特殊字符(\/:*?"<>|)
+     */
+    private static String stringFilter(String str) {
+        if (str == null) {
+            return null;
+        }
+        String regEx = "[\\/:*?\"<>|]";
+        Pattern p = Pattern.compile(regEx);
+        Matcher m = p.matcher(str);
+        return m.replaceAll("").trim();
     }
 }

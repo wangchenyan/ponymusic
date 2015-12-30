@@ -198,16 +198,17 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         public void onReceive(Context context, Intent intent) {
             long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
             String title = (String) Preferences.get(context, String.valueOf(id), "");
-            if (!TextUtils.isEmpty(title)) {
-                // 由于系统扫描音乐是异步执行，因此延迟刷新音乐列表
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        getPlayService().updateMusicList();
-                        updateView();
-                    }
-                }, 500);
+            if (TextUtils.isEmpty(title)) {
+                return;
             }
+            // 由于系统扫描音乐是异步执行，因此延迟刷新音乐列表
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getPlayService().updateMusicList();
+                    updateView();
+                }
+            }, 500);
         }
     }
 }

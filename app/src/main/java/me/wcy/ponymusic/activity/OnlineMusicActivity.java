@@ -262,7 +262,6 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                         Uri uri = Uri.parse(response.getBitrate().getFile_link());
                         DownloadManager.Request request = new DownloadManager.Request(uri);
                         String mp3FileName = MusicUtils.getMp3FileName(jOnlineMusic.getArtist_name(), jOnlineMusic.getTitle());
-                        request.setDescription(mp3FileName);
                         request.setDestinationInExternalPublicDir(MusicUtils.getRelativeMusicDir(), mp3FileName);
                         request.setMimeType(MimeTypeMap.getFileExtensionFromUrl(response.getBitrate().getFile_link()));
                         request.allowScanningByMediaScanner();
@@ -270,6 +269,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                         request.setAllowedOverRoaming(false);// 不允许漫游
                         long id = downloadManager.enqueue(request);
                         Preferences.put(OnlineMusicActivity.this, String.valueOf(id), jOnlineMusic.getTitle());
+                        ToastUtil.show("正在下载：" + jOnlineMusic.getTitle());
                     }
 
                     @Override
