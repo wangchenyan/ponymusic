@@ -269,7 +269,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                         request.setAllowedOverRoaming(false);// 不允许漫游
                         long id = downloadManager.enqueue(request);
                         Preferences.put(OnlineMusicActivity.this, String.valueOf(id), jOnlineMusic.getTitle());
-                        ToastUtil.show("正在下载：" + jOnlineMusic.getTitle());
+                        ToastUtil.show(getString(R.string.now_download) + jOnlineMusic.getTitle());
                     }
 
                     @Override

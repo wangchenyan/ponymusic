@@ -115,8 +115,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     }
 
     public void onItemPlay() {
-        mAdapter.updatePlayingPosition();
-        mAdapter.notifyDataSetChanged();
+        updateView();
         if (getPlayService().getPlayingMusic().getType() == MusicTypeEnum.LOACL) {
             lvLocalMusic.smoothScrollToPosition(getPlayService().getPlayingPosition());
         }

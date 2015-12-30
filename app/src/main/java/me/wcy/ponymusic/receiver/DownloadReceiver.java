@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.utils.Preferences;
 import me.wcy.ponymusic.utils.ToastUtil;
 
@@ -18,8 +19,9 @@ public class DownloadReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
         String title = (String) Preferences.get(context, String.valueOf(id), "");
-        if (!TextUtils.isEmpty(title)) {
-            ToastUtil.show(title + "下载完成");
+        if (TextUtils.isEmpty(title)) {
+            return;
         }
+        ToastUtil.show(title + context.getString(R.string.download_success));
     }
 }
