@@ -21,11 +21,11 @@ public class Music {
     private long duration;
     // 音乐路径
     private String uri;
-    // 本地歌曲 专辑封面路径
+    // 专辑封面路径[本地歌曲]
     private String coverUri;
     // 文件名
     private String fileName;
-    // 网络歌曲 专辑封面bitmap
+    // 专辑封面bitmap[网络歌曲]
     private Bitmap cover;
 
     public String getAlbum() {

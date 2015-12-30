@@ -16,7 +16,7 @@ import butterknife.Bind;
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.activity.OnlineMusicActivity;
 import me.wcy.ponymusic.adapter.SongListAdapter;
-import me.wcy.ponymusic.model.OnlineMusicListInfo;
+import me.wcy.ponymusic.model.MusicListInfo;
 import me.wcy.ponymusic.utils.Extras;
 
 /**
@@ -26,7 +26,7 @@ import me.wcy.ponymusic.utils.Extras;
 public class SongListFragment extends BaseFragment implements AdapterView.OnItemClickListener {
     @Bind(R.id.lv_online_music)
     ListView lvOnlineMusic;
-    private List<OnlineMusicListInfo> mData;
+    private List<MusicListInfo> mData;
 
     @Nullable
     @Override
@@ -40,7 +40,7 @@ public class SongListFragment extends BaseFragment implements AdapterView.OnItem
         String[] titles = getResources().getStringArray(R.array.online_music_list_title);
         String[] types = getResources().getStringArray(R.array.online_music_list_type);
         for (int i = 0; i < titles.length; i++) {
-            OnlineMusicListInfo info = new OnlineMusicListInfo();
+            MusicListInfo info = new MusicListInfo();
             info.setTitle(titles[i]);
             info.setType(types[i]);
             mData.add(info);
@@ -56,12 +56,12 @@ public class SongListFragment extends BaseFragment implements AdapterView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        OnlineMusicListInfo musicListInfo = mData.get(position);
+        MusicListInfo musicListInfo = mData.get(position);
         if (musicListInfo.getType().equals("*")) {
             return;
         }
         Intent intent = new Intent(getContext(), OnlineMusicActivity.class);
-        intent.putExtra(Extras.ONLINE_MUSIC_LIST_TYPE, musicListInfo);
+        intent.putExtra(Extras.MUSIC_LIST_TYPE, musicListInfo);
         startActivity(intent);
     }
 }

@@ -6,7 +6,7 @@ package me.wcy.ponymusic.model;
  */
 public class JOnlineMusicList {
     JOnlineMusic[] song_list;
-    JOnlineMusicListInfo billboard;
+    JBillboard billboard;
 
     public JOnlineMusic[] getSong_list() {
         return song_list;
@@ -16,15 +16,15 @@ public class JOnlineMusicList {
         this.song_list = song_list;
     }
 
-    public JOnlineMusicListInfo getBillboard() {
+    public JBillboard getBillboard() {
         return billboard;
     }
 
-    public void setBillboard(JOnlineMusicListInfo billboard) {
+    public void setBillboard(JBillboard billboard) {
         this.billboard = billboard;
     }
 
-    public class JOnlineMusicListInfo {
+    public class JBillboard {
         String update_date;
         String name;
         String comment;

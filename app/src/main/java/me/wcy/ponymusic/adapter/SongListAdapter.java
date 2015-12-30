@@ -19,7 +19,7 @@ import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.callback.JsonCallback;
 import me.wcy.ponymusic.model.JOnlineMusic;
 import me.wcy.ponymusic.model.JOnlineMusicList;
-import me.wcy.ponymusic.model.OnlineMusicListInfo;
+import me.wcy.ponymusic.model.MusicListInfo;
 import me.wcy.ponymusic.utils.Constants;
 
 /**
@@ -30,10 +30,10 @@ public class SongListAdapter extends BaseAdapter {
     private static final int TYPE_PROFILE = 0;
     private static final int TYPE_MUSIC_LIST = 1;
     private Context mContext;
-    private List<OnlineMusicListInfo> mData;
+    private List<MusicListInfo> mData;
     private DisplayImageOptions mOptions;
 
-    public SongListAdapter(Context context, List<OnlineMusicListInfo> data) {
+    public SongListAdapter(Context context, List<MusicListInfo> data) {
         mContext = context;
         mData = data;
         mOptions = new DisplayImageOptions.Builder()
@@ -83,7 +83,7 @@ public class SongListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolderProfile holderProfile;
         ViewHolderMusicList holderMusicList;
-        OnlineMusicListInfo musicListInfo = mData.get(position);
+        MusicListInfo musicListInfo = mData.get(position);
         int itemViewType = getItemViewType(position);
         switch (itemViewType) {
             case TYPE_PROFILE:
@@ -115,7 +115,7 @@ public class SongListAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private void getMusicListInfo(final OnlineMusicListInfo musicListInfo, final ViewHolderMusicList holderMusicList) {
+    private void getMusicListInfo(final MusicListInfo musicListInfo, final ViewHolderMusicList holderMusicList) {
         if (musicListInfo.getCoverUrl() == null) {
             OkHttpUtils.get().url(Constants.BASE_URL)
                     .addParams("method", Constants.METHOD_GET_MUSIC_LIST)

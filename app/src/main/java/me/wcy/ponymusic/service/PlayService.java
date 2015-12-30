@@ -18,11 +18,11 @@ import java.util.Random;
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.activity.MusicActivity;
 import me.wcy.ponymusic.activity.SplashActivity;
+import me.wcy.ponymusic.enums.MusicTypeEnum;
+import me.wcy.ponymusic.enums.PlayModeEnum;
 import me.wcy.ponymusic.model.Music;
 import me.wcy.ponymusic.utils.CoverLoader;
-import me.wcy.ponymusic.enums.MusicTypeEnum;
 import me.wcy.ponymusic.utils.MusicUtils;
-import me.wcy.ponymusic.enums.PlayModeEnum;
 import me.wcy.ponymusic.utils.Preferences;
 
 /**
@@ -224,7 +224,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
      */
     private void updateNotification(Music music) {
         String title = music.getTitle();
-        String subtitle = music.getArtist() + " - " + music.getAlbum();
+        String subtitle = MusicUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum());
         Bitmap bitmap;
         if (music.getType() == MusicTypeEnum.LOACL) {
             bitmap = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());

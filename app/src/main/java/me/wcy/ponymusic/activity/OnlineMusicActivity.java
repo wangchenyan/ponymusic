@@ -30,11 +30,11 @@ import me.wcy.ponymusic.adapter.OnMoreClickListener;
 import me.wcy.ponymusic.adapter.OnlineMusicAdapter;
 import me.wcy.ponymusic.callback.JsonCallback;
 import me.wcy.ponymusic.enums.MusicTypeEnum;
-import me.wcy.ponymusic.model.JDownloadMusic;
+import me.wcy.ponymusic.model.JDownloadInfo;
 import me.wcy.ponymusic.model.JOnlineMusic;
 import me.wcy.ponymusic.model.JOnlineMusicList;
 import me.wcy.ponymusic.model.Music;
-import me.wcy.ponymusic.model.OnlineMusicListInfo;
+import me.wcy.ponymusic.model.MusicListInfo;
 import me.wcy.ponymusic.service.PlayService;
 import me.wcy.ponymusic.utils.Constants;
 import me.wcy.ponymusic.utils.Extras;
@@ -45,7 +45,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
     private static final int MUSIC_LIST_SIZE = 20;
     @Bind(R.id.lv_online_music_list)
     ListView lvOnlineMusic;
-    private OnlineMusicListInfo mListInfo;
+    private MusicListInfo mListInfo;
     private JOnlineMusicList jOnlineMusicList;
     private List<JOnlineMusic> mMusicList;
     private OnlineMusicAdapter mAdapter;
@@ -60,7 +60,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online_music);
 
-        mListInfo = (OnlineMusicListInfo) getIntent().getSerializableExtra(Extras.ONLINE_MUSIC_LIST_TYPE);
+        mListInfo = (MusicListInfo) getIntent().getSerializableExtra(Extras.MUSIC_LIST_TYPE);
         setTitle(mListInfo.getTitle());
         mMusicList = new ArrayList<>();
         mAdapter = new OnlineMusicAdapter(this, mMusicList);
@@ -153,9 +153,9 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                 .addParams("method", Constants.METHOD_DOWNLOAD_MUSIC)
                 .addParams("songid", jOnlineMusic.getSong_id())
                 .build()
-                .execute(new JsonCallback<JDownloadMusic>(JDownloadMusic.class) {
+                .execute(new JsonCallback<JDownloadInfo>(JDownloadInfo.class) {
                     @Override
-                    public void onResponse(final JDownloadMusic response) {
+                    public void onResponse(final JDownloadInfo response) {
                         music.setUri(response.getBitrate().getFile_link());
                         music.setDuration(response.getBitrate().getFile_duration() * 1000);
                         mCounter++;

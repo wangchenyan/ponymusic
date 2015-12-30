@@ -4,18 +4,18 @@ package me.wcy.ponymusic.model;
  * JavaBean
  * Created by wcy on 2015/12/27.
  */
-public class JDownloadMusic {
-    JDownloadMusicInfo bitrate;
+public class JDownloadInfo {
+    JBitrate bitrate;
 
-    public JDownloadMusicInfo getBitrate() {
+    public JBitrate getBitrate() {
         return bitrate;
     }
 
-    public void setBitrate(JDownloadMusicInfo bitrate) {
+    public void setBitrate(JBitrate bitrate) {
         this.bitrate = bitrate;
     }
 
-    public class JDownloadMusicInfo {
+    public class JBitrate {
         int file_duration;
         String file_link;
 
