@@ -80,7 +80,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     private void bindService() {
         Intent intent = new Intent();
         intent.setClass(this, PlayService.class);
-        intent.putExtra(MusicActivity.class.getName(), MusicActivity.class.getName());
         mPlayServiceConnection = new PlayServiceConnection();
         bindService(intent, mPlayServiceConnection, Context.BIND_AUTO_CREATE);
     }
@@ -100,6 +99,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void init() {
+        getPlayService().updateMusicList();
         setupView();
         onChange(mPlayService.getPlayingMusic());
         mProgressDialog.cancel();

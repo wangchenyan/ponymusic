@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.Random;
 
 import me.wcy.ponymusic.R;
-import me.wcy.ponymusic.activity.MusicActivity;
 import me.wcy.ponymusic.activity.SplashActivity;
 import me.wcy.ponymusic.enums.MusicTypeEnum;
 import me.wcy.ponymusic.enums.PlayModeEnum;
@@ -36,17 +35,15 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     private MediaPlayer mPlayer;
     private OnPlayerEventListener mListener;
     private Handler mHandler;
+    // 正在播放的歌曲[本地|网络]
     private Music mPlayingMusic;
+    // 正在播放的本地歌曲的序号
     private int mPlayingPosition;
     private boolean mIsPause = false;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        MusicUtils.scanMusic(this);
-        mPlayingPosition = (Integer) Preferences.get(this, Preferences.PLAY_POSITION, 0);
-        mPlayingPosition = mPlayingPosition >= MusicUtils.getMusicList().size() ? 0 : mPlayingPosition;
-        mPlayingMusic = MusicUtils.getMusicList().isEmpty() ? null : MusicUtils.getMusicList().get(mPlayingPosition);
         mPlayer = new MediaPlayer();
         mPlayer.setOnCompletionListener(this);
         mHandler = new PublishProgressHandler();
@@ -57,6 +54,17 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     @Override
     public IBinder onBind(Intent intent) {
         return new PlayBinder();
+    }
+
+    /**
+     * 每次启动时扫描音乐
+     */
+    public void updateMusicList() {
+        MusicUtils.scanMusic(this);
+        if (!MusicUtils.getMusicList().isEmpty()) {
+            updatePlayingPosition();
+            mPlayingMusic = mPlayingMusic == null ? MusicUtils.getMusicList().get(mPlayingPosition) : mPlayingMusic;
+        }
     }
 
     @Override
@@ -96,7 +104,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
         updateNotification(mPlayingMusic);
 
-        Preferences.put(this, Preferences.PLAY_POSITION, mPlayingPosition);
+        Preferences.put(this, Preferences.MUSIC_ID, mPlayingMusic.getId());
         return mPlayingPosition;
     }
 
@@ -199,24 +207,34 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         return mPlayer != null && mIsPause;
     }
 
+    /**
+     * 获取正在播放的本地歌曲的序号
+     */
     public int getPlayingPosition() {
         return mPlayingPosition;
     }
 
+    /**
+     * 获取正在播放的歌曲[本地|网络]
+     */
     public Music getPlayingMusic() {
         return mPlayingMusic;
     }
 
-    public void updatePlayingPosition(Music playingMusic) {
+    /**
+     * 删除或下载歌曲后刷新正在播放的本地歌曲的序号
+     */
+    public void updatePlayingPosition() {
         int position = 0;
+        long id = (long) Preferences.get(this, Preferences.MUSIC_ID, 0L);
         for (int i = 0; i < MusicUtils.getMusicList().size(); i++) {
-            if (MusicUtils.getMusicList().get(i).equals(playingMusic)) {
+            if (MusicUtils.getMusicList().get(i).getId() == id) {
                 position = i;
                 break;
             }
         }
         mPlayingPosition = position;
-        Preferences.put(this, Preferences.PLAY_POSITION, mPlayingPosition);
+        Preferences.put(this, Preferences.MUSIC_ID, MusicUtils.getMusicList().get(mPlayingPosition).getId());
     }
 
     /**
@@ -253,9 +271,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
     @Override
     public boolean onUnbind(Intent intent) {
-        if (MusicActivity.class.getName().equals(intent.getStringExtra(MusicActivity.class.getName()))) {
-            mListener = null;
-        }
+        mListener = null;
         return true;
     }
 

@@ -42,6 +42,7 @@ public class MusicUtils {
             if (isMusic == 0) {
                 continue;
             }
+            long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
             String title = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)));
             String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
             String unknown = context.getString(R.string.unknown);
@@ -53,6 +54,7 @@ public class MusicUtils {
             String coverUri = getCoverUri(context, albumId);
             String fileName = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)));
             Music music = new Music();
+            music.setId(id);
             music.setType(MusicTypeEnum.LOACL);
             music.setTitle(title);
             music.setArtist(artist);
@@ -102,6 +104,11 @@ public class MusicUtils {
         return mkdirs(dir);
     }
 
+    public static String getRelativeMusicDir() {
+        String dir = "PonyMusic" + File.separator + "Music" + File.separator;
+        return mkdirs(dir);
+    }
+
     private static String mkdirs(String dir) {
         File file = new File(dir);
         if (!file.exists()) {
@@ -134,4 +141,23 @@ public class MusicUtils {
         }
     }
 
+    public static String getMp3FileName(String artist, String title) {
+        if (TextUtils.isEmpty(artist)) {
+            artist = MusicApplication.getInstance().getString(R.string.unknown);
+        }
+        if (TextUtils.isEmpty(title)) {
+            title = MusicApplication.getInstance().getString(R.string.unknown);
+        }
+        return artist + " - " + title + Constants.FILENAME_MP3;
+    }
+
+    public static String getLrcFileName(String artist, String title) {
+        if (TextUtils.isEmpty(artist)) {
+            artist = MusicApplication.getInstance().getString(R.string.unknown);
+        }
+        if (TextUtils.isEmpty(title)) {
+            title = MusicApplication.getInstance().getString(R.string.unknown);
+        }
+        return artist + " - " + title + Constants.FILENAME_LRC;
+    }
 }

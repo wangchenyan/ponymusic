@@ -1,16 +1,22 @@
 package me.wcy.ponymusic.fragment;
 
 import android.app.AlertDialog;
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +33,7 @@ import me.wcy.ponymusic.adapter.OnMoreClickListener;
 import me.wcy.ponymusic.enums.MusicTypeEnum;
 import me.wcy.ponymusic.model.Music;
 import me.wcy.ponymusic.utils.MusicUtils;
+import me.wcy.ponymusic.utils.Preferences;
 import me.wcy.ponymusic.utils.ToastUtil;
 
 /**
@@ -39,6 +46,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     @Bind(R.id.tv_empty)
     TextView tvEmpty;
     private LocalMusicAdapter mAdapter;
+    private DownloadReceiver mReceiver;
 
     @Nullable
     @Override
@@ -49,11 +57,16 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     @Override
     protected void init() {
         mAdapter = new LocalMusicAdapter(getActivity());
+        mReceiver = new DownloadReceiver();
         mAdapter.setOnMoreClickListener(this);
         lvLocalMusic.setAdapter(mAdapter);
         if (getPlayService().getPlayingMusic() != null && getPlayService().getPlayingMusic().getType() == MusicTypeEnum.LOACL) {
             lvLocalMusic.setSelection(getPlayService().getPlayingPosition());
         }
+        updateView();
+
+        IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
+        getActivity().registerReceiver(mReceiver, filter);
     }
 
     @Override
@@ -61,9 +74,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         lvLocalMusic.setOnItemClickListener(this);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    private void updateView() {
         if (MusicUtils.getMusicList().isEmpty()) {
             tvEmpty.setVisibility(View.VISIBLE);
         } else {
@@ -80,22 +91,22 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
 
     @Override
     public void onMoreClick(final int position) {
-        Music music = MusicUtils.getMusicList().get(position);
+        final Music music = MusicUtils.getMusicList().get(position);
         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         dialog.setTitle(music.getTitle());
-        int itemsId = position == getPlayService().getPlayingPosition() ? R.array.local_music_list_dialog_no_delete : R.array.local_music_list_dialog;
+        int itemsId = position == getPlayService().getPlayingPosition() ? R.array.local_music_dialog_no_delete : R.array.local_music_dialog;
         dialog.setItems(itemsId, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
-                    case 0:
-                        shareMusic(position);
+                    case 0:// 分享
+                        shareMusic(music);
                         break;
-                    case 1:
-                        setRingtone(position);
+                    case 1:// 设为铃声
+                        setRingtone(music);
                         break;
-                    case 2:
-                        deleteMusic(position);
+                    case 2:// 删除
+                        deleteMusic(music);
                         break;
                 }
             }
@@ -114,8 +125,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     /**
      * 分享音乐
      */
-    private void shareMusic(int position) {
-        Music music = MusicUtils.getMusicList().get(position);
+    private void shareMusic(Music music) {
         File file = new File(music.getUri());
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("audio/*");
@@ -126,8 +136,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     /**
      * 设置铃声
      */
-    private void setRingtone(int position) {
-        Music music = MusicUtils.getMusicList().get(position);
+    private void setRingtone(Music music) {
         Uri uri = MediaStore.Audio.Media.getContentUriForPath(music.getUri());
         // 查询音乐文件在媒体库是否存在
         Cursor cursor = getActivity().getContentResolver().query(uri, null,
@@ -154,21 +163,20 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     /**
      * 删除音乐
      */
-    private void deleteMusic(final int position) {
-        final Music playingMusic = MusicUtils.getMusicList().get(getPlayService().getPlayingPosition());
+    private void deleteMusic(final Music music) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-        String title = MusicUtils.getMusicList().get(position).getTitle();
+        String title = music.getTitle();
         String msg = getString(R.string.delete_music);
         msg = String.format(msg, title);
         dialog.setMessage(msg);
         dialog.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Music music = MusicUtils.getMusicList().remove(position);
+                MusicUtils.getMusicList().remove(music);
                 File file = new File(music.getUri());
                 if (file.delete()) {
-                    getPlayService().updatePlayingPosition(playingMusic);
-                    onResume();
+                    getPlayService().updatePlayingPosition();
+                    updateView();
                     // 刷新媒体库
                     Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + music.getUri()));
                     getActivity().sendBroadcast(intent);
@@ -177,5 +185,29 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         });
         dialog.setNegativeButton(R.string.cancel, null);
         dialog.show();
+    }
+
+    @Override
+    public void onDestroy() {
+        getActivity().unregisterReceiver(mReceiver);
+        super.onDestroy();
+    }
+
+    class DownloadReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+            String title = (String) Preferences.get(context, String.valueOf(id), "");
+            if (!TextUtils.isEmpty(title)) {
+                // 由于系统扫描音乐是异步执行，因此延迟刷新音乐列表
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getPlayService().updateMusicList();
+                        updateView();
+                    }
+                }, 500);
+            }
+        }
     }
 }

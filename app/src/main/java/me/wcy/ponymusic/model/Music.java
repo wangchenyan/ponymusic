@@ -11,6 +11,8 @@ import me.wcy.ponymusic.enums.MusicTypeEnum;
 public class Music {
     // 歌曲类型 本地，网络
     private MusicTypeEnum type;
+    // 歌曲id[本地歌曲]
+    private long id;
     // 音乐标题
     private String title;
     // 艺术家
@@ -28,52 +30,20 @@ public class Music {
     // 专辑封面bitmap[网络歌曲]
     private Bitmap cover;
 
-    public String getAlbum() {
-        return album;
+    public MusicTypeEnum getType() {
+        return type;
     }
 
-    public void setAlbum(String album) {
-        this.album = album;
+    public void setType(MusicTypeEnum type) {
+        this.type = type;
     }
 
-    public String getArtist() {
-        return artist;
+    public long getId() {
+        return id;
     }
 
-    public void setArtist(String artist) {
-        this.artist = artist;
-    }
-
-    public Bitmap getCover() {
-        return cover;
-    }
-
-    public void setCover(Bitmap cover) {
-        this.cover = cover;
-    }
-
-    public String getCoverUri() {
-        return coverUri;
-    }
-
-    public void setCoverUri(String coverUri) {
-        this.coverUri = coverUri;
-    }
-
-    public long getDuration() {
-        return duration;
-    }
-
-    public void setDuration(long duration) {
-        this.duration = duration;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -84,12 +54,28 @@ public class Music {
         this.title = title;
     }
 
-    public MusicTypeEnum getType() {
-        return type;
+    public String getArtist() {
+        return artist;
     }
 
-    public void setType(MusicTypeEnum type) {
-        this.type = type;
+    public void setArtist(String artist) {
+        this.artist = artist;
+    }
+
+    public String getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(String album) {
+        this.album = album;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
     }
 
     public String getUri() {
@@ -98,5 +84,40 @@ public class Music {
 
     public void setUri(String uri) {
         this.uri = uri;
+    }
+
+    public String getCoverUri() {
+        return coverUri;
+    }
+
+    public void setCoverUri(String coverUri) {
+        this.coverUri = coverUri;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public Bitmap getCover() {
+        return cover;
+    }
+
+    public void setCover(Bitmap cover) {
+        this.cover = cover;
+    }
+
+    /**
+     * 对比本地歌曲是否相同
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Music)) {
+            return false;
+        }
+        return this.getId() == ((Music) o).getId();
     }
 }

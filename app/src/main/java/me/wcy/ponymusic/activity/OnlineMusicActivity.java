@@ -1,15 +1,20 @@
 package me.wcy.ponymusic.activity;
 
+import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -39,6 +44,7 @@ import me.wcy.ponymusic.service.PlayService;
 import me.wcy.ponymusic.utils.Constants;
 import me.wcy.ponymusic.utils.Extras;
 import me.wcy.ponymusic.utils.MusicUtils;
+import me.wcy.ponymusic.utils.Preferences;
 import me.wcy.ponymusic.utils.ToastUtil;
 
 public class OnlineMusicActivity extends BaseActivity implements OnItemClickListener, OnMoreClickListener {
@@ -128,14 +134,33 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
 
     @Override
     public void onMoreClick(int position) {
-
+        final JOnlineMusic jOnlineMusic = mMusicList.get(position);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle(mMusicList.get(position).getTitle());
+        dialog.setItems(R.array.online_music_dialog, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:// 下载
+                        download(jOnlineMusic);
+                        break;
+                    case 1:// 分享
+                        break;
+                    case 2:// 查看歌手信息
+                        break;
+                }
+            }
+        });
+        dialog.show();
     }
 
     private void play(int position) {
         mProgressDialog.show();
         JOnlineMusic jOnlineMusic = mMusicList.get(position);
         mCounter = 0;
-        if (TextUtils.isEmpty(jOnlineMusic.getLrclink())) {
+        String lrcFileName = MusicUtils.getLrcFileName(jOnlineMusic.getArtist_name(), jOnlineMusic.getTitle());
+        File lrcFile = new File(MusicUtils.getLrcDir() + lrcFileName);
+        if (TextUtils.isEmpty(jOnlineMusic.getLrclink()) || lrcFile.exists()) {
             mCounter++;
         }
         String picUrl = TextUtils.isEmpty(jOnlineMusic.getPic_big()) ? TextUtils.isEmpty(jOnlineMusic.getPic_small())
@@ -160,7 +185,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                         music.setDuration(response.getBitrate().getFile_duration() * 1000);
                         mCounter++;
                         if (mCounter == 3) {
-                            onDownloadFinish(music);
+                            onPlayPrepare(music);
                         }
                     }
 
@@ -170,8 +195,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                     }
                 });
         // 下载歌词
-        String lrcFileName = jOnlineMusic.getArtist_name() + " - " + jOnlineMusic.getTitle() + Constants.FILENAME_LRC;
-        if (!TextUtils.isEmpty(jOnlineMusic.getLrclink())) {
+        if (!TextUtils.isEmpty(jOnlineMusic.getLrclink()) && !lrcFile.exists()) {
             OkHttpUtils.get().url(jOnlineMusic.getLrclink()).build()
                     .execute(new FileCallBack(MusicUtils.getLrcDir(), lrcFileName) {
                         @Override
@@ -190,7 +214,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                         public void onAfter() {
                             mCounter++;
                             if (mCounter == 3) {
-                                onDownloadFinish(music);
+                                onPlayPrepare(music);
                             }
                         }
                     });
@@ -204,7 +228,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                             music.setCover(bitmap);
                             mCounter++;
                             if (mCounter == 3) {
-                                onDownloadFinish(music);
+                                onPlayPrepare(music);
                             }
                         }
 
@@ -212,17 +236,66 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                         public void onError(Request request, Exception e) {
                             mCounter++;
                             if (mCounter == 3) {
-                                onDownloadFinish(music);
+                                onPlayPrepare(music);
                             }
                         }
                     });
         }
     }
 
-    private void onDownloadFinish(Music music) {
+    private void onPlayPrepare(Music music) {
         mProgressDialog.cancel();
         mPlayService.play(music);
         ToastUtil.show(getString(R.string.now_play) + music.getTitle());
+    }
+
+    private void download(final JOnlineMusic jOnlineMusic) {
+        final DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+        // 获取歌曲播放链接
+        OkHttpUtils.get().url(Constants.BASE_URL)
+                .addParams("method", Constants.METHOD_DOWNLOAD_MUSIC)
+                .addParams("songid", jOnlineMusic.getSong_id())
+                .build()
+                .execute(new JsonCallback<JDownloadInfo>(JDownloadInfo.class) {
+                    @Override
+                    public void onResponse(final JDownloadInfo response) {
+                        Uri uri = Uri.parse(response.getBitrate().getFile_link());
+                        DownloadManager.Request request = new DownloadManager.Request(uri);
+                        String mp3FileName = MusicUtils.getMp3FileName(jOnlineMusic.getArtist_name(), jOnlineMusic.getTitle());
+                        request.setDescription(mp3FileName);
+                        request.setDestinationInExternalPublicDir(MusicUtils.getRelativeMusicDir(), mp3FileName);
+                        request.setMimeType(MimeTypeMap.getFileExtensionFromUrl(response.getBitrate().getFile_link()));
+                        request.allowScanningByMediaScanner();
+                        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
+                        request.setAllowedOverRoaming(false);// 不允许漫游
+                        long id = downloadManager.enqueue(request);
+                        Preferences.put(OnlineMusicActivity.this, String.valueOf(id), jOnlineMusic.getTitle());
+                    }
+
+                    @Override
+                    public void onError(Request request, Exception e) {
+
+                    }
+                });
+        // 下载歌词
+        String lrcFileName = MusicUtils.getLrcFileName(jOnlineMusic.getArtist_name(), jOnlineMusic.getTitle());
+        File lrcFile = new File(MusicUtils.getLrcDir() + lrcFileName);
+        if (!TextUtils.isEmpty(jOnlineMusic.getLrclink()) && !lrcFile.exists()) {
+            OkHttpUtils.get().url(jOnlineMusic.getLrclink()).build()
+                    .execute(new FileCallBack(MusicUtils.getLrcDir(), lrcFileName) {
+                        @Override
+                        public void inProgress(float progress) {
+                        }
+
+                        @Override
+                        public void onResponse(File response) {
+                        }
+
+                        @Override
+                        public void onError(Request request, Exception e) {
+                        }
+                    });
+        }
     }
 
     @Override

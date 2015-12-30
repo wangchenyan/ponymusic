@@ -9,7 +9,7 @@ import android.preference.PreferenceManager;
  * Created by wcy on 2015/11/28.
  */
 public class Preferences {
-    public static final String PLAY_POSITION = "play_position";
+    public static final String MUSIC_ID = "music_id";
     public static final String PLAY_MODE = "play_mode";
 
     public static void put(Context context, String key, Object value) {
@@ -42,7 +42,7 @@ public class Preferences {
         } else if (defValue instanceof Float) {
             value = sp.getFloat(key, (Float) defValue);
         } else if (defValue instanceof Long) {
-            value = sp.getLong(key, (Long) value);
+            value = sp.getLong(key, (Long) defValue);
         } else if (defValue instanceof String) {
             value = sp.getString(key, (String) defValue);
         }

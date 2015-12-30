@@ -308,7 +308,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         if (music.getType() == MusicTypeEnum.LOACL) {
             lrcPath = MusicUtils.getLrcDir() + music.getFileName().replace(Constants.FILENAME_MP3, Constants.FILENAME_LRC);
         } else {
-            lrcPath = MusicUtils.getLrcDir() + music.getArtist() + " - " + music.getTitle() + Constants.FILENAME_LRC;
+            lrcPath = MusicUtils.getLrcDir() + MusicUtils.getLrcFileName(music.getArtist(), music.getTitle());
         }
         mLrcViewSingle.loadLrc(lrcPath);
         mLrcViewFull.loadLrc(lrcPath);
