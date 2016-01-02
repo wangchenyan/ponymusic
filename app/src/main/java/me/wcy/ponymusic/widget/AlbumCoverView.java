@@ -36,7 +36,15 @@ public class AlbumCoverView extends View {
     }
 
     public AlbumCoverView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
+    }
+
+    public AlbumCoverView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    private void init() {
         mDiscBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_play_page_disc);
         mDiscBitmap = ImageUtils.resizeImage(mDiscBitmap, MusicUtils.getScreenWidth() * 3 / 4, MusicUtils.getScreenWidth() * 3 / 4);
         mCoverBitmap = CoverLoader.getInstance().loadRound(null);

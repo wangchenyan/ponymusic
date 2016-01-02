@@ -48,7 +48,11 @@ public class LrcView extends View {
     }
 
     public LrcView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
+    }
+
+    public LrcView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
         init(attrs);
     }
 

@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import me.wcy.ponymusic.R;
 
 /**
+ * 播放页Indicator
  * Created by wcy on 2015/11/30.
  */
 public class IndicatorLayout extends LinearLayout {
@@ -17,7 +18,15 @@ public class IndicatorLayout extends LinearLayout {
     }
 
     public IndicatorLayout(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
+    }
+
+    public IndicatorLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    private void init() {
         setOrientation(HORIZONTAL);
         setGravity(Gravity.CENTER);
     }
