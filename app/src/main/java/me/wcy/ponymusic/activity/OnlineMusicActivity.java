@@ -137,16 +137,19 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         final JOnlineMusic jOnlineMusic = mMusicList.get(position);
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle(mMusicList.get(position).getTitle());
-        dialog.setItems(R.array.online_music_dialog, new DialogInterface.OnClickListener() {
+        String path = MusicUtils.getMusicDir() + MusicUtils.getMp3FileName(jOnlineMusic.getArtist_name(), jOnlineMusic.getTitle());
+        File file = new File(path);
+        int itemsId = file.exists() ? R.array.online_music_dialog_no_download : R.array.online_music_dialog;
+        dialog.setItems(itemsId, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
-                    case 0:// 下载
-                        download(jOnlineMusic);
+                    case 0:// 查看歌手信息
                         break;
                     case 1:// 分享
                         break;
-                    case 2:// 查看歌手信息
+                    case 2:// 下载
+                        download(jOnlineMusic);
                         break;
                 }
             }
