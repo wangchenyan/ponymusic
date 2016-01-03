@@ -2,6 +2,7 @@ package me.wcy.ponymusic.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -128,13 +129,13 @@ public class ImageUtils {
     /**
      * 剪裁掉边框
      */
-    private static Bitmap crop(Bitmap bmp) {
-        int width = bmp.getWidth() - 2;
-        int height = bmp.getHeight() - 2;
+    private static Bitmap crop(Bitmap source) {
+        int width = source.getWidth() - 2;
+        int height = source.getHeight() - 2;
         if (width <= 0 || height <= 0) {
-            return bmp;
+            return source;
         }
-        return Bitmap.createBitmap(bmp, 1, 1, width, height);
+        return Bitmap.createBitmap(source, 1, 1, width, height);
     }
 
     /**
@@ -158,14 +159,30 @@ public class ImageUtils {
         Paint paint = new Paint();
         paint.setAntiAlias(true);
         Bitmap target = Bitmap.createBitmap(length, length, Bitmap.Config.ARGB_8888);
-        //产生一个同样大小的画布
         Canvas canvas = new Canvas(target);
-        //首先绘制圆形
         canvas.drawCircle(length / 2, length / 2, length / 2, paint);
-        //使用SRC_IN
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        //绘制图片
         canvas.drawBitmap(source, 0, 0, paint);
         return target;
+    }
+
+    public static int getBasicColor(Bitmap source) {
+        long R = 0, G = 0, B = 0;
+        int height = source.getHeight();
+        int width = source.getWidth();
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int pixelColor = source.getPixel(x, y);
+                R += Color.red(pixelColor);
+                G += Color.green(pixelColor);
+                B += Color.blue(pixelColor);
+            }
+        }
+
+        R /= height * width;
+        G /= height * width;
+        B /= height * width;
+        return Color.rgb((int) R, (int) G, (int) B);
     }
 }

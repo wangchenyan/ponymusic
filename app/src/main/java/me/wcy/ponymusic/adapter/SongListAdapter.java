@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.okhttp.Request;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -21,6 +20,7 @@ import me.wcy.ponymusic.model.JOnlineMusic;
 import me.wcy.ponymusic.model.JOnlineMusicList;
 import me.wcy.ponymusic.model.MusicListInfo;
 import me.wcy.ponymusic.utils.Constants;
+import me.wcy.ponymusic.utils.MusicUtils;
 
 /**
  * 歌单列表适配器
@@ -31,18 +31,10 @@ public class SongListAdapter extends BaseAdapter {
     private static final int TYPE_MUSIC_LIST = 1;
     private Context mContext;
     private List<MusicListInfo> mData;
-    private DisplayImageOptions mOptions;
 
     public SongListAdapter(Context context, List<MusicListInfo> data) {
         mContext = context;
         mData = data;
-        mOptions = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.ic_music_list_default_cover)
-                .showImageForEmptyUri(R.drawable.ic_music_list_default_cover)
-                .showImageOnFail(R.drawable.ic_music_list_default_cover)
-                .cacheInMemory(true)
-                .cacheOnDisc(true)
-                .build();
     }
 
     @Override
@@ -142,7 +134,7 @@ public class SongListAdapter extends BaseAdapter {
                             } else {
                                 musicListInfo.setMusic3("");
                             }
-                            ImageLoader.getInstance().displayImage(musicListInfo.getCoverUrl(), holderMusicList.ivCover, mOptions);
+                            ImageLoader.getInstance().displayImage(musicListInfo.getCoverUrl(), holderMusicList.ivCover, MusicUtils.getDefaultDisplayImageOptions());
                             holderMusicList.tvMusic1.setText(musicListInfo.getMusic1());
                             holderMusicList.tvMusic2.setText(musicListInfo.getMusic2());
                             holderMusicList.tvMusic3.setText(musicListInfo.getMusic3());
@@ -153,7 +145,7 @@ public class SongListAdapter extends BaseAdapter {
                         }
                     });
         } else {
-            ImageLoader.getInstance().displayImage(musicListInfo.getCoverUrl(), holderMusicList.ivCover, mOptions);
+            ImageLoader.getInstance().displayImage(musicListInfo.getCoverUrl(), holderMusicList.ivCover, MusicUtils.getDefaultDisplayImageOptions());
             holderMusicList.tvMusic1.setText(musicListInfo.getMusic1());
             holderMusicList.tvMusic2.setText(musicListInfo.getMusic2());
             holderMusicList.tvMusic3.setText(musicListInfo.getMusic3());

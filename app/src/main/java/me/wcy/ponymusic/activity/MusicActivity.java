@@ -85,7 +85,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private class PlayServiceConnection implements ServiceConnection {
-
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mPlayService = ((PlayService.PlayBinder) service).getService();

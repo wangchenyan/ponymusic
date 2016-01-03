@@ -165,8 +165,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     private void deleteMusic(final Music music) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         String title = music.getTitle();
-        String msg = getString(R.string.delete_music);
-        msg = String.format(msg, title);
+        String msg = getString(R.string.delete_music, title);
         dialog.setMessage(msg);
         dialog.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             @Override

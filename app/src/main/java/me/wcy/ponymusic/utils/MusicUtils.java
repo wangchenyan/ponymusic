@@ -8,6 +8,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -132,5 +134,15 @@ public class MusicUtils {
                 loadFail.setVisibility(View.VISIBLE);
                 break;
         }
+    }
+
+    public static DisplayImageOptions getDefaultDisplayImageOptions() {
+        return new DisplayImageOptions.Builder()
+                .showStubImage(R.drawable.ic_music_list_default_cover)
+                .showImageForEmptyUri(R.drawable.ic_music_list_default_cover)
+                .showImageOnFail(R.drawable.ic_music_list_default_cover)
+                .cacheInMemory(true)
+                .cacheOnDisc(true)
+                .build();
     }
 }

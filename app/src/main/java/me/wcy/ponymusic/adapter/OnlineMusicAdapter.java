@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
@@ -25,18 +24,10 @@ public class OnlineMusicAdapter extends BaseAdapter {
     private Context mContext;
     private List<JOnlineMusic> mData;
     private OnMoreClickListener mListener;
-    private DisplayImageOptions mOptions;
 
     public OnlineMusicAdapter(Context context, List<JOnlineMusic> data) {
         this.mContext = context;
         this.mData = data;
-        mOptions = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.ic_music_list_default_cover)
-                .showImageForEmptyUri(R.drawable.ic_music_list_default_cover)
-                .showImageOnFail(R.drawable.ic_music_list_default_cover)
-                .cacheInMemory(true)
-                .cacheOnDisc(true)
-                .build();
     }
 
     @Override
@@ -69,7 +60,7 @@ public class OnlineMusicAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         JOnlineMusic jOnlineMusic = mData.get(position);
-        ImageLoader.getInstance().displayImage(jOnlineMusic.getPic_small(), holder.ivCover, mOptions);
+        ImageLoader.getInstance().displayImage(jOnlineMusic.getPic_small(), holder.ivCover, MusicUtils.getDefaultDisplayImageOptions());
         holder.tvTitle.setText(jOnlineMusic.getTitle());
         String artist = MusicUtils.getArtistAndAlbum(jOnlineMusic.getArtist_name(), jOnlineMusic.getAlbum_title());
         holder.tvArtist.setText(artist);

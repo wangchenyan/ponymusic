@@ -7,14 +7,21 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.squareup.okhttp.Request;
 import com.zhy.http.okhttp.OkHttpUtils;
 
@@ -38,6 +45,7 @@ import me.wcy.ponymusic.utils.Constants;
 import me.wcy.ponymusic.utils.DownloadMusic;
 import me.wcy.ponymusic.utils.Extras;
 import me.wcy.ponymusic.utils.FileUtils;
+import me.wcy.ponymusic.utils.ImageUtils;
 import me.wcy.ponymusic.utils.MusicUtils;
 import me.wcy.ponymusic.utils.PlayMusic;
 import me.wcy.ponymusic.utils.ToastUtils;
@@ -49,14 +57,16 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
     LinearLayout llLoading;
     @Bind(R.id.ll_load_fail)
     LinearLayout llLoadFail;
+    private View vHeader;
     private MusicListInfo mListInfo;
-    private JOnlineMusicList jOnlineMusicList;
+    private JOnlineMusicList mJOnlineMusicList;
     private List<JOnlineMusic> mMusicList;
     private OnlineMusicAdapter mAdapter;
     private PlayService mPlayService;
     private PlayServiceConnection mPlayServiceConnection;
     private ProgressDialog mProgressDialog;
     private int mOffset = 0;
+    private boolean mHaveMore = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +75,13 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
 
         mListInfo = (MusicListInfo) getIntent().getSerializableExtra(Extras.MUSIC_LIST_TYPE);
         setTitle(mListInfo.getTitle());
+
+        init();
+    }
+
+    private void init() {
+        vHeader = LayoutInflater.from(this).inflate(R.layout.activity_online_music_list_header, null);
+        lvOnlineMusic.addHeaderView(vHeader, null, false);
         mMusicList = new ArrayList<>();
         mAdapter = new OnlineMusicAdapter(this, mMusicList);
         lvOnlineMusic.setAdapter(mAdapter);
@@ -89,7 +106,6 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
     }
 
     private class PlayServiceConnection implements ServiceConnection {
-
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mPlayService = ((PlayService.PlayBinder) service).getService();
@@ -101,7 +117,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         }
     }
 
-    private void getMusic(int offset) {
+    private void getMusic(final int offset) {
         OkHttpUtils.get().url(Constants.BASE_URL)
                 .addParams("method", Constants.METHOD_GET_MUSIC_LIST)
                 .addParams("type", mListInfo.getType())
@@ -111,22 +127,31 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                 .execute(new JsonCallback<JOnlineMusicList>(JOnlineMusicList.class) {
                     @Override
                     public void onResponse(JOnlineMusicList response) {
-                        MusicUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
-                        jOnlineMusicList = response;
+                        mJOnlineMusicList = response;
+                        if (offset == 0) {
+                            initHeader();
+                            MusicUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
+                        } else if (response.getSong_list().length == 0) {
+                            mHaveMore = false;
+                        }
                         Collections.addAll(mMusicList, response.getSong_list());
                         mAdapter.notifyDataSetChanged();
                     }
 
                     @Override
                     public void onError(Request request, Exception e) {
-                        MusicUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
+                        if (offset == 0) {
+                            MusicUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
+                        } else {
+                            ToastUtils.show(R.string.load_fail);
+                        }
                     }
                 });
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        play(mMusicList.get(position));
+        play(mMusicList.get(position - 1));
     }
 
     @Override
@@ -154,6 +179,25 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         dialog.show();
     }
 
+    private void initHeader() {
+        final ImageView ivCover = (ImageView) vHeader.findViewById(R.id.iv_cover);
+        TextView tvTitle = (TextView) vHeader.findViewById(R.id.tv_title);
+        TextView tvUpdateDate = (TextView) vHeader.findViewById(R.id.tv_update_date);
+        TextView tvComment = (TextView) vHeader.findViewById(R.id.tv_comment);
+        tvTitle.setText(mJOnlineMusicList.getBillboard().getName());
+        tvUpdateDate.setText(getString(R.string.recent_update) + mJOnlineMusicList.getBillboard().getUpdate_date());
+        tvComment.setText(mJOnlineMusicList.getBillboard().getComment());
+        ImageSize imageSize = new ImageSize(200, 200);
+        ImageLoader.getInstance().loadImage(mJOnlineMusicList.getBillboard().getPic_s640(), imageSize,
+                MusicUtils.getDefaultDisplayImageOptions(), new SimpleImageLoadingListener() {
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        ivCover.setImageBitmap(loadedImage);
+                        vHeader.setBackgroundColor(ImageUtils.getBasicColor(loadedImage));
+                    }
+                });
+    }
+
     private void play(JOnlineMusic jOnlineMusic) {
         new PlayMusic(jOnlineMusic) {
 
@@ -171,7 +215,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
 
             @Override
             public void onFail(Request request, Exception e) {
-                ToastUtils.show("暂时无法播放");
+                ToastUtils.show(R.string.unable_to_play);
             }
         }.execute();
     }
@@ -192,7 +236,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
             @Override
             public void onFail(Request request, Exception e) {
                 mProgressDialog.cancel();
-                ToastUtils.show("暂时无法下载");
+                ToastUtils.show(R.string.unable_to_download);
             }
         }.execute();
     }
