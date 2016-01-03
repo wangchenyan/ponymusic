@@ -1,28 +1,22 @@
 package me.wcy.ponymusic.activity;
 
 import android.app.AlertDialog;
-import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.text.TextUtils;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.squareup.okhttp.Request;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.BitmapCallback;
-import com.zhy.http.okhttp.callback.FileCallBack;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -34,23 +28,27 @@ import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.adapter.OnMoreClickListener;
 import me.wcy.ponymusic.adapter.OnlineMusicAdapter;
 import me.wcy.ponymusic.callback.JsonCallback;
-import me.wcy.ponymusic.enums.MusicTypeEnum;
-import me.wcy.ponymusic.model.JDownloadInfo;
+import me.wcy.ponymusic.enums.LoadStateEnum;
 import me.wcy.ponymusic.model.JOnlineMusic;
 import me.wcy.ponymusic.model.JOnlineMusicList;
 import me.wcy.ponymusic.model.Music;
 import me.wcy.ponymusic.model.MusicListInfo;
 import me.wcy.ponymusic.service.PlayService;
 import me.wcy.ponymusic.utils.Constants;
+import me.wcy.ponymusic.utils.DownloadMusic;
 import me.wcy.ponymusic.utils.Extras;
+import me.wcy.ponymusic.utils.FileUtils;
 import me.wcy.ponymusic.utils.MusicUtils;
-import me.wcy.ponymusic.utils.Preferences;
-import me.wcy.ponymusic.utils.ToastUtil;
+import me.wcy.ponymusic.utils.PlayMusic;
+import me.wcy.ponymusic.utils.ToastUtils;
 
 public class OnlineMusicActivity extends BaseActivity implements OnItemClickListener, OnMoreClickListener {
-    private static final int MUSIC_LIST_SIZE = 20;
     @Bind(R.id.lv_online_music_list)
     ListView lvOnlineMusic;
+    @Bind(R.id.ll_loading)
+    LinearLayout llLoading;
+    @Bind(R.id.ll_load_fail)
+    LinearLayout llLoadFail;
     private MusicListInfo mListInfo;
     private JOnlineMusicList jOnlineMusicList;
     private List<JOnlineMusic> mMusicList;
@@ -59,7 +57,6 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
     private PlayServiceConnection mPlayServiceConnection;
     private ProgressDialog mProgressDialog;
     private int mOffset = 0;
-    private int mCounter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +70,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         lvOnlineMusic.setAdapter(mAdapter);
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.loading));
-        mProgressDialog.show();
+        MusicUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOADING);
 
         bindService();
     }
@@ -108,28 +105,28 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         OkHttpUtils.get().url(Constants.BASE_URL)
                 .addParams("method", Constants.METHOD_GET_MUSIC_LIST)
                 .addParams("type", mListInfo.getType())
-                .addParams("size", String.valueOf(MUSIC_LIST_SIZE))
+                .addParams("size", String.valueOf(Constants.MUSIC_LIST_SIZE))
                 .addParams("offset", String.valueOf(offset))
                 .build()
                 .execute(new JsonCallback<JOnlineMusicList>(JOnlineMusicList.class) {
                     @Override
-                    public void onError(Request request, Exception e) {
-
-                    }
-
-                    @Override
                     public void onResponse(JOnlineMusicList response) {
-                        mProgressDialog.cancel();
+                        MusicUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
                         jOnlineMusicList = response;
                         Collections.addAll(mMusicList, response.getSong_list());
                         mAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onError(Request request, Exception e) {
+                        MusicUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
                     }
                 });
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        play(position);
+        play(mMusicList.get(position));
     }
 
     @Override
@@ -137,7 +134,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         final JOnlineMusic jOnlineMusic = mMusicList.get(position);
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle(mMusicList.get(position).getTitle());
-        String path = MusicUtils.getMusicDir() + MusicUtils.getMp3FileName(jOnlineMusic.getArtist_name(), jOnlineMusic.getTitle());
+        String path = FileUtils.getMusicDir() + FileUtils.getMp3FileName(jOnlineMusic.getArtist_name(), jOnlineMusic.getTitle());
         File file = new File(path);
         int itemsId = file.exists() ? R.array.online_music_dialog_no_download : R.array.online_music_dialog;
         dialog.setItems(itemsId, new DialogInterface.OnClickListener() {
@@ -157,148 +154,47 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         dialog.show();
     }
 
-    private void play(int position) {
-        mProgressDialog.show();
-        JOnlineMusic jOnlineMusic = mMusicList.get(position);
-        mCounter = 0;
-        String lrcFileName = MusicUtils.getLrcFileName(jOnlineMusic.getArtist_name(), jOnlineMusic.getTitle());
-        File lrcFile = new File(MusicUtils.getLrcDir() + lrcFileName);
-        if (TextUtils.isEmpty(jOnlineMusic.getLrclink()) || lrcFile.exists()) {
-            mCounter++;
-        }
-        String picUrl = TextUtils.isEmpty(jOnlineMusic.getPic_big()) ? TextUtils.isEmpty(jOnlineMusic.getPic_small())
-                ? null : jOnlineMusic.getPic_small() : jOnlineMusic.getPic_big();
-        if (TextUtils.isEmpty(picUrl)) {
-            mCounter++;
-        }
-        final Music music = new Music();
-        music.setType(MusicTypeEnum.ONLINE);
-        music.setTitle(jOnlineMusic.getTitle());
-        music.setArtist(jOnlineMusic.getArtist_name());
-        music.setAlbum(jOnlineMusic.getAlbum_title());
-        // 获取歌曲播放链接
-        OkHttpUtils.get().url(Constants.BASE_URL)
-                .addParams("method", Constants.METHOD_DOWNLOAD_MUSIC)
-                .addParams("songid", jOnlineMusic.getSong_id())
-                .build()
-                .execute(new JsonCallback<JDownloadInfo>(JDownloadInfo.class) {
-                    @Override
-                    public void onResponse(final JDownloadInfo response) {
-                        music.setUri(response.getBitrate().getFile_link());
-                        music.setDuration(response.getBitrate().getFile_duration() * 1000);
-                        mCounter++;
-                        if (mCounter == 3) {
-                            onPlayPrepare(music);
-                        }
-                    }
+    private void play(JOnlineMusic jOnlineMusic) {
+        new PlayMusic(jOnlineMusic) {
 
-                    @Override
-                    public void onError(Request request, Exception e) {
+            @Override
+            public void onPrepare() {
+                mProgressDialog.show();
+            }
 
-                    }
-                });
-        // 下载歌词
-        if (!TextUtils.isEmpty(jOnlineMusic.getLrclink()) && !lrcFile.exists()) {
-            OkHttpUtils.get().url(jOnlineMusic.getLrclink()).build()
-                    .execute(new FileCallBack(MusicUtils.getLrcDir(), lrcFileName) {
-                        @Override
-                        public void inProgress(float progress) {
-                        }
+            @Override
+            public void onSuccess(Music music) {
+                mProgressDialog.cancel();
+                mPlayService.play(music);
+                ToastUtils.show(getString(R.string.now_play) + music.getTitle());
+            }
 
-                        @Override
-                        public void onResponse(File response) {
-                        }
-
-                        @Override
-                        public void onError(Request request, Exception e) {
-                        }
-
-                        @Override
-                        public void onAfter() {
-                            mCounter++;
-                            if (mCounter == 3) {
-                                onPlayPrepare(music);
-                            }
-                        }
-                    });
-        }
-        // 下载歌曲封面
-        if (!TextUtils.isEmpty(picUrl)) {
-            OkHttpUtils.get().url(picUrl).build()
-                    .execute(new BitmapCallback() {
-                        @Override
-                        public void onResponse(Bitmap bitmap) {
-                            music.setCover(bitmap);
-                            mCounter++;
-                            if (mCounter == 3) {
-                                onPlayPrepare(music);
-                            }
-                        }
-
-                        @Override
-                        public void onError(Request request, Exception e) {
-                            mCounter++;
-                            if (mCounter == 3) {
-                                onPlayPrepare(music);
-                            }
-                        }
-                    });
-        }
-    }
-
-    private void onPlayPrepare(Music music) {
-        mProgressDialog.cancel();
-        mPlayService.play(music);
-        ToastUtil.show(getString(R.string.now_play) + music.getTitle());
+            @Override
+            public void onFail(Request request, Exception e) {
+                ToastUtils.show("暂时无法播放");
+            }
+        }.execute();
     }
 
     private void download(final JOnlineMusic jOnlineMusic) {
-        final DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-        // 获取歌曲播放链接
-        OkHttpUtils.get().url(Constants.BASE_URL)
-                .addParams("method", Constants.METHOD_DOWNLOAD_MUSIC)
-                .addParams("songid", jOnlineMusic.getSong_id())
-                .build()
-                .execute(new JsonCallback<JDownloadInfo>(JDownloadInfo.class) {
-                    @Override
-                    public void onResponse(final JDownloadInfo response) {
-                        Uri uri = Uri.parse(response.getBitrate().getFile_link());
-                        DownloadManager.Request request = new DownloadManager.Request(uri);
-                        String mp3FileName = MusicUtils.getMp3FileName(jOnlineMusic.getArtist_name(), jOnlineMusic.getTitle());
-                        request.setDestinationInExternalPublicDir(MusicUtils.getRelativeMusicDir(), mp3FileName);
-                        request.setMimeType(MimeTypeMap.getFileExtensionFromUrl(response.getBitrate().getFile_link()));
-                        request.allowScanningByMediaScanner();
-                        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
-                        request.setAllowedOverRoaming(false);// 不允许漫游
-                        long id = downloadManager.enqueue(request);
-                        Preferences.put(OnlineMusicActivity.this, String.valueOf(id), jOnlineMusic.getTitle());
-                        ToastUtil.show(getString(R.string.now_download) + jOnlineMusic.getTitle());
-                    }
+        new DownloadMusic(this, jOnlineMusic) {
+            @Override
+            public void onPrepare() {
+                mProgressDialog.show();
+            }
 
-                    @Override
-                    public void onError(Request request, Exception e) {
+            @Override
+            public void onSuccess() {
+                mProgressDialog.cancel();
+                ToastUtils.show(getString(R.string.now_download) + jOnlineMusic.getTitle());
+            }
 
-                    }
-                });
-        // 下载歌词
-        String lrcFileName = MusicUtils.getLrcFileName(jOnlineMusic.getArtist_name(), jOnlineMusic.getTitle());
-        File lrcFile = new File(MusicUtils.getLrcDir() + lrcFileName);
-        if (!TextUtils.isEmpty(jOnlineMusic.getLrclink()) && !lrcFile.exists()) {
-            OkHttpUtils.get().url(jOnlineMusic.getLrclink()).build()
-                    .execute(new FileCallBack(MusicUtils.getLrcDir(), lrcFileName) {
-                        @Override
-                        public void inProgress(float progress) {
-                        }
-
-                        @Override
-                        public void onResponse(File response) {
-                        }
-
-                        @Override
-                        public void onError(Request request, Exception e) {
-                        }
-                    });
-        }
+            @Override
+            public void onFail(Request request, Exception e) {
+                mProgressDialog.cancel();
+                ToastUtils.show("暂时无法下载");
+            }
+        }.execute();
     }
 
     @Override

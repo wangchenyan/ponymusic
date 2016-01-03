@@ -124,20 +124,32 @@ public class SongListAdapter extends BaseAdapter {
                     .build()
                     .execute(new JsonCallback<JOnlineMusicList>(JOnlineMusicList.class) {
                         @Override
-                        public void onError(Request request, Exception e) {
-                        }
-
-                        @Override
                         public void onResponse(JOnlineMusicList response) {
                             JOnlineMusic[] jOnlineMusics = response.getSong_list();
                             musicListInfo.setCoverUrl(response.getBillboard().getPic_s260());
-                            musicListInfo.setMusic1("1." + jOnlineMusics[0].getTitle() + " - " + jOnlineMusics[0].getArtist_name());
-                            musicListInfo.setMusic2("2." + jOnlineMusics[1].getTitle() + " - " + jOnlineMusics[1].getArtist_name());
-                            musicListInfo.setMusic3("3." + jOnlineMusics[2].getTitle() + " - " + jOnlineMusics[2].getArtist_name());
+                            if (jOnlineMusics.length >= 1) {
+                                musicListInfo.setMusic1("1." + jOnlineMusics[0].getTitle() + " - " + jOnlineMusics[0].getArtist_name());
+                            } else {
+                                musicListInfo.setMusic1("");
+                            }
+                            if (jOnlineMusics.length >= 2) {
+                                musicListInfo.setMusic2("2." + jOnlineMusics[1].getTitle() + " - " + jOnlineMusics[1].getArtist_name());
+                            } else {
+                                musicListInfo.setMusic2("");
+                            }
+                            if (jOnlineMusics.length >= 3) {
+                                musicListInfo.setMusic3("3." + jOnlineMusics[2].getTitle() + " - " + jOnlineMusics[2].getArtist_name());
+                            } else {
+                                musicListInfo.setMusic3("");
+                            }
                             ImageLoader.getInstance().displayImage(musicListInfo.getCoverUrl(), holderMusicList.ivCover, mOptions);
                             holderMusicList.tvMusic1.setText(musicListInfo.getMusic1());
                             holderMusicList.tvMusic2.setText(musicListInfo.getMusic2());
                             holderMusicList.tvMusic3.setText(musicListInfo.getMusic3());
+                        }
+
+                        @Override
+                        public void onError(Request request, Exception e) {
                         }
                     });
         } else {

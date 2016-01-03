@@ -34,7 +34,7 @@ import me.wcy.ponymusic.enums.MusicTypeEnum;
 import me.wcy.ponymusic.model.Music;
 import me.wcy.ponymusic.utils.MusicUtils;
 import me.wcy.ponymusic.utils.Preferences;
-import me.wcy.ponymusic.utils.ToastUtil;
+import me.wcy.ponymusic.utils.ToastUtils;
 
 /**
  * 本地音乐列表
@@ -154,7 +154,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
             getActivity().getContentResolver().update(uri, values, MediaStore.MediaColumns.DATA + "=?", new String[]{music.getUri()});
             Uri newUri = ContentUris.withAppendedId(uri, Long.valueOf(_id));
             RingtoneManager.setActualDefaultRingtoneUri(getActivity(), RingtoneManager.TYPE_RINGTONE, newUri);
-            ToastUtil.show(R.string.setting_ringtone_success);
+            ToastUtils.show(R.string.setting_ringtone_success);
         }
         cursor.close();
     }

@@ -20,10 +20,23 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </android.support.design.widget.AppBarLayout>
 
-    <ListView
-        android:id="@+id/lv_online_music_list"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp" />
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/lv_online_music_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp" />
+
+        <include
+            android:id="@+id/ll_loading"
+            layout="@layout/include_loading" />
+
+        <include
+            android:id="@+id/ll_load_fail"
+            layout="@layout/include_load_fail" />
+    </FrameLayout>
 </LinearLayout>

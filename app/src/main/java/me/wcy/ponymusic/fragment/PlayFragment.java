@@ -26,10 +26,11 @@ import me.wcy.ponymusic.enums.PlayModeEnum;
 import me.wcy.ponymusic.model.Music;
 import me.wcy.ponymusic.utils.Constants;
 import me.wcy.ponymusic.utils.CoverLoader;
+import me.wcy.ponymusic.utils.FileUtils;
 import me.wcy.ponymusic.utils.ImageUtils;
 import me.wcy.ponymusic.utils.MusicUtils;
 import me.wcy.ponymusic.utils.Preferences;
-import me.wcy.ponymusic.utils.ToastUtil;
+import me.wcy.ponymusic.utils.ToastUtils;
 import me.wcy.ponymusic.widget.AlbumCoverView;
 import me.wcy.ponymusic.widget.IndicatorLayout;
 import me.wcy.ponymusic.widget.LrcView;
@@ -270,15 +271,15 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         switch (mode) {
             case LOOP:
                 mode = PlayModeEnum.SHUFFLE;
-                ToastUtil.show(R.string.mode_shuffle);
+                ToastUtils.show(R.string.mode_shuffle);
                 break;
             case SHUFFLE:
                 mode = PlayModeEnum.ONE;
-                ToastUtil.show(R.string.mode_one);
+                ToastUtils.show(R.string.mode_one);
                 break;
             case ONE:
                 mode = PlayModeEnum.LOOP;
-                ToastUtil.show(R.string.mode_loop);
+                ToastUtils.show(R.string.mode_loop);
                 break;
         }
         Preferences.put(getContext(), Preferences.PLAY_MODE, mode.value());
@@ -306,9 +307,9 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     private void setLrc(Music music) {
         String lrcPath;
         if (music.getType() == MusicTypeEnum.LOACL) {
-            lrcPath = MusicUtils.getLrcDir() + music.getFileName().replace(Constants.FILENAME_MP3, Constants.FILENAME_LRC);
+            lrcPath = FileUtils.getLrcDir() + music.getFileName().replace(Constants.FILENAME_MP3, Constants.FILENAME_LRC);
         } else {
-            lrcPath = MusicUtils.getLrcDir() + MusicUtils.getLrcFileName(music.getArtist(), music.getTitle());
+            lrcPath = FileUtils.getLrcDir() + FileUtils.getLrcFileName(music.getArtist(), music.getTitle());
         }
         mLrcViewSingle.loadLrc(lrcPath);
         mLrcViewFull.loadLrc(lrcPath);

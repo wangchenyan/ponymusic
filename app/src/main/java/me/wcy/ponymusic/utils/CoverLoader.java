@@ -16,9 +16,11 @@ import me.wcy.ponymusic.application.MusicApplication;
  */
 public class CoverLoader {
     private static final String KEY_NULL = "null";
-    //缩略图LruCache，用于音乐列表
+    // 缩略图，用于音乐列表
     private LruCache<String, Bitmap> mThumbnailCache;
+    // 高斯模糊图，用于播放页背景
     private LruCache<String, Bitmap> mBlurCache;
+    // 圆形图，用于播放页CD
     private LruCache<String, Bitmap> mRoundCache;
 
     private CoverLoader() {

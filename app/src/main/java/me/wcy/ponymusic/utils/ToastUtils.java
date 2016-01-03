@@ -8,7 +8,7 @@ import me.wcy.ponymusic.application.MusicApplication;
  * Toast工具类
  * Created by wcy on 2015/12/26.
  */
-public class ToastUtil {
+public class ToastUtils {
     public static void show(int resId) {
         Toast.makeText(MusicApplication.getInstance().getApplicationContext(), resId, Toast.LENGTH_SHORT).show();
     }

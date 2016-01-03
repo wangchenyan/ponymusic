@@ -57,9 +57,6 @@ public class SongListFragment extends BaseFragment implements AdapterView.OnItem
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         MusicListInfo musicListInfo = mData.get(position);
-        if (musicListInfo.getType().equals("*")) {
-            return;
-        }
         Intent intent = new Intent(getContext(), OnlineMusicActivity.class);
         intent.putExtra(Extras.MUSIC_LIST_TYPE, musicListInfo);
         startActivity(intent);

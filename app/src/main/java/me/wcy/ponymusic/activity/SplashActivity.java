@@ -7,7 +7,7 @@ import android.os.Handler;
 
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.service.PlayService;
-import me.wcy.ponymusic.utils.MusicUtils;
+import me.wcy.ponymusic.utils.FileUtils;
 
 public class SplashActivity extends Activity {
 
@@ -35,8 +35,8 @@ public class SplashActivity extends Activity {
     }
 
     private void checkFile() {
-        MusicUtils.getMusicDir();
-        MusicUtils.getLrcDir();
+        FileUtils.getMusicDir();
+        FileUtils.getLrcDir();
     }
 
     private void startMusicActivity() {

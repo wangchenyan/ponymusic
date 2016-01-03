@@ -8,7 +8,7 @@ import android.text.TextUtils;
 
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.utils.Preferences;
-import me.wcy.ponymusic.utils.ToastUtil;
+import me.wcy.ponymusic.utils.ToastUtils;
 
 /**
  * 下载完成广播接收器
@@ -22,6 +22,6 @@ public class DownloadReceiver extends BroadcastReceiver {
         if (TextUtils.isEmpty(title)) {
             return;
         }
-        ToastUtil.show(title + context.getString(R.string.download_success));
+        ToastUtils.show(title + context.getString(R.string.download_success));
     }
 }
