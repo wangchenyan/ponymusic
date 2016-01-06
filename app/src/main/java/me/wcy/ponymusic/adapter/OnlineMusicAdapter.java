@@ -14,7 +14,7 @@ import java.util.List;
 
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.model.JOnlineMusic;
-import me.wcy.ponymusic.utils.MusicUtils;
+import me.wcy.ponymusic.utils.Utils;
 
 /**
  * 在线音乐列表适配器
@@ -60,9 +60,9 @@ public class OnlineMusicAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         JOnlineMusic jOnlineMusic = mData.get(position);
-        ImageLoader.getInstance().displayImage(jOnlineMusic.getPic_small(), holder.ivCover, MusicUtils.getDefaultDisplayImageOptions());
+        ImageLoader.getInstance().displayImage(jOnlineMusic.getPic_small(), holder.ivCover, Utils.getDefaultDisplayImageOptions());
         holder.tvTitle.setText(jOnlineMusic.getTitle());
-        String artist = MusicUtils.getArtistAndAlbum(jOnlineMusic.getArtist_name(), jOnlineMusic.getAlbum_title());
+        String artist = Utils.getArtistAndAlbum(jOnlineMusic.getArtist_name(), jOnlineMusic.getAlbum_title());
         holder.tvArtist.setText(artist);
         holder.ivMore.setOnClickListener(new View.OnClickListener() {
             @Override

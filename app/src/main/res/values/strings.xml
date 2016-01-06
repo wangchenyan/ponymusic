@@ -16,10 +16,10 @@
     <string name="mode_shuffle">随机播放</string>
     <string name="mode_one">单曲循环</string>
     <string name="play_time_start">00:00</string>
-    <string name="now_play">正在播放：</string>
-    <string name="now_download">正在下载：</string>
+    <string name="now_play">正在播放：%s</string>
+    <string name="now_download">正在下载：%s</string>
     <string name="download_success">下载完成</string>
-    <string name="recent_update">最近更新：</string>
+    <string name="recent_update">最近更新：%s</string>
     <string name="unable_to_play">暂时无法播放</string>
     <string name="unable_to_download">暂时无法下载</string>
 </resources>

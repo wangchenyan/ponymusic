@@ -20,7 +20,7 @@ import me.wcy.ponymusic.model.JOnlineMusic;
 import me.wcy.ponymusic.model.JOnlineMusicList;
 import me.wcy.ponymusic.model.MusicListInfo;
 import me.wcy.ponymusic.utils.Constants;
-import me.wcy.ponymusic.utils.MusicUtils;
+import me.wcy.ponymusic.utils.Utils;
 
 /**
  * 歌单列表适配器
@@ -134,7 +134,7 @@ public class SongListAdapter extends BaseAdapter {
                             } else {
                                 musicListInfo.setMusic3("");
                             }
-                            ImageLoader.getInstance().displayImage(musicListInfo.getCoverUrl(), holderMusicList.ivCover, MusicUtils.getDefaultDisplayImageOptions());
+                            ImageLoader.getInstance().displayImage(musicListInfo.getCoverUrl(), holderMusicList.ivCover, Utils.getDefaultDisplayImageOptions());
                             holderMusicList.tvMusic1.setText(musicListInfo.getMusic1());
                             holderMusicList.tvMusic2.setText(musicListInfo.getMusic2());
                             holderMusicList.tvMusic3.setText(musicListInfo.getMusic3());
@@ -145,7 +145,7 @@ public class SongListAdapter extends BaseAdapter {
                         }
                     });
         } else {
-            ImageLoader.getInstance().displayImage(musicListInfo.getCoverUrl(), holderMusicList.ivCover, MusicUtils.getDefaultDisplayImageOptions());
+            ImageLoader.getInstance().displayImage(musicListInfo.getCoverUrl(), holderMusicList.ivCover, Utils.getDefaultDisplayImageOptions());
             holderMusicList.tvMusic1.setText(musicListInfo.getMusic1());
             holderMusicList.tvMusic2.setText(musicListInfo.getMusic2());
             holderMusicList.tvMusic3.setText(musicListInfo.getMusic3());

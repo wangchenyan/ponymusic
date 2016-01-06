@@ -71,6 +71,10 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
+        }
+
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.loading));
         mProgressDialog.show();
@@ -113,10 +117,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void setupView() {
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
-        }
-
         // add navigation header
         navigationHeader = LayoutInflater.from(this).inflate(R.layout.navigation_header, null);
         navigationView.addHeaderView(navigationHeader);

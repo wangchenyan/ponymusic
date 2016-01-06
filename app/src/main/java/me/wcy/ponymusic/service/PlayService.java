@@ -23,6 +23,7 @@ import me.wcy.ponymusic.model.Music;
 import me.wcy.ponymusic.utils.CoverLoader;
 import me.wcy.ponymusic.utils.MusicUtils;
 import me.wcy.ponymusic.utils.Preferences;
+import me.wcy.ponymusic.utils.Utils;
 
 /**
  * 音乐播放后台服务
@@ -243,7 +244,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
      */
     private void updateNotification(Music music) {
         String title = music.getTitle();
-        String subtitle = MusicUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum());
+        String subtitle = Utils.getArtistAndAlbum(music.getArtist(), music.getAlbum());
         Bitmap bitmap;
         if (music.getType() == MusicTypeEnum.LOACL) {
             bitmap = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());

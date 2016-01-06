@@ -46,9 +46,9 @@ import me.wcy.ponymusic.utils.DownloadMusic;
 import me.wcy.ponymusic.utils.Extras;
 import me.wcy.ponymusic.utils.FileUtils;
 import me.wcy.ponymusic.utils.ImageUtils;
-import me.wcy.ponymusic.utils.MusicUtils;
 import me.wcy.ponymusic.utils.PlayMusic;
 import me.wcy.ponymusic.utils.ToastUtils;
+import me.wcy.ponymusic.utils.Utils;
 
 public class OnlineMusicActivity extends BaseActivity implements OnItemClickListener, OnMoreClickListener {
     @Bind(R.id.lv_online_music_list)
@@ -87,7 +87,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         lvOnlineMusic.setAdapter(mAdapter);
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.loading));
-        MusicUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOADING);
+        Utils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOADING);
 
         bindService();
     }
@@ -130,7 +130,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                         mJOnlineMusicList = response;
                         if (offset == 0) {
                             initHeader();
-                            MusicUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
+                            Utils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
                         } else if (response.getSong_list().length == 0) {
                             mHaveMore = false;
                         }
@@ -141,7 +141,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                     @Override
                     public void onError(Request request, Exception e) {
                         if (offset == 0) {
-                            MusicUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
+                            Utils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
                         } else {
                             ToastUtils.show(R.string.load_fail);
                         }
@@ -185,11 +185,11 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         TextView tvUpdateDate = (TextView) vHeader.findViewById(R.id.tv_update_date);
         TextView tvComment = (TextView) vHeader.findViewById(R.id.tv_comment);
         tvTitle.setText(mJOnlineMusicList.getBillboard().getName());
-        tvUpdateDate.setText(getString(R.string.recent_update) + mJOnlineMusicList.getBillboard().getUpdate_date());
+        tvUpdateDate.setText(getString(R.string.recent_update, mJOnlineMusicList.getBillboard().getUpdate_date()));
         tvComment.setText(mJOnlineMusicList.getBillboard().getComment());
         ImageSize imageSize = new ImageSize(200, 200);
         ImageLoader.getInstance().loadImage(mJOnlineMusicList.getBillboard().getPic_s640(), imageSize,
-                MusicUtils.getDefaultDisplayImageOptions(), new SimpleImageLoadingListener() {
+                Utils.getDefaultDisplayImageOptions(), new SimpleImageLoadingListener() {
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                         ivCover.setImageBitmap(loadedImage);
@@ -210,7 +210,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
             public void onSuccess(Music music) {
                 mProgressDialog.cancel();
                 mPlayService.play(music);
-                ToastUtils.show(getString(R.string.now_play) + music.getTitle());
+                ToastUtils.show(getString(R.string.now_play, music.getTitle()));
             }
 
             @Override
@@ -230,7 +230,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
             @Override
             public void onSuccess() {
                 mProgressDialog.cancel();
-                ToastUtils.show(getString(R.string.now_download) + jOnlineMusic.getTitle());
+                ToastUtils.show(getString(R.string.now_download, jOnlineMusic.getTitle()));
             }
 
             @Override

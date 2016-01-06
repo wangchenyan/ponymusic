@@ -4,18 +4,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.text.TextUtils;
-import android.view.View;
-import android.view.WindowManager;
-
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import me.wcy.ponymusic.R;
-import me.wcy.ponymusic.application.MusicApplication;
-import me.wcy.ponymusic.enums.LoadStateEnum;
 import me.wcy.ponymusic.enums.MusicTypeEnum;
 import me.wcy.ponymusic.model.Music;
 
@@ -26,6 +19,10 @@ import me.wcy.ponymusic.model.Music;
 public class MusicUtils {
     // 存放歌曲列表
     private static List<Music> sMusicList = new ArrayList<>();
+
+    public static List<Music> getMusicList() {
+        return sMusicList;
+    }
 
     /**
      * 扫描歌曲
@@ -81,68 +78,5 @@ public class MusicUtils {
             cursor.close();
         }
         return result;
-    }
-
-    public static List<Music> getMusicList() {
-        return sMusicList;
-    }
-
-    public static int getScreenWidth() {
-        WindowManager wm = (WindowManager) MusicApplication.getInstance().getSystemService(Context.WINDOW_SERVICE);
-        return wm.getDefaultDisplay().getWidth();
-    }
-
-    /**
-     * 获取状态栏高度
-     */
-    public static int getSystemBarHeight(Context context) {
-        int result = 0;
-        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = context.getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
-
-    public static String getArtistAndAlbum(String artist, String album) {
-        if (TextUtils.isEmpty(artist) && TextUtils.isEmpty(album)) {
-            return "";
-        } else if (!TextUtils.isEmpty(artist) && TextUtils.isEmpty(album)) {
-            return artist;
-        } else if (TextUtils.isEmpty(artist) && !TextUtils.isEmpty(album)) {
-            return album;
-        } else {
-            return artist + " - " + album;
-        }
-    }
-
-    public static void changeViewState(View loadSuccess, View loading, View loadFail, LoadStateEnum state) {
-        switch (state) {
-            case LOADING:
-                loadSuccess.setVisibility(View.GONE);
-                loading.setVisibility(View.VISIBLE);
-                loadFail.setVisibility(View.GONE);
-                break;
-            case LOAD_SUCCESS:
-                loadSuccess.setVisibility(View.VISIBLE);
-                loading.setVisibility(View.GONE);
-                loadFail.setVisibility(View.GONE);
-                break;
-            case LOAD_FAIL:
-                loadSuccess.setVisibility(View.GONE);
-                loading.setVisibility(View.GONE);
-                loadFail.setVisibility(View.VISIBLE);
-                break;
-        }
-    }
-
-    public static DisplayImageOptions getDefaultDisplayImageOptions() {
-        return new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.ic_music_list_default_cover)
-                .showImageForEmptyUri(R.drawable.ic_music_list_default_cover)
-                .showImageOnFail(R.drawable.ic_music_list_default_cover)
-                .cacheInMemory(true)
-                .cacheOnDisc(true)
-                .build();
     }
 }

@@ -11,11 +11,12 @@ import android.widget.TextView;
 
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.activity.MusicActivity;
+import me.wcy.ponymusic.enums.MusicTypeEnum;
 import me.wcy.ponymusic.model.Music;
 import me.wcy.ponymusic.service.PlayService;
 import me.wcy.ponymusic.utils.CoverLoader;
-import me.wcy.ponymusic.enums.MusicTypeEnum;
 import me.wcy.ponymusic.utils.MusicUtils;
+import me.wcy.ponymusic.utils.Utils;
 
 /**
  * 本地音乐列表适配器
@@ -69,7 +70,7 @@ public class LocalMusicAdapter extends BaseAdapter {
         Bitmap cover = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
         holder.ivCover.setImageBitmap(cover);
         holder.tvTitle.setText(music.getTitle());
-        String artist = MusicUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum());
+        String artist = Utils.getArtistAndAlbum(music.getArtist(), music.getAlbum());
         holder.tvArtist.setText(artist);
         holder.ivMore.setOnClickListener(new View.OnClickListener() {
             @Override

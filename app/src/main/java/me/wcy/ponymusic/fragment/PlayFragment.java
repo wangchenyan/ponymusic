@@ -28,9 +28,9 @@ import me.wcy.ponymusic.utils.Constants;
 import me.wcy.ponymusic.utils.CoverLoader;
 import me.wcy.ponymusic.utils.FileUtils;
 import me.wcy.ponymusic.utils.ImageUtils;
-import me.wcy.ponymusic.utils.MusicUtils;
 import me.wcy.ponymusic.utils.Preferences;
 import me.wcy.ponymusic.utils.ToastUtils;
+import me.wcy.ponymusic.utils.Utils;
 import me.wcy.ponymusic.widget.AlbumCoverView;
 import me.wcy.ponymusic.widget.IndicatorLayout;
 import me.wcy.ponymusic.widget.LrcView;
@@ -105,7 +105,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
      */
     private void initSystemBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            int top = MusicUtils.getSystemBarHeight(getActivity());
+            int top = Utils.getSystemBarHeight(getActivity());
             llContent.setPadding(0, top, 0, 0);
         }
     }
@@ -295,7 +295,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                 mAlbumCoverView.setCoverBitmap(CoverLoader.getInstance().loadRound(null));
                 ivPlayingBg.setImageResource(R.drawable.ic_play_page_default_bg);
             } else {
-                Bitmap cover = ImageUtils.resizeImage(music.getCover(), MusicUtils.getScreenWidth() / 2, MusicUtils.getScreenWidth() / 2);
+                Bitmap cover = ImageUtils.resizeImage(music.getCover(), Utils.getScreenWidth() / 2, Utils.getScreenWidth() / 2);
                 cover = ImageUtils.createCircleImage(cover);
                 mAlbumCoverView.setCoverBitmap(cover);
                 Bitmap bg = ImageUtils.boxBlurFilter(music.getCover());

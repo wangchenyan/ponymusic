@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.os.Handler;
-import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -22,17 +20,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import me.wcy.ponymusic.R;
+import me.wcy.ponymusic.utils.Utils;
 
 /**
- * LrcView
+ * 歌词
  * Created by wcy on 2015/11/9.
  */
 public class LrcView extends View {
     private static final String TAG = LrcView.class.getSimpleName();
-    private static final int MSG_NEW_LINE = 0;
     private List<Long> mLrcTimes;
     private List<String> mLrcTexts;
-    private LrcHandler mHandler;
     private Paint mNormalPaint;
     private Paint mCurrentPaint;
     private float mTextSize;
@@ -58,22 +55,19 @@ public class LrcView extends View {
 
     /**
      * 初始化
-     *
-     * @param attrs attrs
      */
     private void init(AttributeSet attrs) {
         TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.LrcView);
-        mTextSize = ta.getDimension(R.styleable.LrcView_textSize, 48.0f);
-        mDividerHeight = ta.getDimension(R.styleable.LrcView_dividerHeight, 72.0f);
+        mTextSize = ta.getDimension(R.styleable.LrcView_textSize, Utils.sp2px(getContext(), 16));
+        mDividerHeight = ta.getDimension(R.styleable.LrcView_dividerHeight, Utils.dp2px(getContext(), 24));
         mAnimationDuration = ta.getInt(R.styleable.LrcView_animationDuration, 1000);
         mAnimationDuration = mAnimationDuration < 0 ? 1000 : mAnimationDuration;
-        int normalColor = ta.getColor(R.styleable.LrcView_normalTextColor, 0xffffffff);
-        int currentColor = ta.getColor(R.styleable.LrcView_currentTextColor, 0xffff4081);
+        int normalColor = ta.getColor(R.styleable.LrcView_normalTextColor, 0xFFFFFFFF);
+        int currentColor = ta.getColor(R.styleable.LrcView_currentTextColor, 0xFFFF4081);
         ta.recycle();
 
         mLrcTimes = new ArrayList<>();
         mLrcTexts = new ArrayList<>();
-        mHandler = new LrcHandler();
         mNormalPaint = new Paint();
         mCurrentPaint = new Paint();
         mNormalPaint.setColor(normalColor);
@@ -85,10 +79,10 @@ public class LrcView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        //中心Y坐标
+        // 中心Y坐标
         float centerY = getHeight() / 2 + mTextSize / 2 + mAnimOffset;
 
-        //无歌词文件
+        // 无歌词文件
         if (!hasLrc()) {
             String noLrc = "暂无歌词";
             float centerX = (getWidth() - mCurrentPaint.measureText(noLrc)) / 2;
@@ -96,12 +90,12 @@ public class LrcView extends View {
             return;
         }
 
-        //画当前行
+        // 画当前行
         String currStr = mLrcTexts.get(mCurrentLine);
         float currX = (getWidth() - mCurrentPaint.measureText(currStr)) / 2;
         canvas.drawText(currStr, currX, centerY, mCurrentPaint);
 
-        //画当前行上面的
+        // 画当前行上面的
         for (int i = mCurrentLine - 1; i >= 0; i--) {
             String upStr = mLrcTexts.get(i);
             float upX = (getWidth() - mNormalPaint.measureText(upStr)) / 2;
@@ -109,7 +103,7 @@ public class LrcView extends View {
             canvas.drawText(upStr, upX, upY, mNormalPaint);
         }
 
-        //画当前行下面的
+        // 画当前行下面的
         for (int i = mCurrentLine + 1; i < mLrcTimes.size(); i++) {
             String downStr = mLrcTexts.get(i);
             float downX = (getWidth() - mNormalPaint.measureText(downStr)) / 2;
@@ -169,7 +163,7 @@ public class LrcView extends View {
      * @param time 当前时间
      */
     public synchronized void updateTime(long time) {
-        //避免重复绘制
+        // 避免重复绘制
         if (time < mNextTime || mIsEnd) {
             return;
         }
@@ -178,16 +172,14 @@ public class LrcView extends View {
                 Log.i(TAG, "lrc newline ...");
                 mNextTime = mLrcTimes.get(i);
                 mCurrentLine = i < 1 ? 0 : i - 1;
-                //属性动画只能在主线程使用，因此用Handler转发操作
-                mHandler.sendEmptyMessage(MSG_NEW_LINE);
+                newLineAnim();
                 break;
             } else if (i == mLrcTimes.size() - 1) {
                 //最后一行
                 Log.i(TAG, "lrc end ...");
                 mCurrentLine = mLrcTimes.size() - 1;
                 mIsEnd = true;
-                //属性动画只能在主线程使用，因此用Handler转发操作
-                mHandler.sendEmptyMessage(MSG_NEW_LINE);
+                newLineAnim();
                 break;
             }
         }
@@ -199,7 +191,7 @@ public class LrcView extends View {
                 mNextTime = mLrcTimes.get(i);
                 mCurrentLine = i < 1 ? 0 : i - 1;
                 mIsEnd = false;
-                mHandler.sendEmptyMessage(MSG_NEW_LINE);
+                newLineAnim();
                 break;
             }
         }
@@ -236,7 +228,7 @@ public class LrcView extends View {
     private String parseTime(String time) {
         time = time.replaceAll(":", "\\.");
         String[] times = time.split("\\.");
-        long l = 0l;
+        long l = 0L;
         try {
             long min = Long.parseLong(times[0]);
             long sec = Long.parseLong(times[1]);
@@ -263,16 +255,5 @@ public class LrcView extends View {
             }
         });
         animator.start();
-    }
-
-    private class LrcHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case MSG_NEW_LINE:
-                    newLineAnim();
-                    break;
-            }
-        }
     }
 }

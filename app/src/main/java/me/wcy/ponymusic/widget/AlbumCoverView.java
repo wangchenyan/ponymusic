@@ -13,7 +13,7 @@ import android.view.View;
 import me.wcy.ponymusic.R;
 import me.wcy.ponymusic.utils.CoverLoader;
 import me.wcy.ponymusic.utils.ImageUtils;
-import me.wcy.ponymusic.utils.MusicUtils;
+import me.wcy.ponymusic.utils.Utils;
 
 /**
  * 专辑封面
@@ -27,9 +27,9 @@ public class AlbumCoverView extends View {
     private Bitmap mCoverBitmap;
     private Matrix mDiscMatrix;
     private Matrix mCoverMatrix;
-    private Handler mHandler;
+    private CoverHandler mHandler;
     private float mRotation = 0.0f;
-    private boolean mIsRunning = false;
+    private boolean mIsPlaying = false;
 
     public AlbumCoverView(Context context) {
         this(context, null);
@@ -46,7 +46,7 @@ public class AlbumCoverView extends View {
 
     private void init() {
         mDiscBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_play_page_disc);
-        mDiscBitmap = ImageUtils.resizeImage(mDiscBitmap, MusicUtils.getScreenWidth() * 3 / 4, MusicUtils.getScreenWidth() * 3 / 4);
+        mDiscBitmap = ImageUtils.resizeImage(mDiscBitmap, Utils.getScreenWidth() * 3 / 4, Utils.getScreenWidth() * 3 / 4);
         mCoverBitmap = CoverLoader.getInstance().loadRound(null);
         mDiscMatrix = new Matrix();
         mCoverMatrix = new Matrix();
@@ -55,10 +55,10 @@ public class AlbumCoverView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        //设置旋转角度
+        // 设置旋转角度
         mDiscMatrix.setRotate(mRotation, getWidth() / 2, getHeight() / 2);
         mCoverMatrix.setRotate(mRotation, getWidth() / 2, getHeight() / 2);
-        //设置初始位置
+        // 设置初始位置
         mDiscMatrix.preTranslate((getWidth() - mDiscBitmap.getWidth()) / 2, (getHeight() - mDiscBitmap.getHeight()) / 2);
         mCoverMatrix.preTranslate((getWidth() - mCoverBitmap.getWidth()) / 2, (getHeight() - mCoverBitmap.getHeight()) / 2);
         canvas.drawBitmap(mCoverBitmap, mCoverMatrix, null);
@@ -72,25 +72,25 @@ public class AlbumCoverView extends View {
     }
 
     public void start() {
-        if (mIsRunning) {
+        if (mIsPlaying) {
             return;
         }
-        mIsRunning = true;
+        mIsPlaying = true;
         mHandler.sendEmptyMessageDelayed(MSG_UPDATE, TIME_UPDATE);
     }
 
     public void pause() {
-        if (!mIsRunning) {
+        if (!mIsPlaying) {
             return;
         }
-        mIsRunning = false;
+        mIsPlaying = false;
     }
 
     private class CoverHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == MSG_UPDATE) {
-                if (!mIsRunning) {
+                if (!mIsPlaying) {
                     return;
                 }
                 mRotation += ROTATION_INCREASE;

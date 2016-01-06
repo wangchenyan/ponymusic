@@ -16,5 +16,4 @@
         lrc:dividerHeight="24dp"
         lrc:normalTextColor="@color/translucent_white"
         lrc:textSize="@dimen/text_size_common" />
-
 </LinearLayout>
