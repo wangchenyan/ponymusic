@@ -3,11 +3,13 @@ package me.wcy.ponymusic.activity;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import butterknife.Bind;
@@ -22,25 +24,36 @@ import me.wcy.ponymusic.R;
 public abstract class BaseActivity extends AppCompatActivity {
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
+    protected Handler mHandler;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mHandler = new Handler();
         setSystemBarTransparent();
     }
 
     @Override
     public void setContentView(int layoutResID) {
-        View view = getLayoutInflater().inflate(layoutResID, null);
-        setContentView(view);
+        super.setContentView(layoutResID);
+        initView();
     }
 
     @Override
     public void setContentView(View view) {
         super.setContentView(view);
-        // init butter knife
+        initView();
+    }
+
+    @Override
+    public void setContentView(View view, ViewGroup.LayoutParams params) {
+        super.setContentView(view, params);
+        initView();
+    }
+
+    private void initView() {
         ButterKnife.bind(this);
-        // setup toolbar
+
         setSupportActionBar(mToolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -49,8 +62,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        setListener();
         super.onStart();
+        setListener();
     }
 
     protected abstract void setListener();

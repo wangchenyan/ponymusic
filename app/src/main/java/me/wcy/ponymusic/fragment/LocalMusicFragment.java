@@ -13,7 +13,6 @@ import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -200,9 +199,12 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
                 return;
             }
             // 由于系统扫描音乐是异步执行，因此延迟刷新音乐列表
-            new Handler().postDelayed(new Runnable() {
+            mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    if (!isAdded()) {
+                        return;
+                    }
                     getPlayService().updateMusicList();
                     updateView();
                 }
