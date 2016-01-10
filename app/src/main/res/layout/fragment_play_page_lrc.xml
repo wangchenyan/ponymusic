@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin">
 
-    <me.wcy.ponymusic.widget.LrcView
+    <me.wcy.music.widget.LrcView
         android:id="@+id/lrc_view_full"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

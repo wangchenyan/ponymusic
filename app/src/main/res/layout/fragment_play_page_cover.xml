@@ -8,13 +8,13 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin">
 
-    <me.wcy.ponymusic.widget.AlbumCoverView
+    <me.wcy.music.widget.AlbumCoverView
         android:id="@+id/album_cover_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <me.wcy.ponymusic.widget.LrcView
+    <me.wcy.music.widget.LrcView
         android:id="@+id/lrc_view_single"
         android:layout_width="match_parent"
         android:layout_height="20dp"

@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <me.wcy.ponymusic.widget.AutoLoadListView
+        <me.wcy.music.widget.AutoLoadListView
             android:id="@+id/lv_online_music_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
