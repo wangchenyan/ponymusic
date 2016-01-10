@@ -16,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -49,10 +48,12 @@ import me.wcy.ponymusic.utils.ImageUtils;
 import me.wcy.ponymusic.utils.PlayMusic;
 import me.wcy.ponymusic.utils.ToastUtils;
 import me.wcy.ponymusic.utils.Utils;
+import me.wcy.ponymusic.widget.AutoLoadListView;
+import me.wcy.ponymusic.widget.OnLoadListener;
 
-public class OnlineMusicActivity extends BaseActivity implements OnItemClickListener, OnMoreClickListener {
+public class OnlineMusicActivity extends BaseActivity implements OnItemClickListener, OnMoreClickListener, OnLoadListener {
     @Bind(R.id.lv_online_music_list)
-    ListView lvOnlineMusic;
+    AutoLoadListView lvOnlineMusic;
     @Bind(R.id.ll_loading)
     LinearLayout llLoading;
     @Bind(R.id.ll_load_fail)
@@ -65,8 +66,6 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
     private PlayService mPlayService;
     private PlayServiceConnection mPlayServiceConnection;
     private ProgressDialog mProgressDialog;
-    private int mOffset = 0;
-    private boolean mHaveMore = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +84,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         mMusicList = new ArrayList<>();
         mAdapter = new OnlineMusicAdapter(this, mMusicList);
         lvOnlineMusic.setAdapter(mAdapter);
+        lvOnlineMusic.setOnLoadListener(this);
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.loading));
         Utils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOADING);
@@ -109,7 +109,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mPlayService = ((PlayService.PlayBinder) service).getService();
-            getMusic(mOffset);
+            onLoad();
         }
 
         @Override
@@ -127,12 +127,15 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                 .execute(new JsonCallback<JOnlineMusicList>(JOnlineMusicList.class) {
                     @Override
                     public void onResponse(JOnlineMusicList response) {
+                        lvOnlineMusic.onLoadComplete();
                         mJOnlineMusicList = response;
                         if (offset == 0) {
                             initHeader();
                             Utils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
-                        } else if (response.getSong_list().length == 0) {
-                            mHaveMore = false;
+                        }
+                        if (response.getSong_list() == null || response.getSong_list().length == 0) {
+                            lvOnlineMusic.setEnable(false);
+                            return;
                         }
                         Collections.addAll(mMusicList, response.getSong_list());
                         mAdapter.notifyDataSetChanged();
@@ -140,6 +143,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
 
                     @Override
                     public void onError(Request request, Exception e) {
+                        lvOnlineMusic.onLoadComplete();
                         if (offset == 0) {
                             Utils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
                         } else {
@@ -147,6 +151,11 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onLoad() {
+        getMusic(mMusicList.size());
     }
 
     @Override

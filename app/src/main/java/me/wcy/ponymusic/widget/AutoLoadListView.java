@@ -2,6 +2,7 @@ package me.wcy.ponymusic.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
@@ -14,8 +15,12 @@ import me.wcy.ponymusic.R;
  * Created by hzwangchenyan on 2016/1/7.
  */
 public class AutoLoadListView extends ListView implements AbsListView.OnScrollListener {
+    private static final String TAG = AutoLoadListView.class.getSimpleName();
     private View vFooter;
     private OnLoadListener mListener;
+    private int mFirstVisibleItem = 0;
+    private boolean mEnableLoad = true;
+    private boolean mIsLoading = false;
 
     public AutoLoadListView(Context context) {
         super(context);
@@ -34,9 +39,9 @@ public class AutoLoadListView extends ListView implements AbsListView.OnScrollLi
 
     private void init() {
         vFooter = LayoutInflater.from(getContext()).inflate(R.layout.auto_load_list_view_footer, null);
-        vFooter.setVisibility(GONE);
         addFooterView(vFooter, null, false);
         setOnScrollListener(this);
+        onLoadComplete();
     }
 
     public void setOnLoadListener(OnLoadListener listener) {
@@ -44,14 +49,25 @@ public class AutoLoadListView extends ListView implements AbsListView.OnScrollLi
     }
 
     public void onLoadComplete() {
-        vFooter.setVisibility(GONE);
+        Log.d(TAG, "onLoadComplete");
+        mIsLoading = false;
+        vFooter.setVisibility(View.GONE);
+        vFooter.setPadding(0, -vFooter.getHeight(), 0, 0);
+    }
+
+    public void setEnable(boolean enable) {
+        mEnableLoad = enable;
     }
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (firstVisibleItem + visibleItemCount + 2 == totalItemCount) {
-            onLoad();
+        boolean isPullDown = firstVisibleItem > mFirstVisibleItem;
+        if (mEnableLoad && !mIsLoading && isPullDown) {
+            if (firstVisibleItem + visibleItemCount >= totalItemCount - 2) {
+                onLoad();
+            }
         }
+        mFirstVisibleItem = firstVisibleItem;
     }
 
     @Override
@@ -59,7 +75,10 @@ public class AutoLoadListView extends ListView implements AbsListView.OnScrollLi
     }
 
     private void onLoad() {
-        vFooter.setVisibility(VISIBLE);
+        Log.d(TAG, "onLoad");
+        mIsLoading = true;
+        vFooter.setVisibility(View.VISIBLE);
+        vFooter.setPadding(0, 0, 0, 0);
         if (mListener != null) {
             mListener.onLoad();
         }
