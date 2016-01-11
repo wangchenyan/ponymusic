@@ -1,20 +1,12 @@
 <resources>
 
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
-
-    <style name="AppBaseTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="AppTheme" parent="AppBaseTheme" />
-
-    <style name="AppTheme.NoActionBar" parent="AppBaseTheme.NoActionBar" />
 
     <style name="AppTheme.Splash" parent="android:Theme.NoTitleBar.Fullscreen">
         <item name="android:windowBackground">@drawable/ic_splash</item>

@@ -24,12 +24,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <me.wcy.music.widget.AutoLoadListView
-            android:id="@+id/lv_online_music_list"
+        <ScrollView
+            android:id="@+id/sv_artist_info"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="0dp" />
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/ll_artist_info_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp" />
+        </ScrollView>
 
         <include
             android:id="@+id/ll_loading"

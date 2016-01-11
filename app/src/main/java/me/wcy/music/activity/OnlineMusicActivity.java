@@ -175,9 +175,10 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
-                    case 0:// 查看歌手信息
+                    case 0:// 分享
                         break;
-                    case 1:// 分享
+                    case 1:// 查看歌手信息
+                        artistInfo(jOnlineMusic);
                         break;
                     case 2:// 下载
                         download(jOnlineMusic);
@@ -227,6 +228,12 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                 ToastUtils.show(R.string.unable_to_play);
             }
         }.execute();
+    }
+
+    private void artistInfo(JOnlineMusic jOnlineMusic) {
+        Intent intent = new Intent(this, ArtistInfoActivity.class);
+        intent.putExtra(Extras.TING_UID, jOnlineMusic.getTing_uid());
+        startActivity(intent);
     }
 
     private void download(final JOnlineMusic jOnlineMusic) {

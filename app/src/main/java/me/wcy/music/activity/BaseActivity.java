@@ -18,7 +18,7 @@ import me.wcy.music.R;
 
 /**
  * 基类
- * 如果继承本类，需要在layout中添加toolbar。
+ * 如果继承本类，需要在 layout 中添加 {@link Toolbar} ，并将 AppTheme 继承 Theme.AppCompat.NoActionBar 。
  * Created by wcy on 2015/11/26.
  */
 public abstract class BaseActivity extends AppCompatActivity {

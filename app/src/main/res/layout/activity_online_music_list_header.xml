@@ -11,7 +11,7 @@
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_music_list_default_cover" />
+        android:src="@drawable/ic_default_cover" />
 
     <LinearLayout
         android:layout_width="wrap_content"

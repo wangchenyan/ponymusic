@@ -58,7 +58,7 @@ public class CoverLoader {
         if (uri == null) {
             bitmap = mThumbnailCache.get(KEY_NULL);
             if (bitmap == null) {
-                bitmap = BitmapFactory.decodeResource(MusicApplication.getInstance().getResources(), R.drawable.ic_music_list_default_cover);
+                bitmap = BitmapFactory.decodeResource(MusicApplication.getInstance().getResources(), R.drawable.ic_default_cover);
                 mThumbnailCache.put(KEY_NULL, bitmap);
             }
         } else {

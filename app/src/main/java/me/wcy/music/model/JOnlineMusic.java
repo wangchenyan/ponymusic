@@ -5,23 +5,15 @@ package me.wcy.music.model;
  * Created by wcy on 2015/12/20.
  */
 public class JOnlineMusic {
-    String artist_id;
     String pic_big;
     String pic_small;
     String lrclink;
     String rank;
     String song_id;
     String title;
+    String ting_uid;
     String album_title;
     String artist_name;
-
-    public String getArtist_id() {
-        return artist_id;
-    }
-
-    public void setArtist_id(String artist_id) {
-        this.artist_id = artist_id;
-    }
 
     public String getPic_big() {
         return pic_big;
@@ -69,6 +61,14 @@ public class JOnlineMusic {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getTing_uid() {
+        return ting_uid;
+    }
+
+    public void setTing_uid(String ting_uid) {
+        this.ting_uid = ting_uid;
     }
 
     public String getAlbum_title() {

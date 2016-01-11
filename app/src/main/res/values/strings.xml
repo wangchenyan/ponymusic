@@ -22,4 +22,13 @@
     <string name="recent_update">最近更新：%s</string>
     <string name="unable_to_play">暂时无法播放</string>
     <string name="unable_to_download">暂时无法下载</string>
+    <string name="artist_info">歌手信息</string>
+    <string name="artist_info_name">姓名：%s</string>
+    <string name="artist_info_country">国籍：%s</string>
+    <string name="artist_info_constellation">星座：%s</string>
+    <string name="artist_info_stature">身高：%scm</string>
+    <string name="artist_info_weight">体重：%skg</string>
+    <string name="artist_info_birth">生日：%s</string>
+    <string name="artist_info_intro">简介：%s</string>
+    <string name="artist_info_url">&lt;font color=\'#2196F3\'&gt;&lt;a href=\'%s\'&gt;查看更多信息&lt;/a&gt;&lt;/font&gt;</string>
 </resources>

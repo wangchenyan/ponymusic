@@ -67,9 +67,9 @@ public class Utils {
 
     public static DisplayImageOptions getDefaultDisplayImageOptions() {
         return new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.ic_music_list_default_cover)
-                .showImageForEmptyUri(R.drawable.ic_music_list_default_cover)
-                .showImageOnFail(R.drawable.ic_music_list_default_cover)
+                .showStubImage(R.drawable.ic_default_cover)
+                .showImageForEmptyUri(R.drawable.ic_default_cover)
+                .showImageOnFail(R.drawable.ic_default_cover)
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
                 .build();
