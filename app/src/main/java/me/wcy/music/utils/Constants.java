@@ -16,5 +16,6 @@ public class Constants {
     public static final String PARAM_TYPE = "type";
     public static final String PARAM_SIZE = "size";
     public static final String PARAM_OFFSET = "offset";
+    public static final String PARAM_SONG_ID = "songid";
     public static final String PARAM_TING_UID = "tinguid";
 }

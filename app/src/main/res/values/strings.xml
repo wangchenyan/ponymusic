@@ -22,6 +22,7 @@
     <string name="recent_update">最近更新：%s</string>
     <string name="unable_to_play">暂时无法播放</string>
     <string name="unable_to_download">暂时无法下载</string>
+    <string name="unable_to_share">暂时无法分享</string>
     <string name="artist_info">歌手信息</string>
     <string name="artist_info_name">姓名：%s</string>
     <string name="artist_info_country">国籍：%s</string>
@@ -31,4 +32,5 @@
     <string name="artist_info_birth">生日：%s</string>
     <string name="artist_info_intro">简介：%s</string>
     <string name="artist_info_url">&lt;font color=\'#2196F3\'&gt;&lt;a href=\'%s\'&gt;查看更多信息&lt;/a&gt;&lt;/font&gt;</string>
+    <string name="share_music">我用%1$s分享了歌曲\n《%2$s》\n%3$s</string>
 </resources>

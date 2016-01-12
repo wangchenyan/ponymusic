@@ -51,8 +51,8 @@ public abstract class PlayMusic {
         music.setAlbum(mJOnlineMusic.getAlbum_title());
         // 获取歌曲播放链接
         OkHttpUtils.get().url(Constants.BASE_URL)
-                .addParams("method", Constants.METHOD_DOWNLOAD_MUSIC)
-                .addParams("songid", mJOnlineMusic.getSong_id())
+                .addParams(Constants.PARAM_METHOD, Constants.METHOD_DOWNLOAD_MUSIC)
+                .addParams(Constants.PARAM_SONG_ID, mJOnlineMusic.getSong_id())
                 .build()
                 .execute(new JsonCallback<JDownloadInfo>(JDownloadInfo.class) {
                     @Override

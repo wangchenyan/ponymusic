@@ -35,6 +35,7 @@ import me.wcy.music.adapter.OnMoreClickListener;
 import me.wcy.music.adapter.OnlineMusicAdapter;
 import me.wcy.music.callback.JsonCallback;
 import me.wcy.music.enums.LoadStateEnum;
+import me.wcy.music.model.JDownloadInfo;
 import me.wcy.music.model.JOnlineMusic;
 import me.wcy.music.model.JOnlineMusicList;
 import me.wcy.music.model.Music;
@@ -176,6 +177,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:// 分享
+                        share(jOnlineMusic);
                         break;
                     case 1:// 查看歌手信息
                         artistInfo(jOnlineMusic);
@@ -225,9 +227,37 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
 
             @Override
             public void onFail(Request request, Exception e) {
+                mProgressDialog.cancel();
                 ToastUtils.show(R.string.unable_to_play);
             }
         }.execute();
+    }
+
+    private void share(final JOnlineMusic jOnlineMusic) {
+        mProgressDialog.show();
+        // 获取歌曲播放链接
+        OkHttpUtils.get().url(Constants.BASE_URL)
+                .addParams(Constants.PARAM_METHOD, Constants.METHOD_DOWNLOAD_MUSIC)
+                .addParams(Constants.PARAM_SONG_ID, jOnlineMusic.getSong_id())
+                .build()
+                .execute(new JsonCallback<JDownloadInfo>(JDownloadInfo.class) {
+                    @Override
+                    public void onResponse(final JDownloadInfo response) {
+                        mProgressDialog.cancel();
+                        Intent intent = new Intent(Intent.ACTION_SEND);
+                        intent.setType("text/plain");
+                        intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_music, getString(R.string.app_name),
+                                jOnlineMusic.getTitle(), response.getBitrate().getFile_link()));
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(Intent.createChooser(intent, getString(R.string.share)));
+                    }
+
+                    @Override
+                    public void onError(Request request, Exception e) {
+                        mProgressDialog.cancel();
+                        ToastUtils.show(R.string.unable_to_share);
+                    }
+                });
     }
 
     private void artistInfo(JOnlineMusic jOnlineMusic) {
