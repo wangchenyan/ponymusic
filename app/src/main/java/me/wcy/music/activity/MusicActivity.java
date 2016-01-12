@@ -199,8 +199,11 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
                 item.setChecked(false);
             }
         }, 500);
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.action_search:
+                intent = new Intent(this, SearchMusicActivity.class);
+                startActivity(intent);
                 return true;
             case R.id.action_setting:
                 return true;

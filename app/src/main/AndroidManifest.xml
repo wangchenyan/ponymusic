@@ -13,6 +13,7 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+
         <service android:name=".service.PlayService" />
 
         <receiver android:name=".receiver.DownloadReceiver">
@@ -40,6 +41,9 @@
         <activity
             android:name=".activity.ArtistInfoActivity"
             android:label="@string/artist_info"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SearchMusicActivity"
             android:screenOrientation="portrait" />
     </application>
 </manifest>

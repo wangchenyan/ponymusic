@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#CE3D3A</color>
     <color name="colorPrimaryDark">@color/colorPrimary</color>
-    <color name="colorAccent">@color/colorPrimary</color>
+    <color name="colorAccent">#009688</color>
     <color name="white">@android:color/white</color>
     <color name="black">@android:color/black</color>
     <color name="grey">#9E9E9E</color>
