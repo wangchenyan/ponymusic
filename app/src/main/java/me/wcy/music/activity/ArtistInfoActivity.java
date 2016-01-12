@@ -161,7 +161,7 @@ public class ArtistInfoActivity extends BaseActivity {
 
         if (llArtistInfoContainer.getChildCount() == 0) {
             Utils.changeViewState(svArtistInfo, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
-            ((TextView) llLoadFail.findViewById(R.id.tv_error)).setText(R.string.artist_info_empty);
+            ((TextView) llLoadFail.findViewById(R.id.tv_load_fail_text)).setText(R.string.artist_info_empty);
         }
     }
 }

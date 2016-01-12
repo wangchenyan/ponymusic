@@ -7,7 +7,7 @@
     android:paddingTop="80dp">
 
     <TextView
-        android:id="@+id/tv_error"
+        android:id="@+id/tv_load_fail_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/load_fail" />
