@@ -67,6 +67,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
     private PlayService mPlayService;
     private PlayServiceConnection mPlayServiceConnection;
     private ProgressDialog mProgressDialog;
+    private int mOffset = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,6 +139,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                             lvOnlineMusic.setEnable(false);
                             return;
                         }
+                        mOffset += Constants.MUSIC_LIST_SIZE;
                         Collections.addAll(mMusicList, response.getSong_list());
                         mAdapter.notifyDataSetChanged();
                     }
@@ -145,6 +147,11 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                     @Override
                     public void onError(Request request, Exception e) {
                         lvOnlineMusic.onLoadComplete();
+                        if (e instanceof RuntimeException) {
+                            // 歌曲全部加载完成
+                            lvOnlineMusic.setEnable(false);
+                            return;
+                        }
                         if (offset == 0) {
                             Utils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
                         } else {
@@ -156,7 +163,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
 
     @Override
     public void onLoad() {
-        getMusic(mMusicList.size());
+        getMusic(mOffset);
     }
 
     @Override
