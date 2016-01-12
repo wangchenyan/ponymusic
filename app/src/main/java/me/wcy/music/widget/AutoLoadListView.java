@@ -51,8 +51,7 @@ public class AutoLoadListView extends ListView implements AbsListView.OnScrollLi
     public void onLoadComplete() {
         Log.d(TAG, "onLoadComplete");
         mIsLoading = false;
-        vFooter.setVisibility(View.GONE);
-        vFooter.setPadding(0, -vFooter.getHeight(), 0, 0);
+        removeFooterView(vFooter);
     }
 
     public void setEnable(boolean enable) {
@@ -63,7 +62,8 @@ public class AutoLoadListView extends ListView implements AbsListView.OnScrollLi
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         boolean isPullDown = firstVisibleItem > mFirstVisibleItem;
         if (mEnableLoad && !mIsLoading && isPullDown) {
-            if (firstVisibleItem + visibleItemCount >= totalItemCount - 2) {
+            int lastVisibleItem = firstVisibleItem + visibleItemCount;
+            if (lastVisibleItem >= totalItemCount - 1) {
                 onLoad();
             }
         }
@@ -77,8 +77,7 @@ public class AutoLoadListView extends ListView implements AbsListView.OnScrollLi
     private void onLoad() {
         Log.d(TAG, "onLoad");
         mIsLoading = true;
-        vFooter.setVisibility(View.VISIBLE);
-        vFooter.setPadding(0, 0, 0, 0);
+        addFooterView(vFooter, null, false);
         if (mListener != null) {
             mListener.onLoad();
         }
