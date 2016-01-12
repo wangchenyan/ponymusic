@@ -248,7 +248,6 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                         intent.setType("text/plain");
                         intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_music, getString(R.string.app_name),
                                 jOnlineMusic.getTitle(), response.getBitrate().getFile_link()));
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(Intent.createChooser(intent, getString(R.string.share)));
                     }
 
