@@ -72,7 +72,7 @@ public class ArtistInfoActivity extends BaseActivity {
         float textSize = 16.0f;
 
         String name = jArtistInfo.getName();
-        String avatarUri = jArtistInfo.getAvatar_s500();
+        String avatarUri = jArtistInfo.getAvatar_s1000();
         String country = jArtistInfo.getCountry();
         String constellation = jArtistInfo.getConstellation();
         float stature = jArtistInfo.getStature();
@@ -88,8 +88,6 @@ public class ArtistInfoActivity extends BaseActivity {
                     .showStubImage(R.drawable.ic_default_artist)
                     .showImageForEmptyUri(R.drawable.ic_default_artist)
                     .showImageOnFail(R.drawable.ic_default_artist)
-                    .cacheInMemory(true)
-                    .cacheOnDisc(true)
                     .build();
             ImageLoader.getInstance().displayImage(avatarUri, ivAvatar, options);
             llArtistInfoContainer.addView(ivAvatar, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -111,7 +109,7 @@ public class ArtistInfoActivity extends BaseActivity {
             tvCountry.setPadding(0, Utils.dp2px(this, 10), 0, 0);
             llArtistInfoContainer.addView(tvCountry, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         }
-        if (!TextUtils.isEmpty(constellation)) {
+        if (!TextUtils.isEmpty(constellation) && !constellation.equals("未知")) {
             TextView tvConstellation = new TextView(this);
             tvConstellation.setText(getString(R.string.artist_info_constellation, constellation));
             tvConstellation.setTextColor(textColor);
@@ -135,7 +133,7 @@ public class ArtistInfoActivity extends BaseActivity {
             tvWeight.setPadding(0, Utils.dp2px(this, 10), 0, 0);
             llArtistInfoContainer.addView(tvWeight, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         }
-        if (!TextUtils.isEmpty(birth)) {
+        if (!TextUtils.isEmpty(birth) && !birth.equals("0000-00-00")) {
             TextView tvBirth = new TextView(this);
             tvBirth.setText(getString(R.string.artist_info_birth, birth));
             tvBirth.setTextColor(textColor);
@@ -159,6 +157,11 @@ public class ArtistInfoActivity extends BaseActivity {
             tvUrl.setPadding(0, Utils.dp2px(this, 10), 0, 0);
             tvUrl.setGravity(Gravity.CENTER);
             llArtistInfoContainer.addView(tvUrl, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        }
+
+        if (llArtistInfoContainer.getChildCount() == 0) {
+            Utils.changeViewState(svArtistInfo, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
+            ((TextView) llLoadFail.findViewById(R.id.tv_error)).setText(R.string.artist_info_empty);
         }
     }
 }

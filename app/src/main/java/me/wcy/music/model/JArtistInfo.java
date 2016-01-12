@@ -10,14 +10,14 @@ public class JArtistInfo {
     float weight;
     // 身高
     float stature;
-    // 头像
-    String avatar_s500;
     // 国籍
     String country;
     // 歌手链接
     String url;
     // 歌手简介
     String intro;
+    // 头像
+    String avatar_s1000;
     // 姓名
     String name;
     // 生日
@@ -47,14 +47,6 @@ public class JArtistInfo {
         this.stature = stature;
     }
 
-    public String getAvatar_s500() {
-        return avatar_s500;
-    }
-
-    public void setAvatar_s500(String avatar_s500) {
-        this.avatar_s500 = avatar_s500;
-    }
-
     public String getCountry() {
         return country;
     }
@@ -77,6 +69,14 @@ public class JArtistInfo {
 
     public void setIntro(String intro) {
         this.intro = intro;
+    }
+
+    public String getAvatar_s1000() {
+        return avatar_s1000;
+    }
+
+    public void setAvatar_s1000(String avatar_s1000) {
+        this.avatar_s1000 = avatar_s1000;
     }
 
     public String getName() {
