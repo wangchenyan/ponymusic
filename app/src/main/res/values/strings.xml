@@ -36,4 +36,5 @@
     <string name="artist_info_empty">暂无歌手信息</string>
     <string name="share_music">我用%1$s分享了歌曲《%2$s》%3$s</string>
     <string name="search_tips">歌曲名、歌手名</string>
+    <string name="search_empty">未找到相关结果</string>
 </resources>

@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.squareup.okhttp.Request;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -19,8 +20,10 @@ import me.wcy.music.R;
 import me.wcy.music.adapter.OnMoreClickListener;
 import me.wcy.music.adapter.SearchMusicAdapter;
 import me.wcy.music.callback.JsonCallback;
+import me.wcy.music.enums.LoadStateEnum;
 import me.wcy.music.model.JSearchMusic;
 import me.wcy.music.utils.Constants;
+import me.wcy.music.utils.Utils;
 
 public class SearchMusicActivity extends BaseActivity implements SearchView.OnQueryTextListener, OnMoreClickListener {
     @Bind(R.id.lv_search_music_list)
@@ -40,6 +43,7 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
         mSearchMusicList = new ArrayList<>();
         mAdapter = new SearchMusicAdapter(this, mSearchMusicList);
         lvSearchMusic.setAdapter(mAdapter);
+        ((TextView) llLoadFail.findViewById(R.id.tv_load_fail_text)).setText(R.string.search_empty);
     }
 
     @Override
@@ -62,6 +66,7 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        Utils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOADING);
         searchMusic(query);
         return false;
     }
@@ -79,13 +84,18 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
                 .execute(new JsonCallback<JSearchMusic>(JSearchMusic.class) {
                     @Override
                     public void onResponse(JSearchMusic response) {
+                        if (response.getSong() == null) {
+                            Utils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
+                            return;
+                        }
+                        Utils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
                         Collections.addAll(mSearchMusicList, response.getSong());
                         mAdapter.notifyDataSetChanged();
                     }
 
                     @Override
                     public void onError(Request request, Exception e) {
-
+                        Utils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
                     }
                 });
     }
