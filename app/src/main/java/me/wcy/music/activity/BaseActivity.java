@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,8 +38,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     public void setContentView(int layoutResID) {
-        View view = LayoutInflater.from(this).inflate(layoutResID, null);
-        setContentView(view);
+        super.setContentView(layoutResID);
+        initView();
     }
 
     @Override
