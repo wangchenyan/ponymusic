@@ -93,6 +93,7 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
                             return;
                         }
                         Utils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
+                        mSearchMusicList.clear();
                         Collections.addAll(mSearchMusicList, response.getSong());
                         mAdapter.notifyDataSetChanged();
                     }
