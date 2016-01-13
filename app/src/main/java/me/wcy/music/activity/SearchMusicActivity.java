@@ -40,6 +40,10 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_music);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
+
         mSearchMusicList = new ArrayList<>();
         mAdapter = new SearchMusicAdapter(this, mSearchMusicList);
         lvSearchMusic.setAdapter(mAdapter);
