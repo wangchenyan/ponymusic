@@ -13,6 +13,7 @@ public class Constants {
     public static final String METHOD_DOWNLOAD_MUSIC = "baidu.ting.song.play";
     public static final String METHOD_ARTIST_INFO = "baidu.ting.artist.getInfo";
     public static final String METHOD_SEARCH_MUSIC = "baidu.ting.search.catalogSug";
+    public static final String METHOD_LRC = "baidu.ting.song.lry";
     public static final String PARAM_METHOD = "method";
     public static final String PARAM_TYPE = "type";
     public static final String PARAM_SIZE = "size";

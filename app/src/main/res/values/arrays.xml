@@ -18,6 +18,13 @@
         <item>分享</item>
         <item>查看歌手信息</item>
     </string-array>
+    <string-array name="search_music_dialog">
+        <item>分享</item>
+        <item>下载</item>
+    </string-array>
+    <string-array name="search_music_dialog_no_download">
+        <item>分享</item>
+    </string-array>
     <string-array name="online_music_list_title">
         <item>主打榜单</item>
         <item>百度热歌榜</item>

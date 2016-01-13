@@ -1,5 +1,7 @@
 package me.wcy.music.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
@@ -33,6 +35,12 @@ public class ArtistInfoActivity extends BaseActivity {
     LinearLayout llLoading;
     @Bind(R.id.ll_load_fail)
     LinearLayout llLoadFail;
+
+    public static void start(Context context, String tingUid) {
+        Intent intent = new Intent(context, ArtistInfoActivity.class);
+        intent.putExtra(Extras.TING_UID, tingUid);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -22,7 +22,7 @@ import me.wcy.music.model.Music;
  */
 public abstract class PlayMusic {
     private JOnlineMusic mJOnlineMusic;
-    private int mPlayCounter = 0;
+    private int mCounter = 0;
 
     public PlayMusic(JOnlineMusic jOnlineMusic) {
         mJOnlineMusic = jOnlineMusic;
@@ -37,12 +37,12 @@ public abstract class PlayMusic {
         String lrcFileName = FileUtils.getLrcFileName(mJOnlineMusic.getArtist_name(), mJOnlineMusic.getTitle());
         File lrcFile = new File(FileUtils.getLrcDir() + lrcFileName);
         if (TextUtils.isEmpty(mJOnlineMusic.getLrclink()) || lrcFile.exists()) {
-            mPlayCounter++;
+            mCounter++;
         }
         String picUrl = TextUtils.isEmpty(mJOnlineMusic.getPic_big()) ? TextUtils.isEmpty(mJOnlineMusic.getPic_small())
                 ? null : mJOnlineMusic.getPic_small() : mJOnlineMusic.getPic_big();
         if (TextUtils.isEmpty(picUrl)) {
-            mPlayCounter++;
+            mCounter++;
         }
         final Music music = new Music();
         music.setType(MusicTypeEnum.ONLINE);
@@ -59,8 +59,8 @@ public abstract class PlayMusic {
                     public void onResponse(final JDownloadInfo response) {
                         music.setUri(response.getBitrate().getFile_link());
                         music.setDuration(response.getBitrate().getFile_duration() * 1000);
-                        mPlayCounter++;
-                        if (mPlayCounter == 3) {
+                        mCounter++;
+                        if (mCounter == 3) {
                             onSuccess(music);
                         }
                     }
@@ -88,8 +88,8 @@ public abstract class PlayMusic {
 
                         @Override
                         public void onAfter() {
-                            mPlayCounter++;
-                            if (mPlayCounter == 3) {
+                            mCounter++;
+                            if (mCounter == 3) {
                                 onSuccess(music);
                             }
                         }
@@ -102,16 +102,16 @@ public abstract class PlayMusic {
                         @Override
                         public void onResponse(Bitmap bitmap) {
                             music.setCover(bitmap);
-                            mPlayCounter++;
-                            if (mPlayCounter == 3) {
+                            mCounter++;
+                            if (mCounter == 3) {
                                 onSuccess(music);
                             }
                         }
 
                         @Override
                         public void onError(Request request, Exception e) {
-                            mPlayCounter++;
-                            if (mPlayCounter == 3) {
+                            mCounter++;
+                            if (mCounter == 3) {
                                 onSuccess(music);
                             }
                         }
