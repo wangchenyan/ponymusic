@@ -35,5 +35,5 @@
     <string name="artist_info_url">&lt;font color=\'#2196F3\'&gt;&lt;a href=\'%s\'&gt;查看更多信息&lt;/a&gt;&lt;/font&gt;</string>
     <string name="artist_info_empty">暂无歌手信息</string>
     <string name="share_music">我用%1$s分享了歌曲《%2$s》%3$s</string>
-    <string name="search_tips">歌曲、歌手、专辑</string>
+    <string name="search_tips">歌曲名、歌手名</string>
 </resources>

@@ -7,25 +7,44 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.squareup.okhttp.Request;
+import com.zhy.http.okhttp.OkHttpUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import butterknife.Bind;
 import me.wcy.music.R;
+import me.wcy.music.adapter.OnMoreClickListener;
+import me.wcy.music.adapter.SearchMusicAdapter;
+import me.wcy.music.callback.JsonCallback;
+import me.wcy.music.model.JSearchMusic;
+import me.wcy.music.utils.Constants;
 
-public class SearchMusicActivity extends BaseActivity implements SearchView.OnQueryTextListener {
+public class SearchMusicActivity extends BaseActivity implements SearchView.OnQueryTextListener, OnMoreClickListener {
     @Bind(R.id.lv_search_music_list)
     ListView lvSearchMusic;
     @Bind(R.id.ll_loading)
     LinearLayout llLoading;
     @Bind(R.id.ll_load_fail)
     LinearLayout llLoadFail;
+    private SearchMusicAdapter mAdapter;
+    private List<JSearchMusic.JSong> mSearchMusicList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_music);
+
+        mSearchMusicList = new ArrayList<>();
+        mAdapter = new SearchMusicAdapter(this, mSearchMusicList);
+        lvSearchMusic.setAdapter(mAdapter);
     }
 
     @Override
     protected void setListener() {
+        mAdapter.setOnMoreClickListener(this);
     }
 
     @Override
@@ -43,11 +62,36 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        searchMusic(query);
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
         return false;
+    }
+
+    private void searchMusic(String keyword) {
+        OkHttpUtils.get().url(Constants.BASE_URL)
+                .addParams(Constants.PARAM_METHOD, Constants.METHOD_SEARCH_MUSIC)
+                .addParams(Constants.PARAM_QUERY, keyword)
+                .build()
+                .execute(new JsonCallback<JSearchMusic>(JSearchMusic.class) {
+                    @Override
+                    public void onResponse(JSearchMusic response) {
+                        Collections.addAll(mSearchMusicList, response.getSong());
+                        mAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onError(Request request, Exception e) {
+
+                    }
+                });
+    }
+
+    @Override
+    public void onMoreClick(int position) {
+
     }
 }

@@ -1,6 +1,7 @@
 package me.wcy.music.model;
 
 /**
+ * JavaBean
  * Created by hzwangchenyan on 2016/1/11.
  */
 public class JArtistInfo {

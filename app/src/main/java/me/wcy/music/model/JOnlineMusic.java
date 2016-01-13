@@ -8,7 +8,6 @@ public class JOnlineMusic {
     String pic_big;
     String pic_small;
     String lrclink;
-    String rank;
     String song_id;
     String title;
     String ting_uid;
@@ -37,14 +36,6 @@ public class JOnlineMusic {
 
     public void setLrclink(String lrclink) {
         this.lrclink = lrclink;
-    }
-
-    public String getRank() {
-        return rank;
-    }
-
-    public void setRank(String rank) {
-        this.rank = rank;
     }
 
     public String getSong_id() {

@@ -9,10 +9,10 @@ import java.io.Serializable;
 public class MusicListInfo implements Serializable {
     private String title;
     /**
-     * |主打榜单
+     * #主打榜单
      * 1.新歌榜
      * 2.热歌榜
-     * |分类榜单
+     * #分类榜单
      * 20.华语金曲榜
      * 21.欧美金曲榜
      * 24.影视金曲榜
@@ -20,7 +20,7 @@ public class MusicListInfo implements Serializable {
      * 25.网络歌曲榜
      * 22.经典老歌榜
      * 11.摇滚榜
-     * |媒体榜单
+     * #媒体榜单
      * 6.KTV热歌榜
      * 8.Billboard
      * 18.Hito中文榜

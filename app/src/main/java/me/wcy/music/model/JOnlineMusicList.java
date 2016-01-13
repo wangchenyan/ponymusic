@@ -24,7 +24,7 @@ public class JOnlineMusicList {
         this.billboard = billboard;
     }
 
-    public class JBillboard {
+    public static class JBillboard {
         String update_date;
         String name;
         String comment;

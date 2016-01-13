@@ -15,7 +15,7 @@ public class JDownloadInfo {
         this.bitrate = bitrate;
     }
 
-    public class JBitrate {
+    public static class JBitrate {
         int file_duration;
         String file_link;
 
