@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.MenuItem;
 
 import me.wcy.music.R;
+import me.wcy.music.activity.AboutActivity;
 import me.wcy.music.activity.SearchMusicActivity;
 
 /**
@@ -43,6 +44,8 @@ public class NaviMenuExecutor {
                 share();
                 return true;
             case R.id.action_about:
+                intent = new Intent(mContext, AboutActivity.class);
+                mContext.startActivity(intent);
                 return true;
         }
         return false;
