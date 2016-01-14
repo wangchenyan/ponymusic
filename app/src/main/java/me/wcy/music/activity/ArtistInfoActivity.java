@@ -25,6 +25,7 @@ import me.wcy.music.model.JArtistInfo;
 import me.wcy.music.utils.Constants;
 import me.wcy.music.utils.Extras;
 import me.wcy.music.utils.Utils;
+import me.wcy.music.utils.ViewUtils;
 
 public class ArtistInfoActivity extends BaseActivity {
     @Bind(R.id.sv_artist_info)
@@ -49,7 +50,7 @@ public class ArtistInfoActivity extends BaseActivity {
 
         String tingUid = getIntent().getStringExtra(Extras.TING_UID);
         getArtistInfo(tingUid);
-        Utils.changeViewState(svArtistInfo, llLoading, llLoadFail, LoadStateEnum.LOADING);
+        ViewUtils.changeViewState(svArtistInfo, llLoading, llLoadFail, LoadStateEnum.LOADING);
     }
 
     @Override
@@ -64,13 +65,13 @@ public class ArtistInfoActivity extends BaseActivity {
                 .execute(new JsonCallback<JArtistInfo>(JArtistInfo.class) {
                     @Override
                     public void onResponse(JArtistInfo response) {
-                        Utils.changeViewState(svArtistInfo, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
+                        ViewUtils.changeViewState(svArtistInfo, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
                         onSuccess(response);
                     }
 
                     @Override
                     public void onError(Request request, Exception e) {
-                        Utils.changeViewState(svArtistInfo, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
+                        ViewUtils.changeViewState(svArtistInfo, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
                     }
                 });
     }
@@ -168,7 +169,7 @@ public class ArtistInfoActivity extends BaseActivity {
         }
 
         if (llArtistInfoContainer.getChildCount() == 0) {
-            Utils.changeViewState(svArtistInfo, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
+            ViewUtils.changeViewState(svArtistInfo, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
             ((TextView) llLoadFail.findViewById(R.id.tv_load_fail_text)).setText(R.string.artist_info_empty);
         }
     }

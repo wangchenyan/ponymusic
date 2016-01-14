@@ -54,7 +54,7 @@ public class MusicUtils {
             String fileName = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)));
             Music music = new Music();
             music.setId(id);
-            music.setType(MusicTypeEnum.LOACL);
+            music.setType(MusicTypeEnum.LOCAL);
             music.setTitle(title);
             music.setArtist(artist);
             music.setAlbum(album);

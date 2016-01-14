@@ -59,7 +59,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         mReceiver = new DownloadReceiver();
         mAdapter.setOnMoreClickListener(this);
         lvLocalMusic.setAdapter(mAdapter);
-        if (getPlayService().getPlayingMusic() != null && getPlayService().getPlayingMusic().getType() == MusicTypeEnum.LOACL) {
+        if (getPlayService().getPlayingMusic() != null && getPlayService().getPlayingMusic().getType() == MusicTypeEnum.LOCAL) {
             lvLocalMusic.setSelection(getPlayService().getPlayingPosition());
         }
         updateView();
@@ -115,7 +115,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
 
     public void onItemPlay() {
         updateView();
-        if (getPlayService().getPlayingMusic().getType() == MusicTypeEnum.LOACL) {
+        if (getPlayService().getPlayingMusic().getType() == MusicTypeEnum.LOCAL) {
             lvLocalMusic.smoothScrollToPosition(getPlayService().getPlayingPosition());
         }
     }

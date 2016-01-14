@@ -85,7 +85,7 @@ public class LocalMusicAdapter extends BaseAdapter {
 
     public void updatePlayingPosition() {
         PlayService playService = ((MusicActivity) mContext).getPlayService();
-        if (playService.getPlayingMusic() != null && playService.getPlayingMusic().getType() == MusicTypeEnum.LOACL) {
+        if (playService.getPlayingMusic() != null && playService.getPlayingMusic().getType() == MusicTypeEnum.LOCAL) {
             mPlayingPosition = playService.getPlayingPosition();
         } else {
             mPlayingPosition = -1;

@@ -246,7 +246,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         String title = music.getTitle();
         String subtitle = Utils.getArtistAndAlbum(music.getArtist(), music.getAlbum());
         Bitmap bitmap;
-        if (music.getType() == MusicTypeEnum.LOACL) {
+        if (music.getType() == MusicTypeEnum.LOCAL) {
             bitmap = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
         } else {
             bitmap = music.getCover();

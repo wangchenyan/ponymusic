@@ -287,7 +287,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void setCoverAndBg(Music music) {
-        if (music.getType() == MusicTypeEnum.LOACL) {
+        if (music.getType() == MusicTypeEnum.LOCAL) {
             mAlbumCoverView.setCoverBitmap(CoverLoader.getInstance().loadRound(music.getCoverUri()));
             ivPlayingBg.setImageBitmap(CoverLoader.getInstance().loadBlur(music.getCoverUri()));
         } else {
@@ -306,7 +306,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     private void setLrc(Music music) {
         String lrcPath;
-        if (music.getType() == MusicTypeEnum.LOACL) {
+        if (music.getType() == MusicTypeEnum.LOCAL) {
             lrcPath = FileUtils.getLrcDir() + music.getFileName().replace(Constants.FILENAME_MP3, Constants.FILENAME_LRC);
         } else {
             lrcPath = FileUtils.getLrcDir() + FileUtils.getLrcFileName(music.getArtist(), music.getTitle());

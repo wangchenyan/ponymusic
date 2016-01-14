@@ -36,12 +36,12 @@ import me.wcy.music.model.JSearchMusic;
 import me.wcy.music.model.Music;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.Constants;
-import me.wcy.music.utils.DownloadSearchedMusic;
+import me.wcy.music.online.DownloadSearchedMusic;
 import me.wcy.music.utils.FileUtils;
-import me.wcy.music.utils.PlaySearchedMusic;
-import me.wcy.music.utils.ShareOnlineMusic;
+import me.wcy.music.online.PlaySearchedMusic;
+import me.wcy.music.online.ShareOnlineMusic;
 import me.wcy.music.utils.ToastUtils;
-import me.wcy.music.utils.Utils;
+import me.wcy.music.utils.ViewUtils;
 
 public class SearchMusicActivity extends BaseActivity implements SearchView.OnQueryTextListener, AdapterView.OnItemClickListener, OnMoreClickListener {
     @Bind(R.id.lv_search_music_list)
@@ -113,7 +113,7 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        Utils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOADING);
+        ViewUtils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOADING);
         searchMusic(query);
         return false;
     }
@@ -132,18 +132,25 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
                     @Override
                     public void onResponse(JSearchMusic response) {
                         if (response.getSong() == null) {
-                            Utils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
+                            ViewUtils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
                             return;
                         }
-                        Utils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
+                        ViewUtils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
                         mSearchMusicList.clear();
                         Collections.addAll(mSearchMusicList, response.getSong());
                         mAdapter.notifyDataSetChanged();
+                        lvSearchMusic.requestFocus();
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                lvSearchMusic.setSelection(0);
+                            }
+                        });
                     }
 
                     @Override
                     public void onError(Request request, Exception e) {
-                        Utils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
+                        ViewUtils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
                     }
                 });
     }
@@ -158,14 +165,14 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
 
             @Override
             public void onSuccess(Music music) {
-                cancelProgress();
+                mProgressDialog.cancel();
                 mPlayService.play(music);
                 ToastUtils.show(getString(R.string.now_play, music.getTitle()));
             }
 
             @Override
             public void onFail(Request request, Exception e) {
-                cancelProgress();
+                mProgressDialog.cancel();
                 ToastUtils.show(R.string.unable_to_play);
             }
         }.execute();
@@ -204,12 +211,12 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
 
             @Override
             public void onSuccess() {
-                cancelProgress();
+                mProgressDialog.cancel();
             }
 
             @Override
             public void onFail(Request request, Exception e) {
-                cancelProgress();
+                mProgressDialog.cancel();
             }
         }.execute();
     }
@@ -223,24 +230,16 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
 
             @Override
             public void onSuccess() {
-                cancelProgress();
+                mProgressDialog.cancel();
                 ToastUtils.show(getString(R.string.now_download, jSong.getSongname()));
             }
 
             @Override
             public void onFail(Request request, Exception e) {
-                cancelProgress();
+                mProgressDialog.cancel();
                 ToastUtils.show(R.string.unable_to_download);
             }
         }.execute();
-    }
-
-    private void cancelProgress() {
-        if (mProgressDialog == null) {
-            return;
-        }
-        mProgressDialog.cancel();
-        lvSearchMusic.requestFocus();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package me.wcy.music.utils;
+package me.wcy.music.online;
 
 import android.graphics.Bitmap;
 import android.text.TextUtils;
@@ -15,16 +15,18 @@ import me.wcy.music.enums.MusicTypeEnum;
 import me.wcy.music.model.JDownloadInfo;
 import me.wcy.music.model.JOnlineMusic;
 import me.wcy.music.model.Music;
+import me.wcy.music.utils.Constants;
+import me.wcy.music.utils.FileUtils;
 
 /**
  * 播放在线音乐
  * Created by wcy on 2016/1/3.
  */
-public abstract class PlayMusic {
+public abstract class PlayOnlineMusic {
     private JOnlineMusic mJOnlineMusic;
     private int mCounter = 0;
 
-    public PlayMusic(JOnlineMusic jOnlineMusic) {
+    public PlayOnlineMusic(JOnlineMusic jOnlineMusic) {
         mJOnlineMusic = jOnlineMusic;
     }
 

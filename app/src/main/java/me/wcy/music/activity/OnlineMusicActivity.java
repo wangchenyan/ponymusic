@@ -41,14 +41,15 @@ import me.wcy.music.model.Music;
 import me.wcy.music.model.MusicListInfo;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.Constants;
-import me.wcy.music.utils.DownloadMusic;
+import me.wcy.music.online.DownloadOnlineMusic;
 import me.wcy.music.utils.Extras;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.ImageUtils;
-import me.wcy.music.utils.PlayMusic;
-import me.wcy.music.utils.ShareOnlineMusic;
+import me.wcy.music.online.PlayOnlineMusic;
+import me.wcy.music.online.ShareOnlineMusic;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.Utils;
+import me.wcy.music.utils.ViewUtils;
 import me.wcy.music.widget.AutoLoadListView;
 import me.wcy.music.widget.OnLoadListener;
 
@@ -89,7 +90,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         lvOnlineMusic.setOnLoadListener(this);
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.loading));
-        Utils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOADING);
+        ViewUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOADING);
 
         bindService();
     }
@@ -133,7 +134,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                         mJOnlineMusicList = response;
                         if (offset == 0) {
                             initHeader();
-                            Utils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
+                            ViewUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
                         }
                         if (response.getSong_list() == null || response.getSong_list().length == 0) {
                             lvOnlineMusic.setEnable(false);
@@ -153,7 +154,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                             return;
                         }
                         if (offset == 0) {
-                            Utils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
+                            ViewUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
                         } else {
                             ToastUtils.show(R.string.load_fail);
                         }
@@ -218,7 +219,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
     }
 
     private void play(JOnlineMusic jOnlineMusic) {
-        new PlayMusic(jOnlineMusic) {
+        new PlayOnlineMusic(jOnlineMusic) {
 
             @Override
             public void onPrepare() {
@@ -264,7 +265,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
     }
 
     private void download(final JOnlineMusic jOnlineMusic) {
-        new DownloadMusic(this, jOnlineMusic) {
+        new DownloadOnlineMusic(this, jOnlineMusic) {
             @Override
             public void onPrepare() {
                 mProgressDialog.show();

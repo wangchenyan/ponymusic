@@ -5,6 +5,6 @@ package me.wcy.music.enums;
  * Created by wcy on 2015/12/27.
  */
 public enum MusicTypeEnum {
-    LOACL,
+    LOCAL,
     ONLINE
 }

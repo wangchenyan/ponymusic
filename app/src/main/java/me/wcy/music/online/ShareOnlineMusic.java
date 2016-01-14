@@ -1,4 +1,4 @@
-package me.wcy.music.utils;
+package me.wcy.music.online;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,8 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import me.wcy.music.R;
 import me.wcy.music.callback.JsonCallback;
 import me.wcy.music.model.JDownloadInfo;
+import me.wcy.music.utils.Constants;
+import me.wcy.music.utils.ToastUtils;
 
 /**
  * 分享在线歌曲

@@ -1,4 +1,4 @@
-package me.wcy.music.utils;
+package me.wcy.music.online;
 
 import android.text.TextUtils;
 
@@ -15,6 +15,8 @@ import me.wcy.music.model.JDownloadInfo;
 import me.wcy.music.model.JLrc;
 import me.wcy.music.model.JSearchMusic;
 import me.wcy.music.model.Music;
+import me.wcy.music.utils.Constants;
+import me.wcy.music.utils.FileUtils;
 
 /**
  * 播放搜索的音乐

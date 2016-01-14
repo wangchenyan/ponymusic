@@ -2,14 +2,12 @@ package me.wcy.music.utils;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.view.View;
 import android.view.WindowManager;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import me.wcy.music.R;
 import me.wcy.music.application.MusicApplication;
-import me.wcy.music.enums.LoadStateEnum;
 
 /**
  * 工具类
@@ -42,26 +40,6 @@ public class Utils {
             return album;
         } else {
             return artist + " - " + album;
-        }
-    }
-
-    public static void changeViewState(View loadSuccess, View loading, View loadFail, LoadStateEnum state) {
-        switch (state) {
-            case LOADING:
-                loadSuccess.setVisibility(View.GONE);
-                loading.setVisibility(View.VISIBLE);
-                loadFail.setVisibility(View.GONE);
-                break;
-            case LOAD_SUCCESS:
-                loadSuccess.setVisibility(View.VISIBLE);
-                loading.setVisibility(View.GONE);
-                loadFail.setVisibility(View.GONE);
-                break;
-            case LOAD_FAIL:
-                loadSuccess.setVisibility(View.GONE);
-                loading.setVisibility(View.GONE);
-                loadFail.setVisibility(View.VISIBLE);
-                break;
         }
     }
 
