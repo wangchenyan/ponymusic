@@ -37,4 +37,9 @@
     <string name="share_music">我用%1$s分享了歌曲《%2$s》%3$s</string>
     <string name="search_tips">歌曲名、歌手名</string>
     <string name="search_empty">未找到相关结果</string>
+    <string name="menu_search">在线搜索</string>
+    <string name="menu_setting">功能设置</string>
+    <string name="menu_share">好友分享</string>
+    <string name="menu_about">关于波尼音乐</string>
+    <string name="share_app">青春，狂热，放纵，自由，当我们带上耳机以后做回自己，这是音乐的魅力。%s[下载链接]</string>
 </resources>

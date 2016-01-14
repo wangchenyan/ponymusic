@@ -1,4 +1,4 @@
-package me.wcy.music.online;
+package me.wcy.music.executor;
 
 import android.app.DownloadManager;
 import android.content.Context;
@@ -8,30 +8,28 @@ import android.webkit.MimeTypeMap;
 
 import com.squareup.okhttp.Request;
 import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.FileCallBack;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 import me.wcy.music.callback.JsonCallback;
 import me.wcy.music.model.JDownloadInfo;
-import me.wcy.music.model.JLrc;
-import me.wcy.music.model.JSearchMusic;
+import me.wcy.music.model.JOnlineMusic;
 import me.wcy.music.utils.Constants;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.Preferences;
 
 /**
- * 下载搜索的音乐
- * Created by hzwangchenyan on 2016/1/13.
+ * 下载音乐
+ * Created by wcy on 2016/1/3.
  */
-public abstract class DownloadSearchedMusic {
+public abstract class DownloadOnlineMusic {
     private Context mContext;
-    private JSearchMusic.JSong mJSong;
+    private JOnlineMusic mJOnlineMusic;
 
-    public DownloadSearchedMusic(Context context, JSearchMusic.JSong jSong) {
+    public DownloadOnlineMusic(Context context, JOnlineMusic jOnlineMusic) {
         mContext = context;
-        mJSong = jSong;
+        mJOnlineMusic = jOnlineMusic;
     }
 
     public void execute() {
@@ -44,21 +42,21 @@ public abstract class DownloadSearchedMusic {
         // 获取歌曲下载链接
         OkHttpUtils.get().url(Constants.BASE_URL)
                 .addParams(Constants.PARAM_METHOD, Constants.METHOD_DOWNLOAD_MUSIC)
-                .addParams(Constants.PARAM_SONG_ID, mJSong.getSongid())
+                .addParams(Constants.PARAM_SONG_ID, mJOnlineMusic.getSong_id())
                 .build()
                 .execute(new JsonCallback<JDownloadInfo>(JDownloadInfo.class) {
                     @Override
                     public void onResponse(final JDownloadInfo response) {
                         Uri uri = Uri.parse(response.getBitrate().getFile_link());
                         DownloadManager.Request request = new DownloadManager.Request(uri);
-                        String mp3FileName = FileUtils.getMp3FileName(mJSong.getArtistname(), mJSong.getSongname());
+                        String mp3FileName = FileUtils.getMp3FileName(mJOnlineMusic.getArtist_name(), mJOnlineMusic.getTitle());
                         request.setDestinationInExternalPublicDir(FileUtils.getRelativeMusicDir(), mp3FileName);
                         request.setMimeType(MimeTypeMap.getFileExtensionFromUrl(response.getBitrate().getFile_link()));
                         request.allowScanningByMediaScanner();
                         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
                         request.setAllowedOverRoaming(false);// 不允许漫游
                         long id = downloadManager.enqueue(request);
-                        Preferences.put(mContext, String.valueOf(id), mJSong.getSongname());
+                        Preferences.put(mContext, String.valueOf(id), mJOnlineMusic.getTitle());
                         onSuccess();
                     }
 
@@ -68,38 +66,23 @@ public abstract class DownloadSearchedMusic {
                     }
                 });
         // 下载歌词
-        String lrcFileName = FileUtils.getLrcFileName(mJSong.getArtistname(), mJSong.getSongname());
+        String lrcFileName = FileUtils.getLrcFileName(mJOnlineMusic.getArtist_name(), mJOnlineMusic.getTitle());
         File lrcFile = new File(FileUtils.getLrcDir() + lrcFileName);
-        if (!lrcFile.exists()) {
-            OkHttpUtils.get().url(Constants.BASE_URL)
-                    .addParams(Constants.PARAM_METHOD, Constants.METHOD_LRC)
-                    .addParams(Constants.PARAM_SONG_ID, mJSong.getSongid())
-                    .build()
-                    .execute(new JsonCallback<JLrc>(JLrc.class) {
+        if (!TextUtils.isEmpty(mJOnlineMusic.getLrclink()) && !lrcFile.exists()) {
+            OkHttpUtils.get().url(mJOnlineMusic.getLrclink()).build()
+                    .execute(new FileCallBack(FileUtils.getLrcDir(), lrcFileName) {
                         @Override
-                        public void onResponse(JLrc response) {
-                            if (TextUtils.isEmpty(response.getLrcContent())) {
-                                return;
-                            }
-                            String lrcFileName = FileUtils.getLrcFileName(mJSong.getArtistname(), mJSong.getSongname());
-                            saveLrcFile(lrcFileName, response.getLrcContent());
+                        public void inProgress(float progress) {
+                        }
+
+                        @Override
+                        public void onResponse(File response) {
                         }
 
                         @Override
                         public void onError(Request request, Exception e) {
                         }
                     });
-        }
-    }
-
-    private void saveLrcFile(String fileName, String content) {
-        try {
-            FileWriter writer = new FileWriter(FileUtils.getLrcDir() + fileName);
-            writer.flush();
-            writer.write(content);
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

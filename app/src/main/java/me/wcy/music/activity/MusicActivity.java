@@ -26,6 +26,7 @@ import android.widget.TextView;
 import butterknife.Bind;
 import me.wcy.music.R;
 import me.wcy.music.adapter.FragmentAdapter;
+import me.wcy.music.executor.NaviMenuExecutor;
 import me.wcy.music.fragment.LocalMusicFragment;
 import me.wcy.music.fragment.PlayFragment;
 import me.wcy.music.fragment.SongListFragment;
@@ -199,20 +200,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
                 item.setChecked(false);
             }
         }, 500);
-        Intent intent;
-        switch (item.getItemId()) {
-            case R.id.action_search:
-                intent = new Intent(this, SearchMusicActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.action_setting:
-                return true;
-            case R.id.action_share:
-                return true;
-            case R.id.action_about:
-                return true;
-        }
-        return false;
+        return NaviMenuExecutor.getInstance().setContext(this).onNavigationItemSelected(item);
     }
 
     public void onPlay(Music music) {

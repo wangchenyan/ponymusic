@@ -4,18 +4,18 @@
         <item
             android:id="@+id/action_search"
             android:icon="@drawable/ic_menu_search"
-            android:title="搜索" />
+            android:title="@string/menu_search" />
         <item
             android:id="@+id/action_setting"
             android:icon="@drawable/ic_menu_settings"
-            android:title="设置" />
+            android:title="@string/menu_setting" />
         <item
             android:id="@+id/action_share"
             android:icon="@drawable/ic_menu_share"
-            android:title="分享" />
+            android:title="@string/menu_share" />
         <item
             android:id="@+id/action_about"
             android:icon="@drawable/ic_menu_about"
-            android:title="关于" />
+            android:title="@string/menu_about" />
     </group>
 </menu>
