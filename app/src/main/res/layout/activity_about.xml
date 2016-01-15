@@ -51,7 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
         android:text="查看更多"
-        android:textColor="@color/black"
         android:textSize="@dimen/text_size_common" />
 </LinearLayout>
