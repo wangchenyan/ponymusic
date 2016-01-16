@@ -11,4 +11,8 @@
     <style name="AppTheme.Splash" parent="android:Theme.NoTitleBar.Fullscreen">
         <item name="android:windowBackground">@drawable/ic_splash</item>
     </style>
+
+    <style name="AppTheme.Setting" parent="AppBaseTheme">
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
 </resources>

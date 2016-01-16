@@ -1,7 +1,10 @@
 package me.wcy.music.executor;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
@@ -13,12 +16,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import me.wcy.music.R;
 import me.wcy.music.callback.JsonCallback;
 import me.wcy.music.model.JDownloadInfo;
 import me.wcy.music.model.JLrc;
 import me.wcy.music.model.JSearchMusic;
 import me.wcy.music.utils.Constants;
 import me.wcy.music.utils.FileUtils;
+import me.wcy.music.utils.NetworkUtils;
 import me.wcy.music.utils.Preferences;
 
 /**
@@ -35,7 +40,29 @@ public abstract class DownloadSearchedMusic {
     }
 
     public void execute() {
-        download();
+        checkNetwork();
+    }
+
+    private void checkNetwork() {
+        boolean mobileNetworkDownload = (boolean) Preferences.get(mContext,
+                mContext.getString(R.string.setting_key_mobile_network_download), false);
+        if (NetworkUtils.isActiveNetworkMobile(mContext) && !mobileNetworkDownload) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setTitle(R.string.tips);
+            builder.setMessage(R.string.download_tips);
+            builder.setPositiveButton(R.string.download_tips_sure, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    download();
+                }
+            });
+            builder.setNegativeButton(R.string.cancel, null);
+            Dialog dialog = builder.create();
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
+        } else {
+            download();
+        }
     }
 
     private void download() {

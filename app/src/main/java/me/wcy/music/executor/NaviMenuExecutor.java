@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import me.wcy.music.R;
 import me.wcy.music.activity.AboutActivity;
 import me.wcy.music.activity.SearchMusicActivity;
+import me.wcy.music.activity.SettingActivity;
 
 /**
  * 导航菜单执行器
@@ -39,6 +40,8 @@ public class NaviMenuExecutor {
                 mContext.startActivity(intent);
                 return true;
             case R.id.action_setting:
+                intent = new Intent(mContext, SettingActivity.class);
+                mContext.startActivity(intent);
                 return true;
             case R.id.action_share:
                 share();

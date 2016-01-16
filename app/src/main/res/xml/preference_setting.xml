@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/network">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/setting_key_mobile_network_play"
+            android:title="@string/mobile_network_play" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/setting_key_mobile_network_download"
+            android:title="@string/mobile_network_download" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/play">
+        <Preference
+            android:key="@string/setting_key_sound_effect"
+            android:title="@string/sound_effect" />
+    </PreferenceCategory>
+</PreferenceScreen>

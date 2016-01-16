@@ -32,14 +32,14 @@ import me.wcy.music.adapter.OnMoreClickListener;
 import me.wcy.music.adapter.SearchMusicAdapter;
 import me.wcy.music.callback.JsonCallback;
 import me.wcy.music.enums.LoadStateEnum;
+import me.wcy.music.executor.DownloadSearchedMusic;
+import me.wcy.music.executor.PlaySearchedMusic;
+import me.wcy.music.executor.ShareOnlineMusic;
 import me.wcy.music.model.JSearchMusic;
 import me.wcy.music.model.Music;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.Constants;
-import me.wcy.music.executor.DownloadSearchedMusic;
 import me.wcy.music.utils.FileUtils;
-import me.wcy.music.executor.PlaySearchedMusic;
-import me.wcy.music.executor.ShareOnlineMusic;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.ViewUtils;
 
@@ -157,7 +157,7 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        new PlaySearchedMusic(mSearchMusicList.get(position)) {
+        new PlaySearchedMusic(this, mSearchMusicList.get(position)) {
             @Override
             public void onPrepare() {
                 mProgressDialog.show();

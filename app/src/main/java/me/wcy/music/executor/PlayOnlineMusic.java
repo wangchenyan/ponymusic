@@ -1,5 +1,9 @@
 package me.wcy.music.executor;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 
@@ -10,6 +14,7 @@ import com.zhy.http.okhttp.callback.FileCallBack;
 
 import java.io.File;
 
+import me.wcy.music.R;
 import me.wcy.music.callback.JsonCallback;
 import me.wcy.music.enums.MusicTypeEnum;
 import me.wcy.music.model.JDownloadInfo;
@@ -17,21 +22,48 @@ import me.wcy.music.model.JOnlineMusic;
 import me.wcy.music.model.Music;
 import me.wcy.music.utils.Constants;
 import me.wcy.music.utils.FileUtils;
+import me.wcy.music.utils.NetworkUtils;
+import me.wcy.music.utils.Preferences;
 
 /**
  * 播放在线音乐
  * Created by wcy on 2016/1/3.
  */
 public abstract class PlayOnlineMusic {
+    private Context mContext;
     private JOnlineMusic mJOnlineMusic;
     private int mCounter = 0;
 
-    public PlayOnlineMusic(JOnlineMusic jOnlineMusic) {
+    public PlayOnlineMusic(Context context, JOnlineMusic jOnlineMusic) {
+        mContext = context;
         mJOnlineMusic = jOnlineMusic;
     }
 
     public void execute() {
-        getPlayInfo();
+        checkNetwork();
+    }
+
+    private void checkNetwork() {
+        boolean mobileNetworkPlay = (boolean) Preferences.get(mContext,
+                mContext.getString(R.string.setting_key_mobile_network_play), false);
+        if (NetworkUtils.isActiveNetworkMobile(mContext) && !mobileNetworkPlay) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setTitle(R.string.tips);
+            builder.setMessage(R.string.play_tips);
+            builder.setPositiveButton(R.string.play_tips_sure, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Preferences.put(mContext, mContext.getString(R.string.setting_key_mobile_network_play), true);
+                    getPlayInfo();
+                }
+            });
+            builder.setNegativeButton(R.string.cancel, null);
+            Dialog dialog = builder.create();
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
+        } else {
+            getPlayInfo();
+        }
     }
 
     private void getPlayInfo() {

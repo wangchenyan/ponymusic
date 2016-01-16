@@ -22,6 +22,6 @@ public class DownloadReceiver extends BroadcastReceiver {
         if (TextUtils.isEmpty(title)) {
             return;
         }
-        ToastUtils.show(title + context.getString(R.string.download_success));
+        ToastUtils.show(context.getString(R.string.download_success, title));
     }
 }

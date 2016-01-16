@@ -19,7 +19,7 @@
     <string name="play_time_start">00:00</string>
     <string name="now_play">正在播放：%s</string>
     <string name="now_download">正在下载：%s</string>
-    <string name="download_success">下载完成</string>
+    <string name="download_success">%s下载完成</string>
     <string name="recent_update">最近更新：%s</string>
     <string name="unable_to_play">暂时无法播放</string>
     <string name="unable_to_download">暂时无法下载</string>
@@ -41,6 +41,19 @@
     <string name="menu_setting">功能设置</string>
     <string name="menu_share">好友分享</string>
     <string name="menu_about">关于波尼音乐</string>
+    <string name="setting_key_mobile_network_play">mobile_network_play</string>
+    <string name="setting_key_mobile_network_download">mobile_network_download</string>
+    <string name="setting_key_sound_effect">sound_effect</string>
+    <string name="network">网络</string>
+    <string name="mobile_network_play">使用2G/3G/4G网络播放</string>
+    <string name="mobile_network_download">使用2G/3G/4G网络下载</string>
+    <string name="play">播放</string>
+    <string name="sound_effect">音效调节</string>
+    <string name="tips">温馨提示</string>
+    <string name="play_tips">当前处于2G/3G/4G网络，确定打开2G/3G/4G网络播放开关吗？</string>
+    <string name="play_tips_sure">立即打开</string>
+    <string name="download_tips">当前处于2G/3G/4G网络，下载将消耗较多流量，是否继续下载？</string>
+    <string name="download_tips_sure">继续下载</string>
     <string name="share_app">青春，狂热，放纵，自由，当我们带上耳机以后做回自己，这是音乐的魅力。%s[下载链接]</string>
     <string name="version">当前版本 V%s</string>
     <string name="declaration">&#160;&#160;&#160;&#160;本应用内所有在线内容均来自&lt;a href=\'http://music.baidu.com/\'&gt;百度MP3&lt;/a&gt;，%s不承担任何由于内容的合法性及健康性所引起的争议和法律责任。

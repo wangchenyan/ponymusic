@@ -35,18 +35,18 @@ import me.wcy.music.adapter.OnMoreClickListener;
 import me.wcy.music.adapter.OnlineMusicAdapter;
 import me.wcy.music.callback.JsonCallback;
 import me.wcy.music.enums.LoadStateEnum;
+import me.wcy.music.executor.DownloadOnlineMusic;
+import me.wcy.music.executor.PlayOnlineMusic;
+import me.wcy.music.executor.ShareOnlineMusic;
 import me.wcy.music.model.JOnlineMusic;
 import me.wcy.music.model.JOnlineMusicList;
 import me.wcy.music.model.Music;
 import me.wcy.music.model.MusicListInfo;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.Constants;
-import me.wcy.music.executor.DownloadOnlineMusic;
 import me.wcy.music.utils.Extras;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.ImageUtils;
-import me.wcy.music.executor.PlayOnlineMusic;
-import me.wcy.music.executor.ShareOnlineMusic;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.Utils;
 import me.wcy.music.utils.ViewUtils;
@@ -219,7 +219,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
     }
 
     private void play(JOnlineMusic jOnlineMusic) {
-        new PlayOnlineMusic(jOnlineMusic) {
+        new PlayOnlineMusic(this, jOnlineMusic) {
 
             @Override
             public void onPrepare() {
