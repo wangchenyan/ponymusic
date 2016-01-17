@@ -39,8 +39,10 @@
     <string name="search_empty">未找到相关结果</string>
     <string name="menu_search">在线搜索</string>
     <string name="menu_setting">功能设置</string>
-    <string name="menu_share">好友分享</string>
+    <string name="menu_share">推荐给朋友</string>
     <string name="menu_about">关于波尼音乐</string>
+    <string name="menu_praise">给我评分</string>
+    <string name="menu_exit">退出应用</string>
     <string name="setting_key_mobile_network_play">mobile_network_play</string>
     <string name="setting_key_mobile_network_download">mobile_network_download</string>
     <string name="setting_key_sound_effect">sound_effect</string>

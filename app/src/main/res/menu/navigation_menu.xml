@@ -14,8 +14,16 @@
             android:icon="@drawable/ic_menu_share"
             android:title="@string/menu_share" />
         <item
+            android:id="@+id/action_praise"
+            android:icon="@drawable/ic_menu_praise"
+            android:title="@string/menu_praise" />
+        <item
             android:id="@+id/action_about"
             android:icon="@drawable/ic_menu_about"
             android:title="@string/menu_about" />
+        <item
+            android:id="@+id/action_exit"
+            android:icon="@drawable/ic_menu_exit"
+            android:title="@string/menu_exit" />
     </group>
 </menu>

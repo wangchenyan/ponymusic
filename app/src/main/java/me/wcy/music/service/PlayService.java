@@ -283,6 +283,14 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         super.onDestroy();
     }
 
+    public void stop() {
+        clearNotification();
+        mPlayer.reset();
+        mPlayer.release();
+        mPlayer = null;
+        stopSelf();
+    }
+
     public class PlayBinder extends Binder {
         public PlayService getService() {
             return PlayService.this;
