@@ -32,7 +32,7 @@
     <string name="artist_info_weight">体重：%skg</string>
     <string name="artist_info_birth">生日：%s</string>
     <string name="artist_info_intro">简介：%s</string>
-    <string name="artist_info_url">&lt;a href=\'%s\'&gt;查看更多信息&lt;/a&gt;</string>
+    <string name="artist_info_url">&lt;font color=blue&gt;&lt;a href="%s"&gt;查看更多信息&lt;/a&gt;&lt;/font&gt;</string>
     <string name="artist_info_empty">暂无歌手信息</string>
     <string name="share_music">我用%1$s分享了歌曲《%2$s》%3$s</string>
     <string name="search_tips">歌曲名、歌手名</string>
@@ -54,10 +54,11 @@
     <string name="play_tips_sure">立即打开</string>
     <string name="download_tips">当前处于2G/3G/4G网络，下载将消耗较多流量，是否继续下载？</string>
     <string name="download_tips_sure">继续下载</string>
+    <string name="device_not_support">您的设备不支持此功能</string>
     <string name="share_app">青春，狂热，放纵，自由，当我们带上耳机以后做回自己，这是音乐的魅力。%s[下载链接]</string>
     <string name="version">当前版本 V%s</string>
-    <string name="declaration">&#160;&#160;&#160;&#160;本应用内所有在线内容均来自&lt;a href=\'http://music.baidu.com/\'&gt;百度MP3&lt;/a&gt;，%s不承担任何由于内容的合法性及健康性所引起的争议和法律责任。
-        &lt;br&gt;&#160;&#160;&#160;&#160;为方便学习交流，本应用开放&lt;a href=\'https://github.com/ChanWong21/PonyMusic\'&gt;源代码&lt;/a&gt;，&lt;font color=\'#F44336\'&gt;请勿用于商业用途！&lt;/font&gt;
-        &lt;br&gt;&#160;&#160;&#160;&#160;如有疑问请联系&lt;a href=\'mailto:919247701@qq.com\'&gt;919247701@qq.com&lt;/a&gt;</string>
-    <string name="baidu_declaration">&lt;a href=\'http://music.baidu.com/doc/about\'&gt;查看更多&lt;/a&gt;</string>
+    <string name="declaration">&#160;&#160;&#160;&#160;本应用内所有在线内容均来自&lt;font color=blue&gt;&lt;a href=\'http://music.baidu.com/\'&gt;百度MP3&lt;/a&gt;&lt;/font&gt;，%s不承担任何由于内容的合法性及健康性所引起的争议和法律责任。
+        &lt;br&gt;&#160;&#160;&#160;&#160;为方便学习交流，本应用开放&lt;font color=blue&gt;&lt;a href=\'https://github.com/ChanWong21/PonyMusic\'&gt;源代码&lt;/a&gt;&lt;/font&gt;，&lt;font color=red&gt;请勿用于商业用途！&lt;/font&gt;
+        &lt;br&gt;&#160;&#160;&#160;&#160;如有疑问请联系&lt;font color=blue&gt;&lt;a href=\'mailto:919247701@qq.com\'&gt;919247701@qq.com&lt;/a&gt;&lt;/font&gt;</string>
+    <string name="baidu_declaration">&lt;font color=blue&gt;&lt;a href=\'http://music.baidu.com/doc/about\'&gt;查看更多&lt;/a&gt;&lt;/font&gt;</string>
 </resources>

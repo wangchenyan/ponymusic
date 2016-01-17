@@ -6,6 +6,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
 import me.wcy.music.R;
+import me.wcy.music.utils.ToastUtils;
 
 public class SettingActivity extends BaseActivity {
 
@@ -40,7 +41,12 @@ public class SettingActivity extends BaseActivity {
                 intent.putExtra("android.media.extra.PACKAGE_NAME", getActivity().getPackageName());
                 intent.putExtra("android.media.extra.CONTENT_TYPE", 0);
                 intent.putExtra("android.media.extra.AUDIO_SESSION", 0);
-                startActivity(intent);
+                try {
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.show(R.string.device_not_support);
+                }
                 return true;
             }
             return false;
