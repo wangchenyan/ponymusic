@@ -27,6 +27,7 @@ import butterknife.Bind;
 import me.wcy.music.R;
 import me.wcy.music.adapter.FragmentAdapter;
 import me.wcy.music.executor.NaviMenuExecutor;
+import me.wcy.music.executor.WeatherExecutor;
 import me.wcy.music.fragment.LocalMusicFragment;
 import me.wcy.music.fragment.PlayFragment;
 import me.wcy.music.fragment.SongListFragment;
@@ -58,7 +59,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     ImageView ivPlayBarNext;
     @Bind(R.id.pb_play_bar)
     ProgressBar mProgressBar;
-    private View navigationHeader;
+    private View vNavigationHeader;
     private LocalMusicFragment mLocalMusicFragment;
     private SongListFragment mSongListFragment;
     private PlayFragment mPlayFragment;
@@ -105,6 +106,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     private void init() {
         getPlayService().updateMusicList();
         setupView();
+        updateWeather();
         onChange(mPlayService.getPlayingMusic());
         mProgressDialog.cancel();
     }
@@ -119,8 +121,8 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     private void setupView() {
         // add navigation header
-        navigationHeader = LayoutInflater.from(this).inflate(R.layout.navigation_header, null);
-        navigationView.addHeaderView(navigationHeader);
+        vNavigationHeader = LayoutInflater.from(this).inflate(R.layout.navigation_header, null);
+        navigationView.addHeaderView(vNavigationHeader);
 
         // setup view pager
         mLocalMusicFragment = new LocalMusicFragment();
@@ -130,6 +132,10 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         adapter.addFragment(mSongListFragment, getString(R.string.online_music));
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);
+    }
+
+    private void updateWeather() {
+        new WeatherExecutor(this, vNavigationHeader).execute();
     }
 
     /**
