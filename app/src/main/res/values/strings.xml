@@ -57,6 +57,8 @@
     <string name="download_tips">当前处于2G/3G/4G网络，下载将消耗较多流量，是否继续下载？</string>
     <string name="download_tips_sure">继续下载</string>
     <string name="device_not_support">您的设备不支持此功能</string>
+    <string name="weather_temp">%s°</string>
+    <string name="weather_wind">%1$s风%2$s级&#160;&#160;湿度%3$s%%</string>
     <string name="share_app">青春，狂热，放纵，自由，当我们带上耳机以后做回自己，这是音乐的魅力。%s[下载链接]</string>
     <string name="version">当前版本 V%s</string>
     <string name="declaration">&#160;&#160;&#160;&#160;本应用内所有在线内容均来自&lt;font color=blue&gt;&lt;a href=\'http://music.baidu.com/\'&gt;百度MP3&lt;/a&gt;&lt;/font&gt;，%s不承担任何由于内容的合法性及健康性所引起的争议和法律责任。
