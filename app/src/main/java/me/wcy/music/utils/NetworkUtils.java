@@ -10,12 +10,37 @@ import android.net.NetworkInfo;
  */
 public class NetworkUtils {
 
-    public static boolean isActiveNetworkMobile(Context paramContext) {
-        ConnectivityManager localConnectivityManager = (ConnectivityManager) paramContext
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (localConnectivityManager != null) {
-            NetworkInfo localNetworkInfo = localConnectivityManager.getActiveNetworkInfo();
-            if (localNetworkInfo != null && localNetworkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            NetworkInfo[] allNetworkInfo = connectivityManager.getAllNetworkInfo();
+            if (allNetworkInfo != null) {
+                for (NetworkInfo networkInfo : allNetworkInfo) {
+                    if (networkInfo.getState() == NetworkInfo.State.CONNECTED) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean isActiveNetworkMobile(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+            if (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isActiveNetworkWifi(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+            if (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
                 return true;
             }
         }

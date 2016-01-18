@@ -41,7 +41,7 @@ import me.wcy.music.executor.ShareOnlineMusic;
 import me.wcy.music.model.JOnlineMusic;
 import me.wcy.music.model.JOnlineMusicList;
 import me.wcy.music.model.Music;
-import me.wcy.music.model.MusicListInfo;
+import me.wcy.music.model.SongListInfo;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.Constants;
 import me.wcy.music.utils.Extras;
@@ -61,7 +61,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
     @Bind(R.id.ll_load_fail)
     LinearLayout llLoadFail;
     private View vHeader;
-    private MusicListInfo mListInfo;
+    private SongListInfo mListInfo;
     private JOnlineMusicList mJOnlineMusicList;
     private List<JOnlineMusic> mMusicList;
     private OnlineMusicAdapter mAdapter;
@@ -75,7 +75,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online_music);
 
-        mListInfo = (MusicListInfo) getIntent().getSerializableExtra(Extras.MUSIC_LIST_TYPE);
+        mListInfo = (SongListInfo) getIntent().getSerializableExtra(Extras.MUSIC_LIST_TYPE);
         setTitle(mListInfo.getTitle());
 
         init();
