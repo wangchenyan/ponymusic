@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import me.wcy.music.R;
 import me.wcy.music.model.JSearchMusic;
 
@@ -47,11 +49,7 @@ public class SearchMusicAdapter extends BaseAdapter {
         ViewHolder holder;
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.music_list_item, parent, false);
-            holder = new ViewHolder();
-            convertView.findViewById(R.id.iv_cover).setVisibility(View.GONE);
-            holder.tvTitle = (TextView) convertView.findViewById(R.id.tv_title);
-            holder.tvArtist = (TextView) convertView.findViewById(R.id.tv_artist);
-            holder.ivMore = (ImageView) convertView.findViewById(R.id.iv_more);
+            holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -72,8 +70,18 @@ public class SearchMusicAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
+        @Bind(R.id.iv_cover)
+        ImageView ivCover;
+        @Bind(R.id.tv_title)
         TextView tvTitle;
+        @Bind(R.id.tv_artist)
         TextView tvArtist;
+        @Bind(R.id.iv_more)
         ImageView ivMore;
+
+        public ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+            ivCover.setVisibility(View.GONE);
+        }
     }
 }

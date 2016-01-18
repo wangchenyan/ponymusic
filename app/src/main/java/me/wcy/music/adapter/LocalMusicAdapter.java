@@ -9,6 +9,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import me.wcy.music.R;
 import me.wcy.music.activity.MusicActivity;
 import me.wcy.music.enums.MusicTypeEnum;
@@ -51,12 +53,7 @@ public class LocalMusicAdapter extends BaseAdapter {
         ViewHolder holder;
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.music_list_item, parent, false);
-            holder = new ViewHolder();
-            holder.ivPlaying = (ImageView) convertView.findViewById(R.id.iv_playing);
-            holder.ivCover = (ImageView) convertView.findViewById(R.id.iv_cover);
-            holder.tvTitle = (TextView) convertView.findViewById(R.id.tv_title);
-            holder.tvArtist = (TextView) convertView.findViewById(R.id.tv_artist);
-            holder.ivMore = (ImageView) convertView.findViewById(R.id.iv_more);
+            holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -97,10 +94,19 @@ public class LocalMusicAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
+        @Bind(R.id.iv_playing)
         ImageView ivPlaying;
+        @Bind(R.id.iv_cover)
         ImageView ivCover;
+        @Bind(R.id.tv_title)
         TextView tvTitle;
+        @Bind(R.id.tv_artist)
         TextView tvArtist;
+        @Bind(R.id.iv_more)
         ImageView ivMore;
+
+        public ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
     }
 }

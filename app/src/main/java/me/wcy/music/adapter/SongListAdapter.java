@@ -14,6 +14,8 @@ import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import me.wcy.music.R;
 import me.wcy.music.callback.JsonCallback;
 import me.wcy.music.model.JOnlineMusic;
@@ -81,8 +83,7 @@ public class SongListAdapter extends BaseAdapter {
             case TYPE_PROFILE:
                 if (convertView == null) {
                     convertView = LayoutInflater.from(mContext).inflate(R.layout.fragment_song_list_item_profile, parent, false);
-                    holderProfile = new ViewHolderProfile();
-                    holderProfile.tvProfile = (TextView) convertView.findViewById(R.id.tv_profile);
+                    holderProfile = new ViewHolderProfile(convertView);
                     convertView.setTag(holderProfile);
                 } else {
                     holderProfile = (ViewHolderProfile) convertView.getTag();
@@ -92,11 +93,7 @@ public class SongListAdapter extends BaseAdapter {
             case TYPE_MUSIC_LIST:
                 if (convertView == null) {
                     convertView = LayoutInflater.from(mContext).inflate(R.layout.fragment_song_list_item, parent, false);
-                    holderMusicList = new ViewHolderMusicList();
-                    holderMusicList.ivCover = (ImageView) convertView.findViewById(R.id.iv_cover);
-                    holderMusicList.tvMusic1 = (TextView) convertView.findViewById(R.id.tv_music_1);
-                    holderMusicList.tvMusic2 = (TextView) convertView.findViewById(R.id.tv_music_2);
-                    holderMusicList.tvMusic3 = (TextView) convertView.findViewById(R.id.tv_music_3);
+                    holderMusicList = new ViewHolderMusicList(convertView);
                     convertView.setTag(holderMusicList);
                 } else {
                     holderMusicList = (ViewHolderMusicList) convertView.getTag();
@@ -153,13 +150,26 @@ public class SongListAdapter extends BaseAdapter {
     }
 
     class ViewHolderProfile {
+        @Bind(R.id.tv_profile)
         TextView tvProfile;
+
+        public ViewHolderProfile(View view) {
+            ButterKnife.bind(this, view);
+        }
     }
 
     class ViewHolderMusicList {
+        @Bind(R.id.iv_cover)
         ImageView ivCover;
+        @Bind(R.id.tv_music_1)
         TextView tvMusic1;
+        @Bind(R.id.tv_music_2)
         TextView tvMusic2;
+        @Bind(R.id.tv_music_3)
         TextView tvMusic3;
+
+        public ViewHolderMusicList(View view) {
+            ButterKnife.bind(this, view);
+        }
     }
 }
