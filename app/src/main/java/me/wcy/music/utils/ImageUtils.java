@@ -13,12 +13,12 @@ import android.graphics.PorterDuffXfermode;
  * Created by wcy on 2015/11/29.
  */
 public class ImageUtils {
-    //水平方向模糊度
-    private static float hRadius = 10;
-    //竖直方向模糊度
-    private static float vRadius = 10;
-    //模糊迭代度
-    private static int iterations = 7;
+    // 水平方向模糊度
+    private static final float H_RADIUS = 10;
+    // 竖直方向模糊度
+    private static final float V_RADIUS = 10;
+    // 模糊迭代度
+    private static final int ITERATION = 7;
 
     /**
      * 高斯模糊
@@ -30,12 +30,12 @@ public class ImageUtils {
         int[] outPixels = new int[width * height];
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         bmp.getPixels(inPixels, 0, width, 0, 0, width, height);
-        for (int i = 0; i < iterations; i++) {
-            blur(inPixels, outPixels, width, height, hRadius);
-            blur(outPixels, inPixels, height, width, vRadius);
+        for (int i = 0; i < ITERATION; i++) {
+            blur(inPixels, outPixels, width, height, H_RADIUS);
+            blur(outPixels, inPixels, height, width, V_RADIUS);
         }
-        blurFractional(inPixels, outPixels, width, height, hRadius);
-        blurFractional(outPixels, inPixels, height, width, vRadius);
+        blurFractional(inPixels, outPixels, width, height, H_RADIUS);
+        blurFractional(outPixels, inPixels, height, width, V_RADIUS);
         bitmap.setPixels(inPixels, 0, width, 0, 0, width, height);
         return crop(bitmap);
     }

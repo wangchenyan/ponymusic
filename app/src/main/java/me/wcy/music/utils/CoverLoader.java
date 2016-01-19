@@ -2,7 +2,7 @@ package me.wcy.music.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.LruCache;
+import android.support.v4.util.LruCache;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

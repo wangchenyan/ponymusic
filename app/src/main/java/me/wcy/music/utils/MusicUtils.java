@@ -17,7 +17,7 @@ import me.wcy.music.model.Music;
  * Created by wcy on 2015/11/27.
  */
 public class MusicUtils {
-    // 存放歌曲列表
+    // 本地歌曲列表
     private static List<Music> sMusicList = new ArrayList<>();
 
     public static List<Music> getMusicList() {
