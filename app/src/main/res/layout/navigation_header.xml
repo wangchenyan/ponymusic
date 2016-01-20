@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/colorPrimaryDark"
+    android:background="@drawable/ic_navigation_header_bg"
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
