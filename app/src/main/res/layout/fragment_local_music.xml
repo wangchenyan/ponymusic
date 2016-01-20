@@ -14,8 +14,9 @@
         android:id="@+id/tv_empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="暂无本地音乐"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/screen_tips_top"
+        android:text="@string/no_local_music"
         android:textColor="@color/grey"
         android:textSize="14sp"
         android:visibility="gone" />

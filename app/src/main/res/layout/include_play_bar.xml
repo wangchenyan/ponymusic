@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fl_play_bar"
     android:layout_width="match_parent"
-    android:layout_height="57dp"
+    android:layout_height="@dimen/play_bar_height"
     android:background="@drawable/ic_play_bar_bg_selector">
 
     <LinearLayout

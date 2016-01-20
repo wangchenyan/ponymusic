@@ -19,6 +19,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -55,6 +56,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
 
     @Override
     protected void init() {
+        addEmptyFooter();
         mAdapter = new LocalMusicAdapter(getActivity());
         mReceiver = new DownloadReceiver();
         mAdapter.setOnMoreClickListener(this);
@@ -71,6 +73,14 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     @Override
     protected void setListener() {
         lvLocalMusic.setOnItemClickListener(this);
+    }
+
+    private void addEmptyFooter() {
+        View vFooter = new View(getActivity());
+        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                (int) getResources().getDimension(R.dimen.play_bar_height));
+        vFooter.setLayoutParams(layoutParams);
+        lvLocalMusic.addFooterView(vFooter, null, false);
     }
 
     private void updateView() {
