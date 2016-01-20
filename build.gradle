@@ -2,10 +2,8 @@
 
 buildscript {
     repositories {
-        // jcenter()
-        maven {
-            url 'http://maven.oschina.net/content/groups/public/'
-        }
+        jcenter()
+        // maven { url 'http://maven.oschina.net/content/groups/public/' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.5.0'
