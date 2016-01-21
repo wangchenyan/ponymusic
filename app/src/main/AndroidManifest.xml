@@ -33,6 +33,12 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".receiver.RemoteControlReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".activity.SplashActivity"
             android:screenOrientation="portrait"

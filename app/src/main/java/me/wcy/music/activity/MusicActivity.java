@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -32,6 +33,7 @@ import me.wcy.music.fragment.LocalMusicFragment;
 import me.wcy.music.fragment.PlayFragment;
 import me.wcy.music.fragment.SongListFragment;
 import me.wcy.music.model.Music;
+import me.wcy.music.receiver.RemoteControlReceiver;
 import me.wcy.music.service.OnPlayerEventListener;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.CoverLoader;
@@ -65,6 +67,8 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     private PlayFragment mPlayFragment;
     private PlayService mPlayService;
     private PlayServiceConnection mPlayServiceConnection;
+    private AudioManager mAudioManager;
+    private ComponentName mRemoteReceiver;
     private ProgressDialog mProgressDialog;
     private boolean mIsPlayFragmentShow = false;
 
@@ -107,6 +111,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         getPlayService().updateMusicList();
         setupView();
         updateWeather();
+        registerReceiver();
         onChange(mPlayService.getPlayingMusic());
         mProgressDialog.cancel();
     }
@@ -136,6 +141,12 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     private void updateWeather() {
         new WeatherExecutor(this, vNavigationHeader).execute();
+    }
+
+    private void registerReceiver() {
+        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        mRemoteReceiver = new ComponentName(getPackageName(), RemoteControlReceiver.class.getName());
+        mAudioManager.registerMediaButtonEventReceiver(mRemoteReceiver);
     }
 
     /**
@@ -289,13 +300,13 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
             drawerLayout.closeDrawers();
             return;
         }
-        //moveTaskToBack(false);
-        finish();
+        moveTaskToBack(false);
     }
 
     @Override
     protected void onDestroy() {
         unbindService(mPlayServiceConnection);
+        mAudioManager.unregisterMediaButtonEventReceiver(mRemoteReceiver);
         super.onDestroy();
     }
 }
