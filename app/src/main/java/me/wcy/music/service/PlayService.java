@@ -5,11 +5,11 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.support.annotation.Nullable;
 
 import java.io.IOException;
@@ -30,11 +30,11 @@ import me.wcy.music.utils.Utils;
  * 音乐播放后台服务
  * Created by wcy on 2015/11/27.
  */
-public class PlayService extends Service implements MediaPlayer.OnCompletionListener {
+public class PlayService extends Service implements MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
     private static final int NOTIFICATION_ID = 0x111;
-    private static final int MSG_UPDATE = 0;
     private static final long TIME_UPDATE = 100L;
     private MediaPlayer mPlayer;
+    private AudioManager mAudioManager;
     private OnPlayerEventListener mListener;
     private Handler mHandler;
     // 正在播放的歌曲[本地|网络]
@@ -47,9 +47,10 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     public void onCreate() {
         super.onCreate();
         mPlayer = new MediaPlayer();
+        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+        mHandler = new Handler();
         mPlayer.setOnCompletionListener(this);
-        mHandler = new PublishProgressHandler();
-        mHandler.sendEmptyMessageDelayed(MSG_UPDATE, TIME_UPDATE);
+        mHandler.post(mBackgroundRunnable);
     }
 
     @Nullable
@@ -157,6 +158,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         mPlayer.start();
         mIsPause = false;
         updateNotification(mPlayingMusic);
+        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
     }
 
     public int pause() {
@@ -166,6 +168,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         mPlayer.pause();
         mIsPause = true;
         clearNotification();
+        mAudioManager.abandonAudioFocus(this);
         if (mListener != null) {
             mListener.onPlayerPause();
         }
@@ -295,6 +298,19 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     }
 
     @Override
+    public void onAudioFocusChange(int focusChange) {
+        switch (focusChange) {
+            case AudioManager.AUDIOFOCUS_LOSS:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                if (isPlaying()) {
+                    pause();
+                }
+                break;
+        }
+    }
+
+    @Override
     public boolean onUnbind(Intent intent) {
         mListener = null;
         return true;
@@ -314,21 +330,19 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         stopSelf();
     }
 
+    private Runnable mBackgroundRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (isPlaying() && mListener != null) {
+                mListener.onPublish(mPlayer.getCurrentPosition());
+            }
+            mHandler.postDelayed(this, TIME_UPDATE);
+        }
+    };
+
     public class PlayBinder extends Binder {
         public PlayService getService() {
             return PlayService.this;
-        }
-    }
-
-    private class PublishProgressHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            if (msg.what == MSG_UPDATE) {
-                if (isPlaying() && mListener != null) {
-                    mListener.onPublish(mPlayer.getCurrentPosition());
-                }
-                mHandler.sendEmptyMessageDelayed(MSG_UPDATE, TIME_UPDATE);
-            }
         }
     }
 }

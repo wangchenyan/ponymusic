@@ -162,7 +162,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void registerReceiver() {
-        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         mRemoteReceiver = new ComponentName(getPackageName(), RemoteControlReceiver.class.getName());
         mAudioManager.registerMediaButtonEventReceiver(mRemoteReceiver);
     }
