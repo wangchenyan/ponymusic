@@ -247,18 +247,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void play() {
-        if (getPlayService().isPlaying()) {
-            // 正在播放
-            getPlayService().pause();
-        } else {
-            if (getPlayService().isPause()) {
-                // 暂停
-                getPlayService().resume();
-            } else {
-                // 还未开始播放
-                getPlayService().play(getPlayService().getPlayingPosition());
-            }
-        }
+        getPlayService().playPause();
     }
 
     private void next() {

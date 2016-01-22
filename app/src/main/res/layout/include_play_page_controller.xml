@@ -46,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_play_btn_loop_selector" />
+            android:src="@drawable/ic_play_mode_level_list" />
 
         <ImageView
             android:id="@+id/iv_prev"

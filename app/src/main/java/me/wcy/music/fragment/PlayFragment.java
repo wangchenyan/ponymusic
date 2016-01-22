@@ -62,12 +62,12 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     TextView tvTotalTime;
     @Bind(R.id.iv_mode)
     ImageView ivMode;
-    @Bind(R.id.iv_prev)
-    ImageView ivPrev;
     @Bind(R.id.iv_play)
     ImageView ivPlay;
     @Bind(R.id.iv_next)
     ImageView ivNext;
+    @Bind(R.id.iv_prev)
+    ImageView ivPrev;
     private AlbumCoverView mAlbumCoverView;
     private LrcView mLrcViewSingle;
     private LrcView mLrcViewFull;
@@ -165,11 +165,11 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
             case R.id.iv_play:
                 play();
                 break;
-            case R.id.iv_prev:
-                prev();
-                break;
             case R.id.iv_next:
                 next();
+                break;
+            case R.id.iv_prev:
+                prev();
                 break;
         }
     }
@@ -232,42 +232,24 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void play() {
-        if (getPlayService().isPlaying()) {//正在播放
-            getPlayService().pause();
-        } else {
-            if (getPlayService().isPause()) {//暂停
-                getPlayService().resume();
-            } else {//还未开始播放
-                getPlayService().play(getPlayService().getPlayingPosition());
-            }
-        }
-    }
-
-    private void prev() {
-        getPlayService().prev();
+        getPlayService().playPause();
     }
 
     private void next() {
         getPlayService().next();
     }
 
+    private void prev() {
+        getPlayService().prev();
+    }
+
     private void initMode() {
-        PlayModeEnum mode = PlayModeEnum.valueOf((Integer) Preferences.get(getContext(), Preferences.PLAY_MODE, 1));
-        switch (mode) {
-            case LOOP:
-                ivMode.setImageResource(R.drawable.ic_play_btn_loop_selector);
-                break;
-            case SHUFFLE:
-                ivMode.setImageResource(R.drawable.ic_play_btn_shuffle_selector);
-                break;
-            case ONE:
-                ivMode.setImageResource(R.drawable.ic_play_btn_one_selector);
-                break;
-        }
+        int mode = (Integer) Preferences.get(getContext(), Preferences.PLAY_MODE, 0);
+        ivMode.setImageLevel(mode);
     }
 
     private void switchMode() {
-        PlayModeEnum mode = PlayModeEnum.valueOf((Integer) Preferences.get(getContext(), Preferences.PLAY_MODE, 1));
+        PlayModeEnum mode = PlayModeEnum.valueOf((Integer) Preferences.get(getContext(), Preferences.PLAY_MODE, 0));
         switch (mode) {
             case LOOP:
                 mode = PlayModeEnum.SHUFFLE;

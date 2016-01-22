@@ -20,6 +20,7 @@ import me.wcy.music.activity.SplashActivity;
 import me.wcy.music.enums.MusicTypeEnum;
 import me.wcy.music.enums.PlayModeEnum;
 import me.wcy.music.model.Music;
+import me.wcy.music.utils.Actions;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.MusicUtils;
 import me.wcy.music.utils.Preferences;
@@ -55,6 +56,25 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     @Override
     public IBinder onBind(Intent intent) {
         return new PlayBinder();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent == null || intent.getAction() == null) {
+            return START_STICKY_COMPATIBILITY;
+        }
+        switch (intent.getAction()) {
+            case Actions.ACTION_MEDIA_PLAY_PAUSE:
+                playPause();
+                break;
+            case Actions.ACTION_MEDIA_NEXT:
+                next();
+                break;
+            case Actions.ACTION_MEDIA_PREVIOUS:
+                prev();
+                break;
+        }
+        return START_STICKY_COMPATIBILITY;
     }
 
     /**
@@ -127,6 +147,16 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         updateNotification(mPlayingMusic);
     }
 
+    public void playPause() {
+        if (isPlaying()) {
+            pause();
+        } else if (isPause()) {
+            resume();
+        } else {
+            play(getPlayingPosition());
+        }
+    }
+
     private void start() {
         mPlayer.start();
         updateNotification(mPlayingMusic);
@@ -158,7 +188,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     }
 
     public int next() {
-        PlayModeEnum mode = PlayModeEnum.valueOf((Integer) Preferences.get(this, Preferences.PLAY_MODE, 1));
+        PlayModeEnum mode = PlayModeEnum.valueOf((Integer) Preferences.get(this, Preferences.PLAY_MODE, 0));
         switch (mode) {
             case LOOP:
                 return play(mPlayingPosition + 1);
@@ -173,7 +203,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     }
 
     public int prev() {
-        PlayModeEnum mode = PlayModeEnum.valueOf((Integer) Preferences.get(this, Preferences.PLAY_MODE, 1));
+        PlayModeEnum mode = PlayModeEnum.valueOf((Integer) Preferences.get(this, Preferences.PLAY_MODE, 0));
         switch (mode) {
             case LOOP:
                 return play(mPlayingPosition - 1);

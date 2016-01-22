@@ -5,23 +5,23 @@ package me.wcy.music.enums;
  * Created by wcy on 2015/12/26.
  */
 public enum PlayModeEnum {
-    LOOP(1),
-    SHUFFLE(2),
-    ONE(3);
+    LOOP(0),
+    SHUFFLE(1),
+    ONE(2);
 
     private int value;
 
-    private PlayModeEnum(int value) {
+    PlayModeEnum(int value) {
         this.value = value;
     }
 
     public static PlayModeEnum valueOf(int value) {
         switch (value) {
-            case 1:
+            case 0:
                 return LOOP;
-            case 2:
+            case 1:
                 return SHUFFLE;
-            case 3:
+            case 2:
                 return ONE;
             default:
                 return LOOP;

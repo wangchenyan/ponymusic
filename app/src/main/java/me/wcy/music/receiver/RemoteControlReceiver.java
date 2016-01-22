@@ -5,7 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.KeyEvent;
 
-import me.wcy.music.utils.ToastUtils;
+import me.wcy.music.service.PlayService;
+import me.wcy.music.utils.Actions;
 
 /**
  * 蓝牙/耳机控制
@@ -14,12 +15,31 @@ import me.wcy.music.utils.ToastUtils;
 public class RemoteControlReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (Intent.ACTION_MEDIA_BUTTON.equals(intent.getAction())) {
-            ToastUtils.show("KEYCODE_MEDIA_PLAY");
-            KeyEvent event = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
-            if (KeyEvent.KEYCODE_MEDIA_PLAY == event.getKeyCode()) {
-                // Handle key press.
-            }
+        if (!Intent.ACTION_MEDIA_BUTTON.equals(intent.getAction())) {
+            return;
+        }
+        KeyEvent event = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
+        if (event == null || event.getAction() != KeyEvent.ACTION_UP) {
+            return;
+        }
+        Intent serviceIntent;
+        switch (event.getKeyCode()) {
+            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+            case KeyEvent.KEYCODE_HEADSETHOOK:
+                serviceIntent = new Intent(context, PlayService.class);
+                serviceIntent.setAction(Actions.ACTION_MEDIA_PLAY_PAUSE);
+                context.startService(serviceIntent);
+                break;
+            case KeyEvent.KEYCODE_MEDIA_NEXT:
+                serviceIntent = new Intent(context, PlayService.class);
+                serviceIntent.setAction(Actions.ACTION_MEDIA_PLAY_PAUSE);
+                context.startService(serviceIntent);
+                break;
+            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+                serviceIntent = new Intent(context, PlayService.class);
+                serviceIntent.setAction(Actions.ACTION_MEDIA_PLAY_PAUSE);
+                context.startService(serviceIntent);
+                break;
         }
     }
 }
