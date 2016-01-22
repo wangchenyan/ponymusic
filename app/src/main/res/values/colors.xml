@@ -12,7 +12,7 @@
     <color name="grey_600">#757575</color>
     <color name="translucent_white">#80FFFFFF</color>
     <color name="translucent_black">#80000000</color>
-    <color name="translucent_white_12p">#20FFFFFF</color>
-    <color name="translucent_white_95p">#F2FFFFFF</color>
-    <color name="translucent_grey_300_95p">#F2E0E0E0</color>
+    <color name="translucent_white_24p">#3DFFFFFF</color>
+    <color name="translucent_white_96p">#F5FFFFFF</color>
+    <color name="translucent_grey_300_96p">#F5E0E0E0</color>
 </resources>

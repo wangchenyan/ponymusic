@@ -1,6 +1,11 @@
 package me.wcy.music.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,6 +29,7 @@ import me.wcy.music.adapter.PlayPagerAdapter;
 import me.wcy.music.enums.MusicTypeEnum;
 import me.wcy.music.enums.PlayModeEnum;
 import me.wcy.music.model.Music;
+import me.wcy.music.utils.Actions;
 import me.wcy.music.utils.Constants;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.FileUtils;
@@ -54,8 +60,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     ViewPager vpPlay;
     @Bind(R.id.il_indicator)
     IndicatorLayout ilIndicator;
-    @Bind(R.id.seek_bar)
-    SeekBar seekBar;
+    @Bind(R.id.sb_progress)
+    SeekBar sbProgress;
     @Bind(R.id.tv_current_time)
     TextView tvCurrentTime;
     @Bind(R.id.tv_total_time)
@@ -71,6 +77,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     private AlbumCoverView mAlbumCoverView;
     private LrcView mLrcViewSingle;
     private LrcView mLrcViewFull;
+    private SeekBar sbVolume;
+    private AudioManager mAudioManager;
     private List<View> mViewPagerContent;
     private int mLastProgress;
 
@@ -90,13 +98,21 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter(Actions.VOLUME_CHANGED_ACTION);
+        getActivity().registerReceiver(mVolumeReceiver, filter);
+    }
+
+    @Override
     protected void setListener() {
         ivBack.setOnClickListener(this);
         ivMode.setOnClickListener(this);
         ivPlay.setOnClickListener(this);
         ivPrev.setOnClickListener(this);
         ivNext.setOnClickListener(this);
-        seekBar.setOnSeekBarChangeListener(this);
+        sbProgress.setOnSeekBarChangeListener(this);
+        sbVolume.setOnSeekBarChangeListener(this);
         vpPlay.setOnPageChangeListener(this);
     }
 
@@ -116,18 +132,26 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         mAlbumCoverView = (AlbumCoverView) coverView.findViewById(R.id.album_cover_view);
         mLrcViewSingle = (LrcView) coverView.findViewById(R.id.lrc_view_single);
         mLrcViewFull = (LrcView) lrcView.findViewById(R.id.lrc_view_full);
+        sbVolume = (SeekBar) lrcView.findViewById(R.id.sb_volume);
         mViewPagerContent = new ArrayList<>(2);
         mViewPagerContent.add(coverView);
         mViewPagerContent.add(lrcView);
         PlayPagerAdapter adapter = new PlayPagerAdapter(mViewPagerContent);
         vpPlay.setAdapter(adapter);
+        initVolume();
+    }
+
+    private void initVolume() {
+        mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+        sbVolume.setMax(mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+        sbVolume.setProgress(mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
     }
 
     /**
      * 更新播放进度
      */
     public void onPublish(int progress) {
-        seekBar.setProgress(progress);
+        sbProgress.setProgress(progress);
         if (mLrcViewSingle.hasLrc()) {
             mLrcViewSingle.updateTime(progress);
             mLrcViewFull.updateTime(progress);
@@ -197,15 +221,20 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        if (getPlayService().isPlaying() || getPlayService().isPause()) {
-            int progress = seekBar.getProgress();
-            getPlayService().seekTo(progress);
-            mLrcViewSingle.onDrag(progress);
-            mLrcViewFull.onDrag(progress);
-            tvCurrentTime.setText(formatTime(progress));
-            mLastProgress = progress;
-        } else {
-            seekBar.setProgress(0);
+        if (seekBar == sbProgress) {
+            if (getPlayService().isPlaying() || getPlayService().isPause()) {
+                int progress = seekBar.getProgress();
+                getPlayService().seekTo(progress);
+                mLrcViewSingle.onDrag(progress);
+                mLrcViewFull.onDrag(progress);
+                tvCurrentTime.setText(formatTime(progress));
+                mLastProgress = progress;
+            } else {
+                seekBar.setProgress(0);
+            }
+        } else if (seekBar == sbVolume) {
+            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, seekBar.getProgress(),
+                    AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
         }
     }
 
@@ -215,8 +244,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         }
         tvTitle.setText(music.getTitle());
         tvArtist.setText(music.getArtist());
-        seekBar.setMax((int) music.getDuration());
-        seekBar.setProgress(0);
+        sbProgress.setMax((int) music.getDuration());
+        sbProgress.setProgress(0);
         mLastProgress = 0;
         tvCurrentTime.setText(R.string.play_time_start);
         tvTotalTime.setText(formatTime(music.getDuration()));
@@ -301,5 +330,21 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
         Date date = new Date(lTime);
         return sdf.format(date);
+    }
+
+    private BroadcastReceiver mVolumeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (!Actions.VOLUME_CHANGED_ACTION.equals(intent.getAction())) {
+                return;
+            }
+            sbVolume.setProgress(mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+        }
+    };
+
+    @Override
+    public void onDestroy() {
+        getActivity().unregisterReceiver(mVolumeReceiver);
+        super.onDestroy();
     }
 }

@@ -44,7 +44,7 @@
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:text="无音乐"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/text_size_common" />
 
                 <TextView
