@@ -87,6 +87,24 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         bindService();
     }
 
+    @Override
+    protected void onDestroy() {
+        unbindService(mPlayServiceConnection);
+        mAudioManager.unregisterMediaButtonEventReceiver(mRemoteReceiver);
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showPlayingFragment();
+            }
+        }, 100);
+    }
+
     private void bindService() {
         Intent intent = new Intent();
         intent.setClass(this, PlayService.class);
@@ -292,10 +310,4 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         moveTaskToBack(false);
     }
 
-    @Override
-    protected void onDestroy() {
-        unbindService(mPlayServiceConnection);
-        mAudioManager.unregisterMediaButtonEventReceiver(mRemoteReceiver);
-        super.onDestroy();
-    }
 }

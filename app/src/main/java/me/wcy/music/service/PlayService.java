@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.Random;
 
 import me.wcy.music.R;
-import me.wcy.music.activity.SplashActivity;
+import me.wcy.music.activity.MusicActivity;
 import me.wcy.music.enums.MusicTypeEnum;
 import me.wcy.music.enums.PlayModeEnum;
 import me.wcy.music.model.Music;
@@ -124,8 +124,6 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
             e.printStackTrace();
         }
 
-        updateNotification(mPlayingMusic);
-
         Preferences.put(this, Preferences.MUSIC_ID, mPlayingMusic.getId());
         return mPlayingPosition;
     }
@@ -143,8 +141,6 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        updateNotification(mPlayingMusic);
     }
 
     public void playPause() {
@@ -159,8 +155,8 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
     private void start() {
         mPlayer.start();
-        updateNotification(mPlayingMusic);
         mIsPause = false;
+        updateNotification(mPlayingMusic);
     }
 
     public int pause() {
@@ -168,8 +164,8 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
             return -1;
         }
         mPlayer.pause();
-        clearNotification();
         mIsPause = true;
+        clearNotification();
         if (mListener != null) {
             mListener.onPlayerPause();
         }
@@ -281,7 +277,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         } else {
             bitmap = music.getCover();
         }
-        Intent intent = new Intent(this, SplashActivity.class);
+        Intent intent = new Intent(this, MusicActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         Notification.Builder builder = new Notification.Builder(this)
                 .setContentIntent(pendingIntent)
@@ -294,9 +290,6 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         startForeground(NOTIFICATION_ID, notification);
     }
 
-    /**
-     * 清除通知栏
-     */
     private void clearNotification() {
         stopForeground(true);
     }
