@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -20,6 +21,7 @@ import me.wcy.music.activity.MusicActivity;
 import me.wcy.music.enums.MusicTypeEnum;
 import me.wcy.music.enums.PlayModeEnum;
 import me.wcy.music.model.Music;
+import me.wcy.music.receiver.NoisyAudioStreamReceiver;
 import me.wcy.music.utils.Actions;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.MusicUtils;
@@ -34,8 +36,10 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     private static final int NOTIFICATION_ID = 0x111;
     private static final long TIME_UPDATE = 100L;
     private MediaPlayer mPlayer;
-    private AudioManager mAudioManager;
     private OnPlayerEventListener mListener;
+    private AudioManager mAudioManager;
+    private IntentFilter mNoisyFilter;
+    private NoisyAudioStreamReceiver mNoisyReceiver;
     private Handler mHandler;
     // 正在播放的歌曲[本地|网络]
     private Music mPlayingMusic;
@@ -48,6 +52,8 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         super.onCreate();
         mPlayer = new MediaPlayer();
         mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+        mNoisyFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+        mNoisyReceiver = new NoisyAudioStreamReceiver();
         mHandler = new Handler();
         mPlayer.setOnCompletionListener(this);
         mHandler.post(mBackgroundRunnable);
@@ -154,6 +160,14 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         }
     }
 
+    private void start() {
+        mPlayer.start();
+        mIsPause = false;
+        updateNotification(mPlayingMusic);
+        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+        registerReceiver(mNoisyReceiver, mNoisyFilter);
+    }
+
     public void playPause() {
         if (isPlaying()) {
             pause();
@@ -164,21 +178,15 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         }
     }
 
-    private void start() {
-        mPlayer.start();
-        mIsPause = false;
-        updateNotification(mPlayingMusic);
-        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-    }
-
     public int pause() {
         if (!isPlaying()) {
             return -1;
         }
         mPlayer.pause();
         mIsPause = true;
-        clearNotification();
+        stopForeground(true);
         mAudioManager.abandonAudioFocus(this);
+        unregisterReceiver(mNoisyReceiver);
         if (mListener != null) {
             mListener.onPlayerPause();
         }
@@ -301,10 +309,6 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
                 .setOngoing(true);
         Notification notification = builder.getNotification();
         startForeground(NOTIFICATION_ID, notification);
-    }
-
-    private void clearNotification() {
-        stopForeground(true);
     }
 
     @Override
