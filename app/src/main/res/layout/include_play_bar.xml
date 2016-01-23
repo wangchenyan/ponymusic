@@ -53,13 +53,13 @@
             android:id="@+id/iv_play_bar_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_playbar_btn_play" />
+            android:src="@drawable/ic_play_bar_btn_play_pause_selector" />
 
         <ImageView
             android:id="@+id/iv_play_bar_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_playbar_btn_next" />
+            android:src="@drawable/ic_play_bar_btn_next" />
     </LinearLayout>
 
     <ProgressBar

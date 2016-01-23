@@ -188,7 +188,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onPlayerPause() {
-        ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_play);
+        ivPlayBarPlay.setSelected(false);
         if (mPlayFragment != null && mPlayFragment.isResume()) {
             mPlayFragment.onPlayerPause();
         }
@@ -196,7 +196,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onPlayerResume() {
-        ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_pause);
+        ivPlayBarPlay.setSelected(true);
         if (mPlayFragment != null && mPlayFragment.isResume()) {
             mPlayFragment.onPlayerResume();
         }
@@ -252,9 +252,9 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         tvPlayBarTitle.setText(music.getTitle());
         tvPlayBarArtist.setText(music.getArtist());
         if (getPlayService().isPlaying()) {
-            ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_pause);
+            ivPlayBarPlay.setSelected(true);
         } else {
-            ivPlayBarPlay.setImageResource(R.drawable.ic_playbar_btn_play);
+            ivPlayBarPlay.setSelected(false);
         }
         mProgressBar.setMax((int) music.getDuration());
         mProgressBar.setProgress(0);

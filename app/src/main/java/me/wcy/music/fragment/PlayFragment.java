@@ -168,12 +168,12 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     public void onPlayerPause() {
-        ivPlay.setImageResource(R.drawable.ic_play_btn_play_selector);
+        ivPlay.setSelected(false);
         mAlbumCoverView.pause();
     }
 
     public void onPlayerResume() {
-        ivPlay.setImageResource(R.drawable.ic_play_btn_pause_selector);
+        ivPlay.setSelected(true);
         mAlbumCoverView.start();
     }
 
@@ -252,10 +252,10 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         setCoverAndBg(music);
         setLrc(music);
         if (getPlayService().isPlaying()) {
-            ivPlay.setImageResource(R.drawable.ic_play_btn_pause_selector);
+            ivPlay.setSelected(true);
             mAlbumCoverView.start();
         } else {
-            ivPlay.setImageResource(R.drawable.ic_play_btn_play_selector);
+            ivPlay.setSelected(false);
             mAlbumCoverView.pause();
         }
     }

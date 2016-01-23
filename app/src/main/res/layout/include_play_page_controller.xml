@@ -61,7 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:src="@drawable/ic_play_btn_play_selector" />
+            android:src="@drawable/ic_play_btn_play_pause_selector" />
 
         <ImageView
             android:id="@+id/iv_next"
