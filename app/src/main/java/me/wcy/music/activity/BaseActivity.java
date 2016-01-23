@@ -57,6 +57,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     private void initView() {
         ButterKnife.bind(this);
 
+        if (mToolbar == null) {
+            throw new IllegalStateException("Layout is required to include a Toolbar with id 'toolbar'");
+        }
         setSupportActionBar(mToolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -9,6 +9,7 @@ import me.wcy.music.activity.AboutActivity;
 import me.wcy.music.activity.MusicActivity;
 import me.wcy.music.activity.SearchMusicActivity;
 import me.wcy.music.activity.SettingActivity;
+import me.wcy.music.service.PlayService;
 
 /**
  * 导航菜单执行器
@@ -75,7 +76,8 @@ public class NaviMenuExecutor {
     }
 
     private void exit() {
-        mActivity.getPlayService().stop();
+        PlayService service = mActivity.getPlayService();
         mActivity.finish();
+        service.stop();
     }
 }

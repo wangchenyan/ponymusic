@@ -99,6 +99,16 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         mListener = listener;
     }
 
+    private Runnable mBackgroundRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (isPlaying() && mListener != null) {
+                mListener.onPublish(mPlayer.getCurrentPosition());
+            }
+            mHandler.postDelayed(this, TIME_UPDATE);
+        }
+    };
+
     public int play(int position) {
         if (MusicUtils.getMusicList().isEmpty()) {
             return -1;
@@ -316,29 +326,13 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         return true;
     }
 
-    @Override
-    public void onDestroy() {
-        pause();
-        super.onDestroy();
-    }
-
     public void stop() {
-        clearNotification();
+        pause();
         mPlayer.reset();
         mPlayer.release();
         mPlayer = null;
         stopSelf();
     }
-
-    private Runnable mBackgroundRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (isPlaying() && mListener != null) {
-                mListener.onPublish(mPlayer.getCurrentPosition());
-            }
-            mHandler.postDelayed(this, TIME_UPDATE);
-        }
-    };
 
     public class PlayBinder extends Binder {
         public PlayService getService() {

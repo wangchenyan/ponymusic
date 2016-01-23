@@ -24,6 +24,8 @@ public class RemoteControlReceiver extends BroadcastReceiver {
         }
         Intent serviceIntent;
         switch (event.getKeyCode()) {
+            case KeyEvent.KEYCODE_MEDIA_PLAY:
+            case KeyEvent.KEYCODE_MEDIA_PAUSE:
             case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
             case KeyEvent.KEYCODE_HEADSETHOOK:
                 serviceIntent = new Intent(context, PlayService.class);
@@ -32,12 +34,12 @@ public class RemoteControlReceiver extends BroadcastReceiver {
                 break;
             case KeyEvent.KEYCODE_MEDIA_NEXT:
                 serviceIntent = new Intent(context, PlayService.class);
-                serviceIntent.setAction(Actions.ACTION_MEDIA_PLAY_PAUSE);
+                serviceIntent.setAction(Actions.ACTION_MEDIA_NEXT);
                 context.startService(serviceIntent);
                 break;
             case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
                 serviceIntent = new Intent(context, PlayService.class);
-                serviceIntent.setAction(Actions.ACTION_MEDIA_PLAY_PAUSE);
+                serviceIntent.setAction(Actions.ACTION_MEDIA_PREVIOUS);
                 context.startService(serviceIntent);
                 break;
         }
