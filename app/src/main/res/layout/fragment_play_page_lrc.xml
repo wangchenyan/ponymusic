@@ -13,6 +13,7 @@
         android:id="@+id/lrc_view_full"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         lrc:animationDuration="1000"
         lrc:currentTextColor="@android:color/white"
         lrc:dividerHeight="24dp"

@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
@@ -24,15 +25,16 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
     private static final float DISC_ROTATION_INCREASE = 0.5f;
     private static final float NEEDLE_ROTATION_START = 0.0f;
     private static final float NEEDLE_ROTATION_END = -25.0f;
+    private Handler mHandler;
     private Bitmap mDiscBitmap;
     private Bitmap mCoverBitmap;
     private Bitmap mNeedleBitmap;
     private Matrix mDiscMatrix;
     private Matrix mCoverMatrix;
     private Matrix mNeedleMatrix;
-    private Handler mHandler;
     private ValueAnimator mPlayAnimator;
     private ValueAnimator mPauseAnimator;
+    private Drawable mTopLine;
     private float mDiscRotation = 0.0f;
     private float mNeedleRotation = NEEDLE_ROTATION_START;
     private boolean mIsPlaying = false;
@@ -64,6 +66,7 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
     }
 
     private void init() {
+        mHandler = new Handler();
         mDiscBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_play_page_disc);
         mDiscBitmap = ImageUtils.resizeImage(mDiscBitmap, (int) (Utils.getScreenWidth() * 0.75), (int) (Utils.getScreenWidth() * 0.75));
         mCoverBitmap = CoverLoader.getInstance().loadRound(null);
@@ -72,9 +75,9 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
         mDiscMatrix = new Matrix();
         mCoverMatrix = new Matrix();
         mNeedleMatrix = new Matrix();
-        mHandler = new Handler();
         mPlayAnimator = ValueAnimator.ofFloat(NEEDLE_ROTATION_END, NEEDLE_ROTATION_START);
         mPauseAnimator = ValueAnimator.ofFloat(NEEDLE_ROTATION_START, NEEDLE_ROTATION_END);
+        mTopLine = getResources().getDrawable(R.drawable.ic_play_page_cover_top_line_shape);
         mPlayAnimator.setDuration(300);
         mPlayAnimator.addUpdateListener(this);
         mPauseAnimator.setDuration(300);
@@ -107,6 +110,8 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
         mDiscMatrix.preTranslate(mDiscDX, mDiscDY);
         mCoverMatrix.preTranslate(mCoverDX, mCoverDY);
         mNeedleMatrix.preTranslate(mNeedleDX, mNeedleDY);
+        mTopLine.setBounds(0, getTop(), getWidth(), getTop() + Utils.dp2px(getContext(), 1));
+        mTopLine.draw(canvas);
         canvas.drawBitmap(mCoverBitmap, mCoverMatrix, null);
         canvas.drawBitmap(mDiscBitmap, mDiscMatrix, null);
         canvas.drawBitmap(mNeedleBitmap, mNeedleMatrix, null);
@@ -114,7 +119,7 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
 
     public void setInitialData(boolean isPlaying) {
         mIsPlaying = isPlaying;
-        mNeedleRotation = mIsPlaying ? 0.0f : -25.0f;
+        mNeedleRotation = mIsPlaying ? NEEDLE_ROTATION_START : NEEDLE_ROTATION_END;
         invalidate();
     }
 
