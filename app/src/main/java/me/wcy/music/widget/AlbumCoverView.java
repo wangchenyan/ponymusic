@@ -1,5 +1,6 @@
 package me.wcy.music.widget;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,16 +19,36 @@ import me.wcy.music.utils.Utils;
  * 专辑封面
  * Created by wcy on 2015/11/30.
  */
-public class AlbumCoverView extends View {
+public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdateListener {
     private static final long TIME_UPDATE = 50L;
-    private static final float ROTATION_INCREASE = 0.5f;
+    private static final float DISC_ROTATION_INCREASE = 0.5f;
+    private static final float NEEDLE_ROTATION_START = 0.0f;
+    private static final float NEEDLE_ROTATION_END = -25.0f;
     private Bitmap mDiscBitmap;
     private Bitmap mCoverBitmap;
+    private Bitmap mNeedleBitmap;
     private Matrix mDiscMatrix;
     private Matrix mCoverMatrix;
+    private Matrix mNeedleMatrix;
     private Handler mHandler;
-    private float mRotation = 0.0f;
+    private ValueAnimator mPlayAnimator;
+    private ValueAnimator mPauseAnimator;
+    private float mDiscRotation = 0.0f;
+    private float mNeedleRotation = NEEDLE_ROTATION_START;
     private boolean mIsPlaying = false;
+
+    private float mDiscPX = -1.0f;
+    private float mDiscPY = -1.0f;
+    private float mDiscDX = -1.0f;
+    private float mDiscDY = -1.0f;
+    private float mCoverPX = -1.0f;
+    private float mCoverPY = -1.0f;
+    private float mCoverDX = -1.0f;
+    private float mCoverDY = -1.0f;
+    private float mNeedlePX = -1.0f;
+    private float mNeedlePY = -1.0f;
+    private float mNeedleDX = -1.0f;
+    private float mNeedleDY = -1.0f;
 
     public AlbumCoverView(Context context) {
         this(context, null);
@@ -44,29 +65,64 @@ public class AlbumCoverView extends View {
 
     private void init() {
         mDiscBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_play_page_disc);
-        mDiscBitmap = ImageUtils.resizeImage(mDiscBitmap, Utils.getScreenWidth() * 3 / 4, Utils.getScreenWidth() * 3 / 4);
+        mDiscBitmap = ImageUtils.resizeImage(mDiscBitmap, (int) (Utils.getScreenWidth() * 0.75), (int) (Utils.getScreenWidth() * 0.75));
         mCoverBitmap = CoverLoader.getInstance().loadRound(null);
+        mNeedleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_play_page_needle);
+        mNeedleBitmap = ImageUtils.resizeImage(mNeedleBitmap, (int) (Utils.getScreenWidth() * 0.25), (int) (Utils.getScreenWidth() * 0.375));
         mDiscMatrix = new Matrix();
         mCoverMatrix = new Matrix();
+        mNeedleMatrix = new Matrix();
         mHandler = new Handler();
+        mPlayAnimator = ValueAnimator.ofFloat(NEEDLE_ROTATION_END, NEEDLE_ROTATION_START);
+        mPauseAnimator = ValueAnimator.ofFloat(NEEDLE_ROTATION_START, NEEDLE_ROTATION_END);
+        mPlayAnimator.setDuration(300);
+        mPlayAnimator.addUpdateListener(this);
+        mPauseAnimator.setDuration(300);
+        mPauseAnimator.addUpdateListener(this);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        // 设置旋转角度
-        mDiscMatrix.setRotate(mRotation, getWidth() / 2, getHeight() / 2);
-        mCoverMatrix.setRotate(mRotation, getWidth() / 2, getHeight() / 2);
-        // 设置初始位置
-        mDiscMatrix.preTranslate((getWidth() - mDiscBitmap.getWidth()) / 2, (getHeight() - mDiscBitmap.getHeight()) / 2);
-        mCoverMatrix.preTranslate((getWidth() - mCoverBitmap.getWidth()) / 2, (getHeight() - mCoverBitmap.getHeight()) / 2);
+        if (mDiscPX == -1.0f) {
+            // 避免重复计算
+            int discOffsetY = mNeedleBitmap.getHeight() / 2;
+            mDiscPX = getWidth() / 2;
+            mDiscPY = getTop() + mDiscBitmap.getHeight() / 2 + discOffsetY;
+            mCoverPX = mDiscPX;
+            mCoverPY = mDiscPY;
+            mNeedlePX = mDiscPX;
+            mNeedlePY = getTop();
+            mDiscDX = (getWidth() - mDiscBitmap.getWidth()) / 2;
+            mDiscDY = getTop() + discOffsetY;
+            mCoverDX = (getWidth() - mCoverBitmap.getWidth()) / 2;
+            mCoverDY = getTop() + discOffsetY + (mDiscBitmap.getHeight() - mCoverBitmap.getHeight()) / 2;
+            mNeedleDX = getWidth() / 2 - mNeedleBitmap.getWidth() / 6;
+            mNeedleDY = getTop() - mNeedleBitmap.getWidth() / 6;
+        }
+        // 设置旋转角度和圆心
+        mDiscMatrix.setRotate(mDiscRotation, mDiscPX, mDiscPY);
+        mCoverMatrix.setRotate(mDiscRotation, mCoverPX, mCoverPY);
+        mNeedleMatrix.setRotate(mNeedleRotation, mNeedlePX, mNeedlePY);
+        // 设置旋转半径端点坐标
+        mDiscMatrix.preTranslate(mDiscDX, mDiscDY);
+        mCoverMatrix.preTranslate(mCoverDX, mCoverDY);
+        mNeedleMatrix.preTranslate(mNeedleDX, mNeedleDY);
         canvas.drawBitmap(mCoverBitmap, mCoverMatrix, null);
         canvas.drawBitmap(mDiscBitmap, mDiscMatrix, null);
+        canvas.drawBitmap(mNeedleBitmap, mNeedleMatrix, null);
+    }
+
+    public void setInitialData(boolean isPlaying) {
+        mIsPlaying = isPlaying;
+        mNeedleRotation = mIsPlaying ? 0.0f : -25.0f;
+        invalidate();
     }
 
     public void setCoverBitmap(Bitmap bitmap) {
         mCoverBitmap = bitmap;
-        mRotation = 0.0f;
-        mRunnable.run();
+        mDiscRotation = 0.0f;
+        mHandler.removeCallbacks(mRunnable);
+        mHandler.post(mRunnable);
         invalidate();
     }
 
@@ -75,6 +131,7 @@ public class AlbumCoverView extends View {
             return;
         }
         mIsPlaying = true;
+        mPlayAnimator.start();
     }
 
     public void pause() {
@@ -82,15 +139,22 @@ public class AlbumCoverView extends View {
             return;
         }
         mIsPlaying = false;
+        mPauseAnimator.start();
+    }
+
+    @Override
+    public void onAnimationUpdate(ValueAnimator animation) {
+        mNeedleRotation = (float) animation.getAnimatedValue();
+        invalidate();
     }
 
     private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
             if (mIsPlaying) {
-                mRotation += ROTATION_INCREASE;
-                if (mRotation >= 360) {
-                    mRotation = 0;
+                mDiscRotation += DISC_ROTATION_INCREASE;
+                if (mDiscRotation >= 360) {
+                    mDiscRotation = 0;
                 }
                 invalidate();
             }

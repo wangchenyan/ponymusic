@@ -93,8 +93,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         initSystemBar();
         initViewPager();
         ilIndicator.create(mViewPagerContent.size());
+        initPlayMode();
         onChange(getPlayService().getPlayingMusic());
-        initMode();
     }
 
     @Override
@@ -133,18 +133,24 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         mLrcViewSingle = (LrcView) coverView.findViewById(R.id.lrc_view_single);
         mLrcViewFull = (LrcView) lrcView.findViewById(R.id.lrc_view_full);
         sbVolume = (SeekBar) lrcView.findViewById(R.id.sb_volume);
+        mAlbumCoverView.setInitialData(getPlayService().isPlaying());
+        initVolume();
+
         mViewPagerContent = new ArrayList<>(2);
         mViewPagerContent.add(coverView);
         mViewPagerContent.add(lrcView);
-        PlayPagerAdapter adapter = new PlayPagerAdapter(mViewPagerContent);
-        vpPlay.setAdapter(adapter);
-        initVolume();
+        vpPlay.setAdapter(new PlayPagerAdapter(mViewPagerContent));
     }
 
     private void initVolume() {
         mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
         sbVolume.setMax(mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
         sbVolume.setProgress(mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+    }
+
+    private void initPlayMode() {
+        int mode = (Integer) Preferences.get(getContext(), Preferences.PLAY_MODE, 0);
+        ivMode.setImageLevel(mode);
     }
 
     /**
@@ -184,7 +190,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                 getActivity().onBackPressed();
                 break;
             case R.id.iv_mode:
-                switchMode();
+                switchPlayMode();
                 break;
             case R.id.iv_play:
                 play();
@@ -272,12 +278,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         getPlayService().prev();
     }
 
-    private void initMode() {
-        int mode = (Integer) Preferences.get(getContext(), Preferences.PLAY_MODE, 0);
-        ivMode.setImageLevel(mode);
-    }
-
-    private void switchMode() {
+    private void switchPlayMode() {
         PlayModeEnum mode = PlayModeEnum.valueOf((Integer) Preferences.get(getContext(), Preferences.PLAY_MODE, 0));
         switch (mode) {
             case LOOP:
@@ -294,7 +295,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                 break;
         }
         Preferences.put(getContext(), Preferences.PLAY_MODE, mode.value());
-        initMode();
+        initPlayMode();
     }
 
     private void setCoverAndBg(Music music) {

@@ -23,5 +23,4 @@
         lrc:dividerHeight="10dp"
         lrc:normalTextColor="@android:color/white"
         lrc:textSize="@dimen/text_size_common" />
-
 </LinearLayout>
