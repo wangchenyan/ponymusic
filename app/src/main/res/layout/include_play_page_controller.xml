@@ -16,7 +16,7 @@
             android:id="@+id/tv_current_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="00:00"
+            android:text="@string/play_time_start"
             android:textColor="@android:color/white"
             android:textSize="10sp" />
 
@@ -26,6 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:maxHeight="2dp"
+            android:minHeight="2dp"
             android:progressDrawable="@drawable/ic_seek_bar_progress_style"
             android:thumb="@drawable/ic_seek_bar_progress_btn" />
 
@@ -33,7 +34,7 @@
             android:id="@+id/tv_total_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="00:00"
+            android:text="@string/play_time_start"
             android:textColor="@color/translucent_white"
             android:textSize="10sp" />
     </LinearLayout>
