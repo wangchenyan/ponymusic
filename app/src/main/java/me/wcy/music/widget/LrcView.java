@@ -70,8 +70,10 @@ public class LrcView extends View {
         mLrcTexts = new ArrayList<>();
         mNormalPaint = new Paint();
         mCurrentPaint = new Paint();
+        mNormalPaint.setAntiAlias(true);
         mNormalPaint.setColor(normalColor);
         mNormalPaint.setTextSize(mTextSize);
+        mCurrentPaint.setAntiAlias(true);
         mCurrentPaint.setColor(currentColor);
         mCurrentPaint.setTextSize(mTextSize);
     }
