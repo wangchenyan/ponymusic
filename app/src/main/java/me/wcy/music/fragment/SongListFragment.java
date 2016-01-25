@@ -59,7 +59,7 @@ public class SongListFragment extends BaseFragment implements AdapterView.OnItem
             info.setType(types[i]);
             mData.add(info);
         }
-        SongListAdapter mAdapter = new SongListAdapter(getContext(), mData);
+        SongListAdapter mAdapter = new SongListAdapter(getActivity(), mData);
         lvSongList.setAdapter(mAdapter);
     }
 
@@ -79,7 +79,7 @@ public class SongListFragment extends BaseFragment implements AdapterView.OnItem
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         SongListInfo songListInfo = mData.get(position);
-        Intent intent = new Intent(getContext(), OnlineMusicActivity.class);
+        Intent intent = new Intent(getActivity(), OnlineMusicActivity.class);
         intent.putExtra(Extras.MUSIC_LIST_TYPE, songListInfo);
         startActivity(intent);
     }

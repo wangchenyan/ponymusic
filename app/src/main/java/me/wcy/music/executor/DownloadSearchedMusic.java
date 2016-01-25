@@ -44,8 +44,7 @@ public abstract class DownloadSearchedMusic {
     }
 
     private void checkNetwork() {
-        boolean mobileNetworkDownload = (boolean) Preferences.get(mContext,
-                mContext.getString(R.string.setting_key_mobile_network_download), false);
+        boolean mobileNetworkDownload = (boolean) Preferences.get(mContext.getString(R.string.setting_key_mobile_network_download), false);
         if (NetworkUtils.isActiveNetworkMobile(mContext) && !mobileNetworkDownload) {
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setTitle(R.string.tips);
@@ -85,7 +84,7 @@ public abstract class DownloadSearchedMusic {
                         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
                         request.setAllowedOverRoaming(false);// 不允许漫游
                         long id = downloadManager.enqueue(request);
-                        Preferences.put(mContext, String.valueOf(id), mJSong.getSongname());
+                        Preferences.put(String.valueOf(id), mJSong.getSongname());
                         onSuccess();
                     }
 

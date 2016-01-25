@@ -18,7 +18,7 @@ public class DownloadReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-        String title = (String) Preferences.get(context, String.valueOf(id), "");
+        String title = (String) Preferences.get(String.valueOf(id), "");
         if (TextUtils.isEmpty(title)) {
             return;
         }

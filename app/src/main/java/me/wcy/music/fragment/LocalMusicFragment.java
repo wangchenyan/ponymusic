@@ -46,7 +46,6 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     @Bind(R.id.tv_empty)
     TextView tvEmpty;
     private LocalMusicAdapter mAdapter;
-    private DownloadReceiver mReceiver;
 
     @Nullable
     @Override
@@ -58,7 +57,6 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     protected void init() {
         addEmptyFooter();
         mAdapter = new LocalMusicAdapter(getActivity());
-        mReceiver = new DownloadReceiver();
         mAdapter.setOnMoreClickListener(this);
         lvLocalMusic.setAdapter(mAdapter);
         if (getPlayService().getPlayingMusic() != null && getPlayService().getPlayingMusic().getType() == MusicTypeEnum.LOCAL) {
@@ -67,7 +65,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         updateView();
 
         IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
-        getActivity().registerReceiver(mReceiver, filter);
+        getActivity().registerReceiver(mDownloadReceiver, filter);
     }
 
     @Override
@@ -196,15 +194,15 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
 
     @Override
     public void onDestroy() {
-        getActivity().unregisterReceiver(mReceiver);
+        getActivity().unregisterReceiver(mDownloadReceiver);
         super.onDestroy();
     }
 
-    class DownloadReceiver extends BroadcastReceiver {
+    private BroadcastReceiver mDownloadReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-            String title = (String) Preferences.get(context, String.valueOf(id), "");
+            String title = (String) Preferences.get(String.valueOf(id), "");
             if (TextUtils.isEmpty(title)) {
                 return;
             }
@@ -220,5 +218,5 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
                 }
             }, 500);
         }
-    }
+    };
 }

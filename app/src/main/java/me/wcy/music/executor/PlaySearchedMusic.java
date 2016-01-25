@@ -44,8 +44,7 @@ public abstract class PlaySearchedMusic {
     }
 
     private void checkNetwork() {
-        boolean mobileNetworkPlay = (boolean) Preferences.get(mContext,
-                mContext.getString(R.string.setting_key_mobile_network_play), false);
+        boolean mobileNetworkPlay = (boolean) Preferences.get(mContext.getString(R.string.setting_key_mobile_network_play), false);
         if (NetworkUtils.isActiveNetworkMobile(mContext) && !mobileNetworkPlay) {
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setTitle(R.string.tips);
@@ -53,7 +52,7 @@ public abstract class PlaySearchedMusic {
             builder.setPositiveButton(R.string.play_tips_sure, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Preferences.put(mContext, mContext.getString(R.string.setting_key_mobile_network_play), true);
+                    Preferences.put(mContext.getString(R.string.setting_key_mobile_network_play), true);
                     getPlayInfo();
                 }
             });
