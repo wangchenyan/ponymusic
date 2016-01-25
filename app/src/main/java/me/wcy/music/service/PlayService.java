@@ -56,7 +56,6 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         mNoisyReceiver = new NoisyAudioStreamReceiver();
         mHandler = new Handler();
         mPlayer.setOnCompletionListener(this);
-        mHandler.post(mBackgroundRunnable);
     }
 
     @Nullable
@@ -105,16 +104,6 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         mListener = listener;
     }
 
-    private Runnable mBackgroundRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (isPlaying() && mListener != null) {
-                mListener.onPublish(mPlayer.getCurrentPosition());
-            }
-            mHandler.postDelayed(this, TIME_UPDATE);
-        }
-    };
-
     public int play(int position) {
         if (MusicUtils.getMusicList().isEmpty()) {
             return -1;
@@ -160,14 +149,6 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         }
     }
 
-    private void start() {
-        mPlayer.start();
-        mIsPause = false;
-        updateNotification(mPlayingMusic);
-        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-        registerReceiver(mNoisyReceiver, mNoisyFilter);
-    }
-
     public void playPause() {
         if (isPlaying()) {
             pause();
@@ -178,13 +159,23 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         }
     }
 
+    private void start() {
+        mPlayer.start();
+        mIsPause = false;
+        mHandler.post(mBackgroundRunnable);
+        updateNotification(mPlayingMusic);
+        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+        registerReceiver(mNoisyReceiver, mNoisyFilter);
+    }
+
     public int pause() {
         if (!isPlaying()) {
             return -1;
         }
         mPlayer.pause();
         mIsPause = true;
-        stopForeground(true);
+        mHandler.removeCallbacks(mBackgroundRunnable);
+        cancelNotification();
         mAudioManager.abandonAudioFocus(this);
         unregisterReceiver(mNoisyReceiver);
         if (mListener != null) {
@@ -310,6 +301,20 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         Notification notification = builder.getNotification();
         startForeground(NOTIFICATION_ID, notification);
     }
+
+    private void cancelNotification() {
+        stopForeground(true);
+    }
+
+    private Runnable mBackgroundRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (isPlaying() && mListener != null) {
+                mListener.onPublish(mPlayer.getCurrentPosition());
+            }
+            mHandler.postDelayed(this, TIME_UPDATE);
+        }
+    };
 
     @Override
     public void onAudioFocusChange(int focusChange) {

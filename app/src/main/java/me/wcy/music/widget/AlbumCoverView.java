@@ -128,16 +128,13 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
     }
 
     public void setInitialData(boolean isPlaying) {
-        mIsPlaying = isPlaying;
-        mNeedleRotation = mIsPlaying ? NEEDLE_ROTATION_START : NEEDLE_ROTATION_END;
+        mNeedleRotation = isPlaying ? NEEDLE_ROTATION_START : NEEDLE_ROTATION_END;
         invalidate();
     }
 
     public void setCoverBitmap(Bitmap bitmap) {
         mCoverBitmap = bitmap;
         mDiscRotation = 0.0f;
-        mHandler.removeCallbacks(mRunnable);
-        mHandler.post(mRunnable);
         invalidate();
     }
 
@@ -146,6 +143,7 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
             return;
         }
         mIsPlaying = true;
+        mHandler.post(mRunnable);
         mPlayAnimator.start();
     }
 
@@ -154,6 +152,7 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
             return;
         }
         mIsPlaying = false;
+        mHandler.removeCallbacks(mRunnable);
         mPauseAnimator.start();
     }
 
