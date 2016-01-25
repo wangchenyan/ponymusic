@@ -19,13 +19,18 @@ public class FileUtils {
         return Environment.getExternalStorageDirectory() + File.separator + "PonyMusic" + File.separator;
     }
 
+    public static String getMusicDir() {
+        String dir = getAppDir() + "Music" + File.separator;
+        return mkdirs(dir);
+    }
+
     public static String getLrcDir() {
         String dir = getAppDir() + "Lyric" + File.separator;
         return mkdirs(dir);
     }
 
-    public static String getMusicDir() {
-        String dir = getAppDir() + "Music" + File.separator;
+    public static String getLogDir() {
+        String dir = getAppDir() + "Log" + File.separator;
         return mkdirs(dir);
     }
 

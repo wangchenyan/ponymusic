@@ -37,6 +37,7 @@ public class SplashActivity extends Activity {
     private void checkFile() {
         FileUtils.getMusicDir();
         FileUtils.getLrcDir();
+        FileUtils.getLogDir();
     }
 
     private void startMusicActivity() {
