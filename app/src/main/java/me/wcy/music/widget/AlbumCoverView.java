@@ -127,7 +127,7 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
         canvas.drawBitmap(mNeedleBitmap, mNeedleMatrix, null);
     }
 
-    public void setInitialData(boolean isPlaying) {
+    public void initNeedle(boolean isPlaying) {
         mNeedleRotation = isPlaying ? NEEDLE_ROTATION_START : NEEDLE_ROTATION_END;
         invalidate();
     }

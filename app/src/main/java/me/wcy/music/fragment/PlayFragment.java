@@ -133,7 +133,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         mLrcViewSingle = (LrcView) coverView.findViewById(R.id.lrc_view_single);
         mLrcViewFull = (LrcView) lrcView.findViewById(R.id.lrc_view_full);
         sbVolume = (SeekBar) lrcView.findViewById(R.id.sb_volume);
-        mAlbumCoverView.setInitialData(getPlayService().isPlaying());
+        mAlbumCoverView.initNeedle(getPlayService().isPlaying());
         initVolume();
 
         mViewPagerContent = new ArrayList<>(2);
