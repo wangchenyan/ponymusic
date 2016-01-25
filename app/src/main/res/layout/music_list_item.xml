@@ -45,7 +45,7 @@
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:text="陪你度过漫长岁月"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/text_size_common" />
 
                 <TextView
