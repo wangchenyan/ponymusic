@@ -23,8 +23,8 @@ import me.wcy.music.utils.Utils;
 public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdateListener {
     private static final long TIME_UPDATE = 50L;
     private static final float DISC_ROTATION_INCREASE = 0.5f;
-    private static final float NEEDLE_ROTATION_START = 0.0f;
-    private static final float NEEDLE_ROTATION_END = -25.0f;
+    private static final float NEEDLE_ROTATION_PLAY = 0.0f;
+    private static final float NEEDLE_ROTATION_PAUSE = -25.0f;
     private Handler mHandler;
     private Bitmap mDiscBitmap;
     private Bitmap mCoverBitmap;
@@ -37,7 +37,7 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
     private ValueAnimator mPlayAnimator;
     private ValueAnimator mPauseAnimator;
     private float mDiscRotation = 0.0f;
-    private float mNeedleRotation = NEEDLE_ROTATION_START;
+    private float mNeedleRotation = NEEDLE_ROTATION_PLAY;
     private boolean mIsPlaying = false;
 
     private float mDiscPX = -1.0f;
@@ -80,8 +80,8 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
         mDiscMatrix = new Matrix();
         mCoverMatrix = new Matrix();
         mNeedleMatrix = new Matrix();
-        mPlayAnimator = ValueAnimator.ofFloat(NEEDLE_ROTATION_END, NEEDLE_ROTATION_START);
-        mPauseAnimator = ValueAnimator.ofFloat(NEEDLE_ROTATION_START, NEEDLE_ROTATION_END);
+        mPlayAnimator = ValueAnimator.ofFloat(NEEDLE_ROTATION_PAUSE, NEEDLE_ROTATION_PLAY);
+        mPauseAnimator = ValueAnimator.ofFloat(NEEDLE_ROTATION_PLAY, NEEDLE_ROTATION_PAUSE);
         mPlayAnimator.setDuration(300);
         mPlayAnimator.addUpdateListener(this);
         mPauseAnimator.setDuration(300);
@@ -128,7 +128,7 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
     }
 
     public void initNeedle(boolean isPlaying) {
-        mNeedleRotation = isPlaying ? NEEDLE_ROTATION_START : NEEDLE_ROTATION_END;
+        mNeedleRotation = isPlaying ? NEEDLE_ROTATION_PLAY : NEEDLE_ROTATION_PAUSE;
         invalidate();
     }
 

@@ -187,7 +187,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_back:
-                getActivity().onBackPressed();
+                onBackPressed();
                 break;
             case R.id.iv_mode:
                 switchPlayMode();
@@ -296,6 +296,17 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         }
         Preferences.put(Preferences.PLAY_MODE, mode.value());
         initPlayMode();
+    }
+
+    private void onBackPressed() {
+        getActivity().onBackPressed();
+        ivBack.setEnabled(false);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ivBack.setEnabled(true);
+            }
+        }, 300);
     }
 
     private void setCoverAndBg(Music music) {
