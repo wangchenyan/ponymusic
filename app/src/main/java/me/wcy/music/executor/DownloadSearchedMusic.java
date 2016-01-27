@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
-import com.squareup.okhttp.Request;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.io.File;
@@ -25,6 +24,7 @@ import me.wcy.music.utils.Constants;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.NetworkUtils;
 import me.wcy.music.utils.Preferences;
+import okhttp3.Call;
 
 /**
  * 下载搜索的音乐
@@ -89,8 +89,8 @@ public abstract class DownloadSearchedMusic {
                     }
 
                     @Override
-                    public void onError(Request request, Exception e) {
-                        onFail(request, e);
+                    public void onError(Call call, Exception e) {
+                        onFail(call, e);
                     }
                 });
         // 下载歌词
@@ -112,7 +112,7 @@ public abstract class DownloadSearchedMusic {
                         }
 
                         @Override
-                        public void onError(Request request, Exception e) {
+                        public void onError(Call call, Exception e) {
                         }
                     });
         }
@@ -133,5 +133,5 @@ public abstract class DownloadSearchedMusic {
 
     public abstract void onSuccess();
 
-    public abstract void onFail(Request request, Exception e);
+    public abstract void onFail(Call call, Exception e);
 }

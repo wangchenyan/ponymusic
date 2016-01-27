@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.squareup.okhttp.Request;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import butterknife.Bind;
@@ -26,6 +25,7 @@ import me.wcy.music.utils.Constants;
 import me.wcy.music.utils.Extras;
 import me.wcy.music.utils.Utils;
 import me.wcy.music.utils.ViewUtils;
+import okhttp3.Call;
 
 public class ArtistInfoActivity extends BaseActivity {
     @Bind(R.id.sv_artist_info)
@@ -70,7 +70,7 @@ public class ArtistInfoActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onError(Request request, Exception e) {
+                    public void onError(Call call, Exception e) {
                         ViewUtils.changeViewState(svArtistInfo, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
                     }
                 });

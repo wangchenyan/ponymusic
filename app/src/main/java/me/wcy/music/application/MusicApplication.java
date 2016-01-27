@@ -5,10 +5,7 @@ import android.content.pm.ApplicationInfo;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.squareup.okhttp.OkHttpClient;
-import com.zhy.http.okhttp.OkHttpUtils;
-
-import java.util.concurrent.TimeUnit;
+import com.squareup.leakcanary.LeakCanary;
 
 import me.wcy.music.executor.CrashHandler;
 
@@ -24,7 +21,7 @@ public class MusicApplication extends Application {
         super.onCreate();
         instance = this;
         CrashHandler.getInstance().init();
-        initOkHttp();
+        LeakCanary.install(this);
         initImageLoader();
     }
 
@@ -35,11 +32,6 @@ public class MusicApplication extends Application {
     public static boolean isDebugMode() {
         ApplicationInfo info = getInstance().getApplicationInfo();
         return (info.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
-    }
-
-    private void initOkHttp() {
-        OkHttpClient client = OkHttpUtils.getInstance().getOkHttpClient();
-        client.setConnectTimeout(1000 * 30, TimeUnit.MILLISECONDS);
     }
 
     private void initImageLoader() {

@@ -1,10 +1,11 @@
 package me.wcy.music.callback;
 
-import com.alibaba.fastjson.JSON;
-import com.squareup.okhttp.Response;
+import com.alibaba.fastjson.JSONObject;
 import com.zhy.http.okhttp.callback.Callback;
 
 import java.io.IOException;
+
+import okhttp3.Response;
 
 /**
  * Json封装
@@ -21,7 +22,7 @@ public abstract class JsonCallback<T> extends Callback<T> {
     public T parseNetworkResponse(Response response) throws IOException {
         try {
             String jsonString = response.body().string();
-            return JSON.parseObject(jsonString, mClass);
+            return JSONObject.parseObject(jsonString, mClass);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

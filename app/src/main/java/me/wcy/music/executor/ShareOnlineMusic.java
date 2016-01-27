@@ -3,7 +3,6 @@ package me.wcy.music.executor;
 import android.content.Context;
 import android.content.Intent;
 
-import com.squareup.okhttp.Request;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import me.wcy.music.R;
@@ -11,6 +10,7 @@ import me.wcy.music.callback.JsonCallback;
 import me.wcy.music.model.JDownloadInfo;
 import me.wcy.music.utils.Constants;
 import me.wcy.music.utils.ToastUtils;
+import okhttp3.Call;
 
 /**
  * 分享在线歌曲
@@ -50,8 +50,8 @@ public abstract class ShareOnlineMusic {
                     }
 
                     @Override
-                    public void onError(Request request, Exception e) {
-                        onFail(request, e);
+                    public void onError(Call call, Exception e) {
+                        onFail(call, e);
                         ToastUtils.show(R.string.unable_to_share);
                     }
                 });
@@ -61,5 +61,5 @@ public abstract class ShareOnlineMusic {
 
     public abstract void onSuccess();
 
-    public abstract void onFail(Request request, Exception e);
+    public abstract void onFail(Call call, Exception e);
 }

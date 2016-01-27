@@ -21,7 +21,6 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
-import com.squareup.okhttp.Request;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.io.File;
@@ -52,6 +51,7 @@ import me.wcy.music.utils.Utils;
 import me.wcy.music.utils.ViewUtils;
 import me.wcy.music.widget.AutoLoadListView;
 import me.wcy.music.widget.OnLoadListener;
+import okhttp3.Call;
 
 public class OnlineMusicActivity extends BaseActivity implements OnItemClickListener, OnMoreClickListener, OnLoadListener {
     @Bind(R.id.lv_online_music_list)
@@ -146,7 +146,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                     }
 
                     @Override
-                    public void onError(Request request, Exception e) {
+                    public void onError(Call call, Exception e) {
                         lvOnlineMusic.onLoadComplete();
                         if (e instanceof RuntimeException) {
                             // 歌曲全部加载完成
@@ -234,7 +234,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
             }
 
             @Override
-            public void onFail(Request request, Exception e) {
+            public void onFail(Call call, Exception e) {
                 mProgressDialog.cancel();
                 ToastUtils.show(R.string.unable_to_play);
             }
@@ -254,7 +254,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
             }
 
             @Override
-            public void onFail(Request request, Exception e) {
+            public void onFail(Call call, Exception e) {
                 mProgressDialog.cancel();
             }
         }.execute();
@@ -278,7 +278,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
             }
 
             @Override
-            public void onFail(Request request, Exception e) {
+            public void onFail(Call call, Exception e) {
                 mProgressDialog.cancel();
                 ToastUtils.show(R.string.unable_to_download);
             }

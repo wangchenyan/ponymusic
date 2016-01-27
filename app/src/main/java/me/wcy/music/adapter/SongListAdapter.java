@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.squareup.okhttp.Request;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.List;
@@ -23,6 +22,7 @@ import me.wcy.music.model.JOnlineMusicList;
 import me.wcy.music.model.SongListInfo;
 import me.wcy.music.utils.Constants;
 import me.wcy.music.utils.Utils;
+import okhttp3.Call;
 
 /**
  * 歌单列表适配器
@@ -114,6 +114,9 @@ public class SongListAdapter extends BaseAdapter {
                     .execute(new JsonCallback<JOnlineMusicList>(JOnlineMusicList.class) {
                         @Override
                         public void onResponse(JOnlineMusicList response) {
+                            if (response == null || response.getSong_list() == null) {
+                                return;
+                            }
                             JOnlineMusic[] jOnlineMusics = response.getSong_list();
                             songListInfo.setCoverUrl(response.getBillboard().getPic_s260());
                             if (jOnlineMusics.length >= 1) {
@@ -138,7 +141,7 @@ public class SongListAdapter extends BaseAdapter {
                         }
 
                         @Override
-                        public void onError(Request request, Exception e) {
+                        public void onError(Call call, Exception e) {
                         }
                     });
         } else {

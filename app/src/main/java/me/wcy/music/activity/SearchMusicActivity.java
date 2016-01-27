@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.squareup.okhttp.Request;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.io.File;
@@ -42,6 +41,7 @@ import me.wcy.music.utils.Constants;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.ViewUtils;
+import okhttp3.Call;
 
 public class SearchMusicActivity extends BaseActivity implements SearchView.OnQueryTextListener, AdapterView.OnItemClickListener, OnMoreClickListener {
     @Bind(R.id.lv_search_music_list)
@@ -149,7 +149,7 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
                     }
 
                     @Override
-                    public void onError(Request request, Exception e) {
+                    public void onError(Call call, Exception e) {
                         ViewUtils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
                     }
                 });
@@ -171,7 +171,7 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
             }
 
             @Override
-            public void onFail(Request request, Exception e) {
+            public void onFail(Call call, Exception e) {
                 mProgressDialog.cancel();
                 ToastUtils.show(R.string.unable_to_play);
             }
@@ -215,7 +215,7 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
             }
 
             @Override
-            public void onFail(Request request, Exception e) {
+            public void onFail(Call call, Exception e) {
                 mProgressDialog.cancel();
             }
         }.execute();
@@ -235,7 +235,7 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
             }
 
             @Override
-            public void onFail(Request request, Exception e) {
+            public void onFail(Call call, Exception e) {
                 mProgressDialog.cancel();
                 ToastUtils.show(R.string.unable_to_download);
             }

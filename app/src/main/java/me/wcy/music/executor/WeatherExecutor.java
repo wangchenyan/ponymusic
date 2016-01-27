@@ -78,7 +78,7 @@ public class WeatherExecutor implements AMapLocalWeatherListener {
 
     public WeatherExecutor(Context context, View navigationHeader) {
         ButterKnife.bind(this, navigationHeader);
-        mContext = context;
+        mContext = context.getApplicationContext();
     }
 
     public void execute() {
@@ -97,6 +97,12 @@ public class WeatherExecutor implements AMapLocalWeatherListener {
         } else {
             Log.e(TAG, "获取天气预报失败");
         }
+
+        llWeather = null;
+        ivIcon = null;
+        tvTemp = null;
+        tvCity = null;
+        tvWind = null;
     }
 
     @Override

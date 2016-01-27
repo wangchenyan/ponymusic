@@ -79,5 +79,6 @@ public class NaviMenuExecutor {
         PlayService service = mActivity.getPlayService();
         mActivity.finish();
         service.stop();
+        mActivity = null;
     }
 }

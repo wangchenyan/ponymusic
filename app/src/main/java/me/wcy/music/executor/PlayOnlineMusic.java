@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 
-import com.squareup.okhttp.Request;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.BitmapCallback;
 import com.zhy.http.okhttp.callback.FileCallBack;
@@ -24,6 +23,7 @@ import me.wcy.music.utils.Constants;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.NetworkUtils;
 import me.wcy.music.utils.Preferences;
+import okhttp3.Call;
 
 /**
  * 播放在线音乐
@@ -99,8 +99,8 @@ public abstract class PlayOnlineMusic {
                     }
 
                     @Override
-                    public void onError(Request request, Exception e) {
-                        onFail(request, e);
+                    public void onError(Call call, Exception e) {
+                        onFail(call, e);
                     }
                 });
         // 下载歌词
@@ -116,7 +116,7 @@ public abstract class PlayOnlineMusic {
                         }
 
                         @Override
-                        public void onError(Request request, Exception e) {
+                        public void onError(Call call, Exception e) {
                         }
 
                         @Override
@@ -142,7 +142,7 @@ public abstract class PlayOnlineMusic {
                         }
 
                         @Override
-                        public void onError(Request request, Exception e) {
+                        public void onError(Call call, Exception e) {
                             mCounter++;
                             if (mCounter == 3) {
                                 onSuccess(music);
@@ -156,5 +156,5 @@ public abstract class PlayOnlineMusic {
 
     public abstract void onSuccess(Music music);
 
-    public abstract void onFail(Request request, Exception e);
+    public abstract void onFail(Call call, Exception e);
 }
