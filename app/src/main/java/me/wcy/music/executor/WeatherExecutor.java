@@ -98,11 +98,7 @@ public class WeatherExecutor implements AMapLocalWeatherListener {
             Log.e(TAG, "获取天气预报失败");
         }
 
-        llWeather = null;
-        ivIcon = null;
-        tvTemp = null;
-        tvCity = null;
-        tvWind = null;
+        release();
     }
 
     @Override
@@ -147,5 +143,13 @@ public class WeatherExecutor implements AMapLocalWeatherListener {
             resId = R.drawable.ic_weather_cloudy;
         }
         return resId;
+    }
+
+    private void release() {
+        llWeather = null;
+        ivIcon = null;
+        tvTemp = null;
+        tvCity = null;
+        tvWind = null;
     }
 }

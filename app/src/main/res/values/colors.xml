@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">@color/red</color>
-    <color name="colorPrimaryDark">@color/colorPrimary</color>
+    <color name="colorPrimaryDark">@color/red_700</color>
     <color name="colorAccent">@color/white</color>
     <color name="white">@android:color/white</color>
     <color name="black">@android:color/black</color>
     <color name="red">#F44336</color>
+    <color name="red_700">#D32F2F</color>
     <color name="blue">#2196F3</color>
     <color name="grey">#9E9E9E</color>
     <color name="grey_300">#E0E0E0</color>
