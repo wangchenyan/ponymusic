@@ -34,7 +34,7 @@ public class AboutActivity extends BaseActivity {
     }
 
     private String getVersion() {
-        String version = "1.0";
+        String version = "1.0.0";
         try {
             version = getPackageManager().getPackageInfo(getPackageName(), PackageManager.COMPONENT_ENABLED_STATE_DEFAULT).versionName;
         } catch (PackageManager.NameNotFoundException e) {
