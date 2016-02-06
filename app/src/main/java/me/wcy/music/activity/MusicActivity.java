@@ -1,6 +1,5 @@
 package me.wcy.music.activity;
 
-import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -38,7 +37,8 @@ import me.wcy.music.service.OnPlayerEventListener;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.CoverLoader;
 
-public class MusicActivity extends BaseActivity implements View.OnClickListener, OnPlayerEventListener, NavigationView.OnNavigationItemSelectedListener {
+public class MusicActivity extends BaseActivity implements View.OnClickListener, OnPlayerEventListener,
+        NavigationView.OnNavigationItemSelectedListener {
     @Bind(R.id.drawer_layout)
     DrawerLayout drawerLayout;
     @Bind(R.id.navigation_view)
@@ -66,10 +66,8 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     private SongListFragment mSongListFragment;
     private PlayFragment mPlayFragment;
     private PlayService mPlayService;
-    private PlayServiceConnection mPlayServiceConnection;
     private AudioManager mAudioManager;
     private ComponentName mRemoteReceiver;
-    private ProgressDialog mProgressDialog;
     private boolean mIsPlayFragmentShow = false;
 
     @Override
@@ -81,9 +79,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
         }
 
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage(getString(R.string.loading));
-        mProgressDialog.show();
         bindService();
     }
 
@@ -108,11 +103,10 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     private void bindService() {
         Intent intent = new Intent();
         intent.setClass(this, PlayService.class);
-        mPlayServiceConnection = new PlayServiceConnection();
         bindService(intent, mPlayServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
-    private class PlayServiceConnection implements ServiceConnection {
+    private ServiceConnection mPlayServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mPlayService = ((PlayService.PlayBinder) service).getService();
@@ -123,15 +117,13 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         @Override
         public void onServiceDisconnected(ComponentName name) {
         }
-    }
+    };
 
     private void init() {
-        getPlayService().updateMusicList();
         setupView();
         updateWeather();
         registerReceiver();
         onChange(mPlayService.getPlayingMusic());
-        mProgressDialog.cancel();
     }
 
     @Override

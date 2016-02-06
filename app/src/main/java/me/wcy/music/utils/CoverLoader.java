@@ -3,6 +3,7 @@ package me.wcy.music.utils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.util.LruCache;
+import android.text.TextUtils;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -55,7 +56,7 @@ public class CoverLoader {
 
     public Bitmap loadThumbnail(String uri) {
         Bitmap bitmap;
-        if (uri == null) {
+        if (TextUtils.isEmpty(uri)) {
             bitmap = mThumbnailCache.get(KEY_NULL);
             if (bitmap == null) {
                 bitmap = BitmapFactory.decodeResource(MusicApplication.getInstance().getResources(), R.drawable.ic_default_cover);
@@ -67,7 +68,7 @@ public class CoverLoader {
                 try {
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inJustDecodeBounds = true; // 仅获取大小
-                    bitmap = BitmapFactory.decodeStream(new FileInputStream(uri), null, options);
+                    BitmapFactory.decodeStream(new FileInputStream(uri), null, options);
                     //压缩尺寸，避免卡顿
                     int inSampleSize = options.outHeight / (Utils.getScreenWidth() / 10);
                     if (inSampleSize <= 1) {
@@ -88,7 +89,7 @@ public class CoverLoader {
 
     public Bitmap loadBlur(String uri) {
         Bitmap bitmap;
-        if (uri == null) {
+        if (TextUtils.isEmpty(uri)) {
             bitmap = mBlurCache.get(KEY_NULL);
             if (bitmap == null) {
                 bitmap = BitmapFactory.decodeResource(MusicApplication.getInstance().getResources(), R.drawable.ic_play_page_default_bg);
@@ -111,7 +112,7 @@ public class CoverLoader {
 
     public Bitmap loadRound(String uri) {
         Bitmap bitmap;
-        if (uri == null) {
+        if (TextUtils.isEmpty(uri)) {
             bitmap = mRoundCache.get(KEY_NULL);
             if (bitmap == null) {
                 bitmap = BitmapFactory.decodeResource(MusicApplication.getInstance().getResources(), R.drawable.ic_play_page_default_cover);

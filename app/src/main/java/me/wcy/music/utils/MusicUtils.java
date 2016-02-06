@@ -68,15 +68,16 @@ public class MusicUtils {
     }
 
     private static String getCoverUri(Context context, long albumId) {
-        String result = "";
+        String uri = null;
         Cursor cursor = context.getContentResolver().query(
                 Uri.parse("content://media/external/audio/albums/" + albumId),
                 new String[]{"album_art"}, null, null, null);
         if (cursor != null) {
             cursor.moveToNext();
-            result = cursor.getString(0);
+            uri = cursor.getString(0);
             cursor.close();
         }
-        return result;
+        CoverLoader.getInstance().loadThumbnail(uri);
+        return uri;
     }
 }

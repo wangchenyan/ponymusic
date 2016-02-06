@@ -66,7 +66,6 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
     private List<JOnlineMusic> mMusicList;
     private OnlineMusicAdapter mAdapter;
     private PlayService mPlayService;
-    private PlayServiceConnection mPlayServiceConnection;
     private ProgressDialog mProgressDialog;
     private int mOffset = 0;
 
@@ -104,11 +103,10 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
     private void bindService() {
         Intent intent = new Intent();
         intent.setClass(this, PlayService.class);
-        mPlayServiceConnection = new PlayServiceConnection();
         bindService(intent, mPlayServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
-    private class PlayServiceConnection implements ServiceConnection {
+    private ServiceConnection mPlayServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mPlayService = ((PlayService.PlayBinder) service).getService();
@@ -118,7 +116,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         @Override
         public void onServiceDisconnected(ComponentName name) {
         }
-    }
+    };
 
     private void getMusic(final int offset) {
         OkHttpUtils.get().url(Constants.BASE_URL)
