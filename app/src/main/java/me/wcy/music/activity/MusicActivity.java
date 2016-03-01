@@ -7,10 +7,8 @@ import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -38,13 +36,17 @@ import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.CoverLoader;
 
 public class MusicActivity extends BaseActivity implements View.OnClickListener, OnPlayerEventListener,
-        NavigationView.OnNavigationItemSelectedListener {
+        NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
     @Bind(R.id.drawer_layout)
     DrawerLayout drawerLayout;
     @Bind(R.id.navigation_view)
     NavigationView navigationView;
-    @Bind(R.id.tabs)
-    TabLayout mTabLayout;
+    @Bind(R.id.iv_menu)
+    ImageView ivMenu;
+    @Bind(R.id.tv_local_music)
+    TextView tvLocalMusic;
+    @Bind(R.id.tv_online_music)
+    TextView tvOnlineMusic;
     @Bind(R.id.viewpager)
     ViewPager mViewPager;
     @Bind(R.id.fl_play_bar)
@@ -74,10 +76,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
-        }
 
         bindService();
     }
@@ -128,6 +126,10 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     protected void setListener() {
+        ivMenu.setOnClickListener(this);
+        tvLocalMusic.setOnClickListener(this);
+        tvOnlineMusic.setOnClickListener(this);
+        mViewPager.setOnPageChangeListener(this);
         flPlayBar.setOnClickListener(this);
         ivPlayBarPlay.setOnClickListener(this);
         ivPlayBarNext.setOnClickListener(this);
@@ -143,10 +145,10 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         mLocalMusicFragment = new LocalMusicFragment();
         mSongListFragment = new SongListFragment();
         FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
-        adapter.addFragment(mLocalMusicFragment, getString(R.string.local_music));
-        adapter.addFragment(mSongListFragment, getString(R.string.online_music));
+        adapter.addFragment(mLocalMusicFragment);
+        adapter.addFragment(mSongListFragment);
         mViewPager.setAdapter(adapter);
-        mTabLayout.setupWithViewPager(mViewPager);
+        tvLocalMusic.setSelected(true);
     }
 
     private void updateWeather() {
@@ -197,6 +199,15 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.iv_menu:
+                drawerLayout.openDrawer(GravityCompat.START);
+                break;
+            case R.id.tv_local_music:
+                mViewPager.setCurrentItem(0);
+                break;
+            case R.id.tv_online_music:
+                mViewPager.setCurrentItem(1);
+                break;
             case R.id.fl_play_bar:
                 showPlayingFragment();
                 break;
@@ -210,24 +221,34 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            drawerLayout.openDrawer(GravityCompat.START);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public boolean onNavigationItemSelected(final MenuItem item) {
         drawerLayout.closeDrawers();
-        new Handler().postDelayed(new Runnable() {
+        mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 item.setChecked(false);
             }
         }, 500);
         return NaviMenuExecutor.getInstance().setContext(this).onNavigationItemSelected(item);
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        if (position == 0) {
+            tvLocalMusic.setSelected(true);
+            tvOnlineMusic.setSelected(false);
+        } else {
+            tvLocalMusic.setSelected(false);
+            tvOnlineMusic.setSelected(true);
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
     }
 
     public void onPlay(Music music) {

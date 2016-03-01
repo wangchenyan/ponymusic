@@ -3,4 +3,4 @@
     style="?android:attr/progressBarStyleSmall"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:indeterminateDrawable="@drawable/ic_progress_bar_drawable" />
+    android:indeterminateDrawable="@drawable/progress_bar_drawable" />

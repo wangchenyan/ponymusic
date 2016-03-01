@@ -3,7 +3,7 @@
     android:id="@+id/fl_play_bar"
     android:layout_width="match_parent"
     android:layout_height="@dimen/play_bar_height"
-    android:background="@drawable/ic_play_bar_bg_selector">
+    android:background="@drawable/play_bar_bg_selector">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -53,7 +53,7 @@
             android:id="@+id/iv_play_bar_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_play_bar_btn_play_pause_selector" />
+            android:src="@drawable/play_bar_btn_play_pause_selector" />
 
         <ImageView
             android:id="@+id/iv_play_bar_next"
@@ -68,5 +68,5 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_gravity="bottom"
-        android:progressDrawable="@drawable/ic_progress_bar_style" />
+        android:progressDrawable="@drawable/progress_bar_style" />
 </FrameLayout>

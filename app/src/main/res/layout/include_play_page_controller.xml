@@ -27,7 +27,7 @@
             android:layout_weight="1"
             android:maxHeight="2dp"
             android:minHeight="2dp"
-            android:progressDrawable="@drawable/ic_seek_bar_progress_style"
+            android:progressDrawable="@drawable/seek_bar_progress_style"
             android:thumb="@drawable/ic_seek_bar_progress_btn" />
 
         <TextView
@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_play_mode_level_list" />
+            android:src="@drawable/play_mode_level_list" />
 
         <ImageView
             android:id="@+id/iv_prev"
@@ -56,14 +56,14 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/iv_play"
-            android:src="@drawable/ic_play_btn_prev_selector" />
+            android:src="@drawable/play_btn_prev_selector" />
 
         <ImageView
             android:id="@+id/iv_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:src="@drawable/ic_play_btn_play_pause_selector" />
+            android:src="@drawable/play_btn_play_pause_selector" />
 
         <ImageView
             android:id="@+id/iv_next"
@@ -71,6 +71,6 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/iv_play"
-            android:src="@drawable/ic_play_btn_next_selector" />
+            android:src="@drawable/play_btn_next_selector" />
     </RelativeLayout>
 </LinearLayout>

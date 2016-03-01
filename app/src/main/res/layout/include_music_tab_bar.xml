@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize">
+
+    <ImageView
+        android:id="@+id/iv_menu"
+        android:layout_width="?attr/actionBarSize"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@drawable/play_page_back_selector"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_menu" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_local_music"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/local_music"
+            android:textColor="@drawable/music_tab_bar_text_color_selector"
+            android:textSize="@dimen/text_size_common" />
+
+        <TextView
+            android:id="@+id/tv_online_music"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="30dp"
+            android:gravity="center"
+            android:text="@string/online_music"
+            android:textColor="@drawable/music_tab_bar_text_color_selector"
+            android:textSize="@dimen/text_size_common" />
+    </LinearLayout>
+</FrameLayout>

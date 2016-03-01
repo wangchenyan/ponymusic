@@ -82,7 +82,7 @@ public class SongListAdapter extends BaseAdapter {
         switch (itemViewType) {
             case TYPE_PROFILE:
                 if (convertView == null) {
-                    convertView = LayoutInflater.from(mContext).inflate(R.layout.fragment_song_list_item_profile, parent, false);
+                    convertView = LayoutInflater.from(mContext).inflate(R.layout.view_holder_fragment_song_list_profile, parent, false);
                     holderProfile = new ViewHolderProfile(convertView);
                     convertView.setTag(holderProfile);
                 } else {
@@ -92,7 +92,7 @@ public class SongListAdapter extends BaseAdapter {
                 break;
             case TYPE_MUSIC_LIST:
                 if (convertView == null) {
-                    convertView = LayoutInflater.from(mContext).inflate(R.layout.fragment_song_list_item, parent, false);
+                    convertView = LayoutInflater.from(mContext).inflate(R.layout.view_holder_fragment_song_list, parent, false);
                     holderMusicList = new ViewHolderMusicList(convertView);
                     convertView.setTag(holderMusicList);
                 } else {
