@@ -8,6 +8,8 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.squareup.leakcanary.LeakCanary;
 
 import me.wcy.music.executor.CrashHandler;
+import me.wcy.music.utils.Preferences;
+import me.wcy.music.utils.ToastUtils;
 
 /**
  * 自定义Application
@@ -20,6 +22,8 @@ public class MusicApplication extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
+        ToastUtils.setContext(this);
+        Preferences.setContext(this);
         CrashHandler.getInstance().init();
         LeakCanary.install(this);
         initImageLoader();

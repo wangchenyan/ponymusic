@@ -16,8 +16,6 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import butterknife.Bind;
 import me.wcy.music.R;
@@ -26,6 +24,7 @@ import me.wcy.music.model.JSplash;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.Constants;
 import me.wcy.music.utils.FileUtils;
+import me.wcy.music.utils.Preferences;
 import okhttp3.Call;
 
 public class SplashActivity extends BaseActivity {
@@ -39,7 +38,7 @@ public class SplashActivity extends BaseActivity {
 
         startService();
         initSplash();
-        downloadSplash();
+        updateSplash();
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -90,22 +89,11 @@ public class SplashActivity extends BaseActivity {
         if (!splashImg.exists()) {
             return;
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        String fileDate = sdf.format(new Date(splashImg.lastModified()));
-        String nowDate = sdf.format(new Date());
-        if (nowDate.compareTo(fileDate) > 0) {
-            splashImg.delete();
-            return;
-        }
         Bitmap bitmap = BitmapFactory.decodeFile(splashImg.getAbsolutePath());
         ivSplash.setImageBitmap(bitmap);
     }
 
-    private void downloadSplash() {
-        File splashImg = new File(FileUtils.getSplashDir(this), "splash.jpg");
-        if (splashImg.exists()) {
-            return;
-        }
+    private void updateSplash() {
         OkHttpUtils.get().url(Constants.SPLASH_URL).build()
                 .execute(new JsonCallback<JSplash>(JSplash.class) {
                     @Override
@@ -113,6 +101,11 @@ public class SplashActivity extends BaseActivity {
                         if (response == null || TextUtils.isEmpty(response.getImg())) {
                             return;
                         }
+                        String lastImgUrl = (String) Preferences.get(Preferences.SPLASH_URL, "");
+                        if (lastImgUrl.equals(response.getImg())) {
+                            return;
+                        }
+                        Preferences.put(Preferences.SPLASH_URL, response.getImg());
                         OkHttpUtils.get().url(response.getImg()).build()
                                 .execute(new FileCallBack(FileUtils.getSplashDir(SplashActivity.this), "splash.jpg") {
                                     @Override

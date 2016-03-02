@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import me.wcy.music.application.MusicApplication;
-
 /**
  * SharedPreferences工具类
  * Created by wcy on 2015/11/28.
@@ -13,10 +11,16 @@ import me.wcy.music.application.MusicApplication;
 public class Preferences {
     public static final String MUSIC_ID = "music_id";
     public static final String PLAY_MODE = "play_mode";
+    public static final String SPLASH_URL = "splash_url";
+
+    private static Context sContext;
+
+    public static void setContext(Context context) {
+        sContext = context.getApplicationContext();
+    }
 
     public static void put(String key, Object value) {
-        Context context = MusicApplication.getInstance().getApplicationContext();
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(sContext);
         SharedPreferences.Editor editor = sp.edit();
         if (value instanceof Boolean) {
             editor.putBoolean(key, (Boolean) value);
@@ -33,8 +37,7 @@ public class Preferences {
     }
 
     public static Object get(String key, Object defValue) {
-        Context context = MusicApplication.getInstance().getApplicationContext();
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(sContext);
         Object value = null;
         if (defValue instanceof Boolean) {
             value = sp.getBoolean(key, (Boolean) defValue);
