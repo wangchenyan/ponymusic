@@ -21,4 +21,5 @@ public class Constants {
     public static final String PARAM_SONG_ID = "songid";
     public static final String PARAM_TING_UID = "tinguid";
     public static final String PARAM_QUERY = "query";
+    public static final String SPLASH_URL = "http://news-at.zhihu.com/api/4/start-image/720*1184";
 }

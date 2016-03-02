@@ -1,5 +1,6 @@
 package me.wcy.music.utils;
 
+import android.content.Context;
 import android.os.Environment;
 import android.text.TextUtils;
 
@@ -31,6 +32,11 @@ public class FileUtils {
 
     public static String getLogDir() {
         String dir = getAppDir() + "Log" + File.separator;
+        return mkdirs(dir);
+    }
+
+    public static String getSplashDir(Context context) {
+        String dir = context.getFilesDir() + File.separator + "splash" + File.separator;
         return mkdirs(dir);
     }
 
