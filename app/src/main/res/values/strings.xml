@@ -66,5 +66,5 @@
         &lt;br&gt;&#160;&#160;&#160;&#160;为方便学习交流，本应用开放&lt;font color="#2196F3"&gt;&lt;a href=\'https://github.com/ChanWong21/PonyMusic\'&gt;源代码&lt;/a&gt;&lt;/font&gt;，&lt;font color="#F44336"&gt;请勿用于商业用途！&lt;/font&gt;
         &lt;br&gt;&#160;&#160;&#160;&#160;如有疑问请联系&lt;font color="#2196F3"&gt;&lt;a href=\'mailto:919247701@qq.com\'&gt;919247701@qq.com&lt;/a&gt;&lt;/font&gt;</string>
     <string name="baidu_declaration">&lt;font color="#2196F3"&gt;&lt;a href=\'http://music.baidu.com/doc/about\'&gt;查看更多&lt;/a&gt;&lt;/font&gt;</string>
-    <string name="copyright">Copyright © 2015–2016 SWUST</string>
+    <string name="copyright">Copyright © 2015-2016 SWUST</string>
 </resources>
