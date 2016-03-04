@@ -24,7 +24,7 @@
             android:gravity="center"
             android:text="@string/local_music"
             android:textColor="@drawable/music_tab_bar_text_color_selector"
-            android:textSize="@dimen/text_size_common" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/tv_online_music"
@@ -34,6 +34,6 @@
             android:gravity="center"
             android:text="@string/online_music"
             android:textColor="@drawable/music_tab_bar_text_color_selector"
-            android:textSize="@dimen/text_size_common" />
+            android:textSize="15sp" />
     </LinearLayout>
 </FrameLayout>
