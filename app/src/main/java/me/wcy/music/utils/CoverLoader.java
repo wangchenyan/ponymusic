@@ -77,6 +77,7 @@ public class CoverLoader {
                     options.inSampleSize = inSampleSize;
                     options.inJustDecodeBounds = false; // 获取bitmap
                     bitmap = BitmapFactory.decodeStream(new FileInputStream(uri), null, options);
+                    bitmap = bitmap == null ? loadThumbnail(null) : bitmap;
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                     bitmap = loadThumbnail(null);
