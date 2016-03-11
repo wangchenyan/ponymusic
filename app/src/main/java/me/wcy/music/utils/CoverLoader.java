@@ -143,7 +143,6 @@ public class CoverLoader {
         Bitmap bitmap = null;
         try {
             BitmapFactory.Options options = new BitmapFactory.Options();
-            // 仅获取大小
             options.inJustDecodeBounds = true;
             bitmap = BitmapFactory.decodeStream(new FileInputStream(uri), null, options);
             // 压缩尺寸，避免卡顿
@@ -152,7 +151,6 @@ public class CoverLoader {
                 inSampleSize = 1;
             }
             options.inSampleSize = inSampleSize;
-            // 获取bitmap
             options.inJustDecodeBounds = false;
             bitmap = BitmapFactory.decodeStream(new FileInputStream(uri), null, options);
         } catch (FileNotFoundException e) {
