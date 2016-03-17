@@ -229,7 +229,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
                 item.setChecked(false);
             }
         }, 500);
-        return NaviMenuExecutor.getInstance().setContext(this).onNavigationItemSelected(item);
+        return NaviMenuExecutor.onNavigationItemSelected(item, this);
     }
 
     @Override

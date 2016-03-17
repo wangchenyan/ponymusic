@@ -1,5 +1,6 @@
 package me.wcy.music.executor;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.MenuItem;
@@ -16,69 +17,55 @@ import me.wcy.music.service.PlayService;
  * Created by hzwangchenyan on 2016/1/14.
  */
 public class NaviMenuExecutor {
-    private MusicActivity mActivity;
 
-    public static NaviMenuExecutor getInstance() {
-        return SingletonHolder.sInstance;
-    }
-
-    public NaviMenuExecutor setContext(MusicActivity activity) {
-        mActivity = activity;
-        return this;
-    }
-
-    private NaviMenuExecutor() {
-    }
-
-    private static class SingletonHolder {
-        private static NaviMenuExecutor sInstance = new NaviMenuExecutor();
-    }
-
-    public boolean onNavigationItemSelected(MenuItem item) {
-        Intent intent;
+    public static boolean onNavigationItemSelected(MenuItem item, Context context) {
         switch (item.getItemId()) {
             case R.id.action_search:
-                intent = new Intent(mActivity, SearchMusicActivity.class);
-                mActivity.startActivity(intent);
+                startActivity(context, SearchMusicActivity.class);
                 return true;
             case R.id.action_setting:
-                intent = new Intent(mActivity, SettingActivity.class);
-                mActivity.startActivity(intent);
+                startActivity(context, SettingActivity.class);
                 return true;
             case R.id.action_share:
-                share();
+                share(context);
                 return true;
             case R.id.action_praise:
-                praise();
+                praise(context);
                 return true;
             case R.id.action_about:
-                intent = new Intent(mActivity, AboutActivity.class);
-                mActivity.startActivity(intent);
+                startActivity(context, AboutActivity.class);
                 return true;
             case R.id.action_exit:
-                exit();
+                exit(context);
                 return true;
         }
         return false;
     }
 
-    private void praise() {
-        Uri uri = Uri.parse("market://details?id=" + mActivity.getPackageName());
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        mActivity.startActivity(intent);
+    private static void startActivity(Context context, Class<?> cls) {
+        Intent intent = new Intent(context, cls);
+        context.startActivity(intent);
     }
 
-    private void share() {
+    private static void praise(Context context) {
+        Uri uri = Uri.parse("market://details?id=" + context.getPackageName());
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        context.startActivity(intent);
+    }
+
+    private static void share(Context context) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, mActivity.getString(R.string.share_app, mActivity.getString(R.string.app_name)));
-        mActivity.startActivity(Intent.createChooser(intent, mActivity.getString(R.string.share)));
+        intent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.share_app, context.getString(R.string.app_name)));
+        context.startActivity(Intent.createChooser(intent, context.getString(R.string.share)));
     }
 
-    private void exit() {
-        PlayService service = mActivity.getPlayService();
-        mActivity.finish();
-        service.stop();
-        mActivity = null;
+    private static void exit(Context context) {
+        if (context instanceof MusicActivity) {
+            MusicActivity activity = (MusicActivity) context;
+            PlayService service = activity.getPlayService();
+            activity.finish();
+            service.stop();
+        }
     }
 }
