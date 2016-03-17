@@ -149,7 +149,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void initPlayMode() {
-        int mode = (Integer) Preferences.get(Preferences.PLAY_MODE, 0);
+        int mode = Preferences.getPlayMode(0);
         ivMode.setImageLevel(mode);
     }
 
@@ -279,7 +279,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void switchPlayMode() {
-        PlayModeEnum mode = PlayModeEnum.valueOf((Integer) Preferences.get(Preferences.PLAY_MODE, 0));
+        PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode(0));
         switch (mode) {
             case LOOP:
                 mode = PlayModeEnum.SHUFFLE;
@@ -294,7 +294,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                 ToastUtils.show(R.string.mode_loop);
                 break;
         }
-        Preferences.put(Preferences.PLAY_MODE, mode.value());
+        Preferences.savePlayMode(mode.value());
         initPlayMode();
     }
 

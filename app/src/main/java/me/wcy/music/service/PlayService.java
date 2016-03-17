@@ -130,7 +130,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
             e.printStackTrace();
         }
 
-        Preferences.put(Preferences.MUSIC_ID, mPlayingMusic.getId());
+        Preferences.saveCurrentSongId(mPlayingMusic.getId());
         return mPlayingPosition;
     }
 
@@ -196,7 +196,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     }
 
     public int next() {
-        PlayModeEnum mode = PlayModeEnum.valueOf((Integer) Preferences.get(Preferences.PLAY_MODE, 0));
+        PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode(0));
         switch (mode) {
             case LOOP:
                 return play(mPlayingPosition + 1);
@@ -211,7 +211,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     }
 
     public int prev() {
-        PlayModeEnum mode = PlayModeEnum.valueOf((Integer) Preferences.get(Preferences.PLAY_MODE, 0));
+        PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode(0));
         switch (mode) {
             case LOOP:
                 return play(mPlayingPosition - 1);
@@ -266,7 +266,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
      */
     public void updatePlayingPosition() {
         int position = 0;
-        long id = (long) Preferences.get(Preferences.MUSIC_ID, 0L);
+        long id = Preferences.getCurrentSongId(-1);
         for (int i = 0; i < MusicUtils.getMusicList().size(); i++) {
             if (MusicUtils.getMusicList().get(i).getId() == id) {
                 position = i;
@@ -274,7 +274,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
             }
         }
         mPlayingPosition = position;
-        Preferences.put(Preferences.MUSIC_ID, MusicUtils.getMusicList().get(mPlayingPosition).getId());
+        Preferences.saveCurrentSongId(MusicUtils.getMusicList().get(mPlayingPosition).getId());
     }
 
     /**

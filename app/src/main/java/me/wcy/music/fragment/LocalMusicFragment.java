@@ -30,10 +30,10 @@ import butterknife.Bind;
 import me.wcy.music.R;
 import me.wcy.music.adapter.LocalMusicAdapter;
 import me.wcy.music.adapter.OnMoreClickListener;
+import me.wcy.music.application.MusicApplication;
 import me.wcy.music.enums.MusicTypeEnum;
 import me.wcy.music.model.Music;
 import me.wcy.music.utils.MusicUtils;
-import me.wcy.music.utils.Preferences;
 import me.wcy.music.utils.ToastUtils;
 
 /**
@@ -202,7 +202,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         @Override
         public void onReceive(Context context, Intent intent) {
             long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-            String title = (String) Preferences.get(String.valueOf(id), "");
+            String title = MusicApplication.getInstance().getDownloadList().get(id);
             if (TextUtils.isEmpty(title)) {
                 return;
             }

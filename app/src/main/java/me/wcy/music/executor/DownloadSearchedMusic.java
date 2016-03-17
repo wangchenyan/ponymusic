@@ -16,6 +16,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import me.wcy.music.R;
+import me.wcy.music.application.MusicApplication;
 import me.wcy.music.callback.JsonCallback;
 import me.wcy.music.model.JDownloadInfo;
 import me.wcy.music.model.JLrc;
@@ -44,7 +45,7 @@ public abstract class DownloadSearchedMusic {
     }
 
     private void checkNetwork() {
-        boolean mobileNetworkDownload = (boolean) Preferences.get(mContext.getString(R.string.setting_key_mobile_network_download), false);
+        boolean mobileNetworkDownload = Preferences.enableMobileNetworkDownload(false);
         if (NetworkUtils.isActiveNetworkMobile(mContext) && !mobileNetworkDownload) {
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setTitle(R.string.tips);
@@ -84,7 +85,7 @@ public abstract class DownloadSearchedMusic {
                         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
                         request.setAllowedOverRoaming(false);// 不允许漫游
                         long id = downloadManager.enqueue(request);
-                        Preferences.put(String.valueOf(id), mJSong.getSongname());
+                        MusicApplication.getInstance().getDownloadList().put(id, mJSong.getSongname());
                         onSuccess();
                     }
 

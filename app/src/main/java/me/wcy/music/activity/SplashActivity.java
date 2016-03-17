@@ -19,6 +19,7 @@ import java.io.File;
 
 import butterknife.Bind;
 import me.wcy.music.R;
+import me.wcy.music.application.MusicApplication;
 import me.wcy.music.callback.JsonCallback;
 import me.wcy.music.model.JSplash;
 import me.wcy.music.service.PlayService;
@@ -93,7 +94,7 @@ public class SplashActivity extends BaseActivity {
         ivSplash.setImageBitmap(bitmap);
     }
 
-    private void updateSplash() {
+    private static void updateSplash() {
         OkHttpUtils.get().url(Constants.SPLASH_URL).build()
                 .execute(new JsonCallback<JSplash>(JSplash.class) {
                     @Override
@@ -101,13 +102,13 @@ public class SplashActivity extends BaseActivity {
                         if (response == null || TextUtils.isEmpty(response.getImg())) {
                             return;
                         }
-                        String lastImgUrl = (String) Preferences.get(Preferences.SPLASH_URL, "");
+                        String lastImgUrl = Preferences.getSplashUrl("");
                         if (lastImgUrl.equals(response.getImg())) {
                             return;
                         }
-                        Preferences.put(Preferences.SPLASH_URL, response.getImg());
+                        Preferences.saveSplashUrl(response.getImg());
                         OkHttpUtils.get().url(response.getImg()).build()
-                                .execute(new FileCallBack(FileUtils.getSplashDir(SplashActivity.this), "splash.jpg") {
+                                .execute(new FileCallBack(FileUtils.getSplashDir(MusicApplication.getInstance().getApplicationContext()), "splash.jpg") {
                                     @Override
                                     public void inProgress(float progress) {
                                     }

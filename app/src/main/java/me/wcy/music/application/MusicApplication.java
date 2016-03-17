@@ -2,6 +2,7 @@ package me.wcy.music.application;
 
 import android.app.Application;
 import android.content.pm.ApplicationInfo;
+import android.support.v4.util.LongSparseArray;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -16,12 +17,13 @@ import me.wcy.music.utils.ToastUtils;
  * Created by wcy on 2015/11/27.
  */
 public class MusicApplication extends Application {
-    private static MusicApplication instance;
+    private static MusicApplication sInstance;
+    private LongSparseArray<String> mDownloadList = new LongSparseArray<>();
 
     @Override
     public void onCreate() {
         super.onCreate();
-        instance = this;
+        sInstance = this;
         ToastUtils.setContext(this);
         Preferences.setContext(this);
         CrashHandler.getInstance().init();
@@ -30,12 +32,16 @@ public class MusicApplication extends Application {
     }
 
     public static MusicApplication getInstance() {
-        return instance;
+        return sInstance;
     }
 
     public static boolean isDebugMode() {
         ApplicationInfo info = getInstance().getApplicationInfo();
         return (info.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+    }
+
+    public LongSparseArray<String> getDownloadList() {
+        return mDownloadList;
     }
 
     private void initImageLoader() {
