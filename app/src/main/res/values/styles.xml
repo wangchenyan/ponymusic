@@ -14,6 +14,6 @@
     </style>
 
     <style name="AppTheme.Setting" parent="AppBaseTheme">
-        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorAccent">?attr/colorPrimary</item>
     </style>
 </resources>
