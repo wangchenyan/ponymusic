@@ -23,7 +23,7 @@
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="5916722f5a7ad97d6253c3cec57a317e" />
+            android:value="95d96be4e4a8db30b0442e575867ca3c" />
 
         <service android:name=".service.PlayService" />
 
