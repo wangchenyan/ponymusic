@@ -103,7 +103,7 @@ public class CoverLoader {
                 if (bitmap == null) {
                     bitmap = loadBlur(null);
                 } else {
-                    bitmap = ImageUtils.boxBlurFilter(bitmap);
+                    bitmap = ImageUtils.stackBlur(bitmap, ImageUtils.BLUR_RADIUS_SONG);
                 }
                 mBlurCache.put(uri, bitmap);
             }
