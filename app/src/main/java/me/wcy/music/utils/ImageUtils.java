@@ -2,18 +2,21 @@ package me.wcy.music.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+
+import me.wcy.music.R;
 
 /**
  * 图像工具类
  * Created by wcy on 2015/11/29.
  */
 public class ImageUtils {
-    public static final int BLUR_RADIUS_SONG = 50;
+    public static final int BLUR_RADIUS = 50;
 
     public static Bitmap stackBlur(Bitmap sentBitmap, int radius) {
 
@@ -273,23 +276,13 @@ public class ImageUtils {
         return target;
     }
 
-    public static int getBasicColor(Bitmap source) {
-        long R = 0, G = 0, B = 0;
-        int height = source.getHeight();
-        int width = source.getWidth();
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                int pixelColor = source.getPixel(x, y);
-                R += Color.red(pixelColor);
-                G += Color.green(pixelColor);
-                B += Color.blue(pixelColor);
-            }
-        }
-
-        R /= height * width;
-        G /= height * width;
-        B /= height * width;
-        return Color.rgb((int) R, (int) G, (int) B);
+    public static DisplayImageOptions getDefaultDisplayImageOptions() {
+        return new DisplayImageOptions.Builder()
+                .showStubImage(R.drawable.ic_default_cover)
+                .showImageForEmptyUri(R.drawable.ic_default_cover)
+                .showImageOnFail(R.drawable.ic_default_cover)
+                .cacheInMemory(true)
+                .cacheOnDisc(true)
+                .build();
     }
 }

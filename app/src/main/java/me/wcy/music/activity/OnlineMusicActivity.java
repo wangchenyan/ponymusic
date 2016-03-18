@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
@@ -47,7 +49,7 @@ import me.wcy.music.utils.Extras;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.ImageUtils;
 import me.wcy.music.utils.ToastUtils;
-import me.wcy.music.utils.Utils;
+import me.wcy.music.utils.ScreenUtils;
 import me.wcy.music.utils.ViewUtils;
 import me.wcy.music.widget.AutoLoadListView;
 import me.wcy.music.widget.OnLoadListener;
@@ -82,6 +84,8 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
 
     private void init() {
         vHeader = LayoutInflater.from(this).inflate(R.layout.activity_online_music_list_header, null);
+        AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dp2px(150));
+        vHeader.setLayoutParams(params);
         lvOnlineMusic.addHeaderView(vHeader, null, false);
         mMusicList = new ArrayList<>();
         mAdapter = new OnlineMusicAdapter(this, mMusicList);
@@ -198,6 +202,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
     }
 
     private void initHeader() {
+        final ImageView ivHeaderBg = (ImageView) vHeader.findViewById(R.id.iv_header_bg);
         final ImageView ivCover = (ImageView) vHeader.findViewById(R.id.iv_cover);
         TextView tvTitle = (TextView) vHeader.findViewById(R.id.tv_title);
         TextView tvUpdateDate = (TextView) vHeader.findViewById(R.id.tv_update_date);
@@ -207,11 +212,11 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         tvComment.setText(mJOnlineMusicList.getBillboard().getComment());
         ImageSize imageSize = new ImageSize(200, 200);
         ImageLoader.getInstance().loadImage(mJOnlineMusicList.getBillboard().getPic_s640(), imageSize,
-                Utils.getDefaultDisplayImageOptions(), new SimpleImageLoadingListener() {
+                ImageUtils.getDefaultDisplayImageOptions(), new SimpleImageLoadingListener() {
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                         ivCover.setImageBitmap(loadedImage);
-                        vHeader.setBackgroundColor(ImageUtils.getBasicColor(loadedImage));
+                        ivHeaderBg.setImageBitmap(ImageUtils.stackBlur(loadedImage, ImageUtils.BLUR_RADIUS));
                     }
                 });
     }

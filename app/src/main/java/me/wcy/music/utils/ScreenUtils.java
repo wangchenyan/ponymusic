@@ -4,16 +4,13 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.WindowManager;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-
-import me.wcy.music.R;
 import me.wcy.music.application.MusicApplication;
 
 /**
  * 工具类
  * Created by hzwangchenyan on 2016/1/6.
  */
-public class Utils {
+public class ScreenUtils {
     public static int getScreenWidth() {
         WindowManager wm = (WindowManager) MusicApplication.getInstance().getSystemService(Context.WINDOW_SERVICE);
         return wm.getDefaultDisplay().getWidth();
@@ -43,27 +40,20 @@ public class Utils {
         }
     }
 
-    public static DisplayImageOptions getDefaultDisplayImageOptions() {
-        return new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.ic_default_cover)
-                .showImageForEmptyUri(R.drawable.ic_default_cover)
-                .showImageOnFail(R.drawable.ic_default_cover)
-                .cacheInMemory(true)
-                .cacheOnDisc(true)
-                .build();
-    }
-
-    public static int dp2px(Context context, float dpValue) {
+    public static int dp2px(float dpValue) {
+        Context context = MusicApplication.getInstance().getApplicationContext();
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
 
-    public static int px2dp(Context context, float pxValue) {
+    public static int px2dp(float pxValue) {
+        Context context = MusicApplication.getInstance().getApplicationContext();
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
     }
 
-    public static int sp2px(Context context, float spValue) {
+    public static int sp2px(float spValue) {
+        Context context = MusicApplication.getInstance().getApplicationContext();
         final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
     }

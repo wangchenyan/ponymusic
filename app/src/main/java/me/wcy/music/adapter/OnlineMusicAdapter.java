@@ -16,7 +16,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import me.wcy.music.R;
 import me.wcy.music.model.JOnlineMusic;
-import me.wcy.music.utils.Utils;
+import me.wcy.music.utils.ImageUtils;
+import me.wcy.music.utils.ScreenUtils;
 
 /**
  * 在线音乐列表适配器
@@ -58,9 +59,9 @@ public class OnlineMusicAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         JOnlineMusic jOnlineMusic = mData.get(position);
-        ImageLoader.getInstance().displayImage(jOnlineMusic.getPic_small(), holder.ivCover, Utils.getDefaultDisplayImageOptions());
+        ImageLoader.getInstance().displayImage(jOnlineMusic.getPic_small(), holder.ivCover, ImageUtils.getDefaultDisplayImageOptions());
         holder.tvTitle.setText(jOnlineMusic.getTitle());
-        String artist = Utils.getArtistAndAlbum(jOnlineMusic.getArtist_name(), jOnlineMusic.getAlbum_title());
+        String artist = ScreenUtils.getArtistAndAlbum(jOnlineMusic.getArtist_name(), jOnlineMusic.getAlbum_title());
         holder.tvArtist.setText(artist);
         holder.ivMore.setOnClickListener(new View.OnClickListener() {
             @Override

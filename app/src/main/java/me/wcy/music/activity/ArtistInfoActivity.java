@@ -23,7 +23,7 @@ import me.wcy.music.enums.LoadStateEnum;
 import me.wcy.music.model.JArtistInfo;
 import me.wcy.music.utils.Constants;
 import me.wcy.music.utils.Extras;
-import me.wcy.music.utils.Utils;
+import me.wcy.music.utils.ScreenUtils;
 import me.wcy.music.utils.ViewUtils;
 import okhttp3.Call;
 
@@ -107,7 +107,7 @@ public class ArtistInfoActivity extends BaseActivity {
             tvName.setText(getString(R.string.artist_info_name, name));
             tvName.setTextColor(textColor);
             tvName.setTextSize(textSize);
-            tvName.setPadding(0, Utils.dp2px(this, 10), 0, 0);
+            tvName.setPadding(0, ScreenUtils.dp2px(10), 0, 0);
             llArtistInfoContainer.addView(tvName, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         }
         if (!TextUtils.isEmpty(country)) {
@@ -115,7 +115,7 @@ public class ArtistInfoActivity extends BaseActivity {
             tvCountry.setText(getString(R.string.artist_info_country, country));
             tvCountry.setTextColor(textColor);
             tvCountry.setTextSize(textSize);
-            tvCountry.setPadding(0, Utils.dp2px(this, 10), 0, 0);
+            tvCountry.setPadding(0, ScreenUtils.dp2px(10), 0, 0);
             llArtistInfoContainer.addView(tvCountry, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         }
         if (!TextUtils.isEmpty(constellation) && !constellation.equals("未知")) {
@@ -123,7 +123,7 @@ public class ArtistInfoActivity extends BaseActivity {
             tvConstellation.setText(getString(R.string.artist_info_constellation, constellation));
             tvConstellation.setTextColor(textColor);
             tvConstellation.setTextSize(textSize);
-            tvConstellation.setPadding(0, Utils.dp2px(this, 10), 0, 0);
+            tvConstellation.setPadding(0, ScreenUtils.dp2px(10), 0, 0);
             llArtistInfoContainer.addView(tvConstellation, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         }
         if (stature != 0f) {
@@ -131,7 +131,7 @@ public class ArtistInfoActivity extends BaseActivity {
             tvStature.setText(getString(R.string.artist_info_stature, stature));
             tvStature.setTextColor(textColor);
             tvStature.setTextSize(textSize);
-            tvStature.setPadding(0, Utils.dp2px(this, 10), 0, 0);
+            tvStature.setPadding(0, ScreenUtils.dp2px(10), 0, 0);
             llArtistInfoContainer.addView(tvStature, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         }
         if (weight != 0f) {
@@ -139,7 +139,7 @@ public class ArtistInfoActivity extends BaseActivity {
             tvWeight.setText(getString(R.string.artist_info_weight, weight));
             tvWeight.setTextColor(textColor);
             tvWeight.setTextSize(textSize);
-            tvWeight.setPadding(0, Utils.dp2px(this, 10), 0, 0);
+            tvWeight.setPadding(0, ScreenUtils.dp2px(10), 0, 0);
             llArtistInfoContainer.addView(tvWeight, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         }
         if (!TextUtils.isEmpty(birth) && !birth.equals("0000-00-00")) {
@@ -147,7 +147,7 @@ public class ArtistInfoActivity extends BaseActivity {
             tvBirth.setText(getString(R.string.artist_info_birth, birth));
             tvBirth.setTextColor(textColor);
             tvBirth.setTextSize(textSize);
-            tvBirth.setPadding(0, Utils.dp2px(this, 10), 0, 0);
+            tvBirth.setPadding(0, ScreenUtils.dp2px(10), 0, 0);
             llArtistInfoContainer.addView(tvBirth, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         }
         if (!TextUtils.isEmpty(intro)) {
@@ -155,7 +155,7 @@ public class ArtistInfoActivity extends BaseActivity {
             tvIntro.setText(getString(R.string.artist_info_intro, intro));
             tvIntro.setTextColor(textColor);
             tvIntro.setTextSize(textSize);
-            tvIntro.setPadding(0, Utils.dp2px(this, 10), 0, 0);
+            tvIntro.setPadding(0, ScreenUtils.dp2px(10), 0, 0);
             llArtistInfoContainer.addView(tvIntro, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         }
         if (!TextUtils.isEmpty(url)) {
@@ -163,7 +163,7 @@ public class ArtistInfoActivity extends BaseActivity {
             tvUrl.setText(Html.fromHtml(getString(R.string.artist_info_url, url)));
             tvUrl.setMovementMethod(LinkMovementMethod.getInstance());
             tvUrl.setTextSize(textSize);
-            tvUrl.setPadding(0, Utils.dp2px(this, 10), 0, 0);
+            tvUrl.setPadding(0, ScreenUtils.dp2px(10), 0, 0);
             tvUrl.setGravity(Gravity.CENTER);
             llArtistInfoContainer.addView(tvUrl, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         }

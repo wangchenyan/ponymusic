@@ -20,7 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import me.wcy.music.R;
-import me.wcy.music.utils.Utils;
+import me.wcy.music.utils.ScreenUtils;
 
 /**
  * 歌词
@@ -58,8 +58,8 @@ public class LrcView extends View {
      */
     private void init(AttributeSet attrs) {
         TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.LrcView);
-        mTextSize = ta.getDimension(R.styleable.LrcView_textSize, Utils.sp2px(getContext(), 16));
-        mDividerHeight = ta.getDimension(R.styleable.LrcView_dividerHeight, Utils.dp2px(getContext(), 24));
+        mTextSize = ta.getDimension(R.styleable.LrcView_textSize, ScreenUtils.sp2px(16));
+        mDividerHeight = ta.getDimension(R.styleable.LrcView_dividerHeight, ScreenUtils.dp2px(24));
         mAnimationDuration = ta.getInt(R.styleable.LrcView_animationDuration, 1000);
         mAnimationDuration = mAnimationDuration < 0 ? 1000 : mAnimationDuration;
         int normalColor = ta.getColor(R.styleable.LrcView_normalTextColor, 0xFFFFFFFF);

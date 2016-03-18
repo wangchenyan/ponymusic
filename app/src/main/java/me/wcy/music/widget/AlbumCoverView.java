@@ -14,7 +14,7 @@ import android.view.View;
 import me.wcy.music.R;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.ImageUtils;
-import me.wcy.music.utils.Utils;
+import me.wcy.music.utils.ScreenUtils;
 
 /**
  * 专辑封面
@@ -71,10 +71,10 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
     private void init() {
         mHandler = new Handler();
         mDiscBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_play_page_disc);
-        mDiscBitmap = ImageUtils.resizeImage(mDiscBitmap, (int) (Utils.getScreenWidth() * 0.75), (int) (Utils.getScreenWidth() * 0.75));
+        mDiscBitmap = ImageUtils.resizeImage(mDiscBitmap, (int) (ScreenUtils.getScreenWidth() * 0.75), (int) (ScreenUtils.getScreenWidth() * 0.75));
         mCoverBitmap = CoverLoader.getInstance().loadRound(null);
         mNeedleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_play_page_needle);
-        mNeedleBitmap = ImageUtils.resizeImage(mNeedleBitmap, (int) (Utils.getScreenWidth() * 0.25), (int) (Utils.getScreenWidth() * 0.375));
+        mNeedleBitmap = ImageUtils.resizeImage(mNeedleBitmap, (int) (ScreenUtils.getScreenWidth() * 0.25), (int) (ScreenUtils.getScreenWidth() * 0.375));
         mTopLine = getResources().getDrawable(R.drawable.play_page_cover_top_line_shape);
         mCoverBorder = getResources().getDrawable(R.drawable.play_page_cover_border_shape);
         mDiscMatrix = new Matrix();
@@ -105,8 +105,8 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
             mCoverDY = getTop() + discOffsetY + (mDiscBitmap.getHeight() - mCoverBitmap.getHeight()) / 2;
             mNeedleDX = getWidth() / 2 - mNeedleBitmap.getWidth() / 6;
             mNeedleDY = getTop() - mNeedleBitmap.getWidth() / 6;
-            mTopLineHeight = Utils.dp2px(getContext(), 1);
-            mCoverBorderWidth = Utils.dp2px(getContext(), 1);
+            mTopLineHeight = ScreenUtils.dp2px(1);
+            mCoverBorderWidth = ScreenUtils.dp2px(1);
         }
         // 设置旋转角度和圆心
         mDiscMatrix.setRotate(mDiscRotation, mDiscPX, mDiscPY);

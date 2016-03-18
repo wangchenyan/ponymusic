@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import me.wcy.music.R;
-import me.wcy.music.utils.Utils;
+import me.wcy.music.utils.ScreenUtils;
 
 /**
  * 播放页Indicator
@@ -36,7 +36,7 @@ public class IndicatorLayout extends LinearLayout {
         for (int i = 0; i < count; i++) {
             ImageView imageView = new ImageView(getContext());
             imageView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-            int padding = Utils.dp2px(getContext(), 3);
+            int padding = ScreenUtils.dp2px(3);
             imageView.setPadding(padding, 0, padding, 0);
             imageView.setImageResource(i == 0 ? R.drawable.ic_play_page_indicator_selected : R.drawable.ic_play_page_indicator_unselected);
             addView(imageView);

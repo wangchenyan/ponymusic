@@ -26,7 +26,7 @@ import me.wcy.music.utils.Actions;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.MusicUtils;
 import me.wcy.music.utils.Preferences;
-import me.wcy.music.utils.Utils;
+import me.wcy.music.utils.ScreenUtils;
 
 /**
  * 音乐播放后台服务
@@ -282,7 +282,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
      */
     private void updateNotification(Music music) {
         String title = music.getTitle();
-        String subtitle = Utils.getArtistAndAlbum(music.getArtist(), music.getAlbum());
+        String subtitle = ScreenUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum());
         Bitmap bitmap;
         if (music.getType() == MusicTypeEnum.LOCAL) {
             bitmap = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());

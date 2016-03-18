@@ -70,7 +70,7 @@ public class CoverLoader {
                     options.inJustDecodeBounds = true; // 仅获取大小
                     BitmapFactory.decodeStream(new FileInputStream(uri), null, options);
                     //压缩尺寸，避免卡顿
-                    int inSampleSize = options.outHeight / (Utils.getScreenWidth() / 10);
+                    int inSampleSize = options.outHeight / (ScreenUtils.getScreenWidth() / 10);
                     if (inSampleSize <= 1) {
                         inSampleSize = 1;
                     }
@@ -103,7 +103,7 @@ public class CoverLoader {
                 if (bitmap == null) {
                     bitmap = loadBlur(null);
                 } else {
-                    bitmap = ImageUtils.stackBlur(bitmap, ImageUtils.BLUR_RADIUS_SONG);
+                    bitmap = ImageUtils.stackBlur(bitmap, ImageUtils.BLUR_RADIUS);
                 }
                 mBlurCache.put(uri, bitmap);
             }
@@ -117,7 +117,7 @@ public class CoverLoader {
             bitmap = mRoundCache.get(KEY_NULL);
             if (bitmap == null) {
                 bitmap = BitmapFactory.decodeResource(MusicApplication.getInstance().getResources(), R.drawable.ic_play_page_default_cover);
-                bitmap = ImageUtils.resizeImage(bitmap, Utils.getScreenWidth() / 2, Utils.getScreenWidth() / 2);
+                bitmap = ImageUtils.resizeImage(bitmap, ScreenUtils.getScreenWidth() / 2, ScreenUtils.getScreenWidth() / 2);
                 mRoundCache.put(KEY_NULL, bitmap);
             }
         } else {
@@ -127,7 +127,7 @@ public class CoverLoader {
                 if (bitmap == null) {
                     bitmap = loadRound(null);
                 } else {
-                    bitmap = ImageUtils.resizeImage(bitmap, Utils.getScreenWidth() / 2, Utils.getScreenWidth() / 2);
+                    bitmap = ImageUtils.resizeImage(bitmap, ScreenUtils.getScreenWidth() / 2, ScreenUtils.getScreenWidth() / 2);
                     bitmap = ImageUtils.createCircleImage(bitmap);
                 }
                 mRoundCache.put(uri, bitmap);
@@ -146,7 +146,7 @@ public class CoverLoader {
             options.inJustDecodeBounds = true;
             bitmap = BitmapFactory.decodeStream(new FileInputStream(uri), null, options);
             // 压缩尺寸，避免卡顿
-            int inSampleSize = options.outWidth / (Utils.getScreenWidth() / 2);
+            int inSampleSize = options.outWidth / (ScreenUtils.getScreenWidth() / 2);
             if (inSampleSize <= 0) {
                 inSampleSize = 1;
             }

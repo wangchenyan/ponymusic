@@ -21,7 +21,7 @@ import me.wcy.music.model.JOnlineMusic;
 import me.wcy.music.model.JOnlineMusicList;
 import me.wcy.music.model.SongListInfo;
 import me.wcy.music.utils.Constants;
-import me.wcy.music.utils.Utils;
+import me.wcy.music.utils.ImageUtils;
 import okhttp3.Call;
 
 /**
@@ -134,7 +134,7 @@ public class SongListAdapter extends BaseAdapter {
                             } else {
                                 songListInfo.setMusic3("");
                             }
-                            ImageLoader.getInstance().displayImage(songListInfo.getCoverUrl(), holderMusicList.ivCover, Utils.getDefaultDisplayImageOptions());
+                            ImageLoader.getInstance().displayImage(songListInfo.getCoverUrl(), holderMusicList.ivCover, ImageUtils.getDefaultDisplayImageOptions());
                             holderMusicList.tvMusic1.setText(songListInfo.getMusic1());
                             holderMusicList.tvMusic2.setText(songListInfo.getMusic2());
                             holderMusicList.tvMusic3.setText(songListInfo.getMusic3());
@@ -145,7 +145,7 @@ public class SongListAdapter extends BaseAdapter {
                         }
                     });
         } else {
-            ImageLoader.getInstance().displayImage(songListInfo.getCoverUrl(), holderMusicList.ivCover, Utils.getDefaultDisplayImageOptions());
+            ImageLoader.getInstance().displayImage(songListInfo.getCoverUrl(), holderMusicList.ivCover, ImageUtils.getDefaultDisplayImageOptions());
             holderMusicList.tvMusic1.setText(songListInfo.getMusic1());
             holderMusicList.tvMusic2.setText(songListInfo.getMusic2());
             holderMusicList.tvMusic3.setText(songListInfo.getMusic3());
