@@ -321,7 +321,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
                 Bitmap cover = ImageUtils.resizeImage(music.getCover(), ScreenUtils.getScreenWidth() / 2, ScreenUtils.getScreenWidth() / 2);
                 cover = ImageUtils.createCircleImage(cover);
                 mAlbumCoverView.setCoverBitmap(cover);
-                Bitmap bg = ImageUtils.stackBlur(music.getCover(), ImageUtils.BLUR_RADIUS);
+                Bitmap bg = ImageUtils.blur(music.getCover(), ImageUtils.BLUR_RADIUS);
                 ivPlayingBg.setImageBitmap(bg);
             }
         }

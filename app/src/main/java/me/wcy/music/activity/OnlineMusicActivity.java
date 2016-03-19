@@ -216,7 +216,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                         ivCover.setImageBitmap(loadedImage);
-                        ivHeaderBg.setImageBitmap(ImageUtils.stackBlur(loadedImage, ImageUtils.BLUR_RADIUS));
+                        ivHeaderBg.setImageBitmap(ImageUtils.blur(loadedImage, ImageUtils.BLUR_RADIUS));
                     }
                 });
     }

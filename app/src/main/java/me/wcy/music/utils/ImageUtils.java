@@ -18,7 +18,7 @@ import me.wcy.music.R;
 public class ImageUtils {
     public static final int BLUR_RADIUS = 50;
 
-    public static Bitmap stackBlur(Bitmap sentBitmap, int radius) {
+    public static Bitmap blur(Bitmap sentBitmap, int radius) {
 
         // Stack Blur v1.0 from
         // http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html
