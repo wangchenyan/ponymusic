@@ -2,16 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorPrimary"
-    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <include layout="@layout/include_app_bar" />
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?android:attr/windowBackground">
+        android:layout_height="match_parent">
 
         <ListView
             android:id="@+id/lv_search_music_list"

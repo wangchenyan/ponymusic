@@ -63,7 +63,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.SearchMusicActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.AboutActivity"
             android:label="@string/menu_about"
