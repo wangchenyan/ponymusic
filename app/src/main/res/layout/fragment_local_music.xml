@@ -7,8 +7,7 @@
         android:id="@+id/lv_local_music"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp" />
+        android:divider="@null" />
 
     <TextView
         android:id="@+id/tv_empty"
