@@ -1,6 +1,7 @@
 package me.wcy.music.service;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
@@ -24,9 +25,9 @@ import me.wcy.music.model.Music;
 import me.wcy.music.receiver.NoisyAudioStreamReceiver;
 import me.wcy.music.utils.Actions;
 import me.wcy.music.utils.CoverLoader;
+import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.MusicUtils;
 import me.wcy.music.utils.Preferences;
-import me.wcy.music.utils.ScreenUtils;
 
 /**
  * 音乐播放后台服务
@@ -37,6 +38,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     private static final long TIME_UPDATE = 100L;
     private MediaPlayer mPlayer;
     private OnPlayerEventListener mListener;
+    private NotificationManager mNotificationManager;
     private AudioManager mAudioManager;
     private IntentFilter mNoisyFilter;
     private NoisyAudioStreamReceiver mNoisyReceiver;
@@ -51,6 +53,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     public void onCreate() {
         super.onCreate();
         mPlayer = new MediaPlayer();
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         mNoisyFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
         mNoisyReceiver = new NoisyAudioStreamReceiver();
@@ -175,7 +178,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         mPlayer.pause();
         mIsPause = true;
         mHandler.removeCallbacks(mBackgroundRunnable);
-        cancelNotification();
+        cancelNotification(mPlayingMusic);
         mAudioManager.abandonAudioFocus(this);
         unregisterReceiver(mNoisyReceiver);
         if (mListener != null) {
@@ -281,8 +284,18 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
      * 更新通知栏
      */
     private void updateNotification(Music music) {
+        mNotificationManager.cancel(NOTIFICATION_ID);
+        startForeground(NOTIFICATION_ID, createNotification(music));
+    }
+
+    private void cancelNotification(Music music) {
+        stopForeground(true);
+        mNotificationManager.notify(NOTIFICATION_ID, createNotification(music));
+    }
+
+    private Notification createNotification(Music music) {
         String title = music.getTitle();
-        String subtitle = ScreenUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum());
+        String subtitle = FileUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum());
         Bitmap bitmap;
         if (music.getType() == MusicTypeEnum.LOCAL) {
             bitmap = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
@@ -296,14 +309,8 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
                 .setContentTitle(title)
                 .setContentText(subtitle)
                 .setSmallIcon(R.drawable.ic_notification)
-                .setLargeIcon(bitmap)
-                .setOngoing(true);
-        Notification notification = builder.getNotification();
-        startForeground(NOTIFICATION_ID, notification);
-    }
-
-    private void cancelNotification() {
-        stopForeground(true);
+                .setLargeIcon(bitmap);
+        return builder.getNotification();
     }
 
     private Runnable mBackgroundRunnable = new Runnable() {
@@ -340,6 +347,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         mPlayer.reset();
         mPlayer.release();
         mPlayer = null;
+        mNotificationManager.cancel(NOTIFICATION_ID);
         stopSelf();
     }
 

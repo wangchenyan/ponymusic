@@ -1,7 +1,6 @@
 package me.wcy.music.utils;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.WindowManager;
 
 import me.wcy.music.application.MusicApplication;
@@ -26,18 +25,6 @@ public class ScreenUtils {
             result = context.getResources().getDimensionPixelSize(resourceId);
         }
         return result;
-    }
-
-    public static String getArtistAndAlbum(String artist, String album) {
-        if (TextUtils.isEmpty(artist) && TextUtils.isEmpty(album)) {
-            return "";
-        } else if (!TextUtils.isEmpty(artist) && TextUtils.isEmpty(album)) {
-            return artist;
-        } else if (TextUtils.isEmpty(artist) && !TextUtils.isEmpty(album)) {
-            return album;
-        } else {
-            return artist + " - " + album;
-        }
     }
 
     public static int dp2px(float dpValue) {

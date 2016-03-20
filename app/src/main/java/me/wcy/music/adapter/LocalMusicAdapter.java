@@ -17,8 +17,8 @@ import me.wcy.music.enums.MusicTypeEnum;
 import me.wcy.music.model.Music;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.CoverLoader;
+import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.MusicUtils;
-import me.wcy.music.utils.ScreenUtils;
 
 /**
  * 本地音乐列表适配器
@@ -67,7 +67,7 @@ public class LocalMusicAdapter extends BaseAdapter {
         Bitmap cover = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
         holder.ivCover.setImageBitmap(cover);
         holder.tvTitle.setText(music.getTitle());
-        String artist = ScreenUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum());
+        String artist = FileUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum());
         holder.tvArtist.setText(artist);
         holder.ivMore.setOnClickListener(new View.OnClickListener() {
             @Override
