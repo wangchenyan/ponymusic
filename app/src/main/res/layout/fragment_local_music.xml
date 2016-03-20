@@ -7,7 +7,9 @@
         android:id="@+id/lv_local_music"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@null" />
+        android:clipToPadding="false"
+        android:divider="@null"
+        android:paddingBottom="@dimen/play_bar_height" />
 
     <TextView
         android:id="@+id/tv_empty"

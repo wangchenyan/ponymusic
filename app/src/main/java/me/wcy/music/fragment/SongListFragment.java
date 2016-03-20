@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -49,7 +48,6 @@ public class SongListFragment extends BaseFragment implements AdapterView.OnItem
             ViewUtils.changeViewState(lvSongList, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
             return;
         }
-        addEmptyFooter();
         mData = new ArrayList<>();
         String[] titles = getResources().getStringArray(R.array.online_music_list_title);
         String[] types = getResources().getStringArray(R.array.online_music_list_type);
@@ -66,14 +64,6 @@ public class SongListFragment extends BaseFragment implements AdapterView.OnItem
     @Override
     protected void setListener() {
         lvSongList.setOnItemClickListener(this);
-    }
-
-    private void addEmptyFooter() {
-        View vFooter = new View(getActivity());
-        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                (int) getResources().getDimension(R.dimen.play_bar_height));
-        vFooter.setLayoutParams(layoutParams);
-        lvSongList.addFooterView(vFooter, null, false);
     }
 
     @Override
