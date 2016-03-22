@@ -34,6 +34,7 @@ import me.wcy.music.receiver.RemoteControlReceiver;
 import me.wcy.music.service.OnPlayerEventListener;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.CoverLoader;
+import me.wcy.music.utils.Extras;
 
 public class MusicActivity extends BaseActivity implements View.OnClickListener, OnPlayerEventListener,
         NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
@@ -90,12 +91,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                showPlayingFragment();
-            }
-        }, 100);
+        parseIntent(intent);
     }
 
     private void bindService() {
@@ -110,6 +106,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
             mPlayService = ((PlayService.PlayBinder) service).getService();
             mPlayService.setOnPlayEventListener(MusicActivity.this);
             init();
+            parseIntent(getIntent());
         }
 
         @Override
@@ -159,6 +156,12 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         mRemoteReceiver = new ComponentName(getPackageName(), RemoteControlReceiver.class.getName());
         mAudioManager.registerMediaButtonEventReceiver(mRemoteReceiver);
+    }
+
+    private void parseIntent(Intent intent) {
+        if (intent.hasExtra(Extras.FROM_NOTIFICATION)) {
+            showPlayingFragment();
+        }
     }
 
     /**

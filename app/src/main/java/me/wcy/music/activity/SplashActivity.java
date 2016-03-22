@@ -24,18 +24,43 @@ import me.wcy.music.callback.JsonCallback;
 import me.wcy.music.model.JSplash;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.Constants;
+import me.wcy.music.utils.Extras;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.Preferences;
+import me.wcy.music.utils.SystemUtils;
 import okhttp3.Call;
 
 public class SplashActivity extends BaseActivity {
     @Bind(R.id.iv_splash)
     ImageView ivSplash;
+    private ServiceConnection mPlayServiceConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        parseIntent();
+    }
+
+    @Override
+    protected void setListener() {
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mPlayServiceConnection != null) {
+            unbindService(mPlayServiceConnection);
+        }
+        super.onDestroy();
+    }
+
+    private void parseIntent() {
+        if (getIntent().hasExtra(Extras.FROM_NOTIFICATION) && SystemUtils.isStackResumed(this)) {
+            startMusicActivity();
+            finish();
+            return;
+        }
 
         startService();
         initSplash();
@@ -49,16 +74,6 @@ public class SplashActivity extends BaseActivity {
         }, 1000);
     }
 
-    @Override
-    protected void setListener() {
-    }
-
-    @Override
-    protected void onDestroy() {
-        unbindService(mPlayServiceConnection);
-        super.onDestroy();
-    }
-
     private void startService() {
         Intent intent = new Intent();
         intent.setClass(this, PlayService.class);
@@ -66,12 +81,14 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void bindService() {
+        mPlayServiceConnection = new PlayServiceConnection();
         Intent intent = new Intent();
         intent.setClass(this, PlayService.class);
         bindService(intent, mPlayServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
-    private ServiceConnection mPlayServiceConnection = new ServiceConnection() {
+    class PlayServiceConnection implements ServiceConnection {
+
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             PlayService playService = ((PlayService.PlayBinder) service).getService();
@@ -83,7 +100,7 @@ public class SplashActivity extends BaseActivity {
         @Override
         public void onServiceDisconnected(ComponentName name) {
         }
-    };
+    }
 
     private void initSplash() {
         File splashImg = new File(FileUtils.getSplashDir(this), "splash.jpg");
@@ -132,6 +149,7 @@ public class SplashActivity extends BaseActivity {
     private void startMusicActivity() {
         Intent intent = new Intent();
         intent.setClass(this, MusicActivity.class);
+        intent.putExtras(getIntent());
         startActivity(intent);
     }
 

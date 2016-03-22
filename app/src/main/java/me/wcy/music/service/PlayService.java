@@ -18,13 +18,14 @@ import java.io.IOException;
 import java.util.Random;
 
 import me.wcy.music.R;
-import me.wcy.music.activity.MusicActivity;
+import me.wcy.music.activity.SplashActivity;
 import me.wcy.music.enums.MusicTypeEnum;
 import me.wcy.music.enums.PlayModeEnum;
 import me.wcy.music.model.Music;
 import me.wcy.music.receiver.NoisyAudioStreamReceiver;
 import me.wcy.music.utils.Actions;
 import me.wcy.music.utils.CoverLoader;
+import me.wcy.music.utils.Extras;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.MusicUtils;
 import me.wcy.music.utils.Preferences;
@@ -302,7 +303,8 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         } else {
             bitmap = music.getCover();
         }
-        Intent intent = new Intent(this, MusicActivity.class);
+        Intent intent = new Intent(this, SplashActivity.class);
+        intent.putExtra(Extras.FROM_NOTIFICATION, true);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         Notification.Builder builder = new Notification.Builder(this)
                 .setContentIntent(pendingIntent)
