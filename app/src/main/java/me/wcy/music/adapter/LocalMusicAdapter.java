@@ -18,7 +18,6 @@ import me.wcy.music.model.Music;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.FileUtils;
-import me.wcy.music.utils.MusicUtils;
 
 /**
  * 本地音乐列表适配器
@@ -35,12 +34,12 @@ public class LocalMusicAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return MusicUtils.getMusicList().size();
+        return PlayService.getMusicList().size();
     }
 
     @Override
     public Object getItem(int position) {
-        return MusicUtils.getMusicList().get(position);
+        return PlayService.getMusicList().get(position);
     }
 
     @Override
@@ -63,7 +62,7 @@ public class LocalMusicAdapter extends BaseAdapter {
         } else {
             holder.ivPlaying.setVisibility(View.INVISIBLE);
         }
-        final Music music = MusicUtils.getMusicList().get(position);
+        final Music music = PlayService.getMusicList().get(position);
         Bitmap cover = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
         holder.ivCover.setImageBitmap(cover);
         holder.tvTitle.setText(music.getTitle());

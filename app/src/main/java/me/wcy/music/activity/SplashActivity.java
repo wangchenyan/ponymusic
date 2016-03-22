@@ -24,7 +24,6 @@ import me.wcy.music.callback.JsonCallback;
 import me.wcy.music.model.JSplash;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.Constants;
-import me.wcy.music.utils.Extras;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.Preferences;
 import me.wcy.music.utils.SystemUtils;
@@ -56,7 +55,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void parseIntent() {
-        if (getIntent().hasExtra(Extras.FROM_NOTIFICATION) && SystemUtils.isStackResumed(this)) {
+        if (SystemUtils.isStackResumed(this)) {
             startMusicActivity();
             finish();
             return;

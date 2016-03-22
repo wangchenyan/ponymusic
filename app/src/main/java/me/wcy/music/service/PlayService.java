@@ -15,6 +15,8 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import me.wcy.music.R;
@@ -37,13 +39,15 @@ import me.wcy.music.utils.Preferences;
 public class PlayService extends Service implements MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
     private static final int NOTIFICATION_ID = 0x111;
     private static final long TIME_UPDATE = 100L;
-    private MediaPlayer mPlayer;
-    private OnPlayerEventListener mListener;
-    private NotificationManager mNotificationManager;
+    // 本地歌曲列表
+    private static final List<Music> sMusicList = new ArrayList<>();
+    private MediaPlayer mPlayer = new MediaPlayer();
+    private IntentFilter mNoisyFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+    private NoisyAudioStreamReceiver mNoisyReceiver = new NoisyAudioStreamReceiver();
+    private Handler mHandler = new Handler();
     private AudioManager mAudioManager;
-    private IntentFilter mNoisyFilter;
-    private NoisyAudioStreamReceiver mNoisyReceiver;
-    private Handler mHandler;
+    private NotificationManager mNotificationManager;
+    private OnPlayerEventListener mListener;
     // 正在播放的歌曲[本地|网络]
     private Music mPlayingMusic;
     // 正在播放的本地歌曲的序号
@@ -53,12 +57,8 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     @Override
     public void onCreate() {
         super.onCreate();
-        mPlayer = new MediaPlayer();
-        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-        mNoisyFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
-        mNoisyReceiver = new NoisyAudioStreamReceiver();
-        mHandler = new Handler();
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mPlayer.setOnCompletionListener(this);
     }
 
@@ -87,16 +87,20 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         return START_STICKY_COMPATIBILITY;
     }
 
+    public static List<Music> getMusicList() {
+        return sMusicList;
+    }
+
     /**
      * 每次启动时扫描音乐
      */
     public void updateMusicList() {
-        MusicUtils.scanMusic(this);
-        if (MusicUtils.getMusicList().isEmpty()) {
+        MusicUtils.scanMusic(this, getMusicList());
+        if (getMusicList().isEmpty()) {
             return;
         }
         updatePlayingPosition();
-        mPlayingMusic = mPlayingMusic == null ? MusicUtils.getMusicList().get(mPlayingPosition) : mPlayingMusic;
+        mPlayingMusic = mPlayingMusic == null ? getMusicList().get(mPlayingPosition) : mPlayingMusic;
     }
 
     @Override
@@ -109,18 +113,18 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     }
 
     public int play(int position) {
-        if (MusicUtils.getMusicList().isEmpty()) {
+        if (getMusicList().isEmpty()) {
             return -1;
         }
 
         if (position < 0) {
-            position = MusicUtils.getMusicList().size() - 1;
-        } else if (position >= MusicUtils.getMusicList().size()) {
+            position = getMusicList().size() - 1;
+        } else if (position >= getMusicList().size()) {
             position = 0;
         }
 
         mPlayingPosition = position;
-        mPlayingMusic = MusicUtils.getMusicList().get(mPlayingPosition);
+        mPlayingMusic = getMusicList().get(mPlayingPosition);
 
         try {
             mPlayer.reset();
@@ -205,7 +209,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
             case LOOP:
                 return play(mPlayingPosition + 1);
             case SHUFFLE:
-                mPlayingPosition = new Random().nextInt(MusicUtils.getMusicList().size());
+                mPlayingPosition = new Random().nextInt(getMusicList().size());
                 return play(mPlayingPosition);
             case ONE:
                 return play(mPlayingPosition);
@@ -220,7 +224,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
             case LOOP:
                 return play(mPlayingPosition - 1);
             case SHUFFLE:
-                mPlayingPosition = new Random().nextInt(MusicUtils.getMusicList().size());
+                mPlayingPosition = new Random().nextInt(getMusicList().size());
                 return play(mPlayingPosition);
             case ONE:
                 return play(mPlayingPosition);
@@ -271,14 +275,14 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     public void updatePlayingPosition() {
         int position = 0;
         long id = Preferences.getCurrentSongId(-1);
-        for (int i = 0; i < MusicUtils.getMusicList().size(); i++) {
-            if (MusicUtils.getMusicList().get(i).getId() == id) {
+        for (int i = 0; i < getMusicList().size(); i++) {
+            if (getMusicList().get(i).getId() == id) {
                 position = i;
                 break;
             }
         }
         mPlayingPosition = position;
-        Preferences.saveCurrentSongId(MusicUtils.getMusicList().get(mPlayingPosition).getId());
+        Preferences.saveCurrentSongId(getMusicList().get(mPlayingPosition).getId());
     }
 
     /**

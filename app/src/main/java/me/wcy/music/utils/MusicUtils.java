@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import me.wcy.music.R;
@@ -17,18 +16,12 @@ import me.wcy.music.model.Music;
  * Created by wcy on 2015/11/27.
  */
 public class MusicUtils {
-    // 本地歌曲列表
-    private static List<Music> sMusicList = new ArrayList<>();
-
-    public static List<Music> getMusicList() {
-        return sMusicList;
-    }
 
     /**
      * 扫描歌曲
      */
-    public static void scanMusic(Context context) {
-        sMusicList.clear();
+    public static void scanMusic(Context context, List<Music> musicList) {
+        musicList.clear();
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null,
                 MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
@@ -62,7 +55,7 @@ public class MusicUtils {
             music.setUri(url);
             music.setCoverUri(coverUri);
             music.setFileName(fileName);
-            sMusicList.add(music);
+            musicList.add(music);
         }
         cursor.close();
     }
