@@ -75,29 +75,19 @@ public class SongListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolderProfile holderProfile;
-        ViewHolderMusicList holderMusicList;
         SongListInfo songListInfo = mData.get(position);
         int itemViewType = getItemViewType(position);
         switch (itemViewType) {
             case TYPE_PROFILE:
-                if (convertView == null) {
-                    convertView = LayoutInflater.from(mContext).inflate(R.layout.view_holder_fragment_song_list_profile, parent, false);
-                    holderProfile = new ViewHolderProfile(convertView);
-                    convertView.setTag(holderProfile);
-                } else {
-                    holderProfile = (ViewHolderProfile) convertView.getTag();
-                }
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.view_holder_fragment_song_list_profile, parent, false);
+                ViewHolderProfile holderProfile = new ViewHolderProfile(convertView);
+                convertView.setTag(holderProfile);
                 holderProfile.tvProfile.setText(songListInfo.getTitle());
                 break;
             case TYPE_MUSIC_LIST:
-                if (convertView == null) {
-                    convertView = LayoutInflater.from(mContext).inflate(R.layout.view_holder_fragment_song_list, parent, false);
-                    holderMusicList = new ViewHolderMusicList(convertView);
-                    convertView.setTag(holderMusicList);
-                } else {
-                    holderMusicList = (ViewHolderMusicList) convertView.getTag();
-                }
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.view_holder_fragment_song_list, parent, false);
+                ViewHolderMusicList holderMusicList = new ViewHolderMusicList(convertView);
+                convertView.setTag(holderMusicList);
                 getMusicListInfo(songListInfo, holderMusicList);
                 break;
         }
