@@ -6,7 +6,6 @@ import android.support.v4.util.LongSparseArray;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.squareup.leakcanary.LeakCanary;
 
 import me.wcy.music.executor.CrashHandler;
 import me.wcy.music.utils.Preferences;
@@ -27,7 +26,6 @@ public class MusicApplication extends Application {
         ToastUtils.setContext(this);
         Preferences.setContext(this);
         CrashHandler.getInstance().init();
-        LeakCanary.install(this);
         initImageLoader();
     }
 
