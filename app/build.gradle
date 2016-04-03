@@ -38,12 +38,16 @@ android {
     }
 }
 
+ext {
+    supportVersion = '23.1.1'
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
+    compile "com.android.support:appcompat-v7:${supportVersion}"
+    compile "com.android.support:design:${supportVersion}"
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.zhy:okhttputils:2.2.0'
-    compile 'com.alibaba:fastjson:1.2.7'
+    compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 }

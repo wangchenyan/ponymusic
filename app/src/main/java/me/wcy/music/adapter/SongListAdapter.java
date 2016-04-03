@@ -79,13 +79,13 @@ public class SongListAdapter extends BaseAdapter {
         int itemViewType = getItemViewType(position);
         switch (itemViewType) {
             case TYPE_PROFILE:
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.view_holder_fragment_song_list_profile, parent, false);
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.view_holder_song_list_profile, parent, false);
                 ViewHolderProfile holderProfile = new ViewHolderProfile(convertView);
                 convertView.setTag(holderProfile);
                 holderProfile.tvProfile.setText(songListInfo.getTitle());
                 break;
             case TYPE_MUSIC_LIST:
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.view_holder_fragment_song_list, parent, false);
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.view_holder_song_list, parent, false);
                 ViewHolderMusicList holderMusicList = new ViewHolderMusicList(convertView);
                 convertView.setTag(holderMusicList);
                 getMusicListInfo(songListInfo, holderMusicList);
