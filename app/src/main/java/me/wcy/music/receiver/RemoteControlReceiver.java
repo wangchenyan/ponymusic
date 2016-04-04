@@ -15,9 +15,6 @@ import me.wcy.music.utils.Actions;
 public class RemoteControlReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (!Intent.ACTION_MEDIA_BUTTON.equals(intent.getAction())) {
-            return;
-        }
         KeyEvent event = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
         if (event == null || event.getAction() != KeyEvent.ACTION_UP) {
             return;

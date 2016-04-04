@@ -25,6 +25,24 @@
     <string-array name="search_music_dialog_no_download">
         <item>分享</item>
     </string-array>
+    <string-array name="timer_text">
+        <item>不开启</item>
+        <item>10分钟后</item>
+        <item>20分钟后</item>
+        <item>30分钟后</item>
+        <item>45分钟后</item>
+        <item>60分钟后</item>
+        <item>90分钟后</item>
+    </string-array>
+    <integer-array name="timer_int">
+        <item>0</item>
+        <item>10</item>
+        <item>20</item>
+        <item>30</item>
+        <item>45</item>
+        <item>60</item>
+        <item>90</item>
+    </integer-array>
     <string-array name="online_music_list_title">
         <item>主打榜单</item>
         <item>百度热歌榜</item>

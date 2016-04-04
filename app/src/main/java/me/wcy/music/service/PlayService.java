@@ -52,7 +52,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     private Music mPlayingMusic;
     // 正在播放的本地歌曲的序号
     private int mPlayingPosition;
-    private boolean mIsPause = false;
+    private boolean isPause = false;
 
     @Override
     public void onCreate() {
@@ -169,7 +169,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
     private void start() {
         mPlayer.start();
-        mIsPause = false;
+        isPause = false;
         mHandler.post(mBackgroundRunnable);
         updateNotification(mPlayingMusic);
         mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
@@ -181,7 +181,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
             return -1;
         }
         mPlayer.pause();
-        mIsPause = true;
+        isPause = true;
         mHandler.removeCallbacks(mBackgroundRunnable);
         cancelNotification(mPlayingMusic);
         mAudioManager.abandonAudioFocus(this);
@@ -252,7 +252,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     }
 
     public boolean isPause() {
-        return mPlayer != null && mIsPause;
+        return mPlayer != null && isPause;
     }
 
     /**
@@ -342,6 +342,23 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         }
     }
 
+    public void startTimer(long milli) {
+        stopTimer();
+        mHandler.postDelayed(mStopRunnable, milli);
+    }
+
+    public void stopTimer() {
+        mHandler.removeCallbacks(mStopRunnable);
+    }
+
+    private Runnable mStopRunnable = new Runnable() {
+        @Override
+        public void run() {
+            stop();
+            System.exit(0);
+        }
+    };
+
     @Override
     public boolean onUnbind(Intent intent) {
         mListener = null;
@@ -350,6 +367,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
     public void stop() {
         pause();
+        stopTimer();
         mPlayer.reset();
         mPlayer.release();
         mPlayer = null;
