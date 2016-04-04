@@ -35,6 +35,7 @@ import me.wcy.music.service.OnPlayerEventListener;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.Extras;
+import me.wcy.music.utils.UpdateUtils;
 
 public class MusicActivity extends BaseActivity implements View.OnClickListener, OnPlayerEventListener,
         NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
@@ -119,6 +120,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         updateWeather();
         registerReceiver();
         onChange(mPlayService.getPlayingMusic());
+        UpdateUtils.checkUpdate(this);
     }
 
     @Override

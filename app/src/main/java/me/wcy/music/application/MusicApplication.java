@@ -7,6 +7,7 @@ import android.support.v4.util.LongSparseArray;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
+import im.fir.sdk.FIR;
 import me.wcy.music.executor.CrashHandler;
 import me.wcy.music.utils.Preferences;
 import me.wcy.music.utils.ToastUtils;
@@ -27,6 +28,7 @@ public class MusicApplication extends Application {
         Preferences.setContext(this);
         CrashHandler.getInstance().init();
         initImageLoader();
+        FIR.init(this);
     }
 
     public static MusicApplication getInstance() {

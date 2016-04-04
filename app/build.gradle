@@ -50,4 +50,5 @@ dependencies {
     compile 'com.zhy:okhttputils:2.2.0'
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    compile 'im.fir:fir-sdk:latest.integration@aar'
 }

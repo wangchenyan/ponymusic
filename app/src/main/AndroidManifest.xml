@@ -26,6 +26,10 @@
             android:name="com.amap.api.v2.apikey"
             android:value="95d96be4e4a8db30b0442e575867ca3c" />
 
+        <meta-data
+            android:name="BUG_HD_SDK_GENERAL_KEY"
+            android:value="fb11210d410993f1e6ac366e8187d790" />
+
         <service android:name=".service.PlayService" />
 
         <receiver android:name=".receiver.DownloadReceiver">
@@ -67,14 +71,14 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".activity.AboutActivity"
-            android:label="@string/menu_about"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.SettingActivity"
             android:label="@string/menu_setting"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Setting" />
+        <activity
+            android:name=".activity.AboutActivity"
+            android:label="@string/menu_about"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

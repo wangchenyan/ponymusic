@@ -61,10 +61,9 @@
     <string name="weather_temp">%s°</string>
     <string name="weather_wind">%1$s风%2$s级&#160;&#160;湿度%3$s%%</string>
     <string name="share_app">青春，狂热，放纵，自由，当我们带上耳机以后做回自己，这是音乐的魅力。%s[下载链接]</string>
-    <string name="version">当前版本 V%s</string>
-    <string name="declaration">&#160;&#160;&#160;&#160;本应用内所有在线内容均来自&lt;font color="#2196F3"&gt;&lt;a href=\'http://music.baidu.com/\'&gt;百度MP3&lt;/a&gt;&lt;/font&gt;，%s不承担任何由于内容的合法性及健康性所引起的争议和法律责任。
-        &lt;br&gt;&#160;&#160;&#160;&#160;为方便学习交流，本应用开放&lt;font color="#2196F3"&gt;&lt;a href=\'https://github.com/ChanWong21/PonyMusic\'&gt;源代码&lt;/a&gt;&lt;/font&gt;，&lt;font color="#F44336"&gt;请勿用于商业用途！&lt;/font&gt;
-        &lt;br&gt;&#160;&#160;&#160;&#160;如有疑问请联系&lt;font color="#2196F3"&gt;&lt;a href=\'mailto:919247701@qq.com\'&gt;919247701@qq.com&lt;/a&gt;&lt;/font&gt;</string>
-    <string name="baidu_declaration">&lt;font color="#2196F3"&gt;&lt;a href=\'http://music.baidu.com/doc/about\'&gt;查看更多&lt;/a&gt;&lt;/font&gt;</string>
-    <string name="copyright">Copyright © 2015-2016 SWUST</string>
+    <string name="copyright">Copyright © 2015&#045;2016 SWUST</string>
+    <string name="about_project_url">https://github.com/ChanWong21/PonyMusic</string>
+    <string name="about_weibo">http://weibo.com/wangchenyan1993</string>
+    <string name="about_jianshu">http://www.jianshu.com/users/3231579893ac</string>
+    <string name="about_github">https://github.com/ChanWong21</string>
 </resources>
