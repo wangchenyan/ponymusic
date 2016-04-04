@@ -1,11 +1,11 @@
 package me.wcy.music.executor;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 

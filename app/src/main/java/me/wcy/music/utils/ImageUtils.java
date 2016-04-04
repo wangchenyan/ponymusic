@@ -283,6 +283,7 @@ public class ImageUtils {
                 .showImageOnFail(R.drawable.ic_default_cover)
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
     }
 }

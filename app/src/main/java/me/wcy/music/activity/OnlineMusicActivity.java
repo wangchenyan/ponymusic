@@ -1,6 +1,5 @@
 package me.wcy.music.activity;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -10,6 +9,7 @@ import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,8 +48,8 @@ import me.wcy.music.utils.Constants;
 import me.wcy.music.utils.Extras;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.ImageUtils;
-import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.ScreenUtils;
+import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.ViewUtils;
 import me.wcy.music.widget.AutoLoadListView;
 import me.wcy.music.widget.OnLoadListener;

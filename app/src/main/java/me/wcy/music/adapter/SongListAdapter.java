@@ -61,7 +61,7 @@ public class SongListAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        if (mData.get(position).getType().equals("*")) {
+        if (mData.get(position).getType().equals("#")) {
             return TYPE_PROFILE;
         } else {
             return TYPE_MUSIC_LIST;
@@ -75,19 +75,29 @@ public class SongListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolderProfile holderProfile;
+        ViewHolderMusicList holderMusicList;
         SongListInfo songListInfo = mData.get(position);
         int itemViewType = getItemViewType(position);
         switch (itemViewType) {
             case TYPE_PROFILE:
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.view_holder_song_list_profile, parent, false);
-                ViewHolderProfile holderProfile = new ViewHolderProfile(convertView);
-                convertView.setTag(holderProfile);
+                if (convertView == null) {
+                    convertView = LayoutInflater.from(mContext).inflate(R.layout.view_holder_song_list_profile, parent, false);
+                    holderProfile = new ViewHolderProfile(convertView);
+                    convertView.setTag(holderProfile);
+                } else {
+                    holderProfile = (ViewHolderProfile) convertView.getTag();
+                }
                 holderProfile.tvProfile.setText(songListInfo.getTitle());
                 break;
             case TYPE_MUSIC_LIST:
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.view_holder_song_list, parent, false);
-                ViewHolderMusicList holderMusicList = new ViewHolderMusicList(convertView);
-                convertView.setTag(holderMusicList);
+                if (convertView == null) {
+                    convertView = LayoutInflater.from(mContext).inflate(R.layout.view_holder_song_list, parent, false);
+                    holderMusicList = new ViewHolderMusicList(convertView);
+                    convertView.setTag(holderMusicList);
+                } else {
+                    holderMusicList = (ViewHolderMusicList) convertView.getTag();
+                }
                 getMusicListInfo(songListInfo, holderMusicList);
                 break;
         }
@@ -96,6 +106,11 @@ public class SongListAdapter extends BaseAdapter {
 
     private void getMusicListInfo(final SongListInfo songListInfo, final ViewHolderMusicList holderMusicList) {
         if (songListInfo.getCoverUrl() == null) {
+            holderMusicList.ivCover.setImageResource(R.drawable.ic_default_cover);
+            holderMusicList.tvMusic1.setText("1.加载中…");
+            holderMusicList.tvMusic2.setText("2.加载中…");
+            holderMusicList.tvMusic3.setText("3.加载中…");
+            holderMusicList.ivCover.setTag(songListInfo);
             OkHttpUtils.get().url(Constants.BASE_URL)
                     .addParams(Constants.PARAM_METHOD, Constants.METHOD_GET_MUSIC_LIST)
                     .addParams(Constants.PARAM_TYPE, songListInfo.getType())
@@ -105,6 +120,9 @@ public class SongListAdapter extends BaseAdapter {
                         @Override
                         public void onResponse(JOnlineMusicList response) {
                             if (response == null || response.getSong_list() == null) {
+                                return;
+                            }
+                            if (holderMusicList.ivCover.getTag() != songListInfo) {
                                 return;
                             }
                             JOnlineMusic[] jOnlineMusics = response.getSong_list();

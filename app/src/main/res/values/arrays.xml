@@ -44,10 +44,10 @@
         <item>叱咤歌曲榜</item>
     </string-array>
     <string-array name="online_music_list_type">
-        <item>*</item>
+        <item>#</item>
         <item>2</item>
         <item>1</item>
-        <item>*</item>
+        <item>#</item>
         <item>20</item>
         <item>21</item>
         <item>24</item>
@@ -55,7 +55,7 @@
         <item>25</item>
         <item>22</item>
         <item>11</item>
-        <item>*</item>
+        <item>#</item>
         <item>6</item>
         <item>8</item>
         <item>18</item>

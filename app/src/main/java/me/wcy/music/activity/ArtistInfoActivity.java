@@ -2,6 +2,7 @@ package me.wcy.music.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
@@ -97,6 +98,9 @@ public class ArtistInfoActivity extends BaseActivity {
                     .showStubImage(R.drawable.ic_default_artist)
                     .showImageForEmptyUri(R.drawable.ic_default_artist)
                     .showImageOnFail(R.drawable.ic_default_artist)
+                    .cacheInMemory(true)
+                    .cacheOnDisk(true)
+                    .bitmapConfig(Bitmap.Config.RGB_565)
                     .build();
             ImageLoader.getInstance().displayImage(avatarUri, ivAvatar, options);
             llArtistInfoContainer.addView(ivAvatar, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
