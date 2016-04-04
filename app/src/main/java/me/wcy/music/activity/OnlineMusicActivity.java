@@ -212,7 +212,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         tvComment.setText(mJOnlineMusicList.getBillboard().getComment());
         ImageSize imageSize = new ImageSize(200, 200);
         ImageLoader.getInstance().loadImage(mJOnlineMusicList.getBillboard().getPic_s640(), imageSize,
-                ImageUtils.getDefaultDisplayImageOptions(), new SimpleImageLoadingListener() {
+                ImageUtils.getCoverDisplayOptions(), new SimpleImageLoadingListener() {
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                         ivCover.setImageBitmap(loadedImage);

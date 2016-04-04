@@ -276,7 +276,7 @@ public class ImageUtils {
         return target;
     }
 
-    public static DisplayImageOptions getDefaultDisplayImageOptions() {
+    public static DisplayImageOptions getCoverDisplayOptions() {
         return new DisplayImageOptions.Builder()
                 .showStubImage(R.drawable.ic_default_cover)
                 .showImageForEmptyUri(R.drawable.ic_default_cover)

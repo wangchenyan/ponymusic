@@ -59,7 +59,7 @@ public class OnlineMusicAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         JOnlineMusic jOnlineMusic = mData.get(position);
-        ImageLoader.getInstance().displayImage(jOnlineMusic.getPic_small(), holder.ivCover, ImageUtils.getDefaultDisplayImageOptions());
+        ImageLoader.getInstance().displayImage(jOnlineMusic.getPic_small(), holder.ivCover, ImageUtils.getCoverDisplayOptions());
         holder.tvTitle.setText(jOnlineMusic.getTitle());
         String artist = FileUtils.getArtistAndAlbum(jOnlineMusic.getArtist_name(), jOnlineMusic.getAlbum_title());
         holder.tvArtist.setText(artist);

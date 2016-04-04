@@ -142,7 +142,7 @@ public class SongListAdapter extends BaseAdapter {
                             } else {
                                 songListInfo.setMusic3("");
                             }
-                            ImageLoader.getInstance().displayImage(songListInfo.getCoverUrl(), holderMusicList.ivCover, ImageUtils.getDefaultDisplayImageOptions());
+                            ImageLoader.getInstance().displayImage(songListInfo.getCoverUrl(), holderMusicList.ivCover, ImageUtils.getCoverDisplayOptions());
                             holderMusicList.tvMusic1.setText(songListInfo.getMusic1());
                             holderMusicList.tvMusic2.setText(songListInfo.getMusic2());
                             holderMusicList.tvMusic3.setText(songListInfo.getMusic3());
@@ -153,7 +153,7 @@ public class SongListAdapter extends BaseAdapter {
                         }
                     });
         } else {
-            ImageLoader.getInstance().displayImage(songListInfo.getCoverUrl(), holderMusicList.ivCover, ImageUtils.getDefaultDisplayImageOptions());
+            ImageLoader.getInstance().displayImage(songListInfo.getCoverUrl(), holderMusicList.ivCover, ImageUtils.getCoverDisplayOptions());
             holderMusicList.tvMusic1.setText(songListInfo.getMusic1());
             holderMusicList.tvMusic2.setText(songListInfo.getMusic2());
             holderMusicList.tvMusic3.setText(songListInfo.getMusic3());
