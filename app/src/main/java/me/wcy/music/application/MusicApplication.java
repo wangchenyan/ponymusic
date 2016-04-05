@@ -24,8 +24,8 @@ public class MusicApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sInstance = this;
-        ToastUtils.setContext(this);
-        Preferences.setContext(this);
+        ToastUtils.init(this);
+        Preferences.init(this);
         CrashHandler.getInstance().init();
         initImageLoader();
         FIR.init(this);

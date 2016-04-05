@@ -10,7 +10,7 @@ import android.widget.Toast;
 public class ToastUtils {
     private static Context sContext;
 
-    public static void setContext(Context context) {
+    public static void init(Context context) {
         sContext = context.getApplicationContext();
     }
 
