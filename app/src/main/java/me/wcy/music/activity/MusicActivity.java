@@ -21,6 +21,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import butterknife.Bind;
 import me.wcy.music.R;
 import me.wcy.music.adapter.FragmentAdapter;
@@ -72,7 +75,9 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     private PlayService mPlayService;
     private AudioManager mAudioManager;
     private ComponentName mRemoteReceiver;
-    private boolean mIsPlayFragmentShow = false;
+    private boolean isPlayFragmentShow = false;
+    private MenuItem timerItem;
+    private SimpleDateFormat timerSdf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +142,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     private void setupView() {
         // add navigation header
-        vNavigationHeader = LayoutInflater.from(this).inflate(R.layout.navigation_header, null);
+        vNavigationHeader = LayoutInflater.from(this).inflate(R.layout.navigation_header, navigationView, false);
         navigationView.addHeaderView(vNavigationHeader);
 
         // setup view pager
@@ -199,6 +204,18 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         if (mPlayFragment != null && mPlayFragment.isResume()) {
             mPlayFragment.onPlayerResume();
         }
+    }
+
+    @Override
+    public void onTimer(long remain) {
+        if (timerItem == null) {
+            timerItem = navigationView.getMenu().findItem(R.id.action_timer);
+        }
+        if (timerSdf == null) {
+            String title = getString(R.string.menu_timer);
+            timerSdf = new SimpleDateFormat(title + "(mm:ss)");
+        }
+        timerItem.setTitle(remain == 0 ? getString(R.string.menu_timer) : timerSdf.format(new Date(remain)));
     }
 
     @Override
@@ -304,7 +321,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
             ft.show(mPlayFragment);
         }
         ft.commit();
-        mIsPlayFragmentShow = true;
+        isPlayFragmentShow = true;
     }
 
     private void hidePlayingFragment() {
@@ -312,12 +329,12 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         ft.setCustomAnimations(0, R.anim.fragment_slide_down);
         ft.hide(mPlayFragment);
         ft.commit();
-        mIsPlayFragmentShow = false;
+        isPlayFragmentShow = false;
     }
 
     @Override
     public void onBackPressed() {
-        if (mPlayFragment != null && mIsPlayFragmentShow) {
+        if (mPlayFragment != null && isPlayFragmentShow) {
             hidePlayingFragment();
             return;
         }

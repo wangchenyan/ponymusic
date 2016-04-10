@@ -35,8 +35,8 @@ import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.ImageUtils;
 import me.wcy.music.utils.Preferences;
-import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.ScreenUtils;
+import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.widget.AlbumCoverView;
 import me.wcy.music.widget.IndicatorLayout;
 import me.wcy.music.widget.LrcView;
@@ -81,6 +81,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     private AudioManager mAudioManager;
     private List<View> mViewPagerContent;
     private int mLastProgress;
+    private SimpleDateFormat sdf;
 
     @Nullable
     @Override
@@ -338,10 +339,11 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         mLrcViewFull.loadLrc(lrcPath);
     }
 
-    private String formatTime(long lTime) {
-        SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
-        Date date = new Date(lTime);
-        return sdf.format(date);
+    private String formatTime(long time) {
+        if (sdf == null) {
+            sdf = new SimpleDateFormat("mm:ss");
+        }
+        return sdf.format(new Date(time));
     }
 
     private BroadcastReceiver mVolumeReceiver = new BroadcastReceiver() {

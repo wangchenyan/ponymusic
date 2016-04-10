@@ -53,6 +53,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     // 正在播放的本地歌曲的序号
     private int mPlayingPosition;
     private boolean isPause = false;
+    private long timerTime;
 
     @Override
     public void onCreate() {
@@ -344,18 +345,34 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
     public void startTimer(long milli) {
         stopTimer();
-        mHandler.postDelayed(mStopRunnable, milli);
+        if (milli > 0) {
+            timerTime = milli;
+            mHandler.post(mStopRunnable);
+        } else {
+            timerTime = 0;
+            if (mListener != null) {
+                mListener.onTimer(timerTime);
+            }
+        }
     }
 
-    public void stopTimer() {
+    private void stopTimer() {
         mHandler.removeCallbacks(mStopRunnable);
     }
 
     private Runnable mStopRunnable = new Runnable() {
         @Override
         public void run() {
-            stop();
-            System.exit(0);
+            timerTime = timerTime - 1000;
+            if (timerTime > 0) {
+                if (mListener != null) {
+                    mListener.onTimer(timerTime);
+                }
+                mHandler.postDelayed(this, 1000);
+            } else {
+                stop();
+                System.exit(0);
+            }
         }
     };
 

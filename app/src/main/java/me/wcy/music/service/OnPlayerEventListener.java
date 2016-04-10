@@ -26,4 +26,9 @@ public interface OnPlayerEventListener {
      * 继续播放
      */
     void onPlayerResume();
+
+    /**
+     * 更新定时停止播放时间
+     */
+    void onTimer(long remain);
 }
