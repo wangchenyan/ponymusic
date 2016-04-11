@@ -156,7 +156,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void updateWeather() {
-        new WeatherExecutor(this, vNavigationHeader).execute();
+        new WeatherExecutor(vNavigationHeader).execute();
     }
 
     private void registerReceiver() {

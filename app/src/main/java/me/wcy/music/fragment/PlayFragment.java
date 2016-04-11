@@ -317,7 +317,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         } else {
             if (music.getCover() == null) {
                 mAlbumCoverView.setCoverBitmap(CoverLoader.getInstance().loadRound(null));
-                ivPlayingBg.setImageResource(R.drawable.ic_play_page_default_bg);
+                ivPlayingBg.setImageResource(R.drawable.play_page_default_bg);
             } else {
                 Bitmap cover = ImageUtils.resizeImage(music.getCover(), ScreenUtils.getScreenWidth() / 2, ScreenUtils.getScreenWidth() / 2);
                 cover = ImageUtils.createCircleImage(cover);

@@ -16,6 +16,8 @@
         android:layout_height="wrap_content"
         android:maxHeight="2dp"
         android:minHeight="2dp"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
         android:progressDrawable="@drawable/seek_bar_volume_style"
         android:thumb="@drawable/ic_seek_bar_volume_btn" />
 </LinearLayout>

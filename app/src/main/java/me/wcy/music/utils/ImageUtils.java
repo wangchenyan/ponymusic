@@ -278,9 +278,9 @@ public class ImageUtils {
 
     public static DisplayImageOptions getCoverDisplayOptions() {
         return new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.ic_default_cover)
-                .showImageForEmptyUri(R.drawable.ic_default_cover)
-                .showImageOnFail(R.drawable.ic_default_cover)
+                .showStubImage(R.drawable.default_cover)
+                .showImageForEmptyUri(R.drawable.default_cover)
+                .showImageOnFail(R.drawable.default_cover)
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
                 .bitmapConfig(Bitmap.Config.RGB_565)

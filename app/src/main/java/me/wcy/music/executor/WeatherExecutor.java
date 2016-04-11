@@ -76,9 +76,9 @@ public class WeatherExecutor implements AMapLocalWeatherListener {
     @Bind(R.id.tv_weather_wind)
     TextView tvWind;
 
-    public WeatherExecutor(Context context, View navigationHeader) {
+    public WeatherExecutor(View navigationHeader) {
+        mContext = navigationHeader.getContext().getApplicationContext();
         ButterKnife.bind(this, navigationHeader);
-        mContext = context.getApplicationContext();
     }
 
     public void execute() {

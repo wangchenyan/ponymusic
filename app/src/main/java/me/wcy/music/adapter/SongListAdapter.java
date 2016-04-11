@@ -106,7 +106,7 @@ public class SongListAdapter extends BaseAdapter {
 
     private void getMusicListInfo(final SongListInfo songListInfo, final ViewHolderMusicList holderMusicList) {
         if (songListInfo.getCoverUrl() == null) {
-            holderMusicList.ivCover.setImageResource(R.drawable.ic_default_cover);
+            holderMusicList.ivCover.setImageResource(R.drawable.default_cover);
             holderMusicList.tvMusic1.setText("1.加载中…");
             holderMusicList.tvMusic2.setText("2.加载中…");
             holderMusicList.tvMusic3.setText("3.加载中…");

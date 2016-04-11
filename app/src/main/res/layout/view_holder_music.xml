@@ -19,7 +19,7 @@
         android:layout_height="50dp"
         android:layout_marginLeft="10dp"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_default_cover" />
+        android:src="@drawable/default_cover" />
 
     <FrameLayout
         android:layout_width="match_parent"

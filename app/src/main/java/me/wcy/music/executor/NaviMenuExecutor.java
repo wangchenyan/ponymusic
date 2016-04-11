@@ -66,7 +66,7 @@ public class NaviMenuExecutor {
         if (context instanceof MusicActivity) {
             MusicActivity activity = (MusicActivity) context;
             PlayService service = activity.getPlayService();
-            service.startTimer(minute * 60 * 1000);
+            service.startQuitTimer(minute * 60 * 1000);
             if (minute > 0) {
                 ToastUtils.show(context.getString(R.string.timer_set, minute));
             } else {

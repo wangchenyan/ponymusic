@@ -92,12 +92,12 @@ public class ArtistInfoActivity extends BaseActivity {
         String url = jArtistInfo.getUrl();
         if (!TextUtils.isEmpty(avatarUri)) {
             ImageView ivAvatar = new ImageView(this);
-            ivAvatar.setImageResource(R.drawable.ic_default_artist);
+            ivAvatar.setImageResource(R.drawable.default_artist);
             ivAvatar.setScaleType(ImageView.ScaleType.FIT_START);
             DisplayImageOptions options = new DisplayImageOptions.Builder()
-                    .showStubImage(R.drawable.ic_default_artist)
-                    .showImageForEmptyUri(R.drawable.ic_default_artist)
-                    .showImageOnFail(R.drawable.ic_default_artist)
+                    .showStubImage(R.drawable.default_artist)
+                    .showImageForEmptyUri(R.drawable.default_artist)
+                    .showImageOnFail(R.drawable.default_artist)
                     .cacheInMemory(true)
                     .cacheOnDisk(true)
                     .bitmapConfig(Bitmap.Config.RGB_565)

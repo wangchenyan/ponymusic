@@ -62,7 +62,7 @@
     <string name="weather_wind">%1$s风%2$s级&#160;&#160;湿度%3$s%%</string>
     <string name="timer_set">设置成功，将于%s分钟后关闭</string>
     <string name="timer_cancel">定时停止播放已取消</string>
-    <string name="share_app">青春，狂热，放纵，自由，当我们带上耳机以后做回自己，这是音乐的魅力。%s[下载链接]</string>
+    <string name="share_app">青春，狂热，放纵，自由，当我们带上耳机以后做回自己，这是音乐的魅力。%s：http://fir.im/ponymusic</string>
     <string name="copyright">Copyright © 2015&#045;2016 SWUST</string>
     <string name="about_project_url">https://github.com/ChanWong21/PonyMusic</string>
     <string name="about_weibo">http://weibo.com/wangchenyan1993</string>

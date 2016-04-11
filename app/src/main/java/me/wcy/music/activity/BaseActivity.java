@@ -18,6 +18,7 @@ import android.widget.EditText;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import me.wcy.music.R;
+import me.wcy.music.service.PlayService;
 
 /**
  * 基类
@@ -34,6 +35,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mHandler = new Handler();
         setSystemBarTransparent();
+        PlayService.addToStack(this);
     }
 
     @Override
@@ -93,6 +95,12 @@ public abstract class BaseActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        PlayService.removeFromStack(this);
+        super.onDestroy();
     }
 
     public void showSoftKeyboard(final EditText editText) {

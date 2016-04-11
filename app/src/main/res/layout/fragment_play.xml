@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:clickable="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_play_page_default_bg" />
+        android:src="@drawable/play_page_default_bg" />
 
     <LinearLayout
         android:id="@+id/ll_content"

@@ -1,12 +1,9 @@
 package me.wcy.music.service;
 
-import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
@@ -19,18 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import me.wcy.music.R;
-import me.wcy.music.activity.SplashActivity;
-import me.wcy.music.enums.MusicTypeEnum;
+import me.wcy.music.activity.BaseActivity;
 import me.wcy.music.enums.PlayModeEnum;
 import me.wcy.music.model.Music;
 import me.wcy.music.receiver.NoisyAudioStreamReceiver;
 import me.wcy.music.utils.Actions;
-import me.wcy.music.utils.CoverLoader;
-import me.wcy.music.utils.Extras;
-import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.MusicUtils;
 import me.wcy.music.utils.Preferences;
+import me.wcy.music.utils.SystemUtils;
 
 /**
  * 音乐播放后台服务
@@ -39,8 +32,10 @@ import me.wcy.music.utils.Preferences;
 public class PlayService extends Service implements MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
     private static final int NOTIFICATION_ID = 0x111;
     private static final long TIME_UPDATE = 100L;
+    private static final long SECOND = 1000L;
     // 本地歌曲列表
     private static final List<Music> sMusicList = new ArrayList<>();
+    private static final List<BaseActivity> sActivityStack = new ArrayList<>();
     private MediaPlayer mPlayer = new MediaPlayer();
     private IntentFilter mNoisyFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
     private NoisyAudioStreamReceiver mNoisyReceiver = new NoisyAudioStreamReceiver();
@@ -53,7 +48,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     // 正在播放的本地歌曲的序号
     private int mPlayingPosition;
     private boolean isPause = false;
-    private long timerTime;
+    private long timerTimeRemain;
 
     @Override
     public void onCreate() {
@@ -90,6 +85,14 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
     public static List<Music> getMusicList() {
         return sMusicList;
+    }
+
+    public static void addToStack(BaseActivity activity) {
+        sActivityStack.add(activity);
+    }
+
+    public static void removeFromStack(BaseActivity activity) {
+        sActivityStack.remove(activity);
     }
 
     /**
@@ -291,33 +294,12 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
      */
     private void updateNotification(Music music) {
         mNotificationManager.cancel(NOTIFICATION_ID);
-        startForeground(NOTIFICATION_ID, createNotification(music));
+        startForeground(NOTIFICATION_ID, SystemUtils.createNotification(this, music));
     }
 
     private void cancelNotification(Music music) {
         stopForeground(true);
-        mNotificationManager.notify(NOTIFICATION_ID, createNotification(music));
-    }
-
-    private Notification createNotification(Music music) {
-        String title = music.getTitle();
-        String subtitle = FileUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum());
-        Bitmap bitmap;
-        if (music.getType() == MusicTypeEnum.LOCAL) {
-            bitmap = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
-        } else {
-            bitmap = music.getCover();
-        }
-        Intent intent = new Intent(this, SplashActivity.class);
-        intent.putExtra(Extras.FROM_NOTIFICATION, true);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-        Notification.Builder builder = new Notification.Builder(this)
-                .setContentIntent(pendingIntent)
-                .setContentTitle(title)
-                .setContentText(subtitle)
-                .setSmallIcon(R.drawable.ic_notification)
-                .setLargeIcon(bitmap);
-        return builder.getNotification();
+        mNotificationManager.notify(NOTIFICATION_ID, SystemUtils.createNotification(this, music));
     }
 
     private Runnable mBackgroundRunnable = new Runnable() {
@@ -343,35 +325,35 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         }
     }
 
-    public void startTimer(long milli) {
-        stopTimer();
+    public void startQuitTimer(long milli) {
+        stopQuitTimer();
         if (milli > 0) {
-            timerTime = milli;
-            mHandler.post(mStopRunnable);
+            timerTimeRemain = milli + SECOND;
+            mHandler.post(mQuitRunnable);
         } else {
-            timerTime = 0;
+            timerTimeRemain = 0;
             if (mListener != null) {
-                mListener.onTimer(timerTime);
+                mListener.onTimer(timerTimeRemain);
             }
         }
     }
 
-    private void stopTimer() {
-        mHandler.removeCallbacks(mStopRunnable);
+    private void stopQuitTimer() {
+        mHandler.removeCallbacks(mQuitRunnable);
     }
 
-    private Runnable mStopRunnable = new Runnable() {
+    private Runnable mQuitRunnable = new Runnable() {
         @Override
         public void run() {
-            timerTime = timerTime - 1000;
-            if (timerTime > 0) {
+            timerTimeRemain -= SECOND;
+            if (timerTimeRemain > 0) {
                 if (mListener != null) {
-                    mListener.onTimer(timerTime);
+                    mListener.onTimer(timerTimeRemain);
                 }
-                mHandler.postDelayed(this, 1000);
+                mHandler.postDelayed(this, SECOND);
             } else {
+                SystemUtils.clearStack(sActivityStack);
                 stop();
-                System.exit(0);
             }
         }
     };
@@ -384,7 +366,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
     public void stop() {
         pause();
-        stopTimer();
+        stopQuitTimer();
         mPlayer.reset();
         mPlayer.release();
         mPlayer = null;

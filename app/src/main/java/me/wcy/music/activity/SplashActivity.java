@@ -7,7 +7,6 @@ import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.widget.ImageView;
@@ -65,7 +64,7 @@ public class SplashActivity extends BaseActivity {
         initSplash();
         updateSplash();
 
-        new Handler().postDelayed(new Runnable() {
+        mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 bindService();

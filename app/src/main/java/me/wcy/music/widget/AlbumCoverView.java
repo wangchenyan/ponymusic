@@ -70,10 +70,10 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
 
     private void init() {
         mHandler = new Handler();
-        mDiscBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_play_page_disc);
+        mDiscBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.play_page_disc);
         mDiscBitmap = ImageUtils.resizeImage(mDiscBitmap, (int) (ScreenUtils.getScreenWidth() * 0.75), (int) (ScreenUtils.getScreenWidth() * 0.75));
         mCoverBitmap = CoverLoader.getInstance().loadRound(null);
-        mNeedleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_play_page_needle);
+        mNeedleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.play_page_needle);
         mNeedleBitmap = ImageUtils.resizeImage(mNeedleBitmap, (int) (ScreenUtils.getScreenWidth() * 0.25), (int) (ScreenUtils.getScreenWidth() * 0.375));
         mTopLine = getResources().getDrawable(R.drawable.play_page_cover_top_line_shape);
         mCoverBorder = getResources().getDrawable(R.drawable.play_page_cover_border_shape);
