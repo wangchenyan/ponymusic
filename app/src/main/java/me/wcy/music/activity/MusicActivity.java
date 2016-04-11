@@ -21,9 +21,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import butterknife.Bind;
 import me.wcy.music.R;
 import me.wcy.music.adapter.FragmentAdapter;
@@ -38,6 +35,7 @@ import me.wcy.music.service.OnPlayerEventListener;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.Extras;
+import me.wcy.music.utils.SystemUtils;
 import me.wcy.music.utils.UpdateUtils;
 
 public class MusicActivity extends BaseActivity implements View.OnClickListener, OnPlayerEventListener,
@@ -77,7 +75,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     private ComponentName mRemoteReceiver;
     private boolean isPlayFragmentShow = false;
     private MenuItem timerItem;
-    private SimpleDateFormat timerSdf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,11 +208,8 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         if (timerItem == null) {
             timerItem = navigationView.getMenu().findItem(R.id.action_timer);
         }
-        if (timerSdf == null) {
-            String title = getString(R.string.menu_timer);
-            timerSdf = new SimpleDateFormat(title + "(mm:ss)");
-        }
-        timerItem.setTitle(remain == 0 ? getString(R.string.menu_timer) : timerSdf.format(new Date(remain)));
+        String title = getString(R.string.menu_timer);
+        timerItem.setTitle(remain == 0 ? title : SystemUtils.formatTime(title + "(mm:ss)", remain));
     }
 
     @Override

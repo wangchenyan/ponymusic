@@ -18,9 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -36,6 +34,7 @@ import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.ImageUtils;
 import me.wcy.music.utils.Preferences;
 import me.wcy.music.utils.ScreenUtils;
+import me.wcy.music.utils.SystemUtils;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.widget.AlbumCoverView;
 import me.wcy.music.widget.IndicatorLayout;
@@ -81,7 +80,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     private AudioManager mAudioManager;
     private List<View> mViewPagerContent;
     private int mLastProgress;
-    private SimpleDateFormat sdf;
 
     @Nullable
     @Override
@@ -340,10 +338,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private String formatTime(long time) {
-        if (sdf == null) {
-            sdf = new SimpleDateFormat("mm:ss");
-        }
-        return sdf.format(new Date(time));
+        return SystemUtils.formatTime("mm:ss", time);
     }
 
     private BroadcastReceiver mVolumeReceiver = new BroadcastReceiver() {

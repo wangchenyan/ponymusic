@@ -74,4 +74,12 @@ public class SystemUtils {
             activityStack.get(i).finish();
         }
     }
+
+    public static String formatTime(String pattern, long milli) {
+        int m = (int) (milli / (60 * 1000));
+        int s = (int) ((milli / 1000) % 60);
+        String mm = String.format("%02d", m);
+        String ss = String.format("%02d", s);
+        return pattern.replace("mm", mm).replace("ss", ss);
+    }
 }
