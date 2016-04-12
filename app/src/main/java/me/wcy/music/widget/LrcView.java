@@ -27,7 +27,7 @@ import me.wcy.music.utils.ScreenUtils;
  * Created by wcy on 2015/11/9.
  */
 public class LrcView extends View {
-    private static final String TAG = LrcView.class.getSimpleName();
+    private static final String TAG = "LrcView";
     private List<Long> mLrcTimes;
     private List<String> mLrcTexts;
     private Paint mNormalPaint;
@@ -38,7 +38,7 @@ public class LrcView extends View {
     private long mNextTime = 0L;
     private int mCurrentLine = 0;
     private float mAnimOffset;
-    private boolean mIsEnd = false;
+    private boolean isEnd = false;
 
     public LrcView(Context context) {
         this(context, null);
@@ -102,6 +102,10 @@ public class LrcView extends View {
             String upStr = mLrcTexts.get(i);
             float upX = (getWidth() - mNormalPaint.measureText(upStr)) / 2;
             float upY = centerY - (mTextSize + mDividerHeight) * (mCurrentLine - i);
+            // 超出屏幕停止绘制
+            if (upY - mTextSize < 0) {
+                break;
+            }
             canvas.drawText(upStr, upX, upY, mNormalPaint);
         }
 
@@ -110,6 +114,10 @@ public class LrcView extends View {
             String downStr = mLrcTexts.get(i);
             float downX = (getWidth() - mNormalPaint.measureText(downStr)) / 2;
             float downY = centerY + (mTextSize + mDividerHeight) * (i - mCurrentLine);
+            // 超出屏幕停止绘制
+            if (downY > getHeight()) {
+                break;
+            }
             canvas.drawText(downStr, downX, downY, mNormalPaint);
         }
     }
@@ -118,7 +126,6 @@ public class LrcView extends View {
      * 加载歌词文件
      *
      * @param path 歌词文件路径
-     * @throws Exception
      */
     public void loadLrc(String path) {
         reset();
@@ -156,7 +163,7 @@ public class LrcView extends View {
         mLrcTimes.clear();
         mCurrentLine = 0;
         mNextTime = 0L;
-        mIsEnd = false;
+        isEnd = false;
     }
 
     /**
@@ -166,10 +173,10 @@ public class LrcView extends View {
      */
     public synchronized void updateTime(long time) {
         // 避免重复绘制
-        if (time < mNextTime || mIsEnd) {
+        if (time < mNextTime || isEnd) {
             return;
         }
-        for (int i = 0; i < mLrcTimes.size(); i++) {
+        for (int i = mCurrentLine; i < mLrcTimes.size(); i++) {
             if (mLrcTimes.get(i) > time) {
                 Log.i(TAG, "lrc newline ...");
                 mNextTime = mLrcTimes.get(i);
@@ -177,10 +184,10 @@ public class LrcView extends View {
                 newLineAnim();
                 break;
             } else if (i == mLrcTimes.size() - 1) {
-                //最后一行
+                // 最后一行
                 Log.i(TAG, "lrc end ...");
                 mCurrentLine = mLrcTimes.size() - 1;
-                mIsEnd = true;
+                isEnd = true;
                 newLineAnim();
                 break;
             }
@@ -192,7 +199,7 @@ public class LrcView extends View {
             if (mLrcTimes.get(i) > progress) {
                 mNextTime = mLrcTimes.get(i);
                 mCurrentLine = i < 1 ? 0 : i - 1;
-                mIsEnd = false;
+                isEnd = false;
                 newLineAnim();
                 break;
             }
