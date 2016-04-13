@@ -5,9 +5,6 @@ import android.graphics.BitmapFactory;
 import android.support.v4.util.LruCache;
 import android.text.TextUtils;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-
 import me.wcy.music.R;
 import me.wcy.music.application.MusicApplication;
 
@@ -17,31 +14,41 @@ import me.wcy.music.application.MusicApplication;
  */
 public class CoverLoader {
     private static final String KEY_NULL = "null";
-    // 缩略图，用于音乐列表
+    /**
+     * 缩略图缓存，用于音乐列表
+     */
     private LruCache<String, Bitmap> mThumbnailCache;
-    // 高斯模糊图，用于播放页背景
+    /**
+     * 高斯模糊图缓存，用于播放页背景
+     */
     private LruCache<String, Bitmap> mBlurCache;
-    // 圆形图，用于播放页CD
+    /**
+     * 圆形图缓存，用于播放页CD
+     */
     private LruCache<String, Bitmap> mRoundCache;
 
     private CoverLoader() {
-        int maxSize = (int) (Runtime.getRuntime().maxMemory() / 8);
-        mThumbnailCache = new LruCache<String, Bitmap>(maxSize) {
+        // 获取当前进程的可用内存（单位KB）
+        int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+        // 缓存大小为当前进程可用内存的1/8
+        int cacheSize = maxMemory / 8;
+        mThumbnailCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
-            protected int sizeOf(String key, Bitmap value) {
-                return value.getRowBytes() * value.getHeight();
+            protected int sizeOf(String key, Bitmap bitmap) {
+                // 转换为KB，以达到与cacheSize的单位统一
+                return bitmap.getByteCount() / 1024;
             }
         };
-        mBlurCache = new LruCache<String, Bitmap>(maxSize) {
+        mBlurCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
-            protected int sizeOf(String key, Bitmap value) {
-                return value.getRowBytes() * value.getHeight();
+            protected int sizeOf(String key, Bitmap bitmap) {
+                return bitmap.getByteCount() / 1024;
             }
         };
-        mRoundCache = new LruCache<String, Bitmap>(maxSize) {
+        mRoundCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
-            protected int sizeOf(String key, Bitmap value) {
-                return value.getRowBytes() * value.getHeight();
+            protected int sizeOf(String key, Bitmap bitmap) {
+                return bitmap.getByteCount() / 1024;
             }
         };
     }
@@ -65,21 +72,8 @@ public class CoverLoader {
         } else {
             bitmap = mThumbnailCache.get(uri);
             if (bitmap == null) {
-                try {
-                    BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inJustDecodeBounds = true; // 仅获取大小
-                    BitmapFactory.decodeStream(new FileInputStream(uri), null, options);
-                    //压缩尺寸，避免卡顿
-                    int inSampleSize = options.outHeight / (ScreenUtils.getScreenWidth() / 10);
-                    if (inSampleSize <= 1) {
-                        inSampleSize = 1;
-                    }
-                    options.inSampleSize = inSampleSize;
-                    options.inJustDecodeBounds = false; // 获取bitmap
-                    bitmap = BitmapFactory.decodeStream(new FileInputStream(uri), null, options);
-                    bitmap = bitmap == null ? loadThumbnail(null) : bitmap;
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                bitmap = loadBitmap(uri, ScreenUtils.getScreenWidth() / 10);
+                if (bitmap == null) {
                     bitmap = loadThumbnail(null);
                 }
                 mThumbnailCache.put(uri, bitmap);
@@ -99,7 +93,7 @@ public class CoverLoader {
         } else {
             bitmap = mBlurCache.get(uri);
             if (bitmap == null) {
-                bitmap = loadNormal(uri);
+                bitmap = loadBitmap(uri, ScreenUtils.getScreenWidth() / 2);
                 if (bitmap == null) {
                     bitmap = loadBlur(null);
                 } else {
@@ -123,7 +117,7 @@ public class CoverLoader {
         } else {
             bitmap = mRoundCache.get(uri);
             if (bitmap == null) {
-                bitmap = loadNormal(uri);
+                bitmap = loadBitmap(uri, ScreenUtils.getScreenWidth() / 2);
                 if (bitmap == null) {
                     bitmap = loadRound(null);
                 } else {
@@ -137,25 +131,22 @@ public class CoverLoader {
     }
 
     /**
-     * 获得最大宽度为屏幕一半的图片,如果超出，则缩放
+     * 获得指定大小的bitmap
      */
-    private Bitmap loadNormal(String uri) {
-        Bitmap bitmap = null;
-        try {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            bitmap = BitmapFactory.decodeStream(new FileInputStream(uri), null, options);
-            // 压缩尺寸，避免卡顿
-            int inSampleSize = options.outWidth / (ScreenUtils.getScreenWidth() / 2);
-            if (inSampleSize <= 0) {
-                inSampleSize = 1;
-            }
-            options.inSampleSize = inSampleSize;
-            options.inJustDecodeBounds = false;
-            bitmap = BitmapFactory.decodeStream(new FileInputStream(uri), null, options);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+    private Bitmap loadBitmap(String uri, int length) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        // 仅获取大小
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(uri, options);
+        int maxLength = options.outWidth > options.outHeight ? options.outWidth : options.outHeight;
+        // 压缩尺寸，避免卡顿
+        int inSampleSize = maxLength / length;
+        if (inSampleSize < 1) {
+            inSampleSize = 1;
         }
-        return bitmap;
+        options.inSampleSize = inSampleSize;
+        // 获取bitmap
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFile(uri, options);
     }
 }

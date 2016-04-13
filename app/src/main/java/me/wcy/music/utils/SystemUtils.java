@@ -71,7 +71,11 @@ public class SystemUtils {
 
     public static void clearStack(List<BaseActivity> activityStack) {
         for (int i = activityStack.size() - 1; i >= 0; i--) {
-            activityStack.get(i).finish();
+            BaseActivity activity = activityStack.get(i);
+            activityStack.remove(activity);
+            if (!activity.isFinishing()) {
+                activity.finish();
+            }
         }
     }
 
