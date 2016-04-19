@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">@color/red</color>
-    <color name="colorPrimaryDark">@color/red_700</color>
+    <color name="colorPrimaryDark">@color/colorPrimary</color>
     <color name="colorAccent">@color/white</color>
     <color name="white">@android:color/white</color>
     <color name="black">@android:color/black</color>
     <color name="red">#F44336</color>
-    <color name="red_700">#D32F2F</color>
     <color name="blue">#2196F3</color>
     <color name="grey">#9E9E9E</color>
-    <color name="grey_300">#E0E0E0</color>
-    <color name="grey_400">#BDBDBD</color>
-    <color name="grey_600">#757575</color>
+    <color name="grey_900">#212121</color>
     <color name="translucent_white">#80FFFFFF</color>
     <color name="translucent_black">#80000000</color>
+    <color name="translucent_grey">#809E9E9E</color>
     <color name="translucent_white_8p">#14FFFFFF</color>
     <color name="translucent_white_16p">#29FFFFFF</color>
     <color name="translucent_white_24p">#3DFFFFFF</color>
+    <!--play bar-->
     <color name="translucent_white_96p">#F5FFFFFF</color>
     <color name="translucent_grey_300_96p">#F5E0E0E0</color>
+    <color name="translucent_grey_900_96p">#F5212121</color>
+    <color name="translucent_grey_700_96p">#F5616161</color>
 </resources>

@@ -11,6 +11,7 @@
         android:layout_width="?attr/actionBarSize"
         android:layout_height="?attr/actionBarSize"
         android:background="@drawable/play_page_back_selector"
+        android:contentDescription="@null"
         android:scaleType="centerInside"
         android:src="@drawable/ic_menu" />
 

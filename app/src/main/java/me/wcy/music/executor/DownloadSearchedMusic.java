@@ -45,7 +45,7 @@ public abstract class DownloadSearchedMusic {
     }
 
     private void checkNetwork() {
-        boolean mobileNetworkDownload = Preferences.enableMobileNetworkDownload(false);
+        boolean mobileNetworkDownload = Preferences.enableMobileNetworkDownload();
         if (NetworkUtils.isActiveNetworkMobile(mContext) && !mobileNetworkDownload) {
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setTitle(R.string.tips);

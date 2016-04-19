@@ -1,6 +1,5 @@
 package me.wcy.music.adapter;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import me.wcy.music.R;
-import me.wcy.music.activity.MusicActivity;
 import me.wcy.music.enums.MusicTypeEnum;
 import me.wcy.music.model.Music;
 import me.wcy.music.service.PlayService;
@@ -24,13 +22,8 @@ import me.wcy.music.utils.FileUtils;
  * Created by wcy on 2015/11/27.
  */
 public class LocalMusicAdapter extends BaseAdapter {
-    private Context mContext;
     private OnMoreClickListener mListener;
     private int mPlayingPosition;
-
-    public LocalMusicAdapter(Context context) {
-        mContext = context;
-    }
 
     @Override
     public int getCount() {
@@ -51,16 +44,16 @@ public class LocalMusicAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.view_holder_music, parent, false);
+            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_holder_music, parent, false);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         if (position == mPlayingPosition) {
-            holder.ivPlaying.setVisibility(View.VISIBLE);
+            holder.vPlaying.setVisibility(View.VISIBLE);
         } else {
-            holder.ivPlaying.setVisibility(View.INVISIBLE);
+            holder.vPlaying.setVisibility(View.INVISIBLE);
         }
         final Music music = PlayService.getMusicList().get(position);
         Bitmap cover = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
@@ -76,11 +69,15 @@ public class LocalMusicAdapter extends BaseAdapter {
                 }
             }
         });
+        holder.vDivider.setVisibility(isShowDivider(position) ? View.VISIBLE : View.GONE);
         return convertView;
     }
 
-    public void updatePlayingPosition() {
-        PlayService playService = ((MusicActivity) mContext).getPlayService();
+    private boolean isShowDivider(int position) {
+        return position != PlayService.getMusicList().size() - 1;
+    }
+
+    public void updatePlayingPosition(PlayService playService) {
         if (playService.getPlayingMusic() != null && playService.getPlayingMusic().getType() == MusicTypeEnum.LOCAL) {
             mPlayingPosition = playService.getPlayingPosition();
         } else {
@@ -93,8 +90,8 @@ public class LocalMusicAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        @Bind(R.id.iv_playing)
-        ImageView ivPlaying;
+        @Bind(R.id.v_playing)
+        View vPlaying;
         @Bind(R.id.iv_cover)
         ImageView ivCover;
         @Bind(R.id.tv_title)
@@ -103,6 +100,8 @@ public class LocalMusicAdapter extends BaseAdapter {
         TextView tvArtist;
         @Bind(R.id.iv_more)
         ImageView ivMore;
+        @Bind(R.id.v_divider)
+        View vDivider;
 
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);

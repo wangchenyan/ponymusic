@@ -14,6 +14,9 @@
     <string name="delete_music">删除%s？</string>
     <string name="setting_ringtone_success">设置铃声成功</string>
     <string name="no_local_music">暂无本地音乐</string>
+    <string name="song_list_item_title_1">1.%1$s - %2$s</string>
+    <string name="song_list_item_title_2">2.%1$s - %2$s</string>
+    <string name="song_list_item_title_3">3.%1$s - %2$s</string>
     <string name="mode_loop">列表循环</string>
     <string name="mode_shuffle">随机播放</string>
     <string name="mode_one">单曲循环</string>
@@ -33,7 +36,6 @@
     <string name="artist_info_weight">体重：%skg</string>
     <string name="artist_info_birth">生日：%s</string>
     <string name="artist_info_intro">简介：%s</string>
-    <string name="artist_info_url">&lt;font color="#2196F3"&gt;&lt;a href="%s"&gt;查看更多信息&lt;/a&gt;&lt;/font&gt;</string>
     <string name="artist_info_empty">暂无歌手信息</string>
     <string name="share_music">我用%1$s分享了歌曲《%2$s》%3$s</string>
     <string name="search_tips">歌曲名、歌手名</string>
@@ -42,20 +44,21 @@
     <string name="menu_setting">功能设置</string>
     <string name="menu_share">推荐给朋友</string>
     <string name="menu_about">关于波尼音乐</string>
+    <string name="menu_night">夜间模式</string>
     <string name="menu_timer">定时停止播放</string>
     <string name="menu_exit">退出应用</string>
     <string name="setting_key_mobile_network_play">mobile_network_play</string>
     <string name="setting_key_mobile_network_download">mobile_network_download</string>
     <string name="setting_key_sound_effect">sound_effect</string>
     <string name="network">网络</string>
-    <string name="mobile_network_play">使用2G/3G/4G网络播放</string>
-    <string name="mobile_network_download">使用2G/3G/4G网络下载</string>
+    <string name="mobile_network_play">使用移动网络播放</string>
+    <string name="mobile_network_download">使用移动网络下载</string>
     <string name="play">播放</string>
     <string name="sound_effect">音效调节</string>
     <string name="tips">温馨提示</string>
-    <string name="play_tips">当前处于2G/3G/4G网络，确定打开2G/3G/4G网络播放开关吗？</string>
+    <string name="play_tips">当前处于移动网络，确定打开移动网络播放开关吗？</string>
     <string name="play_tips_sure">立即打开</string>
-    <string name="download_tips">当前处于2G/3G/4G网络，下载将消耗较多流量，是否继续下载？</string>
+    <string name="download_tips">当前处于移动网络，下载将消耗较多流量，是否继续下载？</string>
     <string name="download_tips_sure">继续下载</string>
     <string name="device_not_support">您的设备不支持此功能</string>
     <string name="weather_temp">%s°</string>

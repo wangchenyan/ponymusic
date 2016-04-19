@@ -8,6 +8,7 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -24,7 +25,6 @@ import me.wcy.music.enums.LoadStateEnum;
 import me.wcy.music.model.JArtistInfo;
 import me.wcy.music.utils.Constants;
 import me.wcy.music.utils.Extras;
-import me.wcy.music.utils.ScreenUtils;
 import me.wcy.music.utils.ViewUtils;
 import okhttp3.Call;
 
@@ -78,9 +78,6 @@ public class ArtistInfoActivity extends BaseActivity {
     }
 
     private void onSuccess(JArtistInfo jArtistInfo) {
-        int textColor = getResources().getColor(R.color.black);
-        float textSize = 16.0f;
-
         String name = jArtistInfo.getName();
         String avatarUri = jArtistInfo.getAvatar_s1000();
         String country = jArtistInfo.getCountry();
@@ -103,73 +100,51 @@ public class ArtistInfoActivity extends BaseActivity {
                     .bitmapConfig(Bitmap.Config.RGB_565)
                     .build();
             ImageLoader.getInstance().displayImage(avatarUri, ivAvatar, options);
-            llArtistInfoContainer.addView(ivAvatar, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            llArtistInfoContainer.addView(ivAvatar);
         }
         if (!TextUtils.isEmpty(name)) {
             setTitle(name);
-            TextView tvName = new TextView(this);
+            TextView tvName = (TextView) LayoutInflater.from(this).inflate(R.layout.item_artist_info, llArtistInfoContainer, false);
             tvName.setText(getString(R.string.artist_info_name, name));
-            tvName.setTextColor(textColor);
-            tvName.setTextSize(textSize);
-            tvName.setPadding(0, ScreenUtils.dp2px(10), 0, 0);
-            llArtistInfoContainer.addView(tvName, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            llArtistInfoContainer.addView(tvName);
         }
         if (!TextUtils.isEmpty(country)) {
-            TextView tvCountry = new TextView(this);
+            TextView tvCountry = (TextView) LayoutInflater.from(this).inflate(R.layout.item_artist_info, llArtistInfoContainer, false);
             tvCountry.setText(getString(R.string.artist_info_country, country));
-            tvCountry.setTextColor(textColor);
-            tvCountry.setTextSize(textSize);
-            tvCountry.setPadding(0, ScreenUtils.dp2px(10), 0, 0);
-            llArtistInfoContainer.addView(tvCountry, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            llArtistInfoContainer.addView(tvCountry);
         }
         if (!TextUtils.isEmpty(constellation) && !constellation.equals("未知")) {
-            TextView tvConstellation = new TextView(this);
+            TextView tvConstellation = (TextView) LayoutInflater.from(this).inflate(R.layout.item_artist_info, llArtistInfoContainer, false);
             tvConstellation.setText(getString(R.string.artist_info_constellation, constellation));
-            tvConstellation.setTextColor(textColor);
-            tvConstellation.setTextSize(textSize);
-            tvConstellation.setPadding(0, ScreenUtils.dp2px(10), 0, 0);
-            llArtistInfoContainer.addView(tvConstellation, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            llArtistInfoContainer.addView(tvConstellation);
         }
         if (stature != 0f) {
-            TextView tvStature = new TextView(this);
+            TextView tvStature = (TextView) LayoutInflater.from(this).inflate(R.layout.item_artist_info, llArtistInfoContainer, false);
             tvStature.setText(getString(R.string.artist_info_stature, stature));
-            tvStature.setTextColor(textColor);
-            tvStature.setTextSize(textSize);
-            tvStature.setPadding(0, ScreenUtils.dp2px(10), 0, 0);
-            llArtistInfoContainer.addView(tvStature, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            llArtistInfoContainer.addView(tvStature);
         }
         if (weight != 0f) {
-            TextView tvWeight = new TextView(this);
+            TextView tvWeight = (TextView) LayoutInflater.from(this).inflate(R.layout.item_artist_info, llArtistInfoContainer, false);
             tvWeight.setText(getString(R.string.artist_info_weight, weight));
-            tvWeight.setTextColor(textColor);
-            tvWeight.setTextSize(textSize);
-            tvWeight.setPadding(0, ScreenUtils.dp2px(10), 0, 0);
-            llArtistInfoContainer.addView(tvWeight, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            llArtistInfoContainer.addView(tvWeight);
         }
         if (!TextUtils.isEmpty(birth) && !birth.equals("0000-00-00")) {
-            TextView tvBirth = new TextView(this);
+            TextView tvBirth = (TextView) LayoutInflater.from(this).inflate(R.layout.item_artist_info, llArtistInfoContainer, false);
             tvBirth.setText(getString(R.string.artist_info_birth, birth));
-            tvBirth.setTextColor(textColor);
-            tvBirth.setTextSize(textSize);
-            tvBirth.setPadding(0, ScreenUtils.dp2px(10), 0, 0);
-            llArtistInfoContainer.addView(tvBirth, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            llArtistInfoContainer.addView(tvBirth);
         }
         if (!TextUtils.isEmpty(intro)) {
-            TextView tvIntro = new TextView(this);
+            TextView tvIntro = (TextView) LayoutInflater.from(this).inflate(R.layout.item_artist_info, llArtistInfoContainer, false);
             tvIntro.setText(getString(R.string.artist_info_intro, intro));
-            tvIntro.setTextColor(textColor);
-            tvIntro.setTextSize(textSize);
-            tvIntro.setPadding(0, ScreenUtils.dp2px(10), 0, 0);
-            llArtistInfoContainer.addView(tvIntro, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            llArtistInfoContainer.addView(tvIntro);
         }
         if (!TextUtils.isEmpty(url)) {
-            TextView tvUrl = new TextView(this);
-            tvUrl.setText(Html.fromHtml(getString(R.string.artist_info_url, url)));
+            TextView tvUrl = (TextView) LayoutInflater.from(this).inflate(R.layout.item_artist_info, llArtistInfoContainer, false);
+            String html = "<font color='#2196F3'><a href='%s'>查看更多信息</a></font>";
+            tvUrl.setText(Html.fromHtml(String.format(html, url)));
             tvUrl.setMovementMethod(LinkMovementMethod.getInstance());
-            tvUrl.setTextSize(textSize);
-            tvUrl.setPadding(0, ScreenUtils.dp2px(10), 0, 0);
             tvUrl.setGravity(Gravity.CENTER);
-            llArtistInfoContainer.addView(tvUrl, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            llArtistInfoContainer.addView(tvUrl);
         }
 
         if (llArtistInfoContainer.getChildCount() == 0) {

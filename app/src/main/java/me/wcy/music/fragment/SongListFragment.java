@@ -57,8 +57,8 @@ public class SongListFragment extends BaseFragment implements AdapterView.OnItem
             info.setType(types[i]);
             mData.add(info);
         }
-        SongListAdapter mAdapter = new SongListAdapter(getActivity(), mData);
-        lvSongList.setAdapter(mAdapter);
+        SongListAdapter adapter = new SongListAdapter(mData);
+        lvSongList.setAdapter(adapter);
     }
 
     @Override

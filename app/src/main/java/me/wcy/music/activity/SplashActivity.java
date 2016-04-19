@@ -117,7 +117,7 @@ public class SplashActivity extends BaseActivity {
                         if (response == null || TextUtils.isEmpty(response.getImg())) {
                             return;
                         }
-                        String lastImgUrl = Preferences.getSplashUrl("");
+                        String lastImgUrl = Preferences.getSplashUrl();
                         if (lastImgUrl.equals(response.getImg())) {
                             return;
                         }

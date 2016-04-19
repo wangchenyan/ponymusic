@@ -27,6 +27,7 @@ public class AboutActivity extends BaseActivity {
     public static class AboutFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
         private Preference mVersion;
         private Preference mUpdate;
+        private Preference mShare;
         private Preference mStar;
         private Preference mWeibo;
         private Preference mJianshu;
@@ -39,6 +40,7 @@ public class AboutActivity extends BaseActivity {
 
             mVersion = findPreference("version");
             mUpdate = findPreference("update");
+            mShare = findPreference("share");
             mStar = findPreference("star");
             mWeibo = findPreference("weibo");
             mJianshu = findPreference("jianshu");
@@ -50,6 +52,7 @@ public class AboutActivity extends BaseActivity {
 
         private void setListener() {
             mUpdate.setOnPreferenceClickListener(this);
+            mShare.setOnPreferenceClickListener(this);
             mStar.setOnPreferenceClickListener(this);
             mWeibo.setOnPreferenceClickListener(this);
             mJianshu.setOnPreferenceClickListener(this);
@@ -61,6 +64,9 @@ public class AboutActivity extends BaseActivity {
             if (preference == mUpdate) {
                 UpdateUtils.checkUpdate(getActivity());
                 return true;
+            } else if (preference == mShare) {
+                share();
+                return true;
             } else if (preference == mStar) {
                 openUrl(getString(R.string.about_project_url));
                 return true;
@@ -69,6 +75,13 @@ public class AboutActivity extends BaseActivity {
                 return true;
             }
             return false;
+        }
+
+        private void share() {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app, getString(R.string.app_name)));
+            startActivity(Intent.createChooser(intent, getString(R.string.share)));
         }
 
         private void openUrl(String url) {

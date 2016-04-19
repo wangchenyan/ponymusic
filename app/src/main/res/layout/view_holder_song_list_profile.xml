@@ -11,14 +11,15 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@null"
         android:src="@drawable/ic_online_music_list_profile_headline" />
 
     <TextView
         android:id="@+id/tv_profile"
+        style="@style/AppTheme.Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:text="主打榜单"
-        android:textColor="@android:color/black"
         android:textSize="16sp" />
 </LinearLayout>

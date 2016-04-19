@@ -2,7 +2,10 @@ package me.wcy.music.application;
 
 import android.app.Application;
 import android.content.pm.ApplicationInfo;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.support.v4.util.LongSparseArray;
+import android.util.DisplayMetrics;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -19,13 +22,17 @@ import me.wcy.music.utils.ToastUtils;
 public class MusicApplication extends Application {
     private static MusicApplication sInstance;
     private LongSparseArray<String> mDownloadList = new LongSparseArray<>();
+    private static Resources sRes;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
         sInstance = this;
+        sRes = getResources();
         ToastUtils.init(this);
         Preferences.init(this);
+        updateNightMode(Preferences.isNightMode());
         CrashHandler.getInstance().init();
         initImageLoader();
         FIR.init(this);
@@ -50,5 +57,13 @@ public class MusicApplication extends Application {
                 .diskCacheSize(50 * 1024 * 1024)
                 .build();
         ImageLoader.getInstance().init(configuration);
+    }
+
+    public static void updateNightMode(boolean on) {
+        DisplayMetrics dm = sRes.getDisplayMetrics();
+        Configuration config = sRes.getConfiguration();
+        config.uiMode &= ~Configuration.UI_MODE_NIGHT_MASK;
+        config.uiMode |= on ? Configuration.UI_MODE_NIGHT_YES : Configuration.UI_MODE_NIGHT_NO;
+        sRes.updateConfiguration(config, dm);
     }
 }

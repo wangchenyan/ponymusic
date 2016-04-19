@@ -208,7 +208,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     }
 
     public int next() {
-        PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode(0));
+        PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode());
         switch (mode) {
             case LOOP:
                 return play(mPlayingPosition + 1);
@@ -223,7 +223,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     }
 
     public int prev() {
-        PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode(0));
+        PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode());
         switch (mode) {
             case LOOP:
                 return play(mPlayingPosition - 1);
@@ -278,7 +278,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
      */
     public void updatePlayingPosition() {
         int position = 0;
-        long id = Preferences.getCurrentSongId(-1);
+        long id = Preferences.getCurrentSongId();
         for (int i = 0; i < getMusicList().size(); i++) {
             if (getMusicList().get(i).getId() == id) {
                 position = i;

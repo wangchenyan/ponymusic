@@ -54,7 +54,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
 
     @Override
     protected void init() {
-        mAdapter = new LocalMusicAdapter(getActivity());
+        mAdapter = new LocalMusicAdapter();
         mAdapter.setOnMoreClickListener(this);
         lvLocalMusic.setAdapter(mAdapter);
         if (getPlayService().getPlayingMusic() != null && getPlayService().getPlayingMusic().getType() == MusicTypeEnum.LOCAL) {
@@ -77,7 +77,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         } else {
             tvEmpty.setVisibility(View.GONE);
         }
-        mAdapter.updatePlayingPosition();
+        mAdapter.updatePlayingPosition(getPlayService());
         mAdapter.notifyDataSetChanged();
     }
 

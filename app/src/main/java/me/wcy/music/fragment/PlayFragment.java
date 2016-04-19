@@ -148,7 +148,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void initPlayMode() {
-        int mode = Preferences.getPlayMode(0);
+        int mode = Preferences.getPlayMode();
         ivMode.setImageLevel(mode);
     }
 
@@ -278,7 +278,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void switchPlayMode() {
-        PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode(0));
+        PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode());
         switch (mode) {
             case LOOP:
                 mode = PlayModeEnum.SHUFFLE;

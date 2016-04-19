@@ -10,13 +10,10 @@
             android:icon="@drawable/ic_menu_settings"
             android:title="@string/menu_setting" />
         <item
-            android:id="@+id/action_share"
-            android:icon="@drawable/ic_menu_share"
-            android:title="@string/menu_share" />
-        <item
-            android:id="@+id/action_about"
-            android:icon="@drawable/ic_menu_about"
-            android:title="@string/menu_about" />
+            android:id="@+id/action_night"
+            android:icon="@drawable/ic_menu_night"
+            android:title="@string/menu_night"
+            android:visible="false" />
         <item
             android:id="@+id/action_timer"
             android:icon="@drawable/ic_menu_timer"
@@ -25,5 +22,9 @@
             android:id="@+id/action_exit"
             android:icon="@drawable/ic_menu_exit"
             android:title="@string/menu_exit" />
+        <item
+            android:id="@+id/action_about"
+            android:icon="@drawable/ic_menu_about"
+            android:title="@string/menu_about" />
     </group>
 </menu>

@@ -55,7 +55,8 @@ import me.wcy.music.widget.AutoLoadListView;
 import me.wcy.music.widget.OnLoadListener;
 import okhttp3.Call;
 
-public class OnlineMusicActivity extends BaseActivity implements OnItemClickListener, OnMoreClickListener, OnLoadListener {
+public class OnlineMusicActivity extends BaseActivity implements OnItemClickListener
+        , OnMoreClickListener, OnLoadListener {
     @Bind(R.id.lv_online_music_list)
     AutoLoadListView lvOnlineMusic;
     @Bind(R.id.ll_loading)
@@ -88,7 +89,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         vHeader.setLayoutParams(params);
         lvOnlineMusic.addHeaderView(vHeader, null, false);
         mMusicList = new ArrayList<>();
-        mAdapter = new OnlineMusicAdapter(this, mMusicList);
+        mAdapter = new OnlineMusicAdapter(mMusicList);
         lvOnlineMusic.setAdapter(mAdapter);
         lvOnlineMusic.setOnLoadListener(this);
         mProgressDialog = new ProgressDialog(this);

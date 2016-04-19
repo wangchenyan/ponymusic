@@ -9,6 +9,9 @@
             android:key="update"
             android:title="检查更新" />
         <Preference
+            android:key="share"
+            android:title="@string/menu_share" />
+        <Preference
             android:key="star"
             android:summary="前往项目地址给个Star，鼓励作者"
             android:title="给我点赞" />

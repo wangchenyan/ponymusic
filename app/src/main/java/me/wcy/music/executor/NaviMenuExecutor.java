@@ -1,8 +1,10 @@
 package me.wcy.music.executor;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 
@@ -11,7 +13,9 @@ import me.wcy.music.activity.AboutActivity;
 import me.wcy.music.activity.MusicActivity;
 import me.wcy.music.activity.SearchMusicActivity;
 import me.wcy.music.activity.SettingActivity;
+import me.wcy.music.application.MusicApplication;
 import me.wcy.music.service.PlayService;
+import me.wcy.music.utils.Preferences;
 import me.wcy.music.utils.ToastUtils;
 
 /**
@@ -28,17 +32,17 @@ public class NaviMenuExecutor {
             case R.id.action_setting:
                 startActivity(context, SettingActivity.class);
                 return true;
-            case R.id.action_share:
-                share(context);
-                return true;
+            case R.id.action_night:
+                nightMode(context);
+                break;
             case R.id.action_timer:
                 timerDialog(context);
                 return true;
-            case R.id.action_about:
-                startActivity(context, AboutActivity.class);
-                return true;
             case R.id.action_exit:
                 exit(context);
+                return true;
+            case R.id.action_about:
+                startActivity(context, AboutActivity.class);
                 return true;
         }
         return false;
@@ -47,6 +51,26 @@ public class NaviMenuExecutor {
     private static void startActivity(Context context, Class<?> cls) {
         Intent intent = new Intent(context, cls);
         context.startActivity(intent);
+    }
+
+    private static void nightMode(Context context) {
+        if (context instanceof MusicActivity) {
+            final MusicActivity activity = (MusicActivity) context;
+            final boolean on = !Preferences.isNightMode();
+            MusicApplication.updateNightMode(on);
+            final ProgressDialog dialog = new ProgressDialog(activity);
+            dialog.setCancelable(false);
+            dialog.show();
+            Handler handler = new Handler(activity.getMainLooper());
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    dialog.cancel();
+                    activity.recreate();
+                    Preferences.saveNightMode(on);
+                }
+            }, 500);
+        }
     }
 
     private static void timerDialog(final Context context) {
@@ -73,13 +97,6 @@ public class NaviMenuExecutor {
                 ToastUtils.show(R.string.timer_cancel);
             }
         }
-    }
-
-    private static void share(Context context) {
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.share_app, context.getString(R.string.app_name)));
-        context.startActivity(Intent.createChooser(intent, context.getString(R.string.share)));
     }
 
     private static void exit(Context context) {

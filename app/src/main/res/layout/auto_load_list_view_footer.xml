@@ -18,7 +18,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="正在加载更多…"
-            android:textColor="@color/black" />
+            android:text="正在加载更多…" />
     </LinearLayout>
 </LinearLayout>

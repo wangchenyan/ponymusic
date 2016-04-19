@@ -327,6 +327,11 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        // 切换夜间模式不保存状态
+    }
+
+    @Override
     public void onBackPressed() {
         if (mPlayFragment != null && isPlayFragmentShow) {
             hidePlayingFragment();

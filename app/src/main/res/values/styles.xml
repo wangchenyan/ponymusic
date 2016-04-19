@@ -16,4 +16,12 @@
     <style name="AppTheme.Setting" parent="AppBaseTheme">
         <item name="colorAccent">?attr/colorPrimary</item>
     </style>
+
+    <style name="AppTheme.Divider">
+        <item name="android:background">?android:attr/listDivider</item>
+    </style>
+
+    <style name="AppTheme.Text" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>

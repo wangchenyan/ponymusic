@@ -44,7 +44,7 @@ public abstract class PlayOnlineMusic {
     }
 
     private void checkNetwork() {
-        boolean mobileNetworkPlay = Preferences.enableMobileNetworkPlay(false);
+        boolean mobileNetworkPlay = Preferences.enableMobileNetworkPlay();
         if (NetworkUtils.isActiveNetworkMobile(mContext) && !mobileNetworkPlay) {
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setTitle(R.string.tips);

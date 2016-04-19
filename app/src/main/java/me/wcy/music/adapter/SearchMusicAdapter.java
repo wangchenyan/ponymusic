@@ -1,6 +1,5 @@
 package me.wcy.music.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +19,10 @@ import me.wcy.music.model.JSearchMusic;
  * Created by hzwangchenyan on 2016/1/13.
  */
 public class SearchMusicAdapter extends BaseAdapter {
-    private Context mContext;
     private List<JSearchMusic.JSong> mData;
     private OnMoreClickListener mListener;
 
-    public SearchMusicAdapter(Context context, List<JSearchMusic.JSong> data) {
-        mContext = context;
+    public SearchMusicAdapter(List<JSearchMusic.JSong> data) {
         mData = data;
     }
 
@@ -48,7 +45,7 @@ public class SearchMusicAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.view_holder_music, parent, false);
+            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_holder_music, parent, false);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         } else {
@@ -62,7 +59,12 @@ public class SearchMusicAdapter extends BaseAdapter {
                 mListener.onMoreClick(position);
             }
         });
+        holder.vDivider.setVisibility(isShowDivider(position) ? View.VISIBLE : View.GONE);
         return convertView;
+    }
+
+    private boolean isShowDivider(int position) {
+        return position != mData.size() - 1;
     }
 
     public void setOnMoreClickListener(OnMoreClickListener listener) {
@@ -78,6 +80,8 @@ public class SearchMusicAdapter extends BaseAdapter {
         TextView tvArtist;
         @Bind(R.id.iv_more)
         ImageView ivMore;
+        @Bind(R.id.v_divider)
+        View vDivider;
 
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);

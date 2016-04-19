@@ -31,7 +31,6 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="1.加载中…"
-                android:textColor="@color/grey_600"
                 android:textSize="12sp" />
 
             <TextView
@@ -42,7 +41,6 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="2.加载中…"
-                android:textColor="@color/grey_600"
                 android:textSize="12sp" />
 
             <TextView
@@ -53,15 +51,15 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="3.加载中…"
-                android:textColor="@color/grey_600"
                 android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
 
-    <include
-        layout="@layout/include_divider"
+    <View
+        android:id="@+id/v_divider"
+        style="@style/AppTheme.Divider"
         android:layout_width="match_parent"
-        android:layout_height="1px"
+        android:layout_height="@dimen/divider_height"
         android:layout_gravity="bottom"
         android:layout_marginLeft="110dp" />
 </FrameLayout>

@@ -43,7 +43,8 @@ import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.ViewUtils;
 import okhttp3.Call;
 
-public class SearchMusicActivity extends BaseActivity implements SearchView.OnQueryTextListener, AdapterView.OnItemClickListener, OnMoreClickListener {
+public class SearchMusicActivity extends BaseActivity implements SearchView.OnQueryTextListener
+        , AdapterView.OnItemClickListener, OnMoreClickListener {
     @Bind(R.id.lv_search_music_list)
     ListView lvSearchMusic;
     @Bind(R.id.ll_loading)
@@ -67,7 +68,7 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
 
         bindService();
         mSearchMusicList = new ArrayList<>();
-        mAdapter = new SearchMusicAdapter(this, mSearchMusicList);
+        mAdapter = new SearchMusicAdapter(mSearchMusicList);
         lvSearchMusic.setAdapter(mAdapter);
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.loading));

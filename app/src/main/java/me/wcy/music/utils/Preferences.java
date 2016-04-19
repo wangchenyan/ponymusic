@@ -15,6 +15,7 @@ public class Preferences {
     private static final String MUSIC_ID = "music_id";
     private static final String PLAY_MODE = "play_mode";
     private static final String SPLASH_URL = "splash_url";
+    private static final String NIGHT_MODE = "night_mode";
 
     private static Context sContext;
 
@@ -22,44 +23,52 @@ public class Preferences {
         sContext = context.getApplicationContext();
     }
 
-    public static long getCurrentSongId(long defValue) {
-        return getLong(MUSIC_ID, defValue);
+    public static long getCurrentSongId() {
+        return getLong(MUSIC_ID, -1);
     }
 
     public static void saveCurrentSongId(long id) {
         saveLong(MUSIC_ID, id);
     }
 
-    public static int getPlayMode(int defValue) {
-        return getInt(PLAY_MODE, defValue);
+    public static int getPlayMode() {
+        return getInt(PLAY_MODE, 0);
     }
 
     public static void savePlayMode(int mode) {
         saveInt(PLAY_MODE, mode);
     }
 
-    public static String getSplashUrl(String defValue) {
-        return getString(SPLASH_URL, defValue);
+    public static String getSplashUrl() {
+        return getString(SPLASH_URL, "");
     }
 
     public static void saveSplashUrl(String url) {
         saveString(SPLASH_URL, url);
     }
 
-    public static boolean enableMobileNetworkPlay(boolean defValue) {
-        return getBoolean(sContext.getString(R.string.setting_key_mobile_network_play), defValue);
+    public static boolean enableMobileNetworkPlay() {
+        return getBoolean(sContext.getString(R.string.setting_key_mobile_network_play), false);
     }
 
     public static void saveMobileNetworkPlay(boolean enable) {
         saveBoolean(sContext.getString(R.string.setting_key_mobile_network_play), enable);
     }
 
-    public static boolean enableMobileNetworkDownload(boolean defValue) {
-        return getBoolean(sContext.getString(R.string.setting_key_mobile_network_download), defValue);
+    public static boolean enableMobileNetworkDownload() {
+        return getBoolean(sContext.getString(R.string.setting_key_mobile_network_download), false);
     }
 
     public static void saveMobileNetworkDownload(boolean enable) {
         saveBoolean(sContext.getString(R.string.setting_key_mobile_network_download), enable);
+    }
+
+    public static boolean isNightMode() {
+        return getBoolean(NIGHT_MODE, false);
+    }
+
+    public static void saveNightMode(boolean on) {
+        saveBoolean(NIGHT_MODE, on);
     }
 
     private static boolean getBoolean(String key, boolean defValue) {

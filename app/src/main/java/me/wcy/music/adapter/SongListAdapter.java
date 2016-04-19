@@ -31,11 +31,9 @@ import okhttp3.Call;
 public class SongListAdapter extends BaseAdapter {
     private static final int TYPE_PROFILE = 0;
     private static final int TYPE_MUSIC_LIST = 1;
-    private Context mContext;
     private List<SongListInfo> mData;
 
-    public SongListAdapter(Context context, List<SongListInfo> data) {
-        mContext = context;
+    public SongListAdapter(List<SongListInfo> data) {
         mData = data;
     }
 
@@ -75,6 +73,7 @@ public class SongListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        Context context = parent.getContext();
         ViewHolderProfile holderProfile;
         ViewHolderMusicList holderMusicList;
         SongListInfo songListInfo = mData.get(position);
@@ -82,7 +81,7 @@ public class SongListAdapter extends BaseAdapter {
         switch (itemViewType) {
             case TYPE_PROFILE:
                 if (convertView == null) {
-                    convertView = LayoutInflater.from(mContext).inflate(R.layout.view_holder_song_list_profile, parent, false);
+                    convertView = LayoutInflater.from(context).inflate(R.layout.view_holder_song_list_profile, parent, false);
                     holderProfile = new ViewHolderProfile(convertView);
                     convertView.setTag(holderProfile);
                 } else {
@@ -92,25 +91,30 @@ public class SongListAdapter extends BaseAdapter {
                 break;
             case TYPE_MUSIC_LIST:
                 if (convertView == null) {
-                    convertView = LayoutInflater.from(mContext).inflate(R.layout.view_holder_song_list, parent, false);
+                    convertView = LayoutInflater.from(context).inflate(R.layout.view_holder_song_list, parent, false);
                     holderMusicList = new ViewHolderMusicList(convertView);
                     convertView.setTag(holderMusicList);
                 } else {
                     holderMusicList = (ViewHolderMusicList) convertView.getTag();
                 }
-                getMusicListInfo(songListInfo, holderMusicList);
+                getMusicListInfo(context, songListInfo, holderMusicList);
+                holderMusicList.vDivider.setVisibility(isShowDivider(position) ? View.VISIBLE : View.GONE);
                 break;
         }
         return convertView;
     }
 
-    private void getMusicListInfo(final SongListInfo songListInfo, final ViewHolderMusicList holderMusicList) {
+    private boolean isShowDivider(int position) {
+        return position != mData.size() - 1;
+    }
+
+    private void getMusicListInfo(final Context context, final SongListInfo songListInfo, final ViewHolderMusicList holderMusicList) {
         if (songListInfo.getCoverUrl() == null) {
+            holderMusicList.ivCover.setTag(songListInfo.getTitle());
             holderMusicList.ivCover.setImageResource(R.drawable.default_cover);
             holderMusicList.tvMusic1.setText("1.加载中…");
             holderMusicList.tvMusic2.setText("2.加载中…");
             holderMusicList.tvMusic3.setText("3.加载中…");
-            holderMusicList.ivCover.setTag(songListInfo);
             OkHttpUtils.get().url(Constants.BASE_URL)
                     .addParams(Constants.PARAM_METHOD, Constants.METHOD_GET_MUSIC_LIST)
                     .addParams(Constants.PARAM_TYPE, songListInfo.getType())
@@ -122,30 +126,27 @@ public class SongListAdapter extends BaseAdapter {
                             if (response == null || response.getSong_list() == null) {
                                 return;
                             }
-                            if (holderMusicList.ivCover.getTag() != songListInfo) {
+                            if (!songListInfo.getTitle().equals(holderMusicList.ivCover.getTag())) {
                                 return;
                             }
                             JOnlineMusic[] jOnlineMusics = response.getSong_list();
                             songListInfo.setCoverUrl(response.getBillboard().getPic_s260());
                             if (jOnlineMusics.length >= 1) {
-                                songListInfo.setMusic1("1." + jOnlineMusics[0].getTitle() + " - " + jOnlineMusics[0].getArtist_name());
+                                songListInfo.setMusic1(context.getString(R.string.song_list_item_title_1, jOnlineMusics[0].getTitle(), jOnlineMusics[0].getArtist_name()));
                             } else {
                                 songListInfo.setMusic1("");
                             }
                             if (jOnlineMusics.length >= 2) {
-                                songListInfo.setMusic2("2." + jOnlineMusics[1].getTitle() + " - " + jOnlineMusics[1].getArtist_name());
+                                songListInfo.setMusic2(context.getString(R.string.song_list_item_title_2, jOnlineMusics[1].getTitle(), jOnlineMusics[1].getArtist_name()));
                             } else {
                                 songListInfo.setMusic2("");
                             }
                             if (jOnlineMusics.length >= 3) {
-                                songListInfo.setMusic3("3." + jOnlineMusics[2].getTitle() + " - " + jOnlineMusics[2].getArtist_name());
+                                songListInfo.setMusic3(context.getString(R.string.song_list_item_title_3, jOnlineMusics[2].getTitle(), jOnlineMusics[2].getArtist_name()));
                             } else {
                                 songListInfo.setMusic3("");
                             }
-                            ImageLoader.getInstance().displayImage(songListInfo.getCoverUrl(), holderMusicList.ivCover, ImageUtils.getCoverDisplayOptions());
-                            holderMusicList.tvMusic1.setText(songListInfo.getMusic1());
-                            holderMusicList.tvMusic2.setText(songListInfo.getMusic2());
-                            holderMusicList.tvMusic3.setText(songListInfo.getMusic3());
+                            setData(songListInfo, holderMusicList);
                         }
 
                         @Override
@@ -153,11 +154,16 @@ public class SongListAdapter extends BaseAdapter {
                         }
                     });
         } else {
-            ImageLoader.getInstance().displayImage(songListInfo.getCoverUrl(), holderMusicList.ivCover, ImageUtils.getCoverDisplayOptions());
-            holderMusicList.tvMusic1.setText(songListInfo.getMusic1());
-            holderMusicList.tvMusic2.setText(songListInfo.getMusic2());
-            holderMusicList.tvMusic3.setText(songListInfo.getMusic3());
+            holderMusicList.ivCover.setTag(null);
+            setData(songListInfo, holderMusicList);
         }
+    }
+
+    private void setData(SongListInfo songListInfo, ViewHolderMusicList holderMusicList) {
+        ImageLoader.getInstance().displayImage(songListInfo.getCoverUrl(), holderMusicList.ivCover, ImageUtils.getCoverDisplayOptions());
+        holderMusicList.tvMusic1.setText(songListInfo.getMusic1());
+        holderMusicList.tvMusic2.setText(songListInfo.getMusic2());
+        holderMusicList.tvMusic3.setText(songListInfo.getMusic3());
     }
 
     class ViewHolderProfile {
@@ -178,6 +184,8 @@ public class SongListAdapter extends BaseAdapter {
         TextView tvMusic2;
         @Bind(R.id.tv_music_3)
         TextView tvMusic3;
+        @Bind(R.id.v_divider)
+        View vDivider;
 
         public ViewHolderMusicList(View view) {
             ButterKnife.bind(this, view);
