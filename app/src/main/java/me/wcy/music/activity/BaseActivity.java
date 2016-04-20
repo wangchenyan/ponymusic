@@ -2,6 +2,7 @@ package me.wcy.music.activity;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,6 +37,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         mHandler = new Handler();
         setSystemBarTransparent();
         PlayService.addToStack(this);
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
     }
 
     @Override
