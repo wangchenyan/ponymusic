@@ -40,20 +40,22 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
     private float mNeedleRotation = NEEDLE_ROTATION_PLAY;
     private boolean mIsPlaying = false;
 
-    private float mDiscPX = -1.0f;
-    private float mDiscPY = -1.0f;
-    private float mDiscDX = -1.0f;
-    private float mDiscDY = -1.0f;
-    private float mCoverPX = -1.0f;
-    private float mCoverPY = -1.0f;
-    private float mCoverDX = -1.0f;
-    private float mCoverDY = -1.0f;
-    private float mNeedlePX = -1.0f;
-    private float mNeedlePY = -1.0f;
-    private float mNeedleDX = -1.0f;
-    private float mNeedleDY = -1.0f;
-    private int mTopLineHeight = -1;
-    private int mCoverBorderWidth = -1;
+    private int mTopLineHeight = ScreenUtils.dp2px(1);
+    private int mCoverBorderWidth = ScreenUtils.dp2px(1);
+    // 圆心坐标
+    private float mDiscPX;
+    private float mDiscPY;
+    // 旋转半径端点坐标
+    private float mDiscDX;
+    private float mDiscDY;
+    private float mCoverPX;
+    private float mCoverPY;
+    private float mCoverDX;
+    private float mCoverDY;
+    private float mNeedlePX;
+    private float mNeedlePY;
+    private float mNeedleDX;
+    private float mNeedleDY;
 
     public AlbumCoverView(Context context) {
         this(context, null);
@@ -71,10 +73,12 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
     private void init() {
         mHandler = new Handler();
         mDiscBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.play_page_disc);
-        mDiscBitmap = ImageUtils.resizeImage(mDiscBitmap, (int) (ScreenUtils.getScreenWidth() * 0.75), (int) (ScreenUtils.getScreenWidth() * 0.75));
+        mDiscBitmap = ImageUtils.resizeImage(mDiscBitmap, (int) (ScreenUtils.getScreenWidth() * 0.75),
+                (int) (ScreenUtils.getScreenWidth() * 0.75));
         mCoverBitmap = CoverLoader.getInstance().loadRound(null);
         mNeedleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.play_page_needle);
-        mNeedleBitmap = ImageUtils.resizeImage(mNeedleBitmap, (int) (ScreenUtils.getScreenWidth() * 0.25), (int) (ScreenUtils.getScreenWidth() * 0.375));
+        mNeedleBitmap = ImageUtils.resizeImage(mNeedleBitmap, (int) (ScreenUtils.getScreenWidth() * 0.25),
+                (int) (ScreenUtils.getScreenWidth() * 0.375));
         mTopLine = getResources().getDrawable(R.drawable.play_page_cover_top_line_shape);
         mCoverBorder = getResources().getDrawable(R.drawable.play_page_cover_border_shape);
         mDiscMatrix = new Matrix();
@@ -89,25 +93,29 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
     }
 
     @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        initSize();
+    }
+
+    private void initSize() {
+        int discOffsetY = mNeedleBitmap.getHeight() / 2;
+        mDiscPX = getWidth() / 2;
+        mDiscPY = mDiscBitmap.getHeight() / 2 + discOffsetY;
+        mCoverPX = mDiscPX;
+        mCoverPY = mDiscPY;
+        mNeedlePX = mDiscPX;
+        mNeedlePY = 0;
+        mDiscDX = (getWidth() - mDiscBitmap.getWidth()) / 2;
+        mDiscDY = discOffsetY;
+        mCoverDX = (getWidth() - mCoverBitmap.getWidth()) / 2;
+        mCoverDY = discOffsetY + (mDiscBitmap.getHeight() - mCoverBitmap.getHeight()) / 2;
+        mNeedleDX = getWidth() / 2 - mNeedleBitmap.getWidth() / 6;
+        mNeedleDY = -mNeedleBitmap.getWidth() / 6;
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
-        if (mDiscPX == -1.0f) {
-            // 避免重复计算
-            int discOffsetY = mNeedleBitmap.getHeight() / 2;
-            mDiscPX = getWidth() / 2;
-            mDiscPY = getTop() + mDiscBitmap.getHeight() / 2 + discOffsetY;
-            mCoverPX = mDiscPX;
-            mCoverPY = mDiscPY;
-            mNeedlePX = mDiscPX;
-            mNeedlePY = getTop();
-            mDiscDX = (getWidth() - mDiscBitmap.getWidth()) / 2;
-            mDiscDY = getTop() + discOffsetY;
-            mCoverDX = (getWidth() - mCoverBitmap.getWidth()) / 2;
-            mCoverDY = getTop() + discOffsetY + (mDiscBitmap.getHeight() - mCoverBitmap.getHeight()) / 2;
-            mNeedleDX = getWidth() / 2 - mNeedleBitmap.getWidth() / 6;
-            mNeedleDY = getTop() - mNeedleBitmap.getWidth() / 6;
-            mTopLineHeight = ScreenUtils.dp2px(1);
-            mCoverBorderWidth = ScreenUtils.dp2px(1);
-        }
         // 设置旋转角度和圆心
         mDiscMatrix.setRotate(mDiscRotation, mDiscPX, mDiscPY);
         mCoverMatrix.setRotate(mDiscRotation, mCoverPX, mCoverPY);
@@ -118,7 +126,8 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
         mNeedleMatrix.preTranslate(mNeedleDX, mNeedleDY);
         mTopLine.setBounds(0, getTop(), getWidth(), getTop() + mTopLineHeight);
         mCoverBorder.setBounds((int) mDiscDX - mCoverBorderWidth, (int) mDiscDY - mCoverBorderWidth,
-                (int) mDiscDX + mDiscBitmap.getWidth() + mCoverBorderWidth, (int) mDiscDY + mDiscBitmap.getHeight() + mCoverBorderWidth);
+                (int) mDiscDX + mDiscBitmap.getWidth() + mCoverBorderWidth, (int) mDiscDY +
+                        mDiscBitmap.getHeight() + mCoverBorderWidth);
         // 绘制
         mTopLine.draw(canvas);
         mCoverBorder.draw(canvas);
@@ -143,7 +152,7 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
             return;
         }
         mIsPlaying = true;
-        mHandler.post(mRunnable);
+        mHandler.post(mRotationRunnable);
         mPlayAnimator.start();
     }
 
@@ -152,7 +161,7 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
             return;
         }
         mIsPlaying = false;
-        mHandler.removeCallbacks(mRunnable);
+        mHandler.removeCallbacks(mRotationRunnable);
         mPauseAnimator.start();
     }
 
@@ -162,7 +171,7 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
         invalidate();
     }
 
-    private Runnable mRunnable = new Runnable() {
+    private Runnable mRotationRunnable = new Runnable() {
         @Override
         public void run() {
             if (mIsPlaying) {
