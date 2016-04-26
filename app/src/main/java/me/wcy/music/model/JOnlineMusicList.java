@@ -1,18 +1,20 @@
 package me.wcy.music.model;
 
+import java.util.List;
+
 /**
  * JavaBean
  * Created by wcy on 2015/12/20.
  */
 public class JOnlineMusicList {
-    JOnlineMusic[] song_list;
-    JBillboard billboard;
+    private List<JOnlineMusic> song_list;
+    private JBillboard billboard;
 
-    public JOnlineMusic[] getSong_list() {
+    public List<JOnlineMusic> getSong_list() {
         return song_list;
     }
 
-    public void setSong_list(JOnlineMusic[] song_list) {
+    public void setSong_list(List<JOnlineMusic> song_list) {
         this.song_list = song_list;
     }
 

@@ -46,6 +46,8 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     NavigationView navigationView;
     @Bind(R.id.iv_menu)
     ImageView ivMenu;
+    @Bind(R.id.iv_search)
+    ImageView ivSearch;
     @Bind(R.id.tv_local_music)
     TextView tvLocalMusic;
     @Bind(R.id.tv_online_music)
@@ -128,6 +130,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void setListener() {
         ivMenu.setOnClickListener(this);
+        ivSearch.setOnClickListener(this);
         tvLocalMusic.setOnClickListener(this);
         tvOnlineMusic.setOnClickListener(this);
         mViewPager.setOnPageChangeListener(this);
@@ -217,6 +220,9 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         switch (v.getId()) {
             case R.id.iv_menu:
                 drawerLayout.openDrawer(GravityCompat.START);
+                break;
+            case R.id.iv_search:
+                startActivity(new Intent(this, SearchMusicActivity.class));
                 break;
             case R.id.tv_local_music:
                 mViewPager.setCurrentItem(0);

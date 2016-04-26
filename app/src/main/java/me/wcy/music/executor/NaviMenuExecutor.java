@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import me.wcy.music.R;
 import me.wcy.music.activity.AboutActivity;
 import me.wcy.music.activity.MusicActivity;
-import me.wcy.music.activity.SearchMusicActivity;
 import me.wcy.music.activity.SettingActivity;
 import me.wcy.music.application.MusicApplication;
 import me.wcy.music.service.PlayService;
@@ -26,9 +25,6 @@ public class NaviMenuExecutor {
 
     public static boolean onNavigationItemSelected(MenuItem item, Context context) {
         switch (item.getItemId()) {
-            case R.id.action_search:
-                startActivity(context, SearchMusicActivity.class);
-                return true;
             case R.id.action_setting:
                 startActivity(context, SettingActivity.class);
                 return true;

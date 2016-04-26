@@ -27,7 +27,6 @@ import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -139,12 +138,12 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                             initHeader();
                             ViewUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
                         }
-                        if (response.getSong_list() == null || response.getSong_list().length == 0) {
+                        if (response.getSong_list() == null || response.getSong_list().size() == 0) {
                             lvOnlineMusic.setEnable(false);
                             return;
                         }
                         mOffset += Constants.MUSIC_LIST_SIZE;
-                        Collections.addAll(mMusicList, response.getSong_list());
+                        mMusicList.addAll(response.getSong_list());
                         mAdapter.notifyDataSetChanged();
                     }
 

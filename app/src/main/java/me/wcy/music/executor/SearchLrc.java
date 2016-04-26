@@ -37,11 +37,11 @@ public abstract class SearchLrc {
                 .execute(new JsonCallback<JSearchMusic>(JSearchMusic.class) {
                     @Override
                     public void onResponse(JSearchMusic response) {
-                        if (response.getSong() == null || response.getSong().length == 0) {
+                        if (response.getSong() == null || response.getSong().size() == 0) {
                             onFail();
                             return;
                         }
-                        downloadLrc(response.getSong()[0].getSongid());
+                        downloadLrc(response.getSong().get(0).getSongid());
                     }
 
                     @Override

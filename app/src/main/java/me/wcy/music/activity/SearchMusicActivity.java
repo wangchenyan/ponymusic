@@ -22,7 +22,6 @@ import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -90,7 +89,7 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
         searchView.setOnQueryTextListener(this);
         searchView.setSubmitButtonEnabled(true);
         ImageView mGoButton = (ImageView) searchView.findViewById(R.id.search_go_btn);
-        mGoButton.setImageResource(R.drawable.ic_menu_search_white);
+        mGoButton.setImageResource(R.drawable.ic_menu_search);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -138,7 +137,7 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
                         }
                         ViewUtils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
                         mSearchMusicList.clear();
-                        Collections.addAll(mSearchMusicList, response.getSong());
+                        mSearchMusicList.addAll(response.getSong());
                         mAdapter.notifyDataSetChanged();
                         lvSearchMusic.requestFocus();
                         mHandler.post(new Runnable() {

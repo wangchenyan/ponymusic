@@ -40,4 +40,14 @@
             android:textColor="@drawable/music_tab_bar_text_color_selector"
             android:textSize="15sp" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_search"
+        android:layout_width="?attr/actionBarSize"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="end"
+        android:background="@drawable/play_page_back_selector"
+        android:contentDescription="@null"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_menu_search" />
 </FrameLayout>

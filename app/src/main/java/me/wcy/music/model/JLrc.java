@@ -5,7 +5,7 @@ package me.wcy.music.model;
  * Created by hzwangchenyan on 2016/1/13.
  */
 public class JLrc {
-    String lrcContent;
+    private String lrcContent;
 
     public String getLrcContent() {
         return lrcContent;

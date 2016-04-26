@@ -1,17 +1,19 @@
 package me.wcy.music.model;
 
+import java.util.List;
+
 /**
  * JavaBean
  * Created by hzwangchenyan on 2016/1/13.
  */
 public class JSearchMusic {
-    JSong[] song;
+    private List<JSong> song;
 
-    public JSong[] getSong() {
+    public List<JSong> getSong() {
         return song;
     }
 
-    public void setSong(JSong[] song) {
+    public void setSong(List<JSong> song) {
         this.song = song;
     }
 

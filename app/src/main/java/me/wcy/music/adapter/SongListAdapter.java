@@ -129,20 +129,20 @@ public class SongListAdapter extends BaseAdapter {
                             if (!songListInfo.getTitle().equals(holderMusicList.ivCover.getTag())) {
                                 return;
                             }
-                            JOnlineMusic[] jOnlineMusics = response.getSong_list();
+                            List<JOnlineMusic> jOnlineMusics = response.getSong_list();
                             songListInfo.setCoverUrl(response.getBillboard().getPic_s260());
-                            if (jOnlineMusics.length >= 1) {
-                                songListInfo.setMusic1(context.getString(R.string.song_list_item_title_1, jOnlineMusics[0].getTitle(), jOnlineMusics[0].getArtist_name()));
+                            if (jOnlineMusics.size() >= 1) {
+                                songListInfo.setMusic1(context.getString(R.string.song_list_item_title_1, jOnlineMusics.get(0).getTitle(), jOnlineMusics.get(0).getArtist_name()));
                             } else {
                                 songListInfo.setMusic1("");
                             }
-                            if (jOnlineMusics.length >= 2) {
-                                songListInfo.setMusic2(context.getString(R.string.song_list_item_title_2, jOnlineMusics[1].getTitle(), jOnlineMusics[1].getArtist_name()));
+                            if (jOnlineMusics.size() >= 2) {
+                                songListInfo.setMusic2(context.getString(R.string.song_list_item_title_2, jOnlineMusics.get(1).getTitle(), jOnlineMusics.get(1).getArtist_name()));
                             } else {
                                 songListInfo.setMusic2("");
                             }
-                            if (jOnlineMusics.length >= 3) {
-                                songListInfo.setMusic3(context.getString(R.string.song_list_item_title_3, jOnlineMusics[2].getTitle(), jOnlineMusics[2].getArtist_name()));
+                            if (jOnlineMusics.size() >= 3) {
+                                songListInfo.setMusic3(context.getString(R.string.song_list_item_title_3, jOnlineMusics.get(2).getTitle(), jOnlineMusics.get(2).getArtist_name()));
                             } else {
                                 songListInfo.setMusic3("");
                             }

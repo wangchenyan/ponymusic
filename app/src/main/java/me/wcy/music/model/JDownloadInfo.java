@@ -5,7 +5,7 @@ package me.wcy.music.model;
  * Created by wcy on 2015/12/27.
  */
 public class JDownloadInfo {
-    JBitrate bitrate;
+    private JBitrate bitrate;
 
     public JBitrate getBitrate() {
         return bitrate;

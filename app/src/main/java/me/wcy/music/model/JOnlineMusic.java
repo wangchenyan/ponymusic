@@ -5,14 +5,14 @@ package me.wcy.music.model;
  * Created by wcy on 2015/12/20.
  */
 public class JOnlineMusic {
-    String pic_big;
-    String pic_small;
-    String lrclink;
-    String song_id;
-    String title;
-    String ting_uid;
-    String album_title;
-    String artist_name;
+    private String pic_big;
+    private String pic_small;
+    private String lrclink;
+    private String song_id;
+    private String title;
+    private String ting_uid;
+    private String album_title;
+    private String artist_name;
 
     public String getPic_big() {
         return pic_big;

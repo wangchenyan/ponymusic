@@ -6,23 +6,23 @@ package me.wcy.music.model;
  */
 public class JArtistInfo {
     // 星座
-    String constellation;
+    private String constellation;
     // 体重
-    float weight;
+    private float weight;
     // 身高
-    float stature;
+    private float stature;
     // 国籍
-    String country;
+    private String country;
     // 歌手链接
-    String url;
+    private String url;
     // 歌手简介
-    String intro;
+    private String intro;
     // 头像
-    String avatar_s1000;
+    private String avatar_s1000;
     // 姓名
-    String name;
+    private String name;
     // 生日
-    String birth;
+    private String birth;
 
     public String getConstellation() {
         return constellation;
