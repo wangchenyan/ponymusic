@@ -67,6 +67,7 @@ public abstract class DownloadSearchedMusic {
 
     private void download() {
         onPrepare();
+
         final DownloadManager downloadManager = (DownloadManager) mContext.getSystemService(Context.DOWNLOAD_SERVICE);
         // 获取歌曲下载链接
         OkHttpUtils.get().url(Constants.BASE_URL)
@@ -108,8 +109,8 @@ public abstract class DownloadSearchedMusic {
                             if (TextUtils.isEmpty(response.getLrcContent())) {
                                 return;
                             }
-                            String lrcFileName = FileUtils.getLrcFileName(mJSong.getArtistname(), mJSong.getSongname());
-                            saveLrcFile(lrcFileName, response.getLrcContent());
+                            String lrcPath = FileUtils.getLrcDir() + FileUtils.getLrcFileName(mJSong.getArtistname(), mJSong.getSongname());
+                            saveLrcFile(lrcPath, response.getLrcContent());
                         }
 
                         @Override
@@ -119,9 +120,9 @@ public abstract class DownloadSearchedMusic {
         }
     }
 
-    private void saveLrcFile(String fileName, String content) {
+    public static void saveLrcFile(String path, String content) {
         try {
-            FileWriter writer = new FileWriter(FileUtils.getLrcDir() + fileName);
+            FileWriter writer = new FileWriter(path);
             writer.flush();
             writer.write(content);
             writer.close();

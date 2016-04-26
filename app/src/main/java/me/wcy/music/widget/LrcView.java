@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import java.io.BufferedReader;
@@ -27,7 +27,6 @@ import me.wcy.music.utils.ScreenUtils;
  * Created by wcy on 2015/11/9.
  */
 public class LrcView extends View {
-    private static final String TAG = "LrcView";
     private List<Long> mLrcTimes;
     private List<String> mLrcTexts;
     private Paint mNormalPaint;
@@ -35,10 +34,11 @@ public class LrcView extends View {
     private float mTextSize;
     private float mDividerHeight;
     private long mAnimationDuration;
+    private float mAnimOffset;
     private long mNextTime = 0L;
     private int mCurrentLine = 0;
-    private float mAnimOffset;
     private boolean isEnd = false;
+    private String label = "暂无歌词";
 
     public LrcView(Context context) {
         this(context, null);
@@ -86,9 +86,8 @@ public class LrcView extends View {
 
         // 无歌词文件
         if (!hasLrc()) {
-            String noLrc = "暂无歌词";
-            float centerX = (getWidth() - mCurrentPaint.measureText(noLrc)) / 2;
-            canvas.drawText(noLrc, centerX, centerY, mCurrentPaint);
+            float centerX = (getWidth() - mCurrentPaint.measureText(label)) / 2;
+            canvas.drawText(label, centerX, centerY, mCurrentPaint);
             return;
         }
 
@@ -122,6 +121,13 @@ public class LrcView extends View {
         }
     }
 
+    public void searchLrc() {
+        reset();
+
+        label = "正在搜索歌词";
+        postInvalidate();
+    }
+
     /**
      * 加载歌词文件
      *
@@ -129,14 +135,16 @@ public class LrcView extends View {
      */
     public void loadLrc(String path) {
         reset();
-        File file = new File(path);
-        if (!file.exists()) {
+
+        if (TextUtils.isEmpty(path) || !new File(path).exists()) {
+            label = "暂无歌词";
             postInvalidate();
             return;
         }
+
         BufferedReader br = null;
         try {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(path))));
             String line;
             while ((line = br.readLine()) != null) {
                 String[] arr = parseLine(line);
@@ -178,14 +186,12 @@ public class LrcView extends View {
         }
         for (int i = mCurrentLine; i < mLrcTimes.size(); i++) {
             if (mLrcTimes.get(i) > time) {
-                Log.i(TAG, "lrc newline ...");
                 mNextTime = mLrcTimes.get(i);
                 mCurrentLine = i < 1 ? 0 : i - 1;
                 newLineAnim();
                 break;
             } else if (i == mLrcTimes.size() - 1) {
                 // 最后一行
-                Log.i(TAG, "lrc end ...");
                 mCurrentLine = mLrcTimes.size() - 1;
                 isEnd = true;
                 newLineAnim();
@@ -219,7 +225,6 @@ public class LrcView extends View {
     private String[] parseLine(String line) {
         Matcher matcher = Pattern.compile("\\[(\\d)+:(\\d)+(\\.)(\\d+)\\].+").matcher(line);
         if (!matcher.matches()) {
-            Log.e(TAG, line);
             return null;
         }
         line = line.replaceAll("\\[", "");

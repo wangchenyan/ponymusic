@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import me.wcy.music.R;
 import me.wcy.music.adapter.PlayPagerAdapter;
 import me.wcy.music.enums.MusicTypeEnum;
 import me.wcy.music.enums.PlayModeEnum;
+import me.wcy.music.executor.SearchLrc;
 import me.wcy.music.model.Music;
 import me.wcy.music.utils.Actions;
 import me.wcy.music.utils.CoverLoader;
@@ -326,14 +328,37 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void setLrc(Music music) {
-        String lrcPath;
         if (music.getType() == MusicTypeEnum.LOCAL) {
-            lrcPath = FileUtils.getLrcFilePath(music);
+            String lrcPath = FileUtils.getLrcFilePath(music);
+            loadLrc(lrcPath);
+            if (!new File(lrcPath).exists()) {
+                new SearchLrc(music.getArtist(), music.getTitle()) {
+                    @Override
+                    public void onPrepare() {
+                        mLrcViewSingle.searchLrc();
+                        mLrcViewFull.searchLrc();
+                    }
+
+                    @Override
+                    public void onSuccess(String lrcPath) {
+                        loadLrc(lrcPath);
+                    }
+
+                    @Override
+                    public void onFail() {
+                        loadLrc(null);
+                    }
+                }.execute();
+            }
         } else {
-            lrcPath = FileUtils.getLrcDir() + FileUtils.getLrcFileName(music.getArtist(), music.getTitle());
+            String lrcPath = FileUtils.getLrcDir() + FileUtils.getLrcFileName(music.getArtist(), music.getTitle());
+            loadLrc(lrcPath);
         }
-        mLrcViewSingle.loadLrc(lrcPath);
-        mLrcViewFull.loadLrc(lrcPath);
+    }
+
+    private void loadLrc(String path) {
+        mLrcViewSingle.loadLrc(path);
+        mLrcViewFull.loadLrc(path);
     }
 
     private String formatTime(long time) {
