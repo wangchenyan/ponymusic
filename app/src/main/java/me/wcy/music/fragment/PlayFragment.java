@@ -28,7 +28,6 @@ import me.wcy.music.enums.MusicTypeEnum;
 import me.wcy.music.enums.PlayModeEnum;
 import me.wcy.music.model.Music;
 import me.wcy.music.utils.Actions;
-import me.wcy.music.utils.Constants;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.ImageUtils;
@@ -329,7 +328,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     private void setLrc(Music music) {
         String lrcPath;
         if (music.getType() == MusicTypeEnum.LOCAL) {
-            lrcPath = FileUtils.getLrcDir() + music.getFileName().replace(Constants.FILENAME_MP3, Constants.FILENAME_LRC);
+            lrcPath = FileUtils.getLrcFilePath(music);
         } else {
             lrcPath = FileUtils.getLrcDir() + FileUtils.getLrcFileName(music.getArtist(), music.getTitle());
         }
