@@ -18,31 +18,31 @@ import me.wcy.music.model.Music;
  */
 public class FileUtils {
     private static String getAppDir() {
-        return Environment.getExternalStorageDirectory() + File.separator + "PonyMusic" + File.separator;
+        return Environment.getExternalStorageDirectory() + "/PonyMusic/";
     }
 
     public static String getMusicDir() {
-        String dir = getAppDir() + "Music" + File.separator;
+        String dir = getAppDir() + "Music/";
         return mkdirs(dir);
     }
 
     public static String getLrcDir() {
-        String dir = getAppDir() + "Lyric" + File.separator;
+        String dir = getAppDir() + "Lyric/";
         return mkdirs(dir);
     }
 
     public static String getLogDir() {
-        String dir = getAppDir() + "Log" + File.separator;
+        String dir = getAppDir() + "Log/";
         return mkdirs(dir);
     }
 
     public static String getSplashDir(Context context) {
-        String dir = context.getFilesDir() + File.separator + "splash" + File.separator;
+        String dir = context.getFilesDir() + "/splash/";
         return mkdirs(dir);
     }
 
     public static String getRelativeMusicDir() {
-        String dir = "PonyMusic" + File.separator + "Music" + File.separator;
+        String dir = "PonyMusic/Music/";
         return mkdirs(dir);
     }
 
