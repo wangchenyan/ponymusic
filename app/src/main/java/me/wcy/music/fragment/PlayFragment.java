@@ -45,7 +45,8 @@ import me.wcy.music.widget.LrcView;
  * 正在播放界面
  * Created by wcy on 2015/11/27.
  */
-public class PlayFragment extends BaseFragment implements View.OnClickListener, ViewPager.OnPageChangeListener, SeekBar.OnSeekBarChangeListener {
+public class PlayFragment extends BaseFragment implements View.OnClickListener,
+        ViewPager.OnPageChangeListener, SeekBar.OnSeekBarChangeListener {
     @Bind(R.id.ll_content)
     LinearLayout llContent;
     @Bind(R.id.iv_play_page_bg)
@@ -327,26 +328,26 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    private void setLrc(Music music) {
+    private void setLrc(final Music music) {
         if (music.getType() == MusicTypeEnum.LOCAL) {
             String lrcPath = FileUtils.getLrcFilePath(music);
-            loadLrc(lrcPath);
-            if (!new File(lrcPath).exists()) {
+            if (new File(lrcPath).exists()) {
+                loadLrc(lrcPath);
+            } else {
                 new SearchLrc(music.getArtist(), music.getTitle()) {
                     @Override
                     public void onPrepare() {
                         mLrcViewSingle.searchLrc();
                         mLrcViewFull.searchLrc();
+                        // 设置tag防止歌词下载完成后已切换歌曲
+                        mLrcViewSingle.setTag(music);
                     }
 
                     @Override
-                    public void onSuccess(String lrcPath) {
-                        loadLrc(lrcPath);
-                    }
-
-                    @Override
-                    public void onFail() {
-                        loadLrc(null);
+                    public void onFinish(@Nullable String lrcPath) {
+                        if (mLrcViewSingle.getTag() == music) {
+                            loadLrc(lrcPath);
+                        }
                     }
                 }.execute();
             }
@@ -359,6 +360,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     private void loadLrc(String path) {
         mLrcViewSingle.loadLrc(path);
         mLrcViewFull.loadLrc(path);
+        // 清除tag
+        mLrcViewSingle.setTag(null);
     }
 
     private String formatTime(long time) {
@@ -368,9 +371,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener, 
     private BroadcastReceiver mVolumeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (!Actions.VOLUME_CHANGED_ACTION.equals(intent.getAction())) {
-                return;
-            }
             sbVolume.setProgress(mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
         }
     };

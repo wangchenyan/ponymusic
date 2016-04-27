@@ -1,5 +1,6 @@
 package me.wcy.music.executor;
 
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -38,7 +39,7 @@ public abstract class SearchLrc {
                     @Override
                     public void onResponse(JSearchMusic response) {
                         if (response.getSong() == null || response.getSong().size() == 0) {
-                            onFail();
+                            onFinish(null);
                             return;
                         }
                         downloadLrc(response.getSong().get(0).getSongid());
@@ -46,7 +47,7 @@ public abstract class SearchLrc {
 
                     @Override
                     public void onError(Call call, Exception e) {
-                        onFail();
+                        onFinish(null);
                     }
                 });
     }
@@ -60,24 +61,22 @@ public abstract class SearchLrc {
                     @Override
                     public void onResponse(JLrc response) {
                         if (TextUtils.isEmpty(response.getLrcContent())) {
-                            onFail();
+                            onFinish(null);
                             return;
                         }
                         String lrcPath = FileUtils.getLrcDir() + FileUtils.getLrcFileName(artist, title);
                         DownloadSearchedMusic.saveLrcFile(lrcPath, response.getLrcContent());
-                        onSuccess(lrcPath);
+                        onFinish(lrcPath);
                     }
 
                     @Override
                     public void onError(Call call, Exception e) {
-                        onFail();
+                        onFinish(null);
                     }
                 });
     }
 
     public abstract void onPrepare();
 
-    public abstract void onSuccess(String lrcPath);
-
-    public abstract void onFail();
+    public abstract void onFinish(@Nullable String lrcPath);
 }
