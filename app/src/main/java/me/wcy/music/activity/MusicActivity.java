@@ -93,12 +93,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         super.onDestroy();
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        parseIntent(intent);
-    }
-
     private void bindService() {
         Intent intent = new Intent();
         intent.setClass(this, PlayService.class);
@@ -347,6 +341,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
             drawerLayout.closeDrawers();
             return;
         }
-        moveTaskToBack(false);
+        // moveTaskToBack(false);
+        super.onBackPressed();
     }
 }

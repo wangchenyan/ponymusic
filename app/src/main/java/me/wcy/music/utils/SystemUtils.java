@@ -28,6 +28,16 @@ public class SystemUtils {
         return runningTaskInfo.numActivities > 1;
     }
 
+    public static boolean isServiceRunning(Context context, Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static String getVersionName(Context context) {
         String versionName = "1.0";
         try {

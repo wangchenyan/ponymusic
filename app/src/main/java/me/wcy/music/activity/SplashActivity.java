@@ -38,7 +38,7 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        parseIntent();
+        checkService();
     }
 
     @Override
@@ -53,29 +53,28 @@ public class SplashActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    private void parseIntent() {
-        if (SystemUtils.isStackResumed(this)) {
+    private void checkService() {
+        if (SystemUtils.isServiceRunning(this, PlayService.class)) {
             startMusicActivity();
             finish();
-            return;
+        } else {
+            startService();
+            initSplash();
+            updateSplash();
+
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    bindService();
+                }
+            }, 1000);
         }
-
-        startService();
-        initSplash();
-        updateSplash();
-
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                bindService();
-            }
-        }, 1000);
     }
 
-    private void startService() {
+    private ComponentName startService() {
         Intent intent = new Intent();
         intent.setClass(this, PlayService.class);
-        startService(intent);
+        return startService(intent);
     }
 
     private void bindService() {
@@ -85,7 +84,7 @@ public class SplashActivity extends BaseActivity {
         bindService(intent, mPlayServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
-    class PlayServiceConnection implements ServiceConnection {
+    private class PlayServiceConnection implements ServiceConnection {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -102,14 +101,13 @@ public class SplashActivity extends BaseActivity {
 
     private void initSplash() {
         File splashImg = new File(FileUtils.getSplashDir(this), "splash.jpg");
-        if (!splashImg.exists()) {
-            return;
+        if (splashImg.exists()) {
+            Bitmap bitmap = BitmapFactory.decodeFile(splashImg.getAbsolutePath());
+            ivSplash.setImageBitmap(bitmap);
         }
-        Bitmap bitmap = BitmapFactory.decodeFile(splashImg.getAbsolutePath());
-        ivSplash.setImageBitmap(bitmap);
     }
 
-    private static void updateSplash() {
+    private void updateSplash() {
         OkHttpUtils.get().url(Constants.SPLASH_URL).build()
                 .execute(new JsonCallback<JSplash>(JSplash.class) {
                     @Override
