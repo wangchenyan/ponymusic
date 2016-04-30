@@ -22,6 +22,7 @@ import java.util.Random;
 import me.wcy.music.activity.BaseActivity;
 import me.wcy.music.enums.PlayModeEnum;
 import me.wcy.music.model.Music;
+import me.wcy.music.model.SongListInfo;
 import me.wcy.music.receiver.NoisyAudioStreamReceiver;
 import me.wcy.music.utils.Actions;
 import me.wcy.music.utils.MusicUtils;
@@ -51,8 +52,9 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     private int mPlayingPosition;
     private boolean isPause = false;
     private long quitTimerRemain;
-    // 缓存天气信息
-    public AMapLocalWeatherLive aMapLocalWeatherLive;
+    // 缓存歌单和天气信息
+    public List<SongListInfo> mSongLists = new ArrayList<>();
+    public AMapLocalWeatherLive mAMapLocalWeatherLive;
 
     @Override
     public void onCreate() {

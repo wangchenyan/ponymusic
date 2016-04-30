@@ -10,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -34,7 +33,7 @@ public class SongListFragment extends BaseFragment implements AdapterView.OnItem
     LinearLayout llLoading;
     @Bind(R.id.ll_load_fail)
     LinearLayout llLoadFail;
-    private List<SongListInfo> mData;
+    private List<SongListInfo> mSongLists;
 
     @Nullable
     @Override
@@ -48,16 +47,18 @@ public class SongListFragment extends BaseFragment implements AdapterView.OnItem
             ViewUtils.changeViewState(lvSongList, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
             return;
         }
-        mData = new ArrayList<>();
-        String[] titles = getResources().getStringArray(R.array.online_music_list_title);
-        String[] types = getResources().getStringArray(R.array.online_music_list_type);
-        for (int i = 0; i < titles.length; i++) {
-            SongListInfo info = new SongListInfo();
-            info.setTitle(titles[i]);
-            info.setType(types[i]);
-            mData.add(info);
+        mSongLists = getPlayService().mSongLists;
+        if (mSongLists.isEmpty()) {
+            String[] titles = getResources().getStringArray(R.array.online_music_list_title);
+            String[] types = getResources().getStringArray(R.array.online_music_list_type);
+            for (int i = 0; i < titles.length; i++) {
+                SongListInfo info = new SongListInfo();
+                info.setTitle(titles[i]);
+                info.setType(types[i]);
+                mSongLists.add(info);
+            }
         }
-        SongListAdapter adapter = new SongListAdapter(mData);
+        SongListAdapter adapter = new SongListAdapter(mSongLists);
         lvSongList.setAdapter(adapter);
     }
 
@@ -68,7 +69,7 @@ public class SongListFragment extends BaseFragment implements AdapterView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        SongListInfo songListInfo = mData.get(position);
+        SongListInfo songListInfo = mSongLists.get(position);
         Intent intent = new Intent(getActivity(), OnlineMusicActivity.class);
         intent.putExtra(Extras.MUSIC_LIST_TYPE, songListInfo);
         startActivity(intent);

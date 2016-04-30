@@ -85,7 +85,7 @@ public class WeatherExecutor implements AMapLocalWeatherListener {
     }
 
     public void execute() {
-        AMapLocalWeatherLive aMapLocalWeatherLive = mPlayService.aMapLocalWeatherLive;
+        AMapLocalWeatherLive aMapLocalWeatherLive = mPlayService.mAMapLocalWeatherLive;
         if (aMapLocalWeatherLive != null && aMapLocalWeatherLive.getAMapException().getErrorCode() == 0) {
             updateView(aMapLocalWeatherLive);
             release();
@@ -98,7 +98,7 @@ public class WeatherExecutor implements AMapLocalWeatherListener {
     @Override
     public void onWeatherLiveSearched(AMapLocalWeatherLive aMapLocalWeatherLive) {
         if (aMapLocalWeatherLive != null && aMapLocalWeatherLive.getAMapException().getErrorCode() == 0) {
-            mPlayService.aMapLocalWeatherLive = aMapLocalWeatherLive;
+            mPlayService.mAMapLocalWeatherLive = aMapLocalWeatherLive;
             updateView(aMapLocalWeatherLive);
         } else {
             Log.e(TAG, "获取天气预报失败");
