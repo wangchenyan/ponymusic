@@ -17,13 +17,14 @@ import java.util.Calendar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import me.wcy.music.R;
+import me.wcy.music.service.PlayService;
 
 /**
  * 更新天气
  * Created by wcy on 2016/1/17.
- * <p/>
+ * <p>
  * 天气现象表
- * <p/>
+ * <p>
  * 晴
  * 多云
  * 阴
@@ -63,7 +64,8 @@ import me.wcy.music.R;
  * 霾
  */
 public class WeatherExecutor implements AMapLocalWeatherListener {
-    private static final String TAG = WeatherExecutor.class.getSimpleName();
+    private static final String TAG = "WeatherExecutor";
+    private PlayService mPlayService;
     private Context mContext;
     @Bind(R.id.ll_weather)
     LinearLayout llWeather;
@@ -76,24 +78,28 @@ public class WeatherExecutor implements AMapLocalWeatherListener {
     @Bind(R.id.tv_weather_wind)
     TextView tvWind;
 
-    public WeatherExecutor(View navigationHeader) {
-        mContext = navigationHeader.getContext().getApplicationContext();
+    public WeatherExecutor(PlayService playService, View navigationHeader) {
+        mPlayService = playService;
+        mContext = mPlayService.getApplicationContext();
         ButterKnife.bind(this, navigationHeader);
     }
 
     public void execute() {
-        LocationManagerProxy mLocationManagerProxy = LocationManagerProxy.getInstance(mContext);
-        mLocationManagerProxy.requestWeatherUpdates(LocationManagerProxy.WEATHER_TYPE_LIVE, this);
+        AMapLocalWeatherLive aMapLocalWeatherLive = mPlayService.aMapLocalWeatherLive;
+        if (aMapLocalWeatherLive != null && aMapLocalWeatherLive.getAMapException().getErrorCode() == 0) {
+            updateView(aMapLocalWeatherLive);
+            release();
+        } else {
+            LocationManagerProxy mLocationManagerProxy = LocationManagerProxy.getInstance(mContext);
+            mLocationManagerProxy.requestWeatherUpdates(LocationManagerProxy.WEATHER_TYPE_LIVE, this);
+        }
     }
 
     @Override
     public void onWeatherLiveSearched(AMapLocalWeatherLive aMapLocalWeatherLive) {
         if (aMapLocalWeatherLive != null && aMapLocalWeatherLive.getAMapException().getErrorCode() == 0) {
-            llWeather.setVisibility(View.VISIBLE);
-            ivIcon.setImageResource(getWeatherIcon(aMapLocalWeatherLive.getWeather()));
-            tvTemp.setText(mContext.getString(R.string.weather_temp, aMapLocalWeatherLive.getTemperature()));
-            tvCity.setText(aMapLocalWeatherLive.getCity());
-            tvWind.setText(mContext.getString(R.string.weather_wind, aMapLocalWeatherLive.getWindDir(), aMapLocalWeatherLive.getWindPower(), aMapLocalWeatherLive.getHumidity()));
+            mPlayService.aMapLocalWeatherLive = aMapLocalWeatherLive;
+            updateView(aMapLocalWeatherLive);
         } else {
             Log.e(TAG, "获取天气预报失败");
         }
@@ -103,6 +109,15 @@ public class WeatherExecutor implements AMapLocalWeatherListener {
 
     @Override
     public void onWeatherForecaseSearched(AMapLocalWeatherForecast aMapLocalWeatherForecast) {
+    }
+
+    private void updateView(AMapLocalWeatherLive aMapLocalWeatherLive) {
+        llWeather.setVisibility(View.VISIBLE);
+        ivIcon.setImageResource(getWeatherIcon(aMapLocalWeatherLive.getWeather()));
+        tvTemp.setText(mContext.getString(R.string.weather_temp, aMapLocalWeatherLive.getTemperature()));
+        tvCity.setText(aMapLocalWeatherLive.getCity());
+        tvWind.setText(mContext.getString(R.string.weather_wind, aMapLocalWeatherLive.getWindDir(),
+                aMapLocalWeatherLive.getWindPower(), aMapLocalWeatherLive.getHumidity()));
     }
 
     private int getWeatherIcon(String weather) {
@@ -146,6 +161,8 @@ public class WeatherExecutor implements AMapLocalWeatherListener {
     }
 
     private void release() {
+        mPlayService = null;
+        mContext = null;
         llWeather = null;
         ivIcon = null;
         tvTemp = null;

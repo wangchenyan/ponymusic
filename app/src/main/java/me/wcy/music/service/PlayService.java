@@ -10,6 +10,9 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.text.format.DateUtils;
+
+import com.amap.api.location.AMapLocalWeatherLive;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,7 +35,6 @@ import me.wcy.music.utils.SystemUtils;
 public class PlayService extends Service implements MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
     private static final int NOTIFICATION_ID = 0x111;
     private static final long TIME_UPDATE = 100L;
-    private static final long SECOND = 1000L;
     // 本地歌曲列表
     private static final List<Music> sMusicList = new ArrayList<>();
     private static final List<BaseActivity> sActivityStack = new ArrayList<>();
@@ -48,7 +50,9 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     // 正在播放的本地歌曲的序号
     private int mPlayingPosition;
     private boolean isPause = false;
-    private long timerTimeRemain;
+    private long quitTimerRemain;
+    // 缓存天气信息
+    public AMapLocalWeatherLive aMapLocalWeatherLive;
 
     @Override
     public void onCreate() {
@@ -328,12 +332,12 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     public void startQuitTimer(long milli) {
         stopQuitTimer();
         if (milli > 0) {
-            timerTimeRemain = milli + SECOND;
+            quitTimerRemain = milli + DateUtils.SECOND_IN_MILLIS;
             mHandler.post(mQuitRunnable);
         } else {
-            timerTimeRemain = 0;
+            quitTimerRemain = 0;
             if (mListener != null) {
-                mListener.onTimer(timerTimeRemain);
+                mListener.onTimer(quitTimerRemain);
             }
         }
     }
@@ -345,12 +349,12 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     private Runnable mQuitRunnable = new Runnable() {
         @Override
         public void run() {
-            timerTimeRemain -= SECOND;
-            if (timerTimeRemain > 0) {
+            quitTimerRemain -= DateUtils.SECOND_IN_MILLIS;
+            if (quitTimerRemain > 0) {
                 if (mListener != null) {
-                    mListener.onTimer(timerTimeRemain);
+                    mListener.onTimer(quitTimerRemain);
                 }
-                mHandler.postDelayed(this, SECOND);
+                mHandler.postDelayed(this, DateUtils.SECOND_IN_MILLIS);
             } else {
                 SystemUtils.clearStack(sActivityStack);
                 stop();
