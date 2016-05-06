@@ -9,8 +9,7 @@
     <style name="AppTheme" parent="AppBaseTheme" />
 
     <style name="AppTheme.Splash" parent="AppBaseTheme">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <style name="AppTheme.Setting" parent="AppBaseTheme">
