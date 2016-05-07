@@ -71,10 +71,10 @@ public class SplashActivity extends BaseActivity {
         }
     }
 
-    private ComponentName startService() {
+    private void startService() {
         Intent intent = new Intent();
         intent.setClass(this, PlayService.class);
-        return startService(intent);
+        startService(intent);
     }
 
     private void bindService() {

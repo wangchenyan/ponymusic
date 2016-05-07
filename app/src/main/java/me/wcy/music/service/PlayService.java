@@ -73,7 +73,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent == null || intent.getAction() == null) {
-            return START_STICKY_COMPATIBILITY;
+            return START_NOT_STICKY;
         }
         switch (intent.getAction()) {
             case Actions.ACTION_MEDIA_PLAY_PAUSE:
@@ -86,7 +86,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
                 prev();
                 break;
         }
-        return START_STICKY_COMPATIBILITY;
+        return START_NOT_STICKY;
     }
 
     public static List<Music> getMusicList() {
