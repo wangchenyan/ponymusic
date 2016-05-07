@@ -27,3 +27,13 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+ext {
+    compileSdkVersion = 23
+    buildToolsVersion = "23.0.3"
+    minSdkVersion = 14
+    targetSdkVersion = 22
+    versionCode = 100
+    versionName = "1.0.0"
+    supportVersion = "23.3.0"
+}
