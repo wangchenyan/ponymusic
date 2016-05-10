@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
+import me.wcy.music.BuildConfig;
 import me.wcy.music.R;
-import me.wcy.music.utils.SystemUtils;
 import me.wcy.music.utils.UpdateUtils;
 
 public class AboutActivity extends BaseActivity {
@@ -46,7 +46,7 @@ public class AboutActivity extends BaseActivity {
             mJianshu = findPreference("jianshu");
             mGithub = findPreference("github");
 
-            mVersion.setSummary("v " + SystemUtils.getVersionName(getActivity()));
+            mVersion.setSummary("v " + BuildConfig.VERSION_NAME);
             setListener();
         }
 

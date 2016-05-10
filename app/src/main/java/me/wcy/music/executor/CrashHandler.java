@@ -11,7 +11,7 @@ import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import me.wcy.music.application.MusicApplication;
+import me.wcy.music.BuildConfig;
 import me.wcy.music.utils.FileUtils;
 
 /**
@@ -37,7 +37,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
-        if (MusicApplication.isDebugMode()) {
+        if (BuildConfig.DEBUG) {
             mDefaultHandler.uncaughtException(thread, ex);
         } else {
             saveCrashInfo(ex);

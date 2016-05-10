@@ -5,7 +5,6 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 
 import java.util.List;
@@ -21,6 +20,9 @@ import me.wcy.music.model.Music;
  */
 public class SystemUtils {
 
+    /**
+     * 判断是否有Activity在运行
+     */
     public static boolean isStackResumed(Context context) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> runningTaskInfos = manager.getRunningTasks(1);
@@ -28,6 +30,9 @@ public class SystemUtils {
         return runningTaskInfo.numActivities > 1;
     }
 
+    /**
+     * 判断Service是否在运行
+     */
     public static boolean isServiceRunning(Context context, Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -36,26 +41,6 @@ public class SystemUtils {
             }
         }
         return false;
-    }
-
-    public static String getVersionName(Context context) {
-        String versionName = "1.0";
-        try {
-            versionName = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return versionName;
-    }
-
-    public static int getVersionCode(Context context) {
-        int versionCode = 1;
-        try {
-            versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return versionCode;
     }
 
     public static Notification createNotification(Context context, Music music) {

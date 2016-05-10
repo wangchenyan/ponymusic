@@ -1,7 +1,6 @@
 package me.wcy.music.application;
 
 import android.app.Application;
-import android.content.pm.ApplicationInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.support.v4.util.LongSparseArray;
@@ -40,11 +39,6 @@ public class MusicApplication extends Application {
 
     public static MusicApplication getInstance() {
         return sInstance;
-    }
-
-    public static boolean isDebugMode() {
-        ApplicationInfo info = getInstance().getApplicationInfo();
-        return (info.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
     }
 
     public LongSparseArray<String> getDownloadList() {
