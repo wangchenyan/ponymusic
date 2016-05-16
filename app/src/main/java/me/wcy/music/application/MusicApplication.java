@@ -8,6 +8,9 @@ import android.util.DisplayMetrics;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.zhy.http.okhttp.OkHttpUtils;
+
+import java.util.concurrent.TimeUnit;
 
 import im.fir.sdk.FIR;
 import me.wcy.music.executor.CrashHandler;
@@ -33,6 +36,7 @@ public class MusicApplication extends Application {
         Preferences.init(this);
         updateNightMode(Preferences.isNightMode());
         CrashHandler.getInstance().init();
+        initOkHttpUtils();
         initImageLoader();
         FIR.init(this);
     }
@@ -45,10 +49,16 @@ public class MusicApplication extends Application {
         return mDownloadList;
     }
 
+    private void initOkHttpUtils() {
+        OkHttpUtils.getInstance().setConnectTimeout(30, TimeUnit.SECONDS);
+        OkHttpUtils.getInstance().setReadTimeout(30, TimeUnit.SECONDS);
+        OkHttpUtils.getInstance().setWriteTimeout(30, TimeUnit.SECONDS);
+    }
+
     private void initImageLoader() {
         ImageLoaderConfiguration configuration = new ImageLoaderConfiguration.Builder(this)
-                .memoryCacheSize(2 * 1024 * 1024)
-                .diskCacheSize(50 * 1024 * 1024)
+                .memoryCacheSize(2 * 1024 * 1024) // 2MB
+                .diskCacheSize(50 * 1024 * 1024) // 50MB
                 .build();
         ImageLoader.getInstance().init(configuration);
     }

@@ -29,7 +29,6 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            //打包签名命令：gradle assembleRelease
             signingConfig signingConfigs.release
         }
         debug {
@@ -43,7 +42,7 @@ dependencies {
     compile "com.android.support:appcompat-v7:${rootProject.ext.supportVersion}"
     compile "com.android.support:design:${rootProject.ext.supportVersion}"
     compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.zhy:okhttputils:2.2.0'
+    compile 'com.zhy:okhttputils:2.3.8'
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'im.fir:fir-sdk:latest.integration@aar'

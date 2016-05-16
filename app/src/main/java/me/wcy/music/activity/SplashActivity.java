@@ -123,7 +123,7 @@ public class SplashActivity extends BaseActivity {
                         OkHttpUtils.get().url(response.getImg()).build()
                                 .execute(new FileCallBack(FileUtils.getSplashDir(MusicApplication.getInstance().getApplicationContext()), "splash.jpg") {
                                     @Override
-                                    public void inProgress(float progress) {
+                                    public void inProgress(float progress, long total) {
                                     }
 
                                     @Override

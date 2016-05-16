@@ -69,23 +69,30 @@
 
 # android-support
 -dontwarn android.support.**
--keep class android.support.** {*;}
+-keep class android.support.** { *; }
 
 # app
--keep class me.wcy.music.model.** {*;}
+-keep class me.wcy.music.model.** { *; }
 
 # butterknife
 -dontwarn butterknife.internal.**
 -keep class **$$ViewInjector { *; }
--keepnames class * { @butterknife.InjectView *;}
+-keepnames class * { @butterknife.InjectView *; }
+
+# okhttputils
+-dontwarn com.zhy.http.**
+-keep class com.zhy.http.** { *; }
+-keep interface com.zhy.http.** { *; }
 
 # okhttp
--dontwarn com.squareup.okhttp.**
--keep class com.squareup.okhttp.** { *; }
+-dontwarn okhttp3.**
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
 
 # okio
 -dontwarn okio.**
 -keep class okio.** { *; }
+-keep interface okio.** { *; }
 
 # amap
--keep class com.amap.api.** {*;}
+-keep class com.amap.api.** { *; }

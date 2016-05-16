@@ -99,7 +99,7 @@ public abstract class DownloadOnlineMusic {
             OkHttpUtils.get().url(mJOnlineMusic.getLrclink()).build()
                     .execute(new FileCallBack(FileUtils.getLrcDir(), lrcFileName) {
                         @Override
-                        public void inProgress(float progress) {
+                        public void inProgress(float progress, long total) {
                         }
 
                         @Override
