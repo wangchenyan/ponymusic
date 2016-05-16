@@ -82,17 +82,15 @@
 # okhttputils
 -dontwarn com.zhy.http.**
 -keep class com.zhy.http.** { *; }
--keep interface com.zhy.http.** { *; }
 
 # okhttp
 -dontwarn okhttp3.**
 -keep class okhttp3.** { *; }
--keep interface okhttp3.** { *; }
 
 # okio
 -dontwarn okio.**
 -keep class okio.** { *; }
--keep interface okio.** { *; }
 
 # amap
+-dontwarn com.amap.api.**
 -keep class com.amap.api.** { *; }
