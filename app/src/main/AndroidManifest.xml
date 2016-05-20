@@ -78,7 +78,8 @@
         <activity
             android:name=".activity.AboutActivity"
             android:label="@string/menu_about"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Setting" />
     </application>
 
 </manifest>
