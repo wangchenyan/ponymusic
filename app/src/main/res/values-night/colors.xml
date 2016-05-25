@@ -2,5 +2,5 @@
 <resources>
     <color name="colorPrimary">@color/grey_900</color>
     <color name="colorPrimaryDark">@color/colorPrimary</color>
-    <color name="colorAccent">@color/white</color>
+    <color name="colorAccent">@color/colorPrimary</color>
 </resources>

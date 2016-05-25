@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import butterknife.Bind;
+import me.wcy.music.BuildConfig;
 import me.wcy.music.R;
 import me.wcy.music.adapter.FragmentAdapter;
 import me.wcy.music.executor.NaviMenuExecutor;
@@ -84,6 +85,12 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         setContentView(R.layout.activity_music);
 
         bindService();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        parseIntent(intent);
     }
 
     @Override
@@ -341,7 +348,11 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
             drawerLayout.closeDrawers();
             return;
         }
-        // moveTaskToBack(false);
-        super.onBackPressed();
+
+        if (BuildConfig.DEBUG) {
+            super.onBackPressed();
+        } else {
+            moveTaskToBack(false);
+        }
     }
 }

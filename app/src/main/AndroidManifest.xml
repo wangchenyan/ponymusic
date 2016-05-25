@@ -69,17 +69,16 @@
         <activity
             android:name=".activity.SearchMusicActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Search"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.SettingActivity"
             android:label="@string/menu_setting"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Setting" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.AboutActivity"
             android:label="@string/menu_about"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Setting" />
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

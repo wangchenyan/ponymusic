@@ -53,10 +53,10 @@ public class NaviMenuExecutor {
         if (context instanceof MusicActivity) {
             final MusicActivity activity = (MusicActivity) context;
             final boolean on = !Preferences.isNightMode();
-            MusicApplication.updateNightMode(on);
             final ProgressDialog dialog = new ProgressDialog(activity);
             dialog.setCancelable(false);
             dialog.show();
+            MusicApplication.updateNightMode(on);
             Handler handler = new Handler(activity.getMainLooper());
             handler.postDelayed(new Runnable() {
                 @Override

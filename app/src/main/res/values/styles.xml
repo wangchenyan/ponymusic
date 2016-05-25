@@ -12,8 +12,8 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
-    <style name="AppTheme.Setting" parent="AppBaseTheme">
-        <item name="colorAccent">?attr/colorPrimary</item>
+    <style name="AppTheme.Search" parent="AppBaseTheme">
+        <item name="colorAccent">@color/white</item>
     </style>
 
     <style name="AppTheme.Divider">
