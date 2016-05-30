@@ -10,8 +10,6 @@ import android.webkit.MimeTypeMap;
 
 import com.google.gson.Gson;
 
-import java.text.DecimalFormat;
-
 import im.fir.sdk.FIR;
 import im.fir.sdk.VersionCheckCallback;
 import me.wcy.music.BuildConfig;
@@ -62,7 +60,7 @@ public class UpdateUtils {
     }
 
     private static void updateDialog(final Activity activity, final UpdateInfo updateInfo) {
-        String fileSize = B2MB(updateInfo.binary.fsize) + "MB";
+        String fileSize = FileUtils.b2mb(updateInfo.binary.fsize) + "MB";
         String message = "v " + updateInfo.versionShort + "(" + fileSize + ")" + "\n\n" + updateInfo.changelog;
         new AlertDialog.Builder(activity)
                 .setTitle("发现新版本")
@@ -89,11 +87,5 @@ public class UpdateUtils {
         request.setAllowedOverRoaming(false);// 不允许漫游
         sDownloadId = downloadManager.enqueue(request);
         ToastUtils.show("正在后台下载");
-    }
-
-    private static float B2MB(int B) {
-        DecimalFormat decimalFormat = new DecimalFormat(".00");
-        String MB = decimalFormat.format((float) B / 1024 / 1024);
-        return Float.valueOf(MB);
     }
 }

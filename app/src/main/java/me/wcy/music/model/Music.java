@@ -2,16 +2,14 @@ package me.wcy.music.model;
 
 import android.graphics.Bitmap;
 
-import me.wcy.music.enums.MusicTypeEnum;
-
 /**
  * 单曲信息
  * Created by wcy on 2015/11/27.
  */
 public class Music {
-    // 歌曲类型 本地，网络
-    private MusicTypeEnum type;
-    // 歌曲id[本地歌曲]
+    // 歌曲类型 本地/网络
+    private Type type;
+    // [本地歌曲]歌曲id
     private long id;
     // 音乐标题
     private String title;
@@ -23,18 +21,22 @@ public class Music {
     private long duration;
     // 音乐路径
     private String uri;
-    // 专辑封面路径[本地歌曲]
+    // [本地歌曲]专辑封面路径
     private String coverUri;
     // 文件名
     private String fileName;
-    // 专辑封面bitmap[网络歌曲]
+    // [网络歌曲]专辑封面bitmap
     private Bitmap cover;
+    // 文件大小
+    private long fileSize;
+    // 发行日期
+    private String year;
 
-    public MusicTypeEnum getType() {
+    public Type getType() {
         return type;
     }
 
-    public void setType(MusicTypeEnum type) {
+    public void setType(Type type) {
         this.type = type;
     }
 
@@ -110,6 +112,22 @@ public class Music {
         this.cover = cover;
     }
 
+    public long getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(long fileSize) {
+        this.fileSize = fileSize;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
     /**
      * 对比本地歌曲是否相同
      */
@@ -119,5 +137,10 @@ public class Music {
             return false;
         }
         return this.getId() == ((Music) o).getId();
+    }
+
+    public enum Type {
+        LOCAL,
+        ONLINE
     }
 }

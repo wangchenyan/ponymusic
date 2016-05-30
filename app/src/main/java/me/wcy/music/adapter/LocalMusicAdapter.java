@@ -11,7 +11,6 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import me.wcy.music.R;
-import me.wcy.music.enums.MusicTypeEnum;
 import me.wcy.music.model.Music;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.CoverLoader;
@@ -78,7 +77,7 @@ public class LocalMusicAdapter extends BaseAdapter {
     }
 
     public void updatePlayingPosition(PlayService playService) {
-        if (playService.getPlayingMusic() != null && playService.getPlayingMusic().getType() == MusicTypeEnum.LOCAL) {
+        if (playService.getPlayingMusic() != null && playService.getPlayingMusic().getType() == Music.Type.LOCAL) {
             mPlayingPosition = playService.getPlayingPosition();
         } else {
             mPlayingPosition = -1;

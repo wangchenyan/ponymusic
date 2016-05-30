@@ -12,7 +12,6 @@ import java.util.List;
 import me.wcy.music.R;
 import me.wcy.music.activity.BaseActivity;
 import me.wcy.music.activity.SplashActivity;
-import me.wcy.music.enums.MusicTypeEnum;
 import me.wcy.music.model.Music;
 
 /**
@@ -47,7 +46,7 @@ public class SystemUtils {
         String title = music.getTitle();
         String subtitle = FileUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum());
         Bitmap cover;
-        if (music.getType() == MusicTypeEnum.LOCAL) {
+        if (music.getType() == Music.Type.LOCAL) {
             cover = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
         } else {
             cover = music.getCover();

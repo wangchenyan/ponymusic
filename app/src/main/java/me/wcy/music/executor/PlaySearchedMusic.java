@@ -14,7 +14,6 @@ import java.io.IOException;
 
 import me.wcy.music.R;
 import me.wcy.music.callback.JsonCallback;
-import me.wcy.music.enums.MusicTypeEnum;
 import me.wcy.music.model.JDownloadInfo;
 import me.wcy.music.model.JLrc;
 import me.wcy.music.model.JSearchMusic;
@@ -73,7 +72,7 @@ public abstract class PlaySearchedMusic {
             mCounter++;
         }
         final Music music = new Music();
-        music.setType(MusicTypeEnum.ONLINE);
+        music.setType(Music.Type.ONLINE);
         music.setTitle(mJSong.getSongname());
         music.setArtist(mJSong.getArtistname());
         // 获取歌曲播放链接

@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.text.TextUtils;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -113,5 +114,11 @@ public class FileUtils {
         Pattern p = Pattern.compile(regEx);
         Matcher m = p.matcher(str);
         return m.replaceAll("").trim();
+    }
+
+    public static float b2mb(int b) {
+        DecimalFormat decimalFormat = new DecimalFormat(".00");
+        String MB = decimalFormat.format((float) b / 1024 / 1024);
+        return Float.valueOf(MB);
     }
 }

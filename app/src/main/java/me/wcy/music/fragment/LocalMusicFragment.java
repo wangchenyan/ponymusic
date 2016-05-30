@@ -30,9 +30,10 @@ import me.wcy.music.R;
 import me.wcy.music.adapter.LocalMusicAdapter;
 import me.wcy.music.adapter.OnMoreClickListener;
 import me.wcy.music.application.MusicApplication;
-import me.wcy.music.enums.MusicTypeEnum;
 import me.wcy.music.model.Music;
 import me.wcy.music.service.PlayService;
+import me.wcy.music.utils.FileUtils;
+import me.wcy.music.utils.SystemUtils;
 import me.wcy.music.utils.ToastUtils;
 
 /**
@@ -57,7 +58,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         mAdapter = new LocalMusicAdapter();
         mAdapter.setOnMoreClickListener(this);
         lvLocalMusic.setAdapter(mAdapter);
-        if (getPlayService().getPlayingMusic() != null && getPlayService().getPlayingMusic().getType() == MusicTypeEnum.LOCAL) {
+        if (getPlayService().getPlayingMusic() != null && getPlayService().getPlayingMusic().getType() == Music.Type.LOCAL) {
             lvLocalMusic.setSelection(getPlayService().getPlayingPosition());
         }
         updateView();
@@ -91,7 +92,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         final Music music = PlayService.getMusicList().get(position);
         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         dialog.setTitle(music.getTitle());
-        int itemsId = position == getPlayService().getPlayingPosition() ? R.array.local_music_dialog_no_delete : R.array.local_music_dialog;
+        int itemsId = position == getPlayService().getPlayingPosition() ? R.array.local_music_dialog_without_delete : R.array.local_music_dialog;
         dialog.setItems(itemsId, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -102,7 +103,10 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
                     case 1:// 设为铃声
                         setRingtone(music);
                         break;
-                    case 2:// 删除
+                    case 2:// 查看歌曲信息
+                        musicInfo(music);
+                        break;
+                    case 3:// 删除
                         deleteMusic(music);
                         break;
                 }
@@ -113,7 +117,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
 
     public void onItemPlay() {
         updateView();
-        if (getPlayService().getPlayingMusic().getType() == MusicTypeEnum.LOCAL) {
+        if (getPlayService().getPlayingMusic().getType() == Music.Type.LOCAL) {
             lvLocalMusic.smoothScrollToPosition(getPlayService().getPlayingPosition());
         }
     }
@@ -148,12 +152,40 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
             values.put(MediaStore.Audio.Media.IS_ALARM, false);
             values.put(MediaStore.Audio.Media.IS_MUSIC, false);
 
-            getActivity().getContentResolver().update(uri, values, MediaStore.MediaColumns.DATA + "=?", new String[]{music.getUri()});
+            getActivity().getContentResolver().update(uri, values, MediaStore.MediaColumns.DATA +
+                    "=?", new String[]{music.getUri()});
             Uri newUri = ContentUris.withAppendedId(uri, Long.valueOf(_id));
-            RingtoneManager.setActualDefaultRingtoneUri(getActivity(), RingtoneManager.TYPE_RINGTONE, newUri);
+            RingtoneManager.setActualDefaultRingtoneUri(getActivity(),
+                    RingtoneManager.TYPE_RINGTONE, newUri);
             ToastUtils.show(R.string.setting_ringtone_success);
         }
         cursor.close();
+    }
+
+    private void musicInfo(Music music) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+        dialog.setTitle(music.getTitle());
+        StringBuilder sb = new StringBuilder();
+        sb.append("艺术家：")
+                .append(music.getArtist())
+                .append("\n\n")
+                .append("专辑：")
+                .append(music.getAlbum())
+                .append("\n\n")
+                .append("播放时长：")
+                .append(SystemUtils.formatTime("mm:ss", music.getDuration()))
+                .append("\n\n")
+                .append("文件名称：")
+                .append(music.getFileName())
+                .append("\n\n")
+                .append("文件大小：")
+                .append(FileUtils.b2mb((int) music.getFileSize()))
+                .append("MB")
+                .append("\n\n")
+                .append("文件路径：")
+                .append(new File(music.getUri()).getParent());
+        dialog.setMessage(sb.toString());
+        dialog.show();
     }
 
     /**

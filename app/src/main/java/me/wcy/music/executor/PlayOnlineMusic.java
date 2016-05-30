@@ -15,7 +15,6 @@ import java.io.File;
 
 import me.wcy.music.R;
 import me.wcy.music.callback.JsonCallback;
-import me.wcy.music.enums.MusicTypeEnum;
 import me.wcy.music.model.JDownloadInfo;
 import me.wcy.music.model.JOnlineMusic;
 import me.wcy.music.model.Music;
@@ -78,7 +77,7 @@ public abstract class PlayOnlineMusic {
             mCounter++;
         }
         final Music music = new Music();
-        music.setType(MusicTypeEnum.ONLINE);
+        music.setType(Music.Type.ONLINE);
         music.setTitle(mJOnlineMusic.getTitle());
         music.setArtist(mJOnlineMusic.getArtist_name());
         music.setAlbum(mJOnlineMusic.getAlbum_title());

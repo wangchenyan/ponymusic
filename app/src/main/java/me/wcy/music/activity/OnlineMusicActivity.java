@@ -181,7 +181,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         dialog.setTitle(mMusicList.get(position).getTitle());
         String path = FileUtils.getMusicDir() + FileUtils.getMp3FileName(jOnlineMusic.getArtist_name(), jOnlineMusic.getTitle());
         File file = new File(path);
-        int itemsId = file.exists() ? R.array.online_music_dialog_no_download : R.array.online_music_dialog;
+        int itemsId = file.exists() ? R.array.online_music_dialog_without_download : R.array.online_music_dialog;
         dialog.setItems(itemsId, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

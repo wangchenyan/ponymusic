@@ -8,7 +8,6 @@ import android.provider.MediaStore;
 import java.util.List;
 
 import me.wcy.music.R;
-import me.wcy.music.enums.MusicTypeEnum;
 import me.wcy.music.model.Music;
 
 /**
@@ -45,9 +44,11 @@ public class MusicUtils {
             long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
             String coverUri = getCoverUri(context, albumId);
             String fileName = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)));
+            long fileSize = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
+            String year = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.YEAR)));
             Music music = new Music();
             music.setId(id);
-            music.setType(MusicTypeEnum.LOCAL);
+            music.setType(Music.Type.LOCAL);
             music.setTitle(title);
             music.setArtist(artist);
             music.setAlbum(album);
@@ -55,6 +56,8 @@ public class MusicUtils {
             music.setUri(url);
             music.setCoverUri(coverUri);
             music.setFileName(fileName);
+            music.setFileSize(fileSize);
+            music.setYear(year);
             musicList.add(music);
         }
         cursor.close();

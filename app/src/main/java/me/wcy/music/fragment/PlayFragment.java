@@ -25,7 +25,6 @@ import java.util.List;
 import butterknife.Bind;
 import me.wcy.music.R;
 import me.wcy.music.adapter.PlayPagerAdapter;
-import me.wcy.music.enums.MusicTypeEnum;
 import me.wcy.music.enums.PlayModeEnum;
 import me.wcy.music.executor.SearchLrc;
 import me.wcy.music.model.Music;
@@ -311,7 +310,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void setCoverAndBg(Music music) {
-        if (music.getType() == MusicTypeEnum.LOCAL) {
+        if (music.getType() == Music.Type.LOCAL) {
             mAlbumCoverView.setCoverBitmap(CoverLoader.getInstance().loadRound(music.getCoverUri()));
             ivPlayingBg.setImageBitmap(CoverLoader.getInstance().loadBlur(music.getCoverUri()));
         } else {
@@ -329,7 +328,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void setLrc(final Music music) {
-        if (music.getType() == MusicTypeEnum.LOCAL) {
+        if (music.getType() == Music.Type.LOCAL) {
             String lrcPath = FileUtils.getLrcFilePath(music);
             if (new File(lrcPath).exists()) {
                 loadLrc(lrcPath);
