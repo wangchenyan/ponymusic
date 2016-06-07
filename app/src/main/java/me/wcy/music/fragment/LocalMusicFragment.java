@@ -147,10 +147,11 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         if (cursor.moveToFirst() && cursor.getCount() > 0) {
             String _id = cursor.getString(0);
             ContentValues values = new ContentValues();
+            values.put(MediaStore.Audio.Media.IS_MUSIC, true);
             values.put(MediaStore.Audio.Media.IS_RINGTONE, true);
-            values.put(MediaStore.Audio.Media.IS_NOTIFICATION, false);
             values.put(MediaStore.Audio.Media.IS_ALARM, false);
-            values.put(MediaStore.Audio.Media.IS_MUSIC, false);
+            values.put(MediaStore.Audio.Media.IS_NOTIFICATION, false);
+            values.put(MediaStore.Audio.Media.IS_PODCAST, false);
 
             getActivity().getContentResolver().update(uri, values, MediaStore.MediaColumns.DATA +
                     "=?", new String[]{music.getUri()});
