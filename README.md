@@ -10,10 +10,10 @@
 * 有问题请提Issues
 
 ### 系列文章
-* [Android开源音乐播放器之本地播放功能](http://www.jianshu.com/users/3231579893ac)
-* [Android开源音乐播放器之自动加载更多ListView](http://www.jianshu.com/users/3231579893ac)
+* [Android开源音乐播放器之播放器基本功能](http://www.jianshu.com/users/3231579893ac)
 * [Android开源音乐播放器之仿云音乐黑胶唱片](http://www.jianshu.com/users/3231579893ac)
 * [Android开源音乐播放器之自动滚动歌词](http://www.jianshu.com/users/3231579893ac)
+* [Android开源音乐播放器之在线音乐列表自动加载更多](http://www.jianshu.com/users/3231579893ac)
 * [Android开源音乐播放器之夜间模式](http://www.jianshu.com/users/3231579893ac)
 * [Android开源音乐播放器之定时关闭](http://www.jianshu.com/users/3231579893ac)
 
