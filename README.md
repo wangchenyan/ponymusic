@@ -1,4 +1,147 @@
 # 波尼音乐
-基于Android平台的在线音乐播放器
+
+## 前言
+毕业设计做的项目，答辩完了，就共享出来。<br>
+
+**注意：fir的key我没有提交，可直接忽略。**
+
+* **开源不易，希望能给个Star鼓励**
+* 项目地址：https://github.com/ChanWong21/PonyMusic
+* 有问题请提Issues
+
+### 系列文章
+* [Android开源音乐播放器之本地播放功能](http://www.jianshu.com/users/3231579893ac)
+* [Android开源音乐播放器之自动加载更多ListView](http://www.jianshu.com/users/3231579893ac)
+* [Android开源音乐播放器之仿云音乐黑胶唱片](http://www.jianshu.com/users/3231579893ac)
+* [Android开源音乐播放器之自动滚动歌词](http://www.jianshu.com/users/3231579893ac)
+* [Android开源音乐播放器之夜间模式](http://www.jianshu.com/users/3231579893ac)
+* [Android开源音乐播放器之定时关闭](http://www.jianshu.com/users/3231579893ac)
+
+## 简介
+波尼音乐是一款免费的Android在线音乐播放器。
+- 播放本地音乐与在线音乐
+- 在线音乐排行榜，如热歌榜、新歌榜等
+- 仿云音乐的黑胶唱片专辑封面
+- 歌词显示，自动搜索歌词
+- 夜间模式
+- 定时关闭
+
+## 更新说明
+`v 1.0`
+* 第一个版本
+
+## 下载地址
+fir.im：http://fir.im/ponymusic
 
 ## TODO
+* 在线音乐可以免下载加入我的音乐列表
+* 在线音乐自动缓存
+* 编辑音乐信息
+
+## 项目
+### 公开API
+* 在线音乐：[百度音乐](http://mrasong.com/a/baidu-mp3-api-full)
+* 天气数据：[高德地图](http://lbs.amap.com/)
+
+### 开源技术
+* [okhttp-utils](https://github.com/hongyangAndroid/okhttp-utils)
+* [Android-Universal-Image-Loader](https://github.com/nostra13/Android-Universal-Image-Loader)
+
+### 关键代码
+黑胶唱片专辑封面绘制流程
+```java
+@Override
+protected void onDraw(Canvas canvas) {
+    // 设置旋转角度和圆心
+    mDiscMatrix.setRotate(mDiscRotation, mDiscPX, mDiscPY);
+    mCoverMatrix.setRotate(mDiscRotation, mCoverPX, mCoverPY);
+    mNeedleMatrix.setRotate(mNeedleRotation, mNeedlePX, mNeedlePY);
+    // 设置旋转半径端点坐标
+    mDiscMatrix.preTranslate(mDiscDX, mDiscDY);
+    mCoverMatrix.preTranslate(mCoverDX, mCoverDY);
+    mNeedleMatrix.preTranslate(mNeedleDX, mNeedleDY);
+    mTopLine.setBounds(0, getTop(), getWidth(), getTop() + mTopLineHeight);
+    mCoverBorder.setBounds((int) mDiscDX - mCoverBorderWidth, (int) mDiscDY - mCoverBorderWidth,
+            (int) mDiscDX + mDiscBitmap.getWidth() + mCoverBorderWidth, (int) mDiscDY +
+                    mDiscBitmap.getHeight() + mCoverBorderWidth);
+    // 绘制
+    mTopLine.draw(canvas);
+    mCoverBorder.draw(canvas);
+    canvas.drawBitmap(mCoverBitmap, mCoverMatrix, null);
+    canvas.drawBitmap(mDiscBitmap, mDiscMatrix, null);
+    canvas.drawBitmap(mNeedleBitmap, mNeedleMatrix, null);
+}
+```
+歌词绘制流程
+```java
+@Override
+protected void onDraw(Canvas canvas) {
+    super.onDraw(canvas);
+    // 中心Y坐标
+    float centerY = getHeight() / 2 + mTextSize / 2 + mAnimOffset;
+
+    // 无歌词文件
+    if (!hasLrc()) {
+        float centerX = (getWidth() - mCurrentPaint.measureText(label)) / 2;
+        canvas.drawText(label, centerX, centerY, mCurrentPaint);
+        return;
+    }
+
+    // 画当前行
+    String currStr = mLrcTexts.get(mCurrentLine);
+    float currX = (getWidth() - mCurrentPaint.measureText(currStr)) / 2;
+    canvas.drawText(currStr, currX, centerY, mCurrentPaint);
+
+    // 画当前行上面的
+    for (int i = mCurrentLine - 1; i >= 0; i--) {
+        String upStr = mLrcTexts.get(i);
+        float upX = (getWidth() - mNormalPaint.measureText(upStr)) / 2;
+        float upY = centerY - (mTextSize + mDividerHeight) * (mCurrentLine - i);
+        // 超出屏幕停止绘制
+        if (upY - mTextSize < 0) {
+            break;
+        }
+        canvas.drawText(upStr, upX, upY, mNormalPaint);
+    }
+
+    // 画当前行下面的
+    for (int i = mCurrentLine + 1; i < mLrcTimes.size(); i++) {
+        String downStr = mLrcTexts.get(i);
+        float downX = (getWidth() - mNormalPaint.measureText(downStr)) / 2;
+        float downY = centerY + (mTextSize + mDividerHeight) * (i - mCurrentLine);
+        // 超出屏幕停止绘制
+        if (downY > getHeight()) {
+            break;
+        }
+        canvas.drawText(downStr, downX, downY, mNormalPaint);
+    }
+}
+```
+
+## 截图
+![](https://raw.githubusercontent.com/ChanWong21/PonyMusic/master/art/screenshot_01.jpg)
+![](https://raw.githubusercontent.com/ChanWong21/PonyMusic/master/art/screenshot_02.jpg)
+![](https://raw.githubusercontent.com/ChanWong21/PonyMusic/master/art/screenshot_03.jpg)
+![](https://raw.githubusercontent.com/ChanWong21/PonyMusic/master/art/screenshot_04.jpg)
+![](https://raw.githubusercontent.com/ChanWong21/PonyMusic/master/art/screenshot_05.jpg)
+![](https://raw.githubusercontent.com/ChanWong21/PonyMusic/master/art/screenshot_06.jpg)
+
+## 关于作者
+简书：http://www.jianshu.com/users/3231579893ac<br>
+微博：http://weibo.com/wangchenyan1993
+
+## License
+
+    Copyright 2016 Chay Wong
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
