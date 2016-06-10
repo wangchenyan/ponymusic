@@ -10,12 +10,10 @@
 * 有问题请提Issues
 
 ### 系列文章
-* [Android开源音乐播放器之播放器基本功能](http://www.jianshu.com/users/3231579893ac)
-* [Android开源音乐播放器之仿云音乐黑胶唱片](http://www.jianshu.com/users/3231579893ac)
-* [Android开源音乐播放器之自动滚动歌词](http://www.jianshu.com/users/3231579893ac)
-* [Android开源音乐播放器之在线音乐列表自动加载更多](http://www.jianshu.com/users/3231579893ac)
-* [Android开源音乐播放器之夜间模式](http://www.jianshu.com/users/3231579893ac)
-* [Android开源音乐播放器之定时关闭](http://www.jianshu.com/users/3231579893ac)
+* [Android开源音乐播放器之播放器基本功能](http://www.jianshu.com/p/bc2f779a5400)
+* [Android开源音乐播放器之高仿云音乐黑胶唱片](http://www.jianshu.com/p/f1d8eb8bb3e5)
+* [Android开源音乐播放器之自动滚动歌词](http://www.jianshu.com/p/0feb6171b0c5)
+* [Android开源音乐播放器之在线音乐列表自动加载更多](http://www.jianshu.com/p/576564627c96)
 
 ## 简介
 波尼音乐是一款免费的Android在线音乐播放器。
@@ -52,23 +50,27 @@ fir.im：http://fir.im/ponymusic
 ```java
 @Override
 protected void onDraw(Canvas canvas) {
-    // 设置旋转角度和圆心
-    mDiscMatrix.setRotate(mDiscRotation, mDiscPX, mDiscPY);
-    mCoverMatrix.setRotate(mDiscRotation, mCoverPX, mCoverPY);
-    mNeedleMatrix.setRotate(mNeedleRotation, mNeedlePX, mNeedlePY);
-    // 设置旋转半径端点坐标
-    mDiscMatrix.preTranslate(mDiscDX, mDiscDY);
-    mCoverMatrix.preTranslate(mCoverDX, mCoverDY);
-    mNeedleMatrix.preTranslate(mNeedleDX, mNeedleDY);
+    // 1.绘制顶部虚线
     mTopLine.setBounds(0, getTop(), getWidth(), getTop() + mTopLineHeight);
+    mTopLine.draw(canvas);
+    // 2.绘制黑胶唱片外侧半透明边框
     mCoverBorder.setBounds((int) mDiscDX - mCoverBorderWidth, (int) mDiscDY - mCoverBorderWidth,
             (int) mDiscDX + mDiscBitmap.getWidth() + mCoverBorderWidth, (int) mDiscDY +
                     mDiscBitmap.getHeight() + mCoverBorderWidth);
-    // 绘制
-    mTopLine.draw(canvas);
     mCoverBorder.draw(canvas);
-    canvas.drawBitmap(mCoverBitmap, mCoverMatrix, null);
+    // 3.绘制黑胶
+    // 设置旋转角度和圆心
+    mDiscMatrix.setRotate(mDiscRotation, mDiscPX, mDiscPY);
+    // 设置旋转半径端点坐标
+    mDiscMatrix.preTranslate(mDiscDX, mDiscDY);
     canvas.drawBitmap(mDiscBitmap, mDiscMatrix, null);
+    // 4.绘制封面
+    mCoverMatrix.setRotate(mDiscRotation, mCoverPX, mCoverPY);
+    mCoverMatrix.preTranslate(mCoverDX, mCoverDY);
+    canvas.drawBitmap(mCoverBitmap, mCoverMatrix, null);
+    // 5.绘制指针
+    mNeedleMatrix.setRotate(mNeedleRotation, mNeedlePX, mNeedlePY);
+    mNeedleMatrix.preTranslate(mNeedleDX, mNeedleDY);
     canvas.drawBitmap(mNeedleBitmap, mNeedleMatrix, null);
 }
 ```
