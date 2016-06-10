@@ -2,6 +2,7 @@
 ![](https://raw.githubusercontent.com/ChanWong21/PonyMusic/master/app/src/main/res/drawable-xxhdpi/ic_launcher.png)
 
 ## 系列文章
+* [Android开源在线音乐播放器——波尼音乐](http://www.jianshu.com/p/1c0f5c4f64fa)
 * [Android开源音乐播放器之播放器基本功能](http://www.jianshu.com/p/bc2f779a5400)
 * [Android开源音乐播放器之高仿云音乐黑胶唱片](http://www.jianshu.com/p/f1d8eb8bb3e5)
 * [Android开源音乐播放器之自动滚动歌词](http://www.jianshu.com/p/0feb6171b0c5)
