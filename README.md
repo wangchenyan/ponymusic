@@ -1,6 +1,12 @@
 # 波尼音乐
 ![](https://raw.githubusercontent.com/ChanWong21/PonyMusic/master/app/src/main/res/drawable-xxhdpi/ic_launcher.png)
 
+## 系列文章
+* [Android开源音乐播放器之播放器基本功能](http://www.jianshu.com/p/bc2f779a5400)
+* [Android开源音乐播放器之高仿云音乐黑胶唱片](http://www.jianshu.com/p/f1d8eb8bb3e5)
+* [Android开源音乐播放器之自动滚动歌词](http://www.jianshu.com/p/0feb6171b0c5)
+* [Android开源音乐播放器之在线音乐列表自动加载更多](http://www.jianshu.com/p/576564627c96)
+
 ## 前言
 毕业设计做的项目，答辩完了，就共享出来。<br>
 
@@ -9,12 +15,6 @@
 * **开源不易，希望能给个Star鼓励**
 * 项目地址：https://github.com/ChanWong21/PonyMusic
 * 有问题请提Issues
-
-### 系列文章
-* [Android开源音乐播放器之播放器基本功能](http://www.jianshu.com/p/bc2f779a5400)
-* [Android开源音乐播放器之高仿云音乐黑胶唱片](http://www.jianshu.com/p/f1d8eb8bb3e5)
-* [Android开源音乐播放器之自动滚动歌词](http://www.jianshu.com/p/0feb6171b0c5)
-* [Android开源音乐播放器之在线音乐列表自动加载更多](http://www.jianshu.com/p/576564627c96)
 
 ## 简介
 波尼音乐是一款免费的Android在线音乐播放器。
