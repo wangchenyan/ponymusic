@@ -1,4 +1,5 @@
 # 波尼音乐
+![](https://raw.githubusercontent.com/ChanWong21/PonyMusic/master/app/src/main/res/drawable-xxxhdpi/ic_launcher.png)
 
 ## 前言
 毕业设计做的项目，答辩完了，就共享出来。<br>
