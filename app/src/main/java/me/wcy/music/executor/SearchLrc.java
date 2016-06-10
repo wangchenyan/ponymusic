@@ -38,7 +38,7 @@ public abstract class SearchLrc {
                 .execute(new JsonCallback<JSearchMusic>(JSearchMusic.class) {
                     @Override
                     public void onResponse(JSearchMusic response) {
-                        if (response.getSong() == null || response.getSong().size() == 0) {
+                        if (response == null || response.getSong() == null || response.getSong().size() == 0) {
                             onFinish(null);
                             return;
                         }
@@ -60,7 +60,7 @@ public abstract class SearchLrc {
                 .execute(new JsonCallback<JLrc>(JLrc.class) {
                     @Override
                     public void onResponse(JLrc response) {
-                        if (TextUtils.isEmpty(response.getLrcContent())) {
+                        if (response == null || TextUtils.isEmpty(response.getLrcContent())) {
                             onFinish(null);
                             return;
                         }

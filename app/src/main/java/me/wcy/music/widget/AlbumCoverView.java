@@ -45,15 +45,15 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
     // 圆心坐标
     private float mDiscPX;
     private float mDiscPY;
+    private float mCoverPX;
+    private float mCoverPY;
+    private float mNeedlePX;
+    private float mNeedlePY;
     // 旋转半径端点坐标
     private float mDiscDX;
     private float mDiscDY;
-    private float mCoverPX;
-    private float mCoverPY;
     private float mCoverDX;
     private float mCoverDY;
-    private float mNeedlePX;
-    private float mNeedlePY;
     private float mNeedleDX;
     private float mNeedleDY;
 
@@ -72,6 +72,8 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
 
     private void init() {
         mHandler = new Handler();
+        mTopLine = getResources().getDrawable(R.drawable.play_page_cover_top_line_shape);
+        mCoverBorder = getResources().getDrawable(R.drawable.play_page_cover_border_shape);
         mDiscBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.play_page_disc);
         mDiscBitmap = ImageUtils.resizeImage(mDiscBitmap, (int) (ScreenUtils.getScreenWidth() * 0.75),
                 (int) (ScreenUtils.getScreenWidth() * 0.75));
@@ -79,15 +81,13 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
         mNeedleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.play_page_needle);
         mNeedleBitmap = ImageUtils.resizeImage(mNeedleBitmap, (int) (ScreenUtils.getScreenWidth() * 0.25),
                 (int) (ScreenUtils.getScreenWidth() * 0.375));
-        mTopLine = getResources().getDrawable(R.drawable.play_page_cover_top_line_shape);
-        mCoverBorder = getResources().getDrawable(R.drawable.play_page_cover_border_shape);
         mDiscMatrix = new Matrix();
         mCoverMatrix = new Matrix();
         mNeedleMatrix = new Matrix();
         mPlayAnimator = ValueAnimator.ofFloat(NEEDLE_ROTATION_PAUSE, NEEDLE_ROTATION_PLAY);
-        mPauseAnimator = ValueAnimator.ofFloat(NEEDLE_ROTATION_PLAY, NEEDLE_ROTATION_PAUSE);
         mPlayAnimator.setDuration(300);
         mPlayAnimator.addUpdateListener(this);
+        mPauseAnimator = ValueAnimator.ofFloat(NEEDLE_ROTATION_PLAY, NEEDLE_ROTATION_PAUSE);
         mPauseAnimator.setDuration(300);
         mPauseAnimator.addUpdateListener(this);
     }
@@ -98,6 +98,9 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
         initSize();
     }
 
+    /**
+     * 确定圆心坐标与旋转半径端点坐标
+     */
     private void initSize() {
         int discOffsetY = mNeedleBitmap.getHeight() / 2;
         mDiscPX = getWidth() / 2;
@@ -116,23 +119,27 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
 
     @Override
     protected void onDraw(Canvas canvas) {
-        // 设置旋转角度和圆心
-        mDiscMatrix.setRotate(mDiscRotation, mDiscPX, mDiscPY);
-        mCoverMatrix.setRotate(mDiscRotation, mCoverPX, mCoverPY);
-        mNeedleMatrix.setRotate(mNeedleRotation, mNeedlePX, mNeedlePY);
-        // 设置旋转半径端点坐标
-        mDiscMatrix.preTranslate(mDiscDX, mDiscDY);
-        mCoverMatrix.preTranslate(mCoverDX, mCoverDY);
-        mNeedleMatrix.preTranslate(mNeedleDX, mNeedleDY);
+        // 1.绘制顶部虚线
         mTopLine.setBounds(0, getTop(), getWidth(), getTop() + mTopLineHeight);
+        mTopLine.draw(canvas);
+        // 2.绘制黑胶唱片外侧半透明边框
         mCoverBorder.setBounds((int) mDiscDX - mCoverBorderWidth, (int) mDiscDY - mCoverBorderWidth,
                 (int) mDiscDX + mDiscBitmap.getWidth() + mCoverBorderWidth, (int) mDiscDY +
                         mDiscBitmap.getHeight() + mCoverBorderWidth);
-        // 绘制
-        mTopLine.draw(canvas);
         mCoverBorder.draw(canvas);
-        canvas.drawBitmap(mCoverBitmap, mCoverMatrix, null);
+        // 3.绘制黑胶
+        // 设置旋转角度和圆心
+        mDiscMatrix.setRotate(mDiscRotation, mDiscPX, mDiscPY);
+        // 设置旋转半径端点坐标
+        mDiscMatrix.preTranslate(mDiscDX, mDiscDY);
         canvas.drawBitmap(mDiscBitmap, mDiscMatrix, null);
+        // 4.绘制封面
+        mCoverMatrix.setRotate(mDiscRotation, mCoverPX, mCoverPY);
+        mCoverMatrix.preTranslate(mCoverDX, mCoverDY);
+        canvas.drawBitmap(mCoverBitmap, mCoverMatrix, null);
+        // 5.绘制指针
+        mNeedleMatrix.setRotate(mNeedleRotation, mNeedlePX, mNeedlePY);
+        mNeedleMatrix.preTranslate(mNeedleDX, mNeedleDY);
         canvas.drawBitmap(mNeedleBitmap, mNeedleMatrix, null);
     }
 

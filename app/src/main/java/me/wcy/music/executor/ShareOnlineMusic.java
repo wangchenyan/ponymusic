@@ -41,6 +41,11 @@ public abstract class ShareOnlineMusic {
                 .execute(new JsonCallback<JDownloadInfo>(JDownloadInfo.class) {
                     @Override
                     public void onResponse(final JDownloadInfo response) {
+                        if (response == null) {
+                            onFail(null, null);
+                            ToastUtils.show(R.string.unable_to_share);
+                            return;
+                        }
                         onSuccess();
                         Intent intent = new Intent(Intent.ACTION_SEND);
                         intent.setType("text/plain");

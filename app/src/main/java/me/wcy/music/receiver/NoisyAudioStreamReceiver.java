@@ -8,7 +8,7 @@ import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.Actions;
 
 /**
- * 耳机拔出/蓝牙断开接收器
+ * 来电/耳机拔出时暂停播放
  * Created by wcy on 2016/1/23.
  */
 public class NoisyAudioStreamReceiver extends BroadcastReceiver {

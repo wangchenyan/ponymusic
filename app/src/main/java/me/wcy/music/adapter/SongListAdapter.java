@@ -31,6 +31,7 @@ import okhttp3.Call;
 public class SongListAdapter extends BaseAdapter {
     private static final int TYPE_PROFILE = 0;
     private static final int TYPE_MUSIC_LIST = 1;
+    private Context mContext;
     private List<SongListInfo> mData;
 
     public SongListAdapter(List<SongListInfo> data) {
@@ -73,7 +74,7 @@ public class SongListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Context context = parent.getContext();
+        mContext = parent.getContext();
         ViewHolderProfile holderProfile;
         ViewHolderMusicList holderMusicList;
         SongListInfo songListInfo = mData.get(position);
@@ -81,7 +82,7 @@ public class SongListAdapter extends BaseAdapter {
         switch (itemViewType) {
             case TYPE_PROFILE:
                 if (convertView == null) {
-                    convertView = LayoutInflater.from(context).inflate(R.layout.view_holder_song_list_profile, parent, false);
+                    convertView = LayoutInflater.from(mContext).inflate(R.layout.view_holder_song_list_profile, parent, false);
                     holderProfile = new ViewHolderProfile(convertView);
                     convertView.setTag(holderProfile);
                 } else {
@@ -91,13 +92,13 @@ public class SongListAdapter extends BaseAdapter {
                 break;
             case TYPE_MUSIC_LIST:
                 if (convertView == null) {
-                    convertView = LayoutInflater.from(context).inflate(R.layout.view_holder_song_list, parent, false);
+                    convertView = LayoutInflater.from(mContext).inflate(R.layout.view_holder_song_list, parent, false);
                     holderMusicList = new ViewHolderMusicList(convertView);
                     convertView.setTag(holderMusicList);
                 } else {
                     holderMusicList = (ViewHolderMusicList) convertView.getTag();
                 }
-                getMusicListInfo(context, songListInfo, holderMusicList);
+                getMusicListInfo(songListInfo, holderMusicList);
                 holderMusicList.vDivider.setVisibility(isShowDivider(position) ? View.VISIBLE : View.GONE);
                 break;
         }
@@ -108,7 +109,7 @@ public class SongListAdapter extends BaseAdapter {
         return position != mData.size() - 1;
     }
 
-    private void getMusicListInfo(final Context context, final SongListInfo songListInfo, final ViewHolderMusicList holderMusicList) {
+    private void getMusicListInfo(final SongListInfo songListInfo, final ViewHolderMusicList holderMusicList) {
         if (songListInfo.getCoverUrl() == null) {
             holderMusicList.ivCover.setTag(songListInfo.getTitle());
             holderMusicList.ivCover.setImageResource(R.drawable.default_cover);
@@ -129,23 +130,7 @@ public class SongListAdapter extends BaseAdapter {
                             if (!songListInfo.getTitle().equals(holderMusicList.ivCover.getTag())) {
                                 return;
                             }
-                            List<JOnlineMusic> jOnlineMusics = response.getSong_list();
-                            songListInfo.setCoverUrl(response.getBillboard().getPic_s260());
-                            if (jOnlineMusics.size() >= 1) {
-                                songListInfo.setMusic1(context.getString(R.string.song_list_item_title_1, jOnlineMusics.get(0).getTitle(), jOnlineMusics.get(0).getArtist_name()));
-                            } else {
-                                songListInfo.setMusic1("");
-                            }
-                            if (jOnlineMusics.size() >= 2) {
-                                songListInfo.setMusic2(context.getString(R.string.song_list_item_title_2, jOnlineMusics.get(1).getTitle(), jOnlineMusics.get(1).getArtist_name()));
-                            } else {
-                                songListInfo.setMusic2("");
-                            }
-                            if (jOnlineMusics.size() >= 3) {
-                                songListInfo.setMusic3(context.getString(R.string.song_list_item_title_3, jOnlineMusics.get(2).getTitle(), jOnlineMusics.get(2).getArtist_name()));
-                            } else {
-                                songListInfo.setMusic3("");
-                            }
+                            parse(response, songListInfo);
                             setData(songListInfo, holderMusicList);
                         }
 
@@ -156,6 +141,29 @@ public class SongListAdapter extends BaseAdapter {
         } else {
             holderMusicList.ivCover.setTag(null);
             setData(songListInfo, holderMusicList);
+        }
+    }
+
+    private void parse(JOnlineMusicList response, SongListInfo songListInfo) {
+        List<JOnlineMusic> jOnlineMusics = response.getSong_list();
+        songListInfo.setCoverUrl(response.getBillboard().getPic_s260());
+        if (jOnlineMusics.size() >= 1) {
+            songListInfo.setMusic1(mContext.getString(R.string.song_list_item_title_1,
+                    jOnlineMusics.get(0).getTitle(), jOnlineMusics.get(0).getArtist_name()));
+        } else {
+            songListInfo.setMusic1("");
+        }
+        if (jOnlineMusics.size() >= 2) {
+            songListInfo.setMusic2(mContext.getString(R.string.song_list_item_title_2,
+                    jOnlineMusics.get(1).getTitle(), jOnlineMusics.get(1).getArtist_name()));
+        } else {
+            songListInfo.setMusic2("");
+        }
+        if (jOnlineMusics.size() >= 3) {
+            songListInfo.setMusic3(mContext.getString(R.string.song_list_item_title_3,
+                    jOnlineMusics.get(2).getTitle(), jOnlineMusics.get(2).getArtist_name()));
+        } else {
+            songListInfo.setMusic3("");
         }
     }
 

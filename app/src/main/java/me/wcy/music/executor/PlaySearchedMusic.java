@@ -83,6 +83,10 @@ public abstract class PlaySearchedMusic {
                 .execute(new JsonCallback<JDownloadInfo>(JDownloadInfo.class) {
                     @Override
                     public void onResponse(final JDownloadInfo response) {
+                        if (response == null) {
+                            onFail(null, null);
+                            return;
+                        }
                         music.setUri(response.getBitrate().getFile_link());
                         music.setDuration(response.getBitrate().getFile_duration() * 1000);
                         mCounter++;
@@ -104,7 +108,7 @@ public abstract class PlaySearchedMusic {
                 .execute(new JsonCallback<JLrc>(JLrc.class) {
                     @Override
                     public void onResponse(JLrc response) {
-                        if (TextUtils.isEmpty(response.getLrcContent())) {
+                        if (response == null || TextUtils.isEmpty(response.getLrcContent())) {
                             return;
                         }
                         String lrcFileName = FileUtils.getLrcFileName(mJSong.getArtistname(), mJSong.getSongname());

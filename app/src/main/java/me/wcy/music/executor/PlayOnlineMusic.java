@@ -89,6 +89,10 @@ public abstract class PlayOnlineMusic {
                 .execute(new JsonCallback<JDownloadInfo>(JDownloadInfo.class) {
                     @Override
                     public void onResponse(final JDownloadInfo response) {
+                        if (response == null) {
+                            onFail(null, null);
+                            return;
+                        }
                         music.setUri(response.getBitrate().getFile_link());
                         music.setDuration(response.getBitrate().getFile_duration() * 1000);
                         mCounter++;

@@ -77,6 +77,10 @@ public abstract class DownloadSearchedMusic {
                 .execute(new JsonCallback<JDownloadInfo>(JDownloadInfo.class) {
                     @Override
                     public void onResponse(final JDownloadInfo response) {
+                        if (response == null) {
+                            onFail(null, null);
+                            return;
+                        }
                         Uri uri = Uri.parse(response.getBitrate().getFile_link());
                         DownloadManager.Request request = new DownloadManager.Request(uri);
                         String mp3FileName = FileUtils.getMp3FileName(mJSong.getArtistname(), mJSong.getSongname());
@@ -106,7 +110,7 @@ public abstract class DownloadSearchedMusic {
                     .execute(new JsonCallback<JLrc>(JLrc.class) {
                         @Override
                         public void onResponse(JLrc response) {
-                            if (TextUtils.isEmpty(response.getLrcContent())) {
+                            if (response == null || TextUtils.isEmpty(response.getLrcContent())) {
                                 return;
                             }
                             String lrcPath = FileUtils.getLrcDir() + FileUtils.getLrcFileName(mJSong.getArtistname(), mJSong.getSongname());

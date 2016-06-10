@@ -131,7 +131,7 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
                 .execute(new JsonCallback<JSearchMusic>(JSearchMusic.class) {
                     @Override
                     public void onResponse(JSearchMusic response) {
-                        if (response.getSong() == null) {
+                        if (response == null || response.getSong() == null) {
                             ViewUtils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
                             return;
                         }

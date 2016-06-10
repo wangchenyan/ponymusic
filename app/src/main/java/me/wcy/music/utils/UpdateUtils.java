@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.webkit.MimeTypeMap;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import im.fir.sdk.FIR;
 import im.fir.sdk.VersionCheckCallback;
@@ -38,7 +39,13 @@ public class UpdateUtils {
                     return;
                 }
                 Gson gson = new Gson();
-                UpdateInfo updateInfo = gson.fromJson(versionJson, UpdateInfo.class);
+                UpdateInfo updateInfo;
+                try {
+                    updateInfo = gson.fromJson(versionJson, UpdateInfo.class);
+                } catch (JsonSyntaxException e) {
+                    e.printStackTrace();
+                    return;
+                }
                 int version = Integer.valueOf(updateInfo.version);
                 if (version > BuildConfig.VERSION_CODE) {
                     updateDialog(activity, updateInfo);

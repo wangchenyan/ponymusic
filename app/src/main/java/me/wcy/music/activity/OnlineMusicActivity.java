@@ -134,11 +134,14 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                     public void onResponse(JOnlineMusicList response) {
                         lvOnlineMusic.onLoadComplete();
                         mJOnlineMusicList = response;
-                        if (offset == 0) {
+                        if (offset == 0 && response == null) {
+                            ViewUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
+                            return;
+                        } else if (offset == 0) {
                             initHeader();
                             ViewUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
                         }
-                        if (response.getSong_list() == null || response.getSong_list().size() == 0) {
+                        if (response == null || response.getSong_list() == null || response.getSong_list().size() == 0) {
                             lvOnlineMusic.setEnable(false);
                             return;
                         }

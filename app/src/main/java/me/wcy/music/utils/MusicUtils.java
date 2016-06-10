@@ -40,7 +40,7 @@ public class MusicUtils {
             artist = artist.equals("<unknown>") ? unknown : artist;
             String album = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)));
             long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
-            String url = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
+            String uri = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
             long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
             String coverUri = getCoverUri(context, albumId);
             String fileName = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)));
@@ -53,7 +53,7 @@ public class MusicUtils {
             music.setArtist(artist);
             music.setAlbum(album);
             music.setDuration(duration);
-            music.setUri(url);
+            music.setUri(uri);
             music.setCoverUri(coverUri);
             music.setFileName(fileName);
             music.setFileSize(fileSize);

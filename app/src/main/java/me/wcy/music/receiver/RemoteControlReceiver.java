@@ -9,7 +9,7 @@ import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.Actions;
 
 /**
- * 蓝牙/耳机控制
+ * 耳机线控
  * Created by hzwangchenyan on 2016/1/21.
  */
 public class RemoteControlReceiver extends BroadcastReceiver {

@@ -66,6 +66,10 @@ public class ArtistInfoActivity extends BaseActivity {
                 .execute(new JsonCallback<JArtistInfo>(JArtistInfo.class) {
                     @Override
                     public void onResponse(JArtistInfo response) {
+                        if (response == null) {
+                            ViewUtils.changeViewState(svArtistInfo, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
+                            return;
+                        }
                         ViewUtils.changeViewState(svArtistInfo, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
                         onSuccess(response);
                     }
