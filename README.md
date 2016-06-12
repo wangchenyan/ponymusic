@@ -31,7 +31,8 @@
 * First Release
 
 ## 下载地址
-fir.im：http://fir.im/ponymusic
+fir.im：http://fir.im/ponymusic<br>
+应用宝：http://android.myapp.com/myapp/detail.htm?apkName=me.wcy.music
 
 ## TODO
 * 在线音乐可以免下载加入我的音乐列表
