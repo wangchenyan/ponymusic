@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -25,37 +26,31 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
     private static final float DISC_ROTATION_INCREASE = 0.5f;
     private static final float NEEDLE_ROTATION_PLAY = 0.0f;
     private static final float NEEDLE_ROTATION_PAUSE = -25.0f;
-    private Handler mHandler;
+    private Handler mHandler = new Handler();
     private Bitmap mDiscBitmap;
     private Bitmap mCoverBitmap;
     private Bitmap mNeedleBitmap;
     private Drawable mTopLine;
     private Drawable mCoverBorder;
-    private Matrix mDiscMatrix;
-    private Matrix mCoverMatrix;
-    private Matrix mNeedleMatrix;
+    private Matrix mDiscMatrix = new Matrix();
+    private Matrix mCoverMatrix = new Matrix();
+    private Matrix mNeedleMatrix = new Matrix();
     private ValueAnimator mPlayAnimator;
     private ValueAnimator mPauseAnimator;
     private float mDiscRotation = 0.0f;
     private float mNeedleRotation = NEEDLE_ROTATION_PLAY;
-    private boolean mIsPlaying = false;
+    private boolean isPlaying = false;
 
     private int mTopLineHeight = ScreenUtils.dp2px(1);
     private int mCoverBorderWidth = ScreenUtils.dp2px(1);
-    // 圆心坐标
-    private float mDiscPX;
-    private float mDiscPY;
-    private float mCoverPX;
-    private float mCoverPY;
-    private float mNeedlePX;
-    private float mNeedlePY;
-    // 旋转半径端点坐标
-    private float mDiscDX;
-    private float mDiscDY;
-    private float mCoverDX;
-    private float mCoverDY;
-    private float mNeedleDX;
-    private float mNeedleDY;
+    // 图片坐标
+    private Point mDiscPoint = new Point();
+    private Point mCoverPoint = new Point();
+    private Point mNeedlePoint = new Point();
+    // 旋转中心坐标
+    private Point mDiscCenterPoint = new Point();
+    private Point mCoverCenterPoint = new Point();
+    private Point mNeedleCenterPoint = new Point();
 
     public AlbumCoverView(Context context) {
         this(context, null);
@@ -71,7 +66,6 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
     }
 
     private void init() {
-        mHandler = new Handler();
         mTopLine = getResources().getDrawable(R.drawable.play_page_cover_top_line_shape);
         mCoverBorder = getResources().getDrawable(R.drawable.play_page_cover_border_shape);
         mDiscBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.play_page_disc);
@@ -81,9 +75,6 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
         mNeedleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.play_page_needle);
         mNeedleBitmap = ImageUtils.resizeImage(mNeedleBitmap, (int) (ScreenUtils.getScreenWidth() * 0.25),
                 (int) (ScreenUtils.getScreenWidth() * 0.375));
-        mDiscMatrix = new Matrix();
-        mCoverMatrix = new Matrix();
-        mNeedleMatrix = new Matrix();
         mPlayAnimator = ValueAnimator.ofFloat(NEEDLE_ROTATION_PAUSE, NEEDLE_ROTATION_PLAY);
         mPlayAnimator.setDuration(300);
         mPlayAnimator.addUpdateListener(this);
@@ -103,18 +94,18 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
      */
     private void initSize() {
         int discOffsetY = mNeedleBitmap.getHeight() / 2;
-        mDiscPX = getWidth() / 2;
-        mDiscPY = mDiscBitmap.getHeight() / 2 + discOffsetY;
-        mCoverPX = mDiscPX;
-        mCoverPY = mDiscPY;
-        mNeedlePX = mDiscPX;
-        mNeedlePY = 0;
-        mDiscDX = (getWidth() - mDiscBitmap.getWidth()) / 2;
-        mDiscDY = discOffsetY;
-        mCoverDX = (getWidth() - mCoverBitmap.getWidth()) / 2;
-        mCoverDY = discOffsetY + (mDiscBitmap.getHeight() - mCoverBitmap.getHeight()) / 2;
-        mNeedleDX = getWidth() / 2 - mNeedleBitmap.getWidth() / 6;
-        mNeedleDY = -mNeedleBitmap.getWidth() / 6;
+        mDiscPoint.x = (getWidth() - mDiscBitmap.getWidth()) / 2;
+        mDiscPoint.y = discOffsetY;
+        mCoverPoint.x = (getWidth() - mCoverBitmap.getWidth()) / 2;
+        mCoverPoint.y = discOffsetY + (mDiscBitmap.getHeight() - mCoverBitmap.getHeight()) / 2;
+        mNeedlePoint.x = getWidth() / 2 - mNeedleBitmap.getWidth() / 6;
+        mNeedlePoint.y = -mNeedleBitmap.getWidth() / 6;
+        mDiscCenterPoint.x = getWidth() / 2;
+        mDiscCenterPoint.y = mDiscBitmap.getHeight() / 2 + discOffsetY;
+        mCoverCenterPoint.x = mDiscCenterPoint.x;
+        mCoverCenterPoint.y = mDiscCenterPoint.y;
+        mNeedleCenterPoint.x = mDiscCenterPoint.x;
+        mNeedleCenterPoint.y = 0;
     }
 
     @Override
@@ -123,23 +114,23 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
         mTopLine.setBounds(0, getTop(), getWidth(), getTop() + mTopLineHeight);
         mTopLine.draw(canvas);
         // 2.绘制黑胶唱片外侧半透明边框
-        mCoverBorder.setBounds((int) mDiscDX - mCoverBorderWidth, (int) mDiscDY - mCoverBorderWidth,
-                (int) mDiscDX + mDiscBitmap.getWidth() + mCoverBorderWidth, (int) mDiscDY +
+        mCoverBorder.setBounds(mDiscPoint.x - mCoverBorderWidth, mDiscPoint.y - mCoverBorderWidth,
+                mDiscPoint.x + mDiscBitmap.getWidth() + mCoverBorderWidth, mDiscPoint.y +
                         mDiscBitmap.getHeight() + mCoverBorderWidth);
         mCoverBorder.draw(canvas);
         // 3.绘制黑胶
-        // 设置旋转角度和圆心
-        mDiscMatrix.setRotate(mDiscRotation, mDiscPX, mDiscPY);
-        // 设置旋转半径端点坐标
-        mDiscMatrix.preTranslate(mDiscDX, mDiscDY);
+        // 设置旋转中心和旋转角度，setRotate和preTranslate顺序很重要
+        mDiscMatrix.setRotate(mDiscRotation, mDiscCenterPoint.x, mDiscCenterPoint.y);
+        // 设置图片坐标
+        mDiscMatrix.preTranslate(mDiscPoint.x, mDiscPoint.y);
         canvas.drawBitmap(mDiscBitmap, mDiscMatrix, null);
         // 4.绘制封面
-        mCoverMatrix.setRotate(mDiscRotation, mCoverPX, mCoverPY);
-        mCoverMatrix.preTranslate(mCoverDX, mCoverDY);
+        mCoverMatrix.setRotate(mDiscRotation, mCoverCenterPoint.x, mCoverCenterPoint.y);
+        mCoverMatrix.preTranslate(mCoverPoint.x, mCoverPoint.y);
         canvas.drawBitmap(mCoverBitmap, mCoverMatrix, null);
         // 5.绘制指针
-        mNeedleMatrix.setRotate(mNeedleRotation, mNeedlePX, mNeedlePY);
-        mNeedleMatrix.preTranslate(mNeedleDX, mNeedleDY);
+        mNeedleMatrix.setRotate(mNeedleRotation, mNeedleCenterPoint.x, mNeedleCenterPoint.y);
+        mNeedleMatrix.preTranslate(mNeedlePoint.x, mNeedlePoint.y);
         canvas.drawBitmap(mNeedleBitmap, mNeedleMatrix, null);
     }
 
@@ -155,19 +146,19 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
     }
 
     public void start() {
-        if (mIsPlaying) {
+        if (isPlaying) {
             return;
         }
-        mIsPlaying = true;
+        isPlaying = true;
         mHandler.post(mRotationRunnable);
         mPlayAnimator.start();
     }
 
     public void pause() {
-        if (!mIsPlaying) {
+        if (!isPlaying) {
             return;
         }
-        mIsPlaying = false;
+        isPlaying = false;
         mHandler.removeCallbacks(mRotationRunnable);
         mPauseAnimator.start();
     }
@@ -181,7 +172,7 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
     private Runnable mRotationRunnable = new Runnable() {
         @Override
         public void run() {
-            if (mIsPlaying) {
+            if (isPlaying) {
                 mDiscRotation += DISC_ROTATION_INCREASE;
                 if (mDiscRotation >= 360) {
                     mDiscRotation = 0;

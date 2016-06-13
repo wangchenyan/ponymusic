@@ -57,23 +57,23 @@ protected void onDraw(Canvas canvas) {
     mTopLine.setBounds(0, getTop(), getWidth(), getTop() + mTopLineHeight);
     mTopLine.draw(canvas);
     // 2.绘制黑胶唱片外侧半透明边框
-    mCoverBorder.setBounds((int) mDiscDX - mCoverBorderWidth, (int) mDiscDY - mCoverBorderWidth,
-            (int) mDiscDX + mDiscBitmap.getWidth() + mCoverBorderWidth, (int) mDiscDY +
+    mCoverBorder.setBounds(mDiscPoint.x - mCoverBorderWidth, mDiscPoint.y - mCoverBorderWidth,
+            mDiscPoint.x + mDiscBitmap.getWidth() + mCoverBorderWidth, mDiscPoint.y +
                     mDiscBitmap.getHeight() + mCoverBorderWidth);
     mCoverBorder.draw(canvas);
     // 3.绘制黑胶
-    // 设置旋转角度和圆心
-    mDiscMatrix.setRotate(mDiscRotation, mDiscPX, mDiscPY);
-    // 设置旋转半径端点坐标
-    mDiscMatrix.preTranslate(mDiscDX, mDiscDY);
+    // 设置旋转中心和旋转角度，setRotate和preTranslate顺序很重要
+    mDiscMatrix.setRotate(mDiscRotation, mDiscCenterPoint.x, mDiscCenterPoint.y);
+    // 设置图片坐标
+    mDiscMatrix.preTranslate(mDiscPoint.x, mDiscPoint.y);
     canvas.drawBitmap(mDiscBitmap, mDiscMatrix, null);
     // 4.绘制封面
-    mCoverMatrix.setRotate(mDiscRotation, mCoverPX, mCoverPY);
-    mCoverMatrix.preTranslate(mCoverDX, mCoverDY);
+    mCoverMatrix.setRotate(mDiscRotation, mCoverCenterPoint.x, mCoverCenterPoint.y);
+    mCoverMatrix.preTranslate(mCoverPoint.x, mCoverPoint.y);
     canvas.drawBitmap(mCoverBitmap, mCoverMatrix, null);
     // 5.绘制指针
-    mNeedleMatrix.setRotate(mNeedleRotation, mNeedlePX, mNeedlePY);
-    mNeedleMatrix.preTranslate(mNeedleDX, mNeedleDY);
+    mNeedleMatrix.setRotate(mNeedleRotation, mNeedleCenterPoint.x, mNeedleCenterPoint.y);
+    mNeedleMatrix.preTranslate(mNeedlePoint.x, mNeedlePoint.y);
     canvas.drawBitmap(mNeedleBitmap, mNeedleMatrix, null);
 }
 ```
