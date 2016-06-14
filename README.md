@@ -64,7 +64,7 @@ protected void onDraw(Canvas canvas) {
     // 3.绘制黑胶
     // 设置旋转中心和旋转角度，setRotate和preTranslate顺序很重要
     mDiscMatrix.setRotate(mDiscRotation, mDiscCenterPoint.x, mDiscCenterPoint.y);
-    // 设置图片坐标
+    // 设置图片起始坐标
     mDiscMatrix.preTranslate(mDiscPoint.x, mDiscPoint.y);
     canvas.drawBitmap(mDiscBitmap, mDiscMatrix, null);
     // 4.绘制封面

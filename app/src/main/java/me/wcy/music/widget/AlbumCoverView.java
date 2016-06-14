@@ -43,7 +43,7 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
 
     private int mTopLineHeight = ScreenUtils.dp2px(1);
     private int mCoverBorderWidth = ScreenUtils.dp2px(1);
-    // 图片坐标
+    // 图片起始坐标
     private Point mDiscPoint = new Point();
     private Point mCoverPoint = new Point();
     private Point mNeedlePoint = new Point();
@@ -90,7 +90,7 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
     }
 
     /**
-     * 确定圆心坐标与旋转半径端点坐标
+     * 确定图片起始坐标与旋转中心坐标
      */
     private void initSize() {
         int discOffsetY = mNeedleBitmap.getHeight() / 2;
@@ -121,7 +121,7 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
         // 3.绘制黑胶
         // 设置旋转中心和旋转角度，setRotate和preTranslate顺序很重要
         mDiscMatrix.setRotate(mDiscRotation, mDiscCenterPoint.x, mDiscCenterPoint.y);
-        // 设置图片坐标
+        // 设置图片起始坐标
         mDiscMatrix.preTranslate(mDiscPoint.x, mDiscPoint.y);
         canvas.drawBitmap(mDiscBitmap, mDiscMatrix, null);
         // 4.绘制封面
