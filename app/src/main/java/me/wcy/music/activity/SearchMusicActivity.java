@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,8 +89,14 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
         searchView.setQueryHint(getString(R.string.search_tips));
         searchView.setOnQueryTextListener(this);
         searchView.setSubmitButtonEnabled(true);
-        ImageView mGoButton = (ImageView) searchView.findViewById(R.id.search_go_btn);
-        mGoButton.setImageResource(R.drawable.ic_menu_search);
+        try {
+            Field field = searchView.getClass().getDeclaredField("mGoButton");
+            field.setAccessible(true);
+            ImageView mGoButton = (ImageView) field.get(searchView);
+            mGoButton.setImageResource(R.drawable.ic_menu_search);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
