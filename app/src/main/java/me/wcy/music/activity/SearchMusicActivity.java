@@ -62,10 +62,6 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_music);
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
-
         bindService();
         mSearchMusicList = new ArrayList<>();
         mAdapter = new SearchMusicAdapter(mSearchMusicList);
@@ -85,6 +81,7 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search_music, menu);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.onActionViewExpanded();
         searchView.setQueryHint(getString(R.string.search_tips));
         searchView.setOnQueryTextListener(this);
