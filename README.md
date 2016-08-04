@@ -53,7 +53,7 @@ fir.im：http://fir.im/ponymusic
 @Override
 protected void onDraw(Canvas canvas) {
     // 1.绘制顶部虚线
-    mTopLine.setBounds(0, getTop(), getWidth(), getTop() + mTopLineHeight);
+    mTopLine.setBounds(0, 0, getWidth(), mTopLineHeight);
     mTopLine.draw(canvas);
     // 2.绘制黑胶唱片外侧半透明边框
     mCoverBorder.setBounds(mDiscPoint.x - mCoverBorderWidth, mDiscPoint.y - mCoverBorderWidth,

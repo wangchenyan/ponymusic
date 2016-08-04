@@ -51,11 +51,10 @@ import me.wcy.music.utils.ScreenUtils;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.ViewUtils;
 import me.wcy.music.widget.AutoLoadListView;
-import me.wcy.music.widget.OnLoadListener;
 import okhttp3.Call;
 
 public class OnlineMusicActivity extends BaseActivity implements OnItemClickListener
-        , OnMoreClickListener, OnLoadListener {
+        , OnMoreClickListener, AutoLoadListView.OnLoadListener {
     @Bind(R.id.lv_online_music_list)
     AutoLoadListView lvOnlineMusic;
     @Bind(R.id.ll_loading)
