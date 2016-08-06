@@ -43,7 +43,7 @@ public class SongListFragment extends BaseFragment implements AdapterView.OnItem
 
     @Override
     protected void init() {
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (!NetworkUtils.isNetworkAvailable(getContext())) {
             ViewUtils.changeViewState(lvSongList, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
             return;
         }
@@ -70,7 +70,7 @@ public class SongListFragment extends BaseFragment implements AdapterView.OnItem
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         SongListInfo songListInfo = mSongLists.get(position);
-        Intent intent = new Intent(getActivity(), OnlineMusicActivity.class);
+        Intent intent = new Intent(getContext(), OnlineMusicActivity.class);
         intent.putExtra(Extras.MUSIC_LIST_TYPE, songListInfo);
         startActivity(intent);
     }

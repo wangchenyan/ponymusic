@@ -101,7 +101,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     public void onResume() {
         super.onResume();
         IntentFilter filter = new IntentFilter(Actions.VOLUME_CHANGED_ACTION);
-        getActivity().registerReceiver(mVolumeReceiver, filter);
+        getContext().registerReceiver(mVolumeReceiver, filter);
     }
 
     @Override
@@ -121,14 +121,14 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
      */
     private void initSystemBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            int top = ScreenUtils.getSystemBarHeight(getActivity());
+            int top = ScreenUtils.getSystemBarHeight();
             llContent.setPadding(0, top, 0, 0);
         }
     }
 
     private void initViewPager() {
-        View coverView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_play_page_cover, null);
-        View lrcView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_play_page_lrc, null);
+        View coverView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_play_page_cover, null);
+        View lrcView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_play_page_lrc, null);
         mAlbumCoverView = (AlbumCoverView) coverView.findViewById(R.id.album_cover_view);
         mLrcViewSingle = (LrcView) coverView.findViewById(R.id.lrc_view_single);
         mLrcViewFull = (LrcView) lrcView.findViewById(R.id.lrc_view_full);
@@ -143,7 +143,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void initVolume() {
-        mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+        mAudioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
         sbVolume.setMax(mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
         sbVolume.setProgress(mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
     }
@@ -376,7 +376,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
 
     @Override
     public void onDestroy() {
-        getActivity().unregisterReceiver(mVolumeReceiver);
+        getContext().unregisterReceiver(mVolumeReceiver);
         super.onDestroy();
     }
 }

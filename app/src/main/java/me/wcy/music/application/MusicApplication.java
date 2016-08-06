@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import im.fir.sdk.FIR;
 import me.wcy.music.executor.CrashHandler;
 import me.wcy.music.utils.Preferences;
+import me.wcy.music.utils.ScreenUtils;
 import me.wcy.music.utils.ToastUtils;
 
 /**
@@ -34,6 +35,7 @@ public class MusicApplication extends Application {
         sRes = getResources();
         ToastUtils.init(this);
         Preferences.init(this);
+        ScreenUtils.init(this);
         updateNightMode(Preferences.isNightMode());
         CrashHandler.getInstance().init();
         initOkHttpUtils();

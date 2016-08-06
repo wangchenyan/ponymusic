@@ -64,7 +64,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         updateView();
 
         IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
-        getActivity().registerReceiver(mDownloadReceiver, filter);
+        getContext().registerReceiver(mDownloadReceiver, filter);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     @Override
     public void onMoreClick(final int position) {
         final Music music = PlayService.getMusicList().get(position);
-        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
         dialog.setTitle(music.getTitle());
         int itemsId = position == getPlayService().getPlayingPosition() ? R.array.local_music_dialog_without_delete : R.array.local_music_dialog;
         dialog.setItems(itemsId, new DialogInterface.OnClickListener() {
@@ -139,7 +139,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     private void setRingtone(Music music) {
         Uri uri = MediaStore.Audio.Media.getContentUriForPath(music.getUri());
         // 查询音乐文件在媒体库是否存在
-        Cursor cursor = getActivity().getContentResolver().query(uri, null,
+        Cursor cursor = getContext().getContentResolver().query(uri, null,
                 MediaStore.MediaColumns.DATA + "=?", new String[]{music.getUri()}, null);
         if (cursor == null) {
             return;
@@ -153,10 +153,10 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
             values.put(MediaStore.Audio.Media.IS_NOTIFICATION, false);
             values.put(MediaStore.Audio.Media.IS_PODCAST, false);
 
-            getActivity().getContentResolver().update(uri, values, MediaStore.MediaColumns.DATA +
+            getContext().getContentResolver().update(uri, values, MediaStore.MediaColumns.DATA +
                     "=?", new String[]{music.getUri()});
             Uri newUri = ContentUris.withAppendedId(uri, Long.valueOf(_id));
-            RingtoneManager.setActualDefaultRingtoneUri(getActivity(),
+            RingtoneManager.setActualDefaultRingtoneUri(getContext(),
                     RingtoneManager.TYPE_RINGTONE, newUri);
             ToastUtils.show(R.string.setting_ringtone_success);
         }
@@ -164,7 +164,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     }
 
     private void musicInfo(Music music) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
         dialog.setTitle(music.getTitle());
         StringBuilder sb = new StringBuilder();
         sb.append("艺术家：")
@@ -193,7 +193,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
      * 删除音乐
      */
     private void deleteMusic(final Music music) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
         String title = music.getTitle();
         String msg = getString(R.string.delete_music, title);
         dialog.setMessage(msg);
@@ -207,7 +207,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
                     updateView();
                     // 刷新媒体库
                     Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + music.getUri()));
-                    getActivity().sendBroadcast(intent);
+                    getContext().sendBroadcast(intent);
                 }
             }
         });
@@ -217,7 +217,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
 
     @Override
     public void onDestroy() {
-        getActivity().unregisterReceiver(mDownloadReceiver);
+        getContext().unregisterReceiver(mDownloadReceiver);
         super.onDestroy();
     }
 
