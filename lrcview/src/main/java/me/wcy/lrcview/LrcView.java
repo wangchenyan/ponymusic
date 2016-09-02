@@ -1,4 +1,4 @@
-package me.wcy.music.widget;
+package me.wcy.lrcview;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -19,9 +19,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import me.wcy.music.R;
-import me.wcy.music.utils.ScreenUtils;
-
 /**
  * 歌词
  * Created by wcy on 2015/11/9.
@@ -38,7 +35,7 @@ public class LrcView extends View {
     private long mNextTime = 0L;
     private int mCurrentLine = 0;
     private boolean isEnd = false;
-    private String label = "暂无歌词";
+    private String label;
 
     public LrcView(Context context) {
         this(context, null);
@@ -58,12 +55,14 @@ public class LrcView extends View {
      */
     private void init(AttributeSet attrs) {
         TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.LrcView);
-        mTextSize = ta.getDimension(R.styleable.LrcView_textSize, ScreenUtils.sp2px(16));
-        mDividerHeight = ta.getDimension(R.styleable.LrcView_dividerHeight, ScreenUtils.dp2px(24));
-        mAnimationDuration = ta.getInt(R.styleable.LrcView_animationDuration, 1000);
+        mTextSize = ta.getDimension(R.styleable.LrcView_lrcTextSize, sp2px(16));
+        mDividerHeight = ta.getDimension(R.styleable.LrcView_lrcDividerHeight, dp2px(24));
+        mAnimationDuration = ta.getInt(R.styleable.LrcView_lrcAnimationDuration, 1000);
         mAnimationDuration = mAnimationDuration < 0 ? 1000 : mAnimationDuration;
-        int normalColor = ta.getColor(R.styleable.LrcView_normalTextColor, 0xFFFFFFFF);
-        int currentColor = ta.getColor(R.styleable.LrcView_currentTextColor, 0xFFFF4081);
+        int normalColor = ta.getColor(R.styleable.LrcView_lrcNormalTextColor, 0xFFFFFFFF);
+        int currentColor = ta.getColor(R.styleable.LrcView_lrcCurrentTextColor, 0xFFFF4081);
+        label = ta.getString(R.styleable.LrcView_lrcLabel);
+        label = TextUtils.isEmpty(label) ? "暂无歌词" : label;
         ta.recycle();
 
         mLrcTimes = new ArrayList<>();
@@ -121,10 +120,13 @@ public class LrcView extends View {
         }
     }
 
-    public void searchLrc() {
+    /**
+     * 设置歌词为空时屏幕中央显示的文字，如“暂无歌词”
+     */
+    public void setLabel(String label) {
         reset();
 
-        label = "正在搜索歌词";
+        this.label = label;
         postInvalidate();
     }
 
@@ -137,7 +139,6 @@ public class LrcView extends View {
         reset();
 
         if (TextUtils.isEmpty(path) || !new File(path).exists()) {
-            label = "暂无歌词";
             postInvalidate();
             return;
         }
@@ -164,6 +165,8 @@ public class LrcView extends View {
                 e.printStackTrace();
             }
         }
+
+        postInvalidate();
     }
 
     private void reset() {
@@ -175,11 +178,9 @@ public class LrcView extends View {
     }
 
     /**
-     * 更新进度
-     *
-     * @param time 当前时间
+     * 刷新歌词
      */
-    public synchronized void updateTime(long time) {
+    public void updateTime(long time) {
         // 避免重复绘制
         if (time < mNextTime || isEnd) {
             return;
@@ -200,9 +201,12 @@ public class LrcView extends View {
         }
     }
 
-    public void onDrag(int progress) {
+    /**
+     * 将歌词滚动到指定时间
+     */
+    public void onDrag(long time) {
         for (int i = 0; i < mLrcTimes.size(); i++) {
-            if (mLrcTimes.get(i) > progress) {
+            if (mLrcTimes.get(i) > time) {
                 mNextTime = mLrcTimes.get(i);
                 mCurrentLine = i < 1 ? 0 : i - 1;
                 isEnd = false;
@@ -269,5 +273,15 @@ public class LrcView extends View {
             }
         });
         animator.start();
+    }
+
+    private int dp2px(float dpValue) {
+        float scale = getContext().getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
+
+    private int sp2px(float spValue) {
+        float fontScale = getContext().getResources().getDisplayMetrics().scaledDensity;
+        return (int) (spValue * fontScale + 0.5f);
     }
 }

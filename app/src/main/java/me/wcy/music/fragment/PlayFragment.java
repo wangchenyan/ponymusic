@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import me.wcy.lrcview.LrcView;
 import me.wcy.music.R;
 import me.wcy.music.adapter.PlayPagerAdapter;
 import me.wcy.music.enums.PlayModeEnum;
@@ -38,7 +40,6 @@ import me.wcy.music.utils.SystemUtils;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.widget.AlbumCoverView;
 import me.wcy.music.widget.IndicatorLayout;
-import me.wcy.music.widget.LrcView;
 
 /**
  * 正在播放界面
@@ -336,15 +337,23 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
                 new SearchLrc(music.getArtist(), music.getTitle()) {
                     @Override
                     public void onPrepare() {
-                        mLrcViewSingle.searchLrc();
-                        mLrcViewFull.searchLrc();
+                        String label = "正在搜索歌词";
+                        mLrcViewSingle.setLabel(label);
+                        mLrcViewFull.setLabel(label);
                         // 设置tag防止歌词下载完成后已切换歌曲
                         mLrcViewSingle.setTag(music);
                     }
 
                     @Override
                     public void onFinish(@Nullable String lrcPath) {
-                        if (mLrcViewSingle.getTag() == music) {
+                        if (mLrcViewSingle.getTag() != music) {
+                            return;
+                        }
+                        if (TextUtils.isEmpty(lrcPath) || !new File(lrcPath).exists()) {
+                            String label = "暂无歌词";
+                            mLrcViewSingle.setLabel(label);
+                            mLrcViewFull.setLabel(label);
+                        } else {
                             loadLrc(lrcPath);
                         }
                     }

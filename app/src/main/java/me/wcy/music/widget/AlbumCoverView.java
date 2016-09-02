@@ -11,11 +11,11 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.WindowManager;
 
 import me.wcy.music.R;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.ImageUtils;
-import me.wcy.music.utils.ScreenUtils;
 
 /**
  * 专辑封面
@@ -32,6 +32,8 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
     private Bitmap mNeedleBitmap;
     private Drawable mTopLine;
     private Drawable mCoverBorder;
+    private int mTopLineHeight;
+    private int mCoverBorderWidth;
     private Matrix mDiscMatrix = new Matrix();
     private Matrix mCoverMatrix = new Matrix();
     private Matrix mNeedleMatrix = new Matrix();
@@ -41,8 +43,6 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
     private float mNeedleRotation = NEEDLE_ROTATION_PLAY;
     private boolean isPlaying = false;
 
-    private int mTopLineHeight = ScreenUtils.dp2px(1);
-    private int mCoverBorderWidth = ScreenUtils.dp2px(1);
     // 图片起始坐标
     private Point mDiscPoint = new Point();
     private Point mCoverPoint = new Point();
@@ -69,12 +69,15 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
         mTopLine = getResources().getDrawable(R.drawable.play_page_cover_top_line_shape);
         mCoverBorder = getResources().getDrawable(R.drawable.play_page_cover_border_shape);
         mDiscBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.play_page_disc);
-        mDiscBitmap = ImageUtils.resizeImage(mDiscBitmap, (int) (ScreenUtils.getScreenWidth() * 0.75),
-                (int) (ScreenUtils.getScreenWidth() * 0.75));
+        mDiscBitmap = ImageUtils.resizeImage(mDiscBitmap, (int) (getScreenWidth() * 0.75),
+                (int) (getScreenWidth() * 0.75));
         mCoverBitmap = CoverLoader.getInstance().loadRound(null);
         mNeedleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.play_page_needle);
-        mNeedleBitmap = ImageUtils.resizeImage(mNeedleBitmap, (int) (ScreenUtils.getScreenWidth() * 0.25),
-                (int) (ScreenUtils.getScreenWidth() * 0.375));
+        mNeedleBitmap = ImageUtils.resizeImage(mNeedleBitmap, (int) (getScreenWidth() * 0.25),
+                (int) (getScreenWidth() * 0.375));
+        mTopLineHeight = dp2px(1);
+        mCoverBorderWidth = dp2px(1);
+
         mPlayAnimator = ValueAnimator.ofFloat(NEEDLE_ROTATION_PAUSE, NEEDLE_ROTATION_PLAY);
         mPlayAnimator.setDuration(300);
         mPlayAnimator.addUpdateListener(this);
@@ -182,4 +185,14 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
             mHandler.postDelayed(this, TIME_UPDATE);
         }
     };
+
+    private int getScreenWidth() {
+        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        return wm.getDefaultDisplay().getWidth();
+    }
+
+    private int dp2px(float dpValue) {
+        float scale = getContext().getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
 }

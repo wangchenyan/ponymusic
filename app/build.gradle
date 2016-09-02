@@ -39,6 +39,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile project(':lrcview')
     compile "com.android.support:appcompat-v7:${rootProject.ext.supportVersion}"
     compile "com.android.support:design:${rootProject.ext.supportVersion}"
     compile 'com.jakewharton:butterknife:7.0.1'

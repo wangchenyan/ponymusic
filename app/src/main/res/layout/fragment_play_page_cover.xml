@@ -14,13 +14,13 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <me.wcy.music.widget.LrcView
+    <me.wcy.lrcview.LrcView
         android:id="@+id/lrc_view_single"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        lrc:animationDuration="1000"
-        lrc:currentTextColor="@color/white"
-        lrc:dividerHeight="10dp"
-        lrc:normalTextColor="@color/white"
-        lrc:textSize="@dimen/text_size_common" />
+        lrc:lrcAnimationDuration="1000"
+        lrc:lrcCurrentTextColor="@color/white"
+        lrc:lrcDividerHeight="10dp"
+        lrc:lrcNormalTextColor="@color/white"
+        lrc:lrcTextSize="@dimen/text_size_common" />
 </LinearLayout>
