@@ -332,7 +332,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         if (music.getType() == Music.Type.LOCAL) {
             String lrcPath = FileUtils.getLrcFilePath(music);
             if (new File(lrcPath).exists()) {
-                loadLrc(lrcPath);
+                loadLrc(new File(lrcPath));
             } else {
                 new SearchLrc(music.getArtist(), music.getTitle()) {
                     @Override
@@ -354,20 +354,20 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
                             mLrcViewSingle.setLabel(label);
                             mLrcViewFull.setLabel(label);
                         } else {
-                            loadLrc(lrcPath);
+                            loadLrc(new File(lrcPath));
                         }
                     }
                 }.execute();
             }
         } else {
             String lrcPath = FileUtils.getLrcDir() + FileUtils.getLrcFileName(music.getArtist(), music.getTitle());
-            loadLrc(lrcPath);
+            loadLrc(new File(lrcPath));
         }
     }
 
-    private void loadLrc(String path) {
-        mLrcViewSingle.loadLrc(path);
-        mLrcViewFull.loadLrc(path);
+    private void loadLrc(File lrcFile) {
+        mLrcViewSingle.loadLrc(lrcFile);
+        mLrcViewFull.loadLrc(lrcFile);
         // 清除tag
         mLrcViewSingle.setTag(null);
     }

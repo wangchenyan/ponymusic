@@ -39,7 +39,6 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':lrcview')
     compile "com.android.support:appcompat-v7:${rootProject.ext.supportVersion}"
     compile "com.android.support:design:${rootProject.ext.supportVersion}"
     compile 'com.jakewharton:butterknife:7.0.1'
@@ -47,4 +46,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'im.fir:fir-sdk:latest.integration@aar'
+    compile 'me.wcy.lrcview:lrcview:1.0.0'
 }
