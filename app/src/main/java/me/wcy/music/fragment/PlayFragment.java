@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import me.wcy.lrcview.LrcView;
 import me.wcy.music.R;
 import me.wcy.music.adapter.PlayPagerAdapter;
 import me.wcy.music.enums.PlayModeEnum;
@@ -40,6 +39,7 @@ import me.wcy.music.utils.SystemUtils;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.widget.AlbumCoverView;
 import me.wcy.music.widget.IndicatorLayout;
+import me.wcy.music.widget.LrcView;
 
 /**
  * 正在播放界面
