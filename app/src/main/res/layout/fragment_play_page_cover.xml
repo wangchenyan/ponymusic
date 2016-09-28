@@ -14,7 +14,7 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <me.wcy.music.widget.LrcView
+    <me.wcy.lrcview.LrcView
         android:id="@+id/lrc_view_single"
         android:layout_width="match_parent"
         android:layout_height="20dp"

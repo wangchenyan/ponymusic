@@ -50,26 +50,30 @@ public class NaviMenuExecutor {
     }
 
     private static void nightMode(Context context) {
-        if (context instanceof MusicActivity) {
-            final MusicActivity activity = (MusicActivity) context;
-            final boolean on = !Preferences.isNightMode();
-            final ProgressDialog dialog = new ProgressDialog(activity);
-            dialog.setCancelable(false);
-            dialog.show();
-            MusicApplication.updateNightMode(on);
-            Handler handler = new Handler(activity.getMainLooper());
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    dialog.cancel();
-                    activity.recreate();
-                    Preferences.saveNightMode(on);
-                }
-            }, 500);
+        if (!(context instanceof MusicActivity)) {
+            return;
         }
+        final MusicActivity activity = (MusicActivity) context;
+        final boolean on = !Preferences.isNightMode();
+        final ProgressDialog dialog = new ProgressDialog(activity);
+        dialog.setCancelable(false);
+        dialog.show();
+        MusicApplication.updateNightMode(on);
+        Handler handler = new Handler(activity.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                dialog.cancel();
+                activity.recreate();
+                Preferences.saveNightMode(on);
+            }
+        }, 500);
     }
 
     private static void timerDialog(final Context context) {
+        if (!(context instanceof MusicActivity)) {
+            return;
+        }
         new AlertDialog.Builder(context)
                 .setTitle(R.string.menu_timer)
                 .setItems(context.getResources().getStringArray(R.array.timer_text), new DialogInterface.OnClickListener() {
@@ -83,24 +87,26 @@ public class NaviMenuExecutor {
     }
 
     private static void startTimer(Context context, int minute) {
-        if (context instanceof MusicActivity) {
-            MusicActivity activity = (MusicActivity) context;
-            PlayService service = activity.getPlayService();
-            service.startQuitTimer(minute * 60 * 1000);
-            if (minute > 0) {
-                ToastUtils.show(context.getString(R.string.timer_set, minute));
-            } else {
-                ToastUtils.show(R.string.timer_cancel);
-            }
+        if (!(context instanceof MusicActivity)) {
+            return;
+        }
+        MusicActivity activity = (MusicActivity) context;
+        PlayService service = activity.getPlayService();
+        service.startQuitTimer(minute * 60 * 1000);
+        if (minute > 0) {
+            ToastUtils.show(context.getString(R.string.timer_set, String.valueOf(minute)));
+        } else {
+            ToastUtils.show(R.string.timer_cancel);
         }
     }
 
     private static void exit(Context context) {
-        if (context instanceof MusicActivity) {
-            MusicActivity activity = (MusicActivity) context;
-            PlayService service = activity.getPlayService();
-            activity.finish();
-            service.stop();
+        if (!(context instanceof MusicActivity)) {
+            return;
         }
+        MusicActivity activity = (MusicActivity) context;
+        PlayService service = activity.getPlayService();
+        activity.finish();
+        service.stop();
     }
 }
