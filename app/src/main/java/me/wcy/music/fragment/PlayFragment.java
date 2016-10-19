@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -332,16 +331,16 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         if (music.getType() == Music.Type.LOCAL) {
             String lrcPath = FileUtils.getLrcFilePath(music);
             if (new File(lrcPath).exists()) {
-                loadLrc(new File(lrcPath));
+                loadLrc(lrcPath);
             } else {
                 new SearchLrc(music.getArtist(), music.getTitle()) {
                     @Override
                     public void onPrepare() {
-                        String label = "正在搜索歌词";
-                        mLrcViewSingle.setLabel(label);
-                        mLrcViewFull.setLabel(label);
                         // 设置tag防止歌词下载完成后已切换歌曲
                         mLrcViewSingle.setTag(music);
+
+                        loadLrc("");
+                        setLrcLabel("正在搜索歌词");
                     }
 
                     @Override
@@ -349,27 +348,31 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
                         if (mLrcViewSingle.getTag() != music) {
                             return;
                         }
-                        if (TextUtils.isEmpty(lrcPath) || !new File(lrcPath).exists()) {
-                            String label = "暂无歌词";
-                            mLrcViewSingle.setLabel(label);
-                            mLrcViewFull.setLabel(label);
-                        } else {
-                            loadLrc(new File(lrcPath));
-                        }
+
+                        // 清除tag
+                        mLrcViewSingle.setTag(null);
+
+                        lrcPath = lrcPath == null ? "" : lrcPath;
+                        loadLrc(lrcPath);
+                        setLrcLabel("暂无歌词");
                     }
                 }.execute();
             }
         } else {
             String lrcPath = FileUtils.getLrcDir() + FileUtils.getLrcFileName(music.getArtist(), music.getTitle());
-            loadLrc(new File(lrcPath));
+            loadLrc(lrcPath);
         }
     }
 
-    private void loadLrc(File lrcFile) {
-        mLrcViewSingle.loadLrc(lrcFile);
-        mLrcViewFull.loadLrc(lrcFile);
-        // 清除tag
-        mLrcViewSingle.setTag(null);
+    private void loadLrc(String path) {
+        File file = new File(path);
+        mLrcViewSingle.loadLrc(file);
+        mLrcViewFull.loadLrc(file);
+    }
+
+    private void setLrcLabel(String label) {
+        mLrcViewSingle.setLabel(label);
+        mLrcViewFull.setLabel(label);
     }
 
     private String formatTime(long time) {
