@@ -46,5 +46,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'im.fir:fir-sdk:latest.integration@aar'
-    compile 'me.wcy.lrcview:lrcview:1.0.0'
+    compile 'me.wcy:lrcview:1.1.0'
 }
