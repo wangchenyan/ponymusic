@@ -18,7 +18,7 @@ import me.wcy.music.service.PlayService;
 public abstract class BaseFragment extends Fragment {
     private PlayService mPlayService;
     protected Handler mHandler;
-    private boolean mResumed;
+    private boolean isInitialized;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,16 +39,21 @@ public abstract class BaseFragment extends Fragment {
         ButterKnife.bind(this, view);
         init();
         setListener();
-        mResumed = true;
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        isInitialized = true;
     }
 
     protected abstract void init();
 
     protected abstract void setListener();
 
-    public boolean isResume() {
-        return mResumed;
+    public boolean isInitialized() {
+        return isInitialized;
     }
 
     protected PlayService getPlayService() {

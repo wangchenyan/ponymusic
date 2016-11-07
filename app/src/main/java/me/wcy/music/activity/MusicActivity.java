@@ -178,7 +178,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onPublish(int progress) {
         mProgressBar.setProgress(progress);
-        if (mPlayFragment != null && mPlayFragment.isResume()) {
+        if (mPlayFragment != null && mPlayFragment.isInitialized()) {
             mPlayFragment.onPublish(progress);
         }
     }
@@ -186,7 +186,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onChange(Music music) {
         onPlay(music);
-        if (mPlayFragment != null && mPlayFragment.isResume()) {
+        if (mPlayFragment != null && mPlayFragment.isInitialized()) {
             mPlayFragment.onChange(music);
         }
     }
@@ -194,7 +194,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onPlayerPause() {
         ivPlayBarPlay.setSelected(false);
-        if (mPlayFragment != null && mPlayFragment.isResume()) {
+        if (mPlayFragment != null && mPlayFragment.isInitialized()) {
             mPlayFragment.onPlayerPause();
         }
     }
@@ -202,7 +202,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onPlayerResume() {
         ivPlayBarPlay.setSelected(true);
-        if (mPlayFragment != null && mPlayFragment.isResume()) {
+        if (mPlayFragment != null && mPlayFragment.isInitialized()) {
             mPlayFragment.onPlayerResume();
         }
     }
@@ -295,7 +295,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         mProgressBar.setMax((int) music.getDuration());
         mProgressBar.setProgress(0);
 
-        if (mLocalMusicFragment != null && mLocalMusicFragment.isResume()) {
+        if (mLocalMusicFragment != null && mLocalMusicFragment.isInitialized()) {
             mLocalMusicFragment.onItemPlay();
         }
     }
