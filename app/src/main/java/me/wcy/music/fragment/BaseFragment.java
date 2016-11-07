@@ -39,13 +39,13 @@ public abstract class BaseFragment extends Fragment {
         ButterKnife.bind(this, view);
         init();
         setListener();
-        super.onViewCreated(view, savedInstanceState);
-    }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        isInitialized = true;
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                isInitialized = true;
+            }
+        });
     }
 
     protected abstract void init();
