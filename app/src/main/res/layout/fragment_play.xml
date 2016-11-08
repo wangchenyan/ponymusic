@@ -28,7 +28,7 @@
                 android:id="@+id/iv_back"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@drawable/play_page_back_selector"
+                android:background="@drawable/btn_action_bg_selector"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_arrow_down" />
 

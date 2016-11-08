@@ -8,6 +8,7 @@
     <color name="red">#F44336</color>
     <color name="blue">#2196F3</color>
     <color name="grey">#9E9E9E</color>
+    <color name="grey_300">#E0E0E0</color>
     <color name="grey_900">#212121</color>
     <color name="translucent_white">#80FFFFFF</color>
     <color name="translucent_black">#80000000</color>
