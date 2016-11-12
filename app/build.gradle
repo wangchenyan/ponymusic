@@ -14,10 +14,12 @@ android {
 
     signingConfigs {
         release {
+            Properties properties = new Properties()
+            properties.load(project.rootProject.file('local.properties').newDataInputStream())
             storeFile file("wangchenyan.keystore")
-            storePassword System.console() == null ? null : new String(System.console().readPassword("\nKeystore password: "))
-            keyAlias "wangchenyan"
-            keyPassword System.console() == null ? null : new String(System.console().readPassword("\nKey password: "))
+            storePassword properties.get("storePassword")
+            keyAlias properties.get("keyAlias")
+            keyPassword properties.get("keyPassword")
         }
         debug {
             storeFile file("debug.keystore")

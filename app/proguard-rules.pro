@@ -34,24 +34,24 @@
 -keep public class com.android.vending.licensing.ILicensingService
 
 -keepclasseswithmembernames class * {
-    native <methods>;
+  native <methods>;
 }
 
 -keepclasseswithmembers class * {
-    public <init>(android.content.Context, android.util.AttributeSet);
+  public <init>(android.content.Context, android.util.AttributeSet);
 }
 
 -keepclasseswithmembers class * {
-    public <init>(android.content.Context, android.util.AttributeSet, int);
+  public <init>(android.content.Context, android.util.AttributeSet, int);
 }
 
 -keepclassmembers class * extends android.app.Activity {
-   public void *(android.view.View);
+  public void *(android.view.View);
 }
 
 -keepclassmembers enum * {
-    public static **[] values();
-    public static ** valueOf(java.lang.String);
+  public static **[] values();
+  public static ** valueOf(java.lang.String);
 }
 
 -keep class * implements android.os.Parcelable {
@@ -73,6 +73,7 @@
 
 # app
 -keep class me.wcy.music.model.** { *; }
+-keep class me.wcy.music.api.ApiKey { *; }
 
 # butterknife
 -dontwarn butterknife.internal.**
