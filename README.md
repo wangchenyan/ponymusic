@@ -11,8 +11,6 @@
 ## 前言
 毕业设计做的项目，答辩完了，就共享出来。<br>
 
-**注意：fir的key我没有提交，可直接忽略。**
-
 * **开源不易，希望能给个Star鼓励**
 * 项目地址：https://github.com/ChanWong21/PonyMusic
 * 有问题请提Issues
