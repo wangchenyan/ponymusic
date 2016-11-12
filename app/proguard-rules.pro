@@ -73,7 +73,7 @@
 
 # app
 -keep class me.wcy.music.model.** { *; }
--keep class me.wcy.music.api.ApiKey { *; }
+-keep class me.wcy.music.api.KeyStore { *; }
 
 # butterknife
 -dontwarn butterknife.internal.**
