@@ -15,7 +15,7 @@ import im.fir.sdk.FIR;
 import im.fir.sdk.VersionCheckCallback;
 import me.wcy.music.BuildConfig;
 import me.wcy.music.activity.AboutActivity;
-import me.wcy.music.api.ApiKey;
+import me.wcy.music.api.KeyUtils;
 import me.wcy.music.model.UpdateInfo;
 
 /**
@@ -25,8 +25,7 @@ public class UpdateUtils {
     public static long sDownloadId = 0;
 
     public static void checkUpdate(final Activity activity) {
-        // FIR_KEY是检查更新需要的key，可直接用""代替
-        FIR.checkForUpdateInFIR(ApiKey.FIR_KEY, new VersionCheckCallback() {
+        FIR.checkForUpdateInFIR(KeyUtils.getKey(activity, KeyUtils.FIR_KEY), new VersionCheckCallback() {
             @Override
             public void onStart() {
                 if (activity instanceof AboutActivity) {
