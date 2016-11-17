@@ -23,8 +23,8 @@
 -keep class android.support.** { *; }
 
 # app
--keep class me.wcy.music.proguard.ExProGuard { *; }
--keep class * extends me.wcy.music.proguard.ExProGuard { *; }
+-keep class me.wcy.music.utils.proguard.ExProGuard { *; }
+-keep class * extends me.wcy.music.utils.proguard.ExProGuard { *; }
 
 # okhttputils
 -dontwarn com.zhy.http.**
