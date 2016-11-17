@@ -13,15 +13,15 @@ import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import me.wcy.music.R;
 import me.wcy.music.callback.JsonCallback;
+import me.wcy.music.constants.Constants;
 import me.wcy.music.model.JOnlineMusic;
 import me.wcy.music.model.JOnlineMusicList;
 import me.wcy.music.model.SongListInfo;
-import me.wcy.music.utils.Constants;
 import me.wcy.music.utils.ImageUtils;
+import me.wcy.music.utils.binding.Bind;
+import me.wcy.music.utils.binding.ViewBinder;
 import okhttp3.Call;
 
 /**
@@ -174,16 +174,16 @@ public class SongListAdapter extends BaseAdapter {
         holderMusicList.tvMusic3.setText(songListInfo.getMusic3());
     }
 
-    class ViewHolderProfile {
+    private static class ViewHolderProfile {
         @Bind(R.id.tv_profile)
         TextView tvProfile;
 
         public ViewHolderProfile(View view) {
-            ButterKnife.bind(this, view);
+            ViewBinder.bind(this, view);
         }
     }
 
-    class ViewHolderMusicList {
+    private static class ViewHolderMusicList {
         @Bind(R.id.iv_cover)
         ImageView ivCover;
         @Bind(R.id.tv_music_1)
@@ -196,7 +196,7 @@ public class SongListAdapter extends BaseAdapter {
         View vDivider;
 
         public ViewHolderMusicList(View view) {
-            ButterKnife.bind(this, view);
+            ViewBinder.bind(this, view);
         }
     }
 }

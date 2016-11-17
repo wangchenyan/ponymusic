@@ -21,7 +21,7 @@ import me.wcy.music.callback.JsonCallback;
 import me.wcy.music.model.JDownloadInfo;
 import me.wcy.music.model.JLrc;
 import me.wcy.music.model.JSearchMusic;
-import me.wcy.music.utils.Constants;
+import me.wcy.music.constants.Constants;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.NetworkUtils;
 import me.wcy.music.utils.Preferences;

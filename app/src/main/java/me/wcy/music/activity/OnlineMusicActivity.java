@@ -29,11 +29,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
 import me.wcy.music.R;
 import me.wcy.music.adapter.OnMoreClickListener;
 import me.wcy.music.adapter.OnlineMusicAdapter;
 import me.wcy.music.callback.JsonCallback;
+import me.wcy.music.constants.Constants;
+import me.wcy.music.constants.Extras;
 import me.wcy.music.enums.LoadStateEnum;
 import me.wcy.music.executor.DownloadOnlineMusic;
 import me.wcy.music.executor.PlayOnlineMusic;
@@ -43,24 +44,23 @@ import me.wcy.music.model.JOnlineMusicList;
 import me.wcy.music.model.Music;
 import me.wcy.music.model.SongListInfo;
 import me.wcy.music.service.PlayService;
-import me.wcy.music.utils.Constants;
-import me.wcy.music.utils.Extras;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.ImageUtils;
 import me.wcy.music.utils.ScreenUtils;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.ViewUtils;
+import me.wcy.music.utils.binding.Bind;
 import me.wcy.music.widget.AutoLoadListView;
 import okhttp3.Call;
 
 public class OnlineMusicActivity extends BaseActivity implements OnItemClickListener
         , OnMoreClickListener, AutoLoadListView.OnLoadListener {
     @Bind(R.id.lv_online_music_list)
-    AutoLoadListView lvOnlineMusic;
+    private AutoLoadListView lvOnlineMusic;
     @Bind(R.id.ll_loading)
-    LinearLayout llLoading;
+    private LinearLayout llLoading;
     @Bind(R.id.ll_load_fail)
-    LinearLayout llLoadFail;
+    private LinearLayout llLoadFail;
     private View vHeader;
     private SongListInfo mListInfo;
     private JOnlineMusicList mJOnlineMusicList;

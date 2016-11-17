@@ -1,17 +1,27 @@
 package me.wcy.music.model;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * JavaBean
  * Created by wcy on 2015/12/20.
  */
 public class JOnlineMusic {
+    @SerializedName("pic_big")
     private String pic_big;
+    @SerializedName("pic_small")
     private String pic_small;
+    @SerializedName("lrclink")
     private String lrclink;
+    @SerializedName("song_id")
     private String song_id;
+    @SerializedName("title")
     private String title;
+    @SerializedName("ting_uid")
     private String ting_uid;
+    @SerializedName("album_title")
     private String album_title;
+    @SerializedName("artist_name")
     private String artist_name;
 
     public String getPic_big() {

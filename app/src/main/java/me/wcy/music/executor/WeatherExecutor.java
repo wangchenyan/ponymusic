@@ -14,10 +14,10 @@ import com.amap.api.location.LocationManagerProxy;
 
 import java.util.Calendar;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import me.wcy.music.R;
 import me.wcy.music.service.PlayService;
+import me.wcy.music.utils.binding.Bind;
+import me.wcy.music.utils.binding.ViewBinder;
 
 /**
  * 更新天气
@@ -68,20 +68,20 @@ public class WeatherExecutor implements AMapLocalWeatherListener {
     private PlayService mPlayService;
     private Context mContext;
     @Bind(R.id.ll_weather)
-    LinearLayout llWeather;
+    private LinearLayout llWeather;
     @Bind(R.id.iv_weather_icon)
-    ImageView ivIcon;
+    private ImageView ivIcon;
     @Bind(R.id.tv_weather_temp)
-    TextView tvTemp;
+    private TextView tvTemp;
     @Bind(R.id.tv_weather_city)
-    TextView tvCity;
+    private TextView tvCity;
     @Bind(R.id.tv_weather_wind)
-    TextView tvWind;
+    private TextView tvWind;
 
     public WeatherExecutor(PlayService playService, View navigationHeader) {
         mPlayService = playService;
         mContext = mPlayService.getApplicationContext();
-        ButterKnife.bind(this, navigationHeader);
+        ViewBinder.bind(this, navigationHeader);
     }
 
     public void execute() {

@@ -9,10 +9,10 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import me.wcy.music.R;
 import me.wcy.music.model.JSearchMusic;
+import me.wcy.music.utils.binding.Bind;
+import me.wcy.music.utils.binding.ViewBinder;
 
 /**
  * 搜索结果适配器
@@ -71,7 +71,7 @@ public class SearchMusicAdapter extends BaseAdapter {
         mListener = listener;
     }
 
-    class ViewHolder {
+    private static class ViewHolder {
         @Bind(R.id.iv_cover)
         ImageView ivCover;
         @Bind(R.id.tv_title)
@@ -84,7 +84,7 @@ public class SearchMusicAdapter extends BaseAdapter {
         View vDivider;
 
         public ViewHolder(View view) {
-            ButterKnife.bind(this, view);
+            ViewBinder.bind(this, view);
             ivCover.setVisibility(View.GONE);
         }
     }

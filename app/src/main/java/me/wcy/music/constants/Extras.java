@@ -1,4 +1,4 @@
-package me.wcy.music.utils;
+package me.wcy.music.constants;
 
 /**
  * Extras

@@ -22,14 +22,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
 import me.wcy.lrcview.LrcView;
 import me.wcy.music.R;
 import me.wcy.music.adapter.PlayPagerAdapter;
+import me.wcy.music.constants.Actions;
 import me.wcy.music.enums.PlayModeEnum;
 import me.wcy.music.executor.SearchLrc;
 import me.wcy.music.model.Music;
-import me.wcy.music.utils.Actions;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.ImageUtils;
@@ -37,6 +36,7 @@ import me.wcy.music.utils.Preferences;
 import me.wcy.music.utils.ScreenUtils;
 import me.wcy.music.utils.SystemUtils;
 import me.wcy.music.utils.ToastUtils;
+import me.wcy.music.utils.binding.Bind;
 import me.wcy.music.widget.AlbumCoverView;
 import me.wcy.music.widget.IndicatorLayout;
 
@@ -47,33 +47,33 @@ import me.wcy.music.widget.IndicatorLayout;
 public class PlayFragment extends BaseFragment implements View.OnClickListener,
         ViewPager.OnPageChangeListener, SeekBar.OnSeekBarChangeListener {
     @Bind(R.id.ll_content)
-    LinearLayout llContent;
+    private LinearLayout llContent;
     @Bind(R.id.iv_play_page_bg)
-    ImageView ivPlayingBg;
+    private ImageView ivPlayingBg;
     @Bind(R.id.iv_back)
-    ImageView ivBack;
+    private ImageView ivBack;
     @Bind(R.id.tv_title)
-    TextView tvTitle;
+    private TextView tvTitle;
     @Bind(R.id.tv_artist)
-    TextView tvArtist;
+    private TextView tvArtist;
     @Bind(R.id.vp_play_page)
-    ViewPager vpPlay;
+    private ViewPager vpPlay;
     @Bind(R.id.il_indicator)
-    IndicatorLayout ilIndicator;
+    private IndicatorLayout ilIndicator;
     @Bind(R.id.sb_progress)
-    SeekBar sbProgress;
+    private SeekBar sbProgress;
     @Bind(R.id.tv_current_time)
-    TextView tvCurrentTime;
+    private TextView tvCurrentTime;
     @Bind(R.id.tv_total_time)
-    TextView tvTotalTime;
+    private TextView tvTotalTime;
     @Bind(R.id.iv_mode)
-    ImageView ivMode;
+    private ImageView ivMode;
     @Bind(R.id.iv_play)
-    ImageView ivPlay;
+    private ImageView ivPlay;
     @Bind(R.id.iv_next)
-    ImageView ivNext;
+    private ImageView ivNext;
     @Bind(R.id.iv_prev)
-    ImageView ivPrev;
+    private ImageView ivPrev;
     private AlbumCoverView mAlbumCoverView;
     private LrcView mLrcViewSingle;
     private LrcView mLrcViewFull;

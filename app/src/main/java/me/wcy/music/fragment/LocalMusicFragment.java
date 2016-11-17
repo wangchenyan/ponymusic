@@ -25,7 +25,6 @@ import android.widget.TextView;
 
 import java.io.File;
 
-import butterknife.Bind;
 import me.wcy.music.R;
 import me.wcy.music.adapter.LocalMusicAdapter;
 import me.wcy.music.adapter.OnMoreClickListener;
@@ -35,6 +34,7 @@ import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.SystemUtils;
 import me.wcy.music.utils.ToastUtils;
+import me.wcy.music.utils.binding.Bind;
 
 /**
  * 本地音乐列表
@@ -42,9 +42,9 @@ import me.wcy.music.utils.ToastUtils;
  */
 public class LocalMusicFragment extends BaseFragment implements AdapterView.OnItemClickListener, OnMoreClickListener {
     @Bind(R.id.lv_local_music)
-    ListView lvLocalMusic;
+    private ListView lvLocalMusic;
     @Bind(R.id.tv_empty)
-    TextView tvEmpty;
+    private TextView tvEmpty;
     private LocalMusicAdapter mAdapter;
 
     @Nullable

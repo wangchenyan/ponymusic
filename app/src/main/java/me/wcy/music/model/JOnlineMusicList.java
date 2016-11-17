@@ -1,5 +1,7 @@
 package me.wcy.music.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -7,7 +9,9 @@ import java.util.List;
  * Created by wcy on 2015/12/20.
  */
 public class JOnlineMusicList {
+    @SerializedName("song_list")
     private List<JOnlineMusic> song_list;
+    @SerializedName("billboard")
     private JBillboard billboard;
 
     public List<JOnlineMusic> getSong_list() {
@@ -27,13 +31,20 @@ public class JOnlineMusicList {
     }
 
     public static class JBillboard {
-        String update_date;
-        String name;
-        String comment;
-        String pic_s640;
-        String pic_s444;
-        String pic_s260;
-        String pic_s210;
+        @SerializedName("update_date")
+        private String update_date;
+        @SerializedName("name")
+        private String name;
+        @SerializedName("comment")
+        private String comment;
+        @SerializedName("pic_s640")
+        private String pic_s640;
+        @SerializedName("pic_s444")
+        private String pic_s444;
+        @SerializedName("pic_s260")
+        private String pic_s260;
+        @SerializedName("pic_s210")
+        private String pic_s210;
 
         public String getUpdate_date() {
             return update_date;

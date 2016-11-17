@@ -18,25 +18,25 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.zhy.http.okhttp.OkHttpUtils;
 
-import butterknife.Bind;
 import me.wcy.music.R;
 import me.wcy.music.callback.JsonCallback;
+import me.wcy.music.constants.Constants;
+import me.wcy.music.constants.Extras;
 import me.wcy.music.enums.LoadStateEnum;
 import me.wcy.music.model.JArtistInfo;
-import me.wcy.music.utils.Constants;
-import me.wcy.music.utils.Extras;
 import me.wcy.music.utils.ViewUtils;
+import me.wcy.music.utils.binding.Bind;
 import okhttp3.Call;
 
 public class ArtistInfoActivity extends BaseActivity {
     @Bind(R.id.sv_artist_info)
-    ScrollView svArtistInfo;
+    private ScrollView svArtistInfo;
     @Bind(R.id.ll_artist_info_container)
-    LinearLayout llArtistInfoContainer;
+    private LinearLayout llArtistInfoContainer;
     @Bind(R.id.ll_loading)
-    LinearLayout llLoading;
+    private LinearLayout llLoading;
     @Bind(R.id.ll_load_fail)
-    LinearLayout llLoadFail;
+    private LinearLayout llLoadFail;
 
     public static void start(Context context, String tingUid) {
         Intent intent = new Intent(context, ArtistInfoActivity.class);
@@ -124,12 +124,12 @@ public class ArtistInfoActivity extends BaseActivity {
         }
         if (stature != 0f) {
             TextView tvStature = (TextView) LayoutInflater.from(this).inflate(R.layout.item_artist_info, llArtistInfoContainer, false);
-            tvStature.setText(getString(R.string.artist_info_stature, stature));
+            tvStature.setText(getString(R.string.artist_info_stature, String.valueOf(stature)));
             llArtistInfoContainer.addView(tvStature);
         }
         if (weight != 0f) {
             TextView tvWeight = (TextView) LayoutInflater.from(this).inflate(R.layout.item_artist_info, llArtistInfoContainer, false);
-            tvWeight.setText(getString(R.string.artist_info_weight, weight));
+            tvWeight.setText(getString(R.string.artist_info_weight, String.valueOf(weight)));
             llArtistInfoContainer.addView(tvWeight);
         }
         if (!TextUtils.isEmpty(birth) && !birth.equals("0000-00-00")) {

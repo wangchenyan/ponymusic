@@ -1,5 +1,7 @@
 package me.wcy.music.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -7,6 +9,7 @@ import java.util.List;
  * Created by hzwangchenyan on 2016/1/13.
  */
 public class JSearchMusic {
+    @SerializedName("song")
     private List<JSong> song;
 
     public List<JSong> getSong() {
@@ -18,9 +21,12 @@ public class JSearchMusic {
     }
 
     public static class JSong {
-        String songname;
-        String artistname;
-        String songid;
+        @SerializedName("songname")
+        private String songname;
+        @SerializedName("artistname")
+        private String artistname;
+        @SerializedName("songid")
+        private String songid;
 
         public String getSongname() {
             return songname;

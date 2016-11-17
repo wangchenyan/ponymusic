@@ -25,11 +25,11 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
 import me.wcy.music.R;
 import me.wcy.music.adapter.OnMoreClickListener;
 import me.wcy.music.adapter.SearchMusicAdapter;
 import me.wcy.music.callback.JsonCallback;
+import me.wcy.music.constants.Constants;
 import me.wcy.music.enums.LoadStateEnum;
 import me.wcy.music.executor.DownloadSearchedMusic;
 import me.wcy.music.executor.PlaySearchedMusic;
@@ -37,20 +37,20 @@ import me.wcy.music.executor.ShareOnlineMusic;
 import me.wcy.music.model.JSearchMusic;
 import me.wcy.music.model.Music;
 import me.wcy.music.service.PlayService;
-import me.wcy.music.utils.Constants;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.ViewUtils;
+import me.wcy.music.utils.binding.Bind;
 import okhttp3.Call;
 
 public class SearchMusicActivity extends BaseActivity implements SearchView.OnQueryTextListener
         , AdapterView.OnItemClickListener, OnMoreClickListener {
     @Bind(R.id.lv_search_music_list)
-    ListView lvSearchMusic;
+    private ListView lvSearchMusic;
     @Bind(R.id.ll_loading)
-    LinearLayout llLoading;
+    private LinearLayout llLoading;
     @Bind(R.id.ll_load_fail)
-    LinearLayout llLoadFail;
+    private LinearLayout llLoadFail;
     private SearchMusicAdapter mAdapter;
     private List<JSearchMusic.JSong> mSearchMusicList;
     private PlayService mPlayService;

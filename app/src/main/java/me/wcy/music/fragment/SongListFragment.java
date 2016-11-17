@@ -12,15 +12,15 @@ import android.widget.ListView;
 
 import java.util.List;
 
-import butterknife.Bind;
 import me.wcy.music.R;
 import me.wcy.music.activity.OnlineMusicActivity;
 import me.wcy.music.adapter.SongListAdapter;
+import me.wcy.music.constants.Extras;
 import me.wcy.music.enums.LoadStateEnum;
 import me.wcy.music.model.SongListInfo;
-import me.wcy.music.utils.Extras;
 import me.wcy.music.utils.NetworkUtils;
 import me.wcy.music.utils.ViewUtils;
+import me.wcy.music.utils.binding.Bind;
 
 /**
  * 在线音乐
@@ -28,11 +28,11 @@ import me.wcy.music.utils.ViewUtils;
  */
 public class SongListFragment extends BaseFragment implements AdapterView.OnItemClickListener {
     @Bind(R.id.lv_song_list)
-    ListView lvSongList;
+    private ListView lvSongList;
     @Bind(R.id.ll_loading)
-    LinearLayout llLoading;
+    private LinearLayout llLoading;
     @Bind(R.id.ll_load_fail)
-    LinearLayout llLoadFail;
+    private LinearLayout llLoadFail;
     private List<SongListInfo> mSongLists;
 
     @Nullable

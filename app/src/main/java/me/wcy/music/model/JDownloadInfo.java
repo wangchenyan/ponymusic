@@ -1,10 +1,13 @@
 package me.wcy.music.model;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * JavaBean
  * Created by wcy on 2015/12/27.
  */
 public class JDownloadInfo {
+    @SerializedName("bitrate")
     private JBitrate bitrate;
 
     public JBitrate getBitrate() {
@@ -16,8 +19,10 @@ public class JDownloadInfo {
     }
 
     public static class JBitrate {
-        int file_duration;
-        String file_link;
+        @SerializedName("file_duration")
+        private int file_duration;
+        @SerializedName("file_link")
+        private String file_link;
 
         public int getFile_duration() {
             return file_duration;

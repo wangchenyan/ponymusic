@@ -1,11 +1,15 @@
 package me.wcy.music.model;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * 启动画面Java bean
  * Created by hzwangchenyan on 2016/3/2.
  */
 public class JSplash {
+    @SerializedName("text")
     private String text;
+    @SerializedName("img")
     private String img;
 
     public void setText(String text) {

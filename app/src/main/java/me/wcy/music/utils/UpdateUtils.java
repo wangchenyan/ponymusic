@@ -43,7 +43,6 @@ public class UpdateUtils {
                 try {
                     updateInfo = gson.fromJson(versionJson, UpdateInfo.class);
                 } catch (JsonSyntaxException e) {
-                    e.printStackTrace();
                     return;
                 }
                 int version = Integer.valueOf(updateInfo.version);

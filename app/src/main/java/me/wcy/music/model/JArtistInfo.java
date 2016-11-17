@@ -1,27 +1,38 @@
 package me.wcy.music.model;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * JavaBean
  * Created by hzwangchenyan on 2016/1/11.
  */
 public class JArtistInfo {
     // 星座
+    @SerializedName("constellation")
     private String constellation;
     // 体重
+    @SerializedName("weight")
     private float weight;
     // 身高
+    @SerializedName("stature")
     private float stature;
     // 国籍
+    @SerializedName("country")
     private String country;
     // 歌手链接
+    @SerializedName("url")
     private String url;
     // 歌手简介
+    @SerializedName("intro")
     private String intro;
     // 头像
+    @SerializedName("avatar_s1000")
     private String avatar_s1000;
     // 姓名
+    @SerializedName("name")
     private String name;
     // 生日
+    @SerializedName("birth")
     private String birth;
 
     public String getConstellation() {

@@ -8,13 +8,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import me.wcy.music.R;
 import me.wcy.music.model.Music;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.FileUtils;
+import me.wcy.music.utils.binding.Bind;
+import me.wcy.music.utils.binding.ViewBinder;
 
 /**
  * 本地音乐列表适配器
@@ -88,7 +88,7 @@ public class LocalMusicAdapter extends BaseAdapter {
         mListener = listener;
     }
 
-    class ViewHolder {
+    private static class ViewHolder {
         @Bind(R.id.v_playing)
         View vPlaying;
         @Bind(R.id.iv_cover)
@@ -103,7 +103,7 @@ public class LocalMusicAdapter extends BaseAdapter {
         View vDivider;
 
         public ViewHolder(View view) {
-            ButterKnife.bind(this, view);
+            ViewBinder.bind(this, view);
         }
     }
 }

@@ -7,9 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import butterknife.ButterKnife;
 import me.wcy.music.activity.MusicActivity;
 import me.wcy.music.service.PlayService;
+import me.wcy.music.utils.binding.ViewBinder;
 
 /**
  * 基类
@@ -36,7 +36,7 @@ public abstract class BaseFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        ButterKnife.bind(this, view);
+        ViewBinder.bind(this, view);
         init();
         setListener();
 

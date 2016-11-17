@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import me.wcy.music.service.PlayService;
-import me.wcy.music.utils.Actions;
+import me.wcy.music.constants.Actions;
 
 /**
  * 来电/耳机拔出时暂停播放

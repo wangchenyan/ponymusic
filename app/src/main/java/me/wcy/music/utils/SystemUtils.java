@@ -12,6 +12,7 @@ import java.util.List;
 import me.wcy.music.R;
 import me.wcy.music.activity.BaseActivity;
 import me.wcy.music.activity.SplashActivity;
+import me.wcy.music.constants.Extras;
 import me.wcy.music.model.Music;
 
 /**

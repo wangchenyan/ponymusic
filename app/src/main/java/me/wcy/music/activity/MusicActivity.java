@@ -21,10 +21,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import butterknife.Bind;
 import me.wcy.music.BuildConfig;
 import me.wcy.music.R;
 import me.wcy.music.adapter.FragmentAdapter;
+import me.wcy.music.constants.Extras;
 import me.wcy.music.executor.NaviMenuExecutor;
 import me.wcy.music.executor.WeatherExecutor;
 import me.wcy.music.fragment.LocalMusicFragment;
@@ -35,40 +35,40 @@ import me.wcy.music.receiver.RemoteControlReceiver;
 import me.wcy.music.service.OnPlayerEventListener;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.CoverLoader;
-import me.wcy.music.utils.Extras;
 import me.wcy.music.utils.SystemUtils;
 import me.wcy.music.utils.UpdateUtils;
+import me.wcy.music.utils.binding.Bind;
 
 public class MusicActivity extends BaseActivity implements View.OnClickListener, OnPlayerEventListener,
         NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
     @Bind(R.id.drawer_layout)
-    DrawerLayout drawerLayout;
+    private DrawerLayout drawerLayout;
     @Bind(R.id.navigation_view)
-    NavigationView navigationView;
+    private NavigationView navigationView;
     @Bind(R.id.iv_menu)
-    ImageView ivMenu;
+    private ImageView ivMenu;
     @Bind(R.id.iv_search)
-    ImageView ivSearch;
+    private ImageView ivSearch;
     @Bind(R.id.tv_local_music)
-    TextView tvLocalMusic;
+    private TextView tvLocalMusic;
     @Bind(R.id.tv_online_music)
-    TextView tvOnlineMusic;
+    private TextView tvOnlineMusic;
     @Bind(R.id.viewpager)
-    ViewPager mViewPager;
+    private ViewPager mViewPager;
     @Bind(R.id.fl_play_bar)
-    FrameLayout flPlayBar;
+    private FrameLayout flPlayBar;
     @Bind(R.id.iv_play_bar_cover)
-    ImageView ivPlayBarCover;
+    private ImageView ivPlayBarCover;
     @Bind(R.id.tv_play_bar_title)
-    TextView tvPlayBarTitle;
+    private TextView tvPlayBarTitle;
     @Bind(R.id.tv_play_bar_artist)
-    TextView tvPlayBarArtist;
+    private TextView tvPlayBarArtist;
     @Bind(R.id.iv_play_bar_play)
-    ImageView ivPlayBarPlay;
+    private ImageView ivPlayBarPlay;
     @Bind(R.id.iv_play_bar_next)
-    ImageView ivPlayBarNext;
+    private ImageView ivPlayBarNext;
     @Bind(R.id.pb_play_bar)
-    ProgressBar mProgressBar;
+    private ProgressBar mProgressBar;
     private View vNavigationHeader;
     private LocalMusicFragment mLocalMusicFragment;
     private SongListFragment mSongListFragment;

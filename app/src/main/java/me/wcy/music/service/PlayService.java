@@ -24,7 +24,7 @@ import me.wcy.music.enums.PlayModeEnum;
 import me.wcy.music.model.Music;
 import me.wcy.music.model.SongListInfo;
 import me.wcy.music.receiver.NoisyAudioStreamReceiver;
-import me.wcy.music.utils.Actions;
+import me.wcy.music.constants.Actions;
 import me.wcy.music.utils.MusicUtils;
 import me.wcy.music.utils.Preferences;
 import me.wcy.music.utils.SystemUtils;

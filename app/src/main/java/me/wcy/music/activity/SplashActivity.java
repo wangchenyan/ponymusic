@@ -16,21 +16,21 @@ import com.zhy.http.okhttp.callback.FileCallBack;
 
 import java.io.File;
 
-import butterknife.Bind;
 import me.wcy.music.R;
 import me.wcy.music.application.MusicApplication;
 import me.wcy.music.callback.JsonCallback;
+import me.wcy.music.constants.Constants;
 import me.wcy.music.model.JSplash;
 import me.wcy.music.service.PlayService;
-import me.wcy.music.utils.Constants;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.Preferences;
 import me.wcy.music.utils.SystemUtils;
+import me.wcy.music.utils.binding.Bind;
 import okhttp3.Call;
 
 public class SplashActivity extends BaseActivity {
     @Bind(R.id.iv_splash)
-    ImageView ivSplash;
+    private ImageView ivSplash;
     private ServiceConnection mPlayServiceConnection;
 
     @Override

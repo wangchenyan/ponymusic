@@ -8,7 +8,7 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import me.wcy.music.R;
 import me.wcy.music.callback.JsonCallback;
 import me.wcy.music.model.JDownloadInfo;
-import me.wcy.music.utils.Constants;
+import me.wcy.music.constants.Constants;
 import me.wcy.music.utils.ToastUtils;
 import okhttp3.Call;
 

@@ -16,10 +16,9 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import me.wcy.music.R;
 import me.wcy.music.service.PlayService;
+import me.wcy.music.utils.binding.ViewBinder;
 
 /**
  * 基类
@@ -27,8 +26,6 @@ import me.wcy.music.service.PlayService;
  * Created by wcy on 2015/11/26.
  */
 public abstract class BaseActivity extends AppCompatActivity {
-    @Bind(R.id.toolbar)
-    Toolbar mToolbar;
     protected Handler mHandler;
 
     @Override
@@ -59,8 +56,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        ButterKnife.bind(this);
+        ViewBinder.bind(this);
 
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         if (mToolbar == null) {
             throw new IllegalStateException("Layout is required to include a Toolbar with id 'toolbar'");
         }

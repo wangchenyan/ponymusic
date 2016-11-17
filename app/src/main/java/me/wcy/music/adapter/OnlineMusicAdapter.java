@@ -11,12 +11,12 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import me.wcy.music.R;
 import me.wcy.music.model.JOnlineMusic;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.ImageUtils;
+import me.wcy.music.utils.binding.Bind;
+import me.wcy.music.utils.binding.ViewBinder;
 
 /**
  * 在线音乐列表适配器
@@ -78,7 +78,7 @@ public class OnlineMusicAdapter extends BaseAdapter {
         mListener = listener;
     }
 
-    class ViewHolder {
+    private static class ViewHolder {
         @Bind(R.id.iv_cover)
         ImageView ivCover;
         @Bind(R.id.tv_title)
@@ -91,7 +91,7 @@ public class OnlineMusicAdapter extends BaseAdapter {
         View vDivider;
 
         public ViewHolder(View view) {
-            ButterKnife.bind(this, view);
+            ViewBinder.bind(this, view);
         }
     }
 }
