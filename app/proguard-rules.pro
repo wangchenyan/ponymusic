@@ -22,8 +22,9 @@
 -dontwarn android.support.**
 -keep class android.support.** { *; }
 
-# key
--keep class me.wcy.music.api.KeyStore { *; }
+# app
+-keep class me.wcy.music.proguard.ExProGuard { *; }
+-keep class * extends me.wcy.music.proguard.ExProGuard { *; }
 
 # okhttputils
 -dontwarn com.zhy.http.**
