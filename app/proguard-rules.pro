@@ -16,7 +16,6 @@
 #   public *;
 #}
 
--dontoptimize
 -keepattributes Signature,InnerClasses,SourceFile,LineNumberTable
 
 # android-support
