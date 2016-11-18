@@ -5,7 +5,9 @@ import android.os.Environment;
 import android.text.TextUtils;
 
 import java.io.File;
-import java.text.DecimalFormat;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -118,8 +120,18 @@ public class FileUtils {
     }
 
     public static float b2mb(int b) {
-        DecimalFormat decimalFormat = new DecimalFormat(".00");
-        String MB = decimalFormat.format((float) b / 1024 / 1024);
-        return Float.valueOf(MB);
+        String mb = String.format(Locale.getDefault(), "%.2f", b / 1024f / 1024);
+        return Float.valueOf(mb);
+    }
+
+    public static void saveLrcFile(String path, String content) {
+        try {
+            FileWriter writer = new FileWriter(path);
+            writer.flush();
+            writer.write(content);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

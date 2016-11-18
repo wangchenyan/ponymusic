@@ -6,9 +6,9 @@ import android.text.TextUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import me.wcy.music.callback.JsonCallback;
+import me.wcy.music.constants.Constants;
 import me.wcy.music.model.JLrc;
 import me.wcy.music.model.JSearchMusic;
-import me.wcy.music.constants.Constants;
 import me.wcy.music.utils.FileUtils;
 import okhttp3.Call;
 
@@ -65,7 +65,7 @@ public abstract class SearchLrc {
                             return;
                         }
                         String lrcPath = FileUtils.getLrcDir() + FileUtils.getLrcFileName(artist, title);
-                        DownloadSearchedMusic.saveLrcFile(lrcPath, response.getLrcContent());
+                        FileUtils.saveLrcFile(lrcPath, response.getLrcContent());
                         onFinish(lrcPath);
                     }
 

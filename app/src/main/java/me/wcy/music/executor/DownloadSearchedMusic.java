@@ -12,16 +12,14 @@ import android.webkit.MimeTypeMap;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 import me.wcy.music.R;
 import me.wcy.music.application.MusicApplication;
 import me.wcy.music.callback.JsonCallback;
+import me.wcy.music.constants.Constants;
 import me.wcy.music.model.JDownloadInfo;
 import me.wcy.music.model.JLrc;
 import me.wcy.music.model.JSearchMusic;
-import me.wcy.music.constants.Constants;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.NetworkUtils;
 import me.wcy.music.utils.Preferences;
@@ -114,24 +112,13 @@ public abstract class DownloadSearchedMusic {
                                 return;
                             }
                             String lrcPath = FileUtils.getLrcDir() + FileUtils.getLrcFileName(mJSong.getArtistname(), mJSong.getSongname());
-                            saveLrcFile(lrcPath, response.getLrcContent());
+                            FileUtils.saveLrcFile(lrcPath, response.getLrcContent());
                         }
 
                         @Override
                         public void onError(Call call, Exception e) {
                         }
                     });
-        }
-    }
-
-    public static void saveLrcFile(String path, String content) {
-        try {
-            FileWriter writer = new FileWriter(path);
-            writer.flush();
-            writer.write(content);
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
