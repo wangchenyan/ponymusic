@@ -12,7 +12,7 @@ import me.wcy.music.R;
 import me.wcy.music.activity.AboutActivity;
 import me.wcy.music.activity.MusicActivity;
 import me.wcy.music.activity.SettingActivity;
-import me.wcy.music.application.MusicApplication;
+import me.wcy.music.application.AppCache;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.Preferences;
 import me.wcy.music.utils.ToastUtils;
@@ -58,7 +58,7 @@ public class NaviMenuExecutor {
         final ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setCancelable(false);
         dialog.show();
-        MusicApplication.updateNightMode(on);
+        AppCache.updateNightMode(on);
         Handler handler = new Handler(activity.getMainLooper());
         handler.postDelayed(new Runnable() {
             @Override

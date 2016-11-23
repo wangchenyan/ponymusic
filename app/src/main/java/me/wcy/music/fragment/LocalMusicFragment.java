@@ -28,7 +28,7 @@ import java.io.File;
 import me.wcy.music.R;
 import me.wcy.music.adapter.LocalMusicAdapter;
 import me.wcy.music.adapter.OnMoreClickListener;
-import me.wcy.music.application.MusicApplication;
+import me.wcy.music.application.AppCache;
 import me.wcy.music.model.Music;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.FileUtils;
@@ -225,7 +225,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         @Override
         public void onReceive(Context context, Intent intent) {
             long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-            String title = MusicApplication.getInstance().getDownloadList().get(id);
+            String title = AppCache.getDownloadList().get(id);
             if (TextUtils.isEmpty(title)) {
                 return;
             }

@@ -1,13 +1,10 @@
 package me.wcy.music.executor;
 
 import android.app.Dialog;
-import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.webkit.MimeTypeMap;
 
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
@@ -15,11 +12,11 @@ import com.zhy.http.okhttp.callback.FileCallBack;
 import java.io.File;
 
 import me.wcy.music.R;
-import me.wcy.music.application.MusicApplication;
+import me.wcy.music.application.AppCache;
 import me.wcy.music.callback.JsonCallback;
+import me.wcy.music.constants.Constants;
 import me.wcy.music.model.JDownloadInfo;
 import me.wcy.music.model.JOnlineMusic;
-import me.wcy.music.constants.Constants;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.NetworkUtils;
 import me.wcy.music.utils.Preferences;
@@ -65,7 +62,7 @@ public abstract class DownloadOnlineMusic {
 
     private void download() {
         onPrepare();
-        final DownloadManager downloadManager = (DownloadManager) mContext.getSystemService(Context.DOWNLOAD_SERVICE);
+
         // 获取歌曲下载链接
         OkHttpUtils.get().url(Constants.BASE_URL)
                 .addParams(Constants.PARAM_METHOD, Constants.METHOD_DOWNLOAD_MUSIC)
@@ -78,16 +75,8 @@ public abstract class DownloadOnlineMusic {
                             onFail(null, null);
                             return;
                         }
-                        Uri uri = Uri.parse(response.getBitrate().getFile_link());
-                        DownloadManager.Request request = new DownloadManager.Request(uri);
-                        String mp3FileName = FileUtils.getMp3FileName(mJOnlineMusic.getArtist_name(), mJOnlineMusic.getTitle());
-                        request.setDestinationInExternalPublicDir(FileUtils.getRelativeMusicDir(), mp3FileName);
-                        request.setMimeType(MimeTypeMap.getFileExtensionFromUrl(response.getBitrate().getFile_link()));
-                        request.allowScanningByMediaScanner();
-                        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
-                        request.setAllowedOverRoaming(false);// 不允许漫游
-                        long id = downloadManager.enqueue(request);
-                        MusicApplication.getInstance().getDownloadList().put(id, mJOnlineMusic.getTitle());
+                        long id = FileUtils.downloadMusic(response.getBitrate().getFile_link(), mJOnlineMusic.getArtist_name(), mJOnlineMusic.getTitle());
+                        AppCache.getDownloadList().put(id, mJOnlineMusic.getTitle());
                         onSuccess();
                     }
 

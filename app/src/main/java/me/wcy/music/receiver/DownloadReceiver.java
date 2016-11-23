@@ -10,7 +10,7 @@ import android.text.TextUtils;
 import java.io.File;
 
 import me.wcy.music.R;
-import me.wcy.music.application.MusicApplication;
+import me.wcy.music.application.AppCache;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.UpdateUtils;
 
@@ -33,7 +33,7 @@ public class DownloadReceiver extends BroadcastReceiver {
                 context.startActivity(install);
             }
         } else {
-            String title = MusicApplication.getInstance().getDownloadList().get(id);
+            String title = AppCache.getDownloadList().get(id);
             if (!TextUtils.isEmpty(title)) {
                 ToastUtils.show(context.getString(R.string.download_success, title));
             }

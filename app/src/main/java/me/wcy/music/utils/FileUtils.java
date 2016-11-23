@@ -1,8 +1,11 @@
 package me.wcy.music.utils;
 
+import android.app.DownloadManager;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.webkit.MimeTypeMap;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -12,7 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import me.wcy.music.R;
-import me.wcy.music.application.MusicApplication;
+import me.wcy.music.application.AppCache;
 import me.wcy.music.constants.Constants;
 import me.wcy.music.model.Music;
 
@@ -74,10 +77,10 @@ public class FileUtils {
         artist = stringFilter(artist);
         title = stringFilter(title);
         if (TextUtils.isEmpty(artist)) {
-            artist = MusicApplication.getInstance().getString(R.string.unknown);
+            artist = AppCache.getContext().getString(R.string.unknown);
         }
         if (TextUtils.isEmpty(title)) {
-            title = MusicApplication.getInstance().getString(R.string.unknown);
+            title = AppCache.getContext().getString(R.string.unknown);
         }
         return artist + " - " + title + Constants.FILENAME_MP3;
     }
@@ -86,10 +89,10 @@ public class FileUtils {
         artist = stringFilter(artist);
         title = stringFilter(title);
         if (TextUtils.isEmpty(artist)) {
-            artist = MusicApplication.getInstance().getString(R.string.unknown);
+            artist = AppCache.getContext().getString(R.string.unknown);
         }
         if (TextUtils.isEmpty(title)) {
-            title = MusicApplication.getInstance().getString(R.string.unknown);
+            title = AppCache.getContext().getString(R.string.unknown);
         }
         return artist + " - " + title + Constants.FILENAME_LRC;
     }
@@ -133,5 +136,18 @@ public class FileUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static long downloadMusic(String url, String artist, String song) {
+        Uri uri = Uri.parse(url);
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+        String mp3FileName = FileUtils.getMp3FileName(artist, song);
+        request.setDestinationInExternalPublicDir(FileUtils.getRelativeMusicDir(), mp3FileName);
+        request.setMimeType(MimeTypeMap.getFileExtensionFromUrl(url));
+        request.allowScanningByMediaScanner();
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
+        request.setAllowedOverRoaming(false);// 不允许漫游
+        DownloadManager downloadManager = (DownloadManager) AppCache.getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+        return downloadManager.enqueue(request);
     }
 }

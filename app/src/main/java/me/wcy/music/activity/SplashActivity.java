@@ -17,7 +17,7 @@ import com.zhy.http.okhttp.callback.FileCallBack;
 import java.io.File;
 
 import me.wcy.music.R;
-import me.wcy.music.application.MusicApplication;
+import me.wcy.music.application.AppCache;
 import me.wcy.music.callback.JsonCallback;
 import me.wcy.music.constants.Constants;
 import me.wcy.music.model.JSplash;
@@ -121,7 +121,7 @@ public class SplashActivity extends BaseActivity {
                         }
                         Preferences.saveSplashUrl(response.getImg());
                         OkHttpUtils.get().url(response.getImg()).build()
-                                .execute(new FileCallBack(FileUtils.getSplashDir(MusicApplication.getInstance().getApplicationContext()), "splash.jpg") {
+                                .execute(new FileCallBack(FileUtils.getSplashDir(AppCache.getContext()), "splash.jpg") {
                                     @Override
                                     public void inProgress(float progress, long total) {
                                     }
