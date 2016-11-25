@@ -63,7 +63,7 @@ public class SplashActivity extends BaseActivity {
                 public void run() {
                     bindService();
                 }
-            }, 100);
+            }, 1000);
         }
     }
 
