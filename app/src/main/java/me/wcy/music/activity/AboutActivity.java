@@ -20,10 +20,6 @@ public class AboutActivity extends BaseActivity {
         getFragmentManager().beginTransaction().replace(R.id.ll_fragment_container, new AboutFragment()).commit();
     }
 
-    @Override
-    protected void setListener() {
-    }
-
     public static class AboutFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
         private Preference mVersion;
         private Preference mUpdate;

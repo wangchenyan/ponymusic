@@ -1,5 +1,6 @@
 package me.wcy.music.activity;
 
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -36,8 +37,11 @@ import me.wcy.music.service.OnPlayerEventListener;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.SystemUtils;
+import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.UpdateUtils;
 import me.wcy.music.utils.binding.Bind;
+import me.wcy.music.utils.permission.PermissionReq;
+import me.wcy.music.utils.permission.PermissionResult;
 
 public class MusicActivity extends BaseActivity implements View.OnClickListener, OnPlayerEventListener,
         NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
@@ -74,6 +78,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     private SongListFragment mSongListFragment;
     private PlayFragment mPlayFragment;
     private PlayService mPlayService;
+    private PlayServiceConnection mPlayServiceConnection;
     private AudioManager mAudioManager;
     private ComponentName mRemoteReceiver;
     private boolean isPlayFragmentShow = false;
@@ -93,20 +98,14 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         parseIntent(intent);
     }
 
-    @Override
-    protected void onDestroy() {
-        unbindService(mPlayServiceConnection);
-        mAudioManager.unregisterMediaButtonEventReceiver(mRemoteReceiver);
-        super.onDestroy();
-    }
-
     private void bindService() {
         Intent intent = new Intent();
         intent.setClass(this, PlayService.class);
+        mPlayServiceConnection = new PlayServiceConnection();
         bindService(intent, mPlayServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
-    private ServiceConnection mPlayServiceConnection = new ServiceConnection() {
+    private class PlayServiceConnection implements ServiceConnection {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mPlayService = ((PlayService.PlayBinder) service).getService();
@@ -118,7 +117,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         @Override
         public void onServiceDisconnected(ComponentName name) {
         }
-    };
+    }
 
     private void init() {
         setupView();
@@ -157,7 +156,21 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void updateWeather() {
-        new WeatherExecutor(mPlayService, vNavigationHeader).execute();
+        PermissionReq.with(this)
+                .permissions(Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION)
+                .result(new PermissionResult() {
+                    @Override
+                    public void onGranted() {
+                        new WeatherExecutor(mPlayService, vNavigationHeader).execute();
+                    }
+
+                    @Override
+                    public void onDenied() {
+                        ToastUtils.show(getString(R.string.no_permission, "定位", "更新天气"));
+                    }
+                })
+                .request();
     }
 
     private void registerReceiver() {
@@ -334,11 +347,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        // 切换夜间模式不保存状态
-    }
-
-    @Override
     public void onBackPressed() {
         if (mPlayFragment != null && isPlayFragmentShow) {
             hidePlayingFragment();
@@ -354,5 +362,21 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         } else {
             moveTaskToBack(false);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        // 切换夜间模式不保存状态
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mPlayServiceConnection != null) {
+            unbindService(mPlayServiceConnection);
+        }
+        if (mRemoteReceiver != null) {
+            mAudioManager.unregisterMediaButtonEventReceiver(mRemoteReceiver);
+        }
+        super.onDestroy();
     }
 }

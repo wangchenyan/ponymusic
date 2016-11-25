@@ -1,5 +1,6 @@
 package me.wcy.music.activity;
 
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -24,8 +25,10 @@ import me.wcy.music.model.JSplash;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.Preferences;
-import me.wcy.music.utils.SystemUtils;
+import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.binding.Bind;
+import me.wcy.music.utils.permission.PermissionReq;
+import me.wcy.music.utils.permission.PermissionResult;
 import okhttp3.Call;
 
 public class SplashActivity extends BaseActivity {
@@ -42,19 +45,12 @@ public class SplashActivity extends BaseActivity {
     }
 
     @Override
-    protected void setListener() {
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (mPlayServiceConnection != null) {
-            unbindService(mPlayServiceConnection);
-        }
-        super.onDestroy();
+    protected void checkServiceAlive() {
+        // SplashActivity不需要检查Service是否活着
     }
 
     private void checkService() {
-        if (SystemUtils.isServiceRunning(this, PlayService.class)) {
+        if (PlayService.isRunning(this)) {
             startMusicActivity();
             finish();
         } else {
@@ -67,7 +63,7 @@ public class SplashActivity extends BaseActivity {
                 public void run() {
                     bindService();
                 }
-            }, 1000);
+            }, 100);
         }
     }
 
@@ -78,20 +74,35 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void bindService() {
-        mPlayServiceConnection = new PlayServiceConnection();
         Intent intent = new Intent();
         intent.setClass(this, PlayService.class);
+        mPlayServiceConnection = new PlayServiceConnection();
         bindService(intent, mPlayServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
     private class PlayServiceConnection implements ServiceConnection {
-
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            PlayService playService = ((PlayService.PlayBinder) service).getService();
-            playService.updateMusicList();
-            startMusicActivity();
-            finish();
+            final PlayService playService = ((PlayService.PlayBinder) service).getService();
+            PermissionReq.with(SplashActivity.this)
+                    .permissions(Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    .result(new PermissionResult() {
+                        @Override
+                        public void onGranted() {
+                            playService.updateMusicList();
+                            startMusicActivity();
+                            finish();
+                        }
+
+                        @Override
+                        public void onDenied() {
+                            ToastUtils.show(getString(R.string.no_permission, "读写手机存储", "扫描本地歌曲"));
+                            finish();
+                            playService.stop();
+                        }
+                    })
+                    .request();
         }
 
         @Override
@@ -111,15 +122,14 @@ public class SplashActivity extends BaseActivity {
         OkHttpUtils.get().url(Constants.SPLASH_URL).build()
                 .execute(new JsonCallback<JSplash>(JSplash.class) {
                     @Override
-                    public void onResponse(JSplash response) {
+                    public void onResponse(final JSplash response) {
                         if (response == null || TextUtils.isEmpty(response.getImg())) {
                             return;
                         }
                         String lastImgUrl = Preferences.getSplashUrl();
-                        if (lastImgUrl.equals(response.getImg())) {
+                        if (TextUtils.equals(lastImgUrl, response.getImg())) {
                             return;
                         }
-                        Preferences.saveSplashUrl(response.getImg());
                         OkHttpUtils.get().url(response.getImg()).build()
                                 .execute(new FileCallBack(FileUtils.getSplashDir(AppCache.getContext()), "splash.jpg") {
                                     @Override
@@ -127,7 +137,8 @@ public class SplashActivity extends BaseActivity {
                                     }
 
                                     @Override
-                                    public void onResponse(File response) {
+                                    public void onResponse(File file) {
+                                        Preferences.saveSplashUrl(response.getImg());
                                     }
 
                                     @Override
@@ -151,5 +162,13 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mPlayServiceConnection != null) {
+            unbindService(mPlayServiceConnection);
+        }
+        super.onDestroy();
     }
 }

@@ -6,9 +6,13 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Process;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,22 +23,36 @@ import android.widget.EditText;
 import me.wcy.music.R;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.binding.ViewBinder;
+import me.wcy.music.utils.permission.PermissionReq;
 
 /**
- * 基类
+ * 基类<br>
  * 如果继承本类，需要在 layout 中添加 {@link Toolbar} ，并将 AppTheme 继承 Theme.AppCompat.NoActionBar 。
  * Created by wcy on 2015/11/26.
  */
 public abstract class BaseActivity extends AppCompatActivity {
-    protected Handler mHandler;
+    private static final String TAG = "Activity";
+    protected Handler mHandler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mHandler = new Handler();
+        Log.i(TAG, "onCreate:" + getClass().getSimpleName());
+
         setSystemBarTransparent();
         PlayService.addToStack(this);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        checkServiceAlive();
+    }
+
+    /**
+     * 应用运行期间进入“设置”修改应用权限会导致应用被kill。
+     * 如果这时从最近任务列表启动应用，检查下Service是否活着，如果已经被kill，则关闭应用。
+     */
+    protected void checkServiceAlive() {
+        if (!PlayService.isRunning(this)) {
+            Process.killProcess(Process.myPid());
+        }
     }
 
     @Override
@@ -74,7 +92,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         setListener();
     }
 
-    protected abstract void setListener();
+    protected void setListener() {
+    }
 
     private void setSystemBarTransparent() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -101,6 +120,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         PlayService.removeFromStack(this);
         super.onDestroy();
+        Log.i(TAG, "onDestroy:" + getClass().getSimpleName());
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PermissionReq.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     public void showSoftKeyboard(final EditText editText) {

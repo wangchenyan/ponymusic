@@ -239,7 +239,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
                     getPlayService().updateMusicList();
                     updateView();
                 }
-            }, 500);
+            }, 1000);
         }
     };
 }

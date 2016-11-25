@@ -2,6 +2,7 @@ package me.wcy.music.service;
 
 import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
@@ -11,6 +12,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.text.format.DateUtils;
+import android.util.Log;
 
 import com.amap.api.location.AMapLocalWeatherLive;
 
@@ -20,11 +22,11 @@ import java.util.List;
 import java.util.Random;
 
 import me.wcy.music.activity.BaseActivity;
+import me.wcy.music.constants.Actions;
 import me.wcy.music.enums.PlayModeEnum;
 import me.wcy.music.model.Music;
 import me.wcy.music.model.SongListInfo;
 import me.wcy.music.receiver.NoisyAudioStreamReceiver;
-import me.wcy.music.constants.Actions;
 import me.wcy.music.utils.MusicUtils;
 import me.wcy.music.utils.Preferences;
 import me.wcy.music.utils.SystemUtils;
@@ -34,6 +36,7 @@ import me.wcy.music.utils.SystemUtils;
  * Created by wcy on 2015/11/27.
  */
 public class PlayService extends Service implements MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
+    private static final String TAG = "Service";
     private static final int NOTIFICATION_ID = 0x111;
     private static final long TIME_UPDATE = 100L;
     // 本地歌曲列表
@@ -59,6 +62,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.i(TAG, "onCreate:" + getClass().getSimpleName());
         mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mPlayer.setOnCompletionListener(this);
@@ -87,6 +91,10 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
                 break;
         }
         return START_NOT_STICKY;
+    }
+
+    public static boolean isRunning(Context context) {
+        return SystemUtils.isServiceRunning(context, PlayService.class);
     }
 
     public static List<Music> getMusicList() {
@@ -368,6 +376,12 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     public boolean onUnbind(Intent intent) {
         mListener = null;
         return true;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onDestroy:" + getClass().getSimpleName());
     }
 
     public void stop() {
