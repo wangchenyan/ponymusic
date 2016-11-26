@@ -1,6 +1,5 @@
 package me.wcy.music.activity;
 
-import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -42,6 +41,7 @@ import me.wcy.music.utils.UpdateUtils;
 import me.wcy.music.utils.binding.Bind;
 import me.wcy.music.utils.permission.PermissionReq;
 import me.wcy.music.utils.permission.PermissionResult;
+import me.wcy.music.utils.permission.Permissions;
 
 public class MusicActivity extends BaseActivity implements View.OnClickListener, OnPlayerEventListener,
         NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
@@ -157,8 +157,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     private void updateWeather() {
         PermissionReq.with(this)
-                .permissions(Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION)
+                .permissions(Permissions.LOCATION)
                 .result(new PermissionResult() {
                     @Override
                     public void onGranted() {
@@ -167,7 +166,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
                     @Override
                     public void onDenied() {
-                        ToastUtils.show(getString(R.string.no_permission, "定位", "更新天气"));
+                        ToastUtils.show(getString(R.string.no_permission, Permissions.LOCATION_DESC, "更新天气"));
                     }
                 })
                 .request();
