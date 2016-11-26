@@ -1,12 +1,12 @@
 package me.wcy.music.utils.permission;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.SparseArray;
@@ -113,7 +113,7 @@ public class PermissionReq {
 
         int requestCode = genRequestCode();
         String[] deniedPermissions = deniedPermissionList.toArray(new String[deniedPermissionList.size()]);
-        ActivityCompat.requestPermissions(activity, deniedPermissions, requestCode);
+        requestPermissions(mObject, deniedPermissions, requestCode);
         sResultArray.put(requestCode, mResult);
     }
 
@@ -133,6 +133,15 @@ public class PermissionReq {
             }
         }
         result.onGranted();
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private static void requestPermissions(Object object, String[] permissions, int requestCode) {
+        if (object instanceof Activity) {
+            ((Activity) object).requestPermissions(permissions, requestCode);
+        } else if (object instanceof Fragment) {
+            ((Fragment) object).requestPermissions(permissions, requestCode);
+        }
     }
 
     private static List<String> getDeniedPermissions(Context context, String[] permissions) {
