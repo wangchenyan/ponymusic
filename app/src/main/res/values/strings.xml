@@ -67,9 +67,9 @@
     <string name="timer_cancel">定时停止播放已取消</string>
     <string name="share_app">青春，狂热，放纵，自由，当我们带上耳机以后做回自己，这是音乐的魅力。%s：http://fir.im/ponymusic</string>
     <string name="copyright">Copyright © 2015&#045;2016 SWUST</string>
-    <string name="about_project_url">https://github.com/ChanWong21/PonyMusic</string>
+    <string name="about_project_url">https://github.com/wangchenyan/PonyMusic</string>
     <string name="about_weibo">http://weibo.com/wangchenyan1993</string>
     <string name="about_jianshu">http://www.jianshu.com/users/3231579893ac</string>
-    <string name="about_github">https://github.com/ChanWong21</string>
+    <string name="about_github">https://github.com/wangchenyan</string>
     <string name="no_permission">没有%1$s权限，无法%2$s！</string>
 </resources>
