@@ -1,15 +1,13 @@
 package me.wcy.music.executor;
 
-import android.annotation.SuppressLint;
-import android.os.Process;
+import android.util.Log;
 
-import java.io.FileOutputStream;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import me.wcy.music.BuildConfig;
 import me.wcy.music.utils.FileUtils;
@@ -18,8 +16,10 @@ import me.wcy.music.utils.FileUtils;
  * 异常捕获
  * Created by hzwangchenyan on 2016/1/25.
  */
-@SuppressLint("SimpleDateFormat")
 public class CrashHandler implements Thread.UncaughtExceptionHandler {
+    private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+    private static SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault());
+
     private Thread.UncaughtExceptionHandler mDefaultHandler;
 
     public static CrashHandler getInstance() {
@@ -37,34 +37,26 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
-        if (BuildConfig.DEBUG) {
-            mDefaultHandler.uncaughtException(thread, ex);
-        } else {
+        if (!BuildConfig.DEBUG) {
             saveCrashInfo(ex);
-            Process.killProcess(Process.myPid());
         }
+        mDefaultHandler.uncaughtException(thread, ex);
     }
 
     private void saveCrashInfo(Throwable ex) {
-        StringBuilder sb = new StringBuilder();
-        Writer writer = new StringWriter();
-        PrintWriter printWriter = new PrintWriter(writer);
-        ex.printStackTrace(printWriter);
-        Throwable cause = ex.getCause();
-        while (cause != null) {
-            cause.printStackTrace(printWriter);
-            cause = cause.getCause();
-        }
-        printWriter.close();
-        sb.append(writer.toString());
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String time = sdf.format(new Date());
-        String fileName = String.format("log_%s.txt", time);
+        String stackTrace = Log.getStackTraceString(ex);
+        Date date = new Date();
+        String dateStr = DATE_FORMAT.format(date);
+        String filePath = FileUtils.getLogDir() + String.format("log_%s.log", dateStr);
+        String time = TIME_FORMAT.format(date);
         try {
-            FileOutputStream fos = new FileOutputStream(FileUtils.getLogDir() + fileName);
-            fos.write(sb.toString().getBytes());
-            fos.close();
+            BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true));
+            bw.write(String.format(Locale.getDefault(), "*** crash at %s *** ", time));
+            bw.newLine();
+            bw.write(stackTrace);
+            bw.newLine();
+            bw.flush();
+            bw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

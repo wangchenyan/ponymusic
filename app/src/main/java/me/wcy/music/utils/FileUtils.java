@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -129,10 +130,10 @@ public class FileUtils {
 
     public static void saveLrcFile(String path, String content) {
         try {
-            FileWriter writer = new FileWriter(path);
-            writer.flush();
-            writer.write(content);
-            writer.close();
+            BufferedWriter bw = new BufferedWriter(new FileWriter(path));
+            bw.write(content);
+            bw.flush();
+            bw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
