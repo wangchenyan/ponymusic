@@ -8,9 +8,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 
 import java.util.List;
+import java.util.Locale;
 
 import me.wcy.music.R;
-import me.wcy.music.activity.BaseActivity;
 import me.wcy.music.activity.SplashActivity;
 import me.wcy.music.constants.Extras;
 import me.wcy.music.model.Music;
@@ -64,21 +64,11 @@ public class SystemUtils {
         return builder.getNotification();
     }
 
-    public static void clearStack(List<BaseActivity> activityStack) {
-        for (int i = activityStack.size() - 1; i >= 0; i--) {
-            BaseActivity activity = activityStack.get(i);
-            activityStack.remove(activity);
-            if (!activity.isFinishing()) {
-                activity.finish();
-            }
-        }
-    }
-
     public static String formatTime(String pattern, long milli) {
         int m = (int) (milli / (60 * 1000));
         int s = (int) ((milli / 1000) % 60);
-        String mm = String.format("%02d", m);
-        String ss = String.format("%02d", s);
+        String mm = String.format(Locale.getDefault(), "%02d", m);
+        String ss = String.format(Locale.getDefault(), "%02d", s);
         return pattern.replace("mm", mm).replace("ss", ss);
     }
 }

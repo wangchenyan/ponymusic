@@ -30,7 +30,6 @@ import me.wcy.music.adapter.LocalMusicAdapter;
 import me.wcy.music.adapter.OnMoreClickListener;
 import me.wcy.music.application.AppCache;
 import me.wcy.music.model.Music;
-import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.SystemUtils;
 import me.wcy.music.utils.ToastUtils;
@@ -73,7 +72,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     }
 
     private void updateView() {
-        if (PlayService.getMusicList().isEmpty()) {
+        if (AppCache.getMusicList().isEmpty()) {
             tvEmpty.setVisibility(View.VISIBLE);
         } else {
             tvEmpty.setVisibility(View.GONE);
@@ -89,7 +88,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
 
     @Override
     public void onMoreClick(final int position) {
-        final Music music = PlayService.getMusicList().get(position);
+        final Music music = AppCache.getMusicList().get(position);
         AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
         dialog.setTitle(music.getTitle());
         int itemsId = position == getPlayService().getPlayingPosition() ? R.array.local_music_dialog_without_delete : R.array.local_music_dialog;
@@ -200,7 +199,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         dialog.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                PlayService.getMusicList().remove(music);
+                AppCache.getMusicList().remove(music);
                 File file = new File(music.getUri());
                 if (file.delete()) {
                     getPlayService().updatePlayingPosition();

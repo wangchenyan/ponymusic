@@ -21,6 +21,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import me.wcy.music.R;
+import me.wcy.music.application.AppCache;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.binding.ViewBinder;
 import me.wcy.music.utils.permission.PermissionReq;
@@ -40,7 +41,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         Log.i(TAG, "onCreate:" + getClass().getSimpleName());
 
         setSystemBarTransparent();
-        PlayService.addToStack(this);
+        AppCache.addToStack(this);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         checkServiceAlive();
     }
@@ -118,7 +119,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        PlayService.removeFromStack(this);
+        AppCache.removeFromStack(this);
         super.onDestroy();
         Log.i(TAG, "onDestroy:" + getClass().getSimpleName());
     }

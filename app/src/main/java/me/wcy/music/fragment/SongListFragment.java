@@ -15,6 +15,7 @@ import java.util.List;
 import me.wcy.music.R;
 import me.wcy.music.activity.OnlineMusicActivity;
 import me.wcy.music.adapter.SongListAdapter;
+import me.wcy.music.application.AppCache;
 import me.wcy.music.constants.Extras;
 import me.wcy.music.enums.LoadStateEnum;
 import me.wcy.music.model.SongListInfo;
@@ -47,7 +48,7 @@ public class SongListFragment extends BaseFragment implements AdapterView.OnItem
             ViewUtils.changeViewState(lvSongList, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
             return;
         }
-        mSongLists = getPlayService().mSongLists;
+        mSongLists = AppCache.getSongListInfos();
         if (mSongLists.isEmpty()) {
             String[] titles = getResources().getStringArray(R.array.online_music_list_title);
             String[] types = getResources().getStringArray(R.array.online_music_list_type);

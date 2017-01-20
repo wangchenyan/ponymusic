@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import me.wcy.music.R;
+import me.wcy.music.application.AppCache;
 import me.wcy.music.model.Music;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.CoverLoader;
@@ -26,12 +27,12 @@ public class LocalMusicAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return PlayService.getMusicList().size();
+        return AppCache.getMusicList().size();
     }
 
     @Override
     public Object getItem(int position) {
-        return PlayService.getMusicList().get(position);
+        return AppCache.getMusicList().get(position);
     }
 
     @Override
@@ -54,7 +55,7 @@ public class LocalMusicAdapter extends BaseAdapter {
         } else {
             holder.vPlaying.setVisibility(View.INVISIBLE);
         }
-        final Music music = PlayService.getMusicList().get(position);
+        final Music music = AppCache.getMusicList().get(position);
         Bitmap cover = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
         holder.ivCover.setImageBitmap(cover);
         holder.tvTitle.setText(music.getTitle());
@@ -73,7 +74,7 @@ public class LocalMusicAdapter extends BaseAdapter {
     }
 
     private boolean isShowDivider(int position) {
-        return position != PlayService.getMusicList().size() - 1;
+        return position != AppCache.getMusicList().size() - 1;
     }
 
     public void updatePlayingPosition(PlayService playService) {

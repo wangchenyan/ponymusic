@@ -15,6 +15,7 @@ import com.amap.api.location.LocationManagerProxy;
 import java.util.Calendar;
 
 import me.wcy.music.R;
+import me.wcy.music.application.AppCache;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.binding.Bind;
 import me.wcy.music.utils.binding.ViewBinder;
@@ -85,7 +86,7 @@ public class WeatherExecutor implements AMapLocalWeatherListener {
     }
 
     public void execute() {
-        AMapLocalWeatherLive aMapLocalWeatherLive = mPlayService.mAMapLocalWeatherLive;
+        AMapLocalWeatherLive aMapLocalWeatherLive = AppCache.getAMapLocalWeatherLive();
         if (aMapLocalWeatherLive != null && aMapLocalWeatherLive.getAMapException().getErrorCode() == 0) {
             updateView(aMapLocalWeatherLive);
             release();
@@ -98,7 +99,7 @@ public class WeatherExecutor implements AMapLocalWeatherListener {
     @Override
     public void onWeatherLiveSearched(AMapLocalWeatherLive aMapLocalWeatherLive) {
         if (aMapLocalWeatherLive != null && aMapLocalWeatherLive.getAMapException().getErrorCode() == 0) {
-            mPlayService.mAMapLocalWeatherLive = aMapLocalWeatherLive;
+            AppCache.setAMapLocalWeatherLive(aMapLocalWeatherLive);
             updateView(aMapLocalWeatherLive);
         } else {
             Log.e(TAG, "获取天气预报失败");
