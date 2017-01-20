@@ -64,7 +64,7 @@ import me.wcy.music.utils.binding.ViewBinder;
  * 轻霾
  * 霾
  */
-public class WeatherExecutor implements AMapLocalWeatherListener {
+public class WeatherExecutor implements IExecutor, AMapLocalWeatherListener {
     private static final String TAG = "WeatherExecutor";
     private PlayService mPlayService;
     private Context mContext;
@@ -85,6 +85,7 @@ public class WeatherExecutor implements AMapLocalWeatherListener {
         ViewBinder.bind(this, navigationHeader);
     }
 
+    @Override
     public void execute() {
         AMapLocalWeatherLive aMapLocalWeatherLive = AppCache.getAMapLocalWeatherLive();
         if (aMapLocalWeatherLive != null && aMapLocalWeatherLive.getAMapException().getErrorCode() == 0) {

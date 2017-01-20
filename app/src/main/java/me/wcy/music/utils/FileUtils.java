@@ -1,11 +1,8 @@
 package me.wcy.music.utils;
 
-import android.app.DownloadManager;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.webkit.MimeTypeMap;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -26,21 +23,21 @@ import me.wcy.music.model.Music;
  */
 public class FileUtils {
     private static String getAppDir() {
-        return Environment.getExternalStorageDirectory() + "/PonyMusic/";
+        return Environment.getExternalStorageDirectory() + "/PonyMusic";
     }
 
     public static String getMusicDir() {
-        String dir = getAppDir() + "Music/";
+        String dir = getAppDir() + "/Music/";
         return mkdirs(dir);
     }
 
     public static String getLrcDir() {
-        String dir = getAppDir() + "Lyric/";
+        String dir = getAppDir() + "/Lyric/";
         return mkdirs(dir);
     }
 
     public static String getLogDir() {
-        String dir = getAppDir() + "Log/";
+        String dir = getAppDir() + "/Log/";
         return mkdirs(dir);
     }
 
@@ -75,18 +72,14 @@ public class FileUtils {
     }
 
     public static String getMp3FileName(String artist, String title) {
-        artist = stringFilter(artist);
-        title = stringFilter(title);
-        if (TextUtils.isEmpty(artist)) {
-            artist = AppCache.getContext().getString(R.string.unknown);
-        }
-        if (TextUtils.isEmpty(title)) {
-            title = AppCache.getContext().getString(R.string.unknown);
-        }
-        return artist + " - " + title + Constants.FILENAME_MP3;
+        return getFileName(artist, title) + Constants.FILENAME_MP3;
     }
 
     public static String getLrcFileName(String artist, String title) {
+        return getFileName(artist, title) + Constants.FILENAME_LRC;
+    }
+
+    private static String getFileName(String artist, String title) {
         artist = stringFilter(artist);
         title = stringFilter(title);
         if (TextUtils.isEmpty(artist)) {
@@ -95,7 +88,7 @@ public class FileUtils {
         if (TextUtils.isEmpty(title)) {
             title = AppCache.getContext().getString(R.string.unknown);
         }
-        return artist + " - " + title + Constants.FILENAME_LRC;
+        return artist + " - " + title;
     }
 
     public static String getArtistAndAlbum(String artist, String album) {
@@ -137,18 +130,5 @@ public class FileUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static long downloadMusic(String url, String artist, String song) {
-        Uri uri = Uri.parse(url);
-        DownloadManager.Request request = new DownloadManager.Request(uri);
-        String mp3FileName = FileUtils.getMp3FileName(artist, song);
-        request.setDestinationInExternalPublicDir(FileUtils.getRelativeMusicDir(), mp3FileName);
-        request.setMimeType(MimeTypeMap.getFileExtensionFromUrl(url));
-        request.allowScanningByMediaScanner();
-        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
-        request.setAllowedOverRoaming(false);// 不允许漫游
-        DownloadManager downloadManager = (DownloadManager) AppCache.getContext().getSystemService(Context.DOWNLOAD_SERVICE);
-        return downloadManager.enqueue(request);
     }
 }

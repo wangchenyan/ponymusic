@@ -239,7 +239,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
             }
 
             @Override
-            public void onFail(Call call, Exception e) {
+            public void onFail(Exception e) {
                 mProgressDialog.cancel();
                 ToastUtils.show(R.string.unable_to_play);
             }
@@ -254,12 +254,12 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
             }
 
             @Override
-            public void onSuccess() {
+            public void onSuccess(Void aVoid) {
                 mProgressDialog.cancel();
             }
 
             @Override
-            public void onFail(Call call, Exception e) {
+            public void onFail(Exception e) {
                 mProgressDialog.cancel();
             }
         }.execute();
@@ -277,13 +277,13 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
             }
 
             @Override
-            public void onSuccess() {
+            public void onSuccess(Void aVoid) {
                 mProgressDialog.cancel();
                 ToastUtils.show(getString(R.string.now_download, jOnlineMusic.getTitle()));
             }
 
             @Override
-            public void onFail(Call call, Exception e) {
+            public void onFail(Exception e) {
                 mProgressDialog.cancel();
                 ToastUtils.show(R.string.unable_to_download);
             }

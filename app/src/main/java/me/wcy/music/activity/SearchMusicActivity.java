@@ -175,7 +175,7 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
             }
 
             @Override
-            public void onFail(Call call, Exception e) {
+            public void onFail(Exception e) {
                 mProgressDialog.cancel();
                 ToastUtils.show(R.string.unable_to_play);
             }
@@ -214,12 +214,12 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
             }
 
             @Override
-            public void onSuccess() {
+            public void onSuccess(Void aVoid) {
                 mProgressDialog.cancel();
             }
 
             @Override
-            public void onFail(Call call, Exception e) {
+            public void onFail(Exception e) {
                 mProgressDialog.cancel();
             }
         }.execute();
@@ -233,13 +233,13 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
             }
 
             @Override
-            public void onSuccess() {
+            public void onSuccess(Void aVoid) {
                 mProgressDialog.cancel();
                 ToastUtils.show(getString(R.string.now_download, jSong.getSongname()));
             }
 
             @Override
-            public void onFail(Call call, Exception e) {
+            public void onFail(Exception e) {
                 mProgressDialog.cancel();
                 ToastUtils.show(R.string.unable_to_download);
             }

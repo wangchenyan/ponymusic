@@ -1,6 +1,5 @@
 package me.wcy.music.executor;
 
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -16,7 +15,7 @@ import okhttp3.Call;
  * 如果本地歌曲没有歌词则从网络搜索歌词
  * Created by wcy on 2016/4/26.
  */
-public abstract class SearchLrc {
+public abstract class SearchLrc implements IExecutor, Callback<String> {
     private String artist;
     private String title;
 
@@ -25,6 +24,7 @@ public abstract class SearchLrc {
         this.title = title;
     }
 
+    @Override
     public void execute() {
         onPrepare();
         searchLrc();
@@ -39,15 +39,16 @@ public abstract class SearchLrc {
                     @Override
                     public void onResponse(JSearchMusic response) {
                         if (response == null || response.getSong() == null || response.getSong().size() == 0) {
-                            onFinish(null);
+                            onFail(null);
                             return;
                         }
+
                         downloadLrc(response.getSong().get(0).getSongid());
                     }
 
                     @Override
                     public void onError(Call call, Exception e) {
-                        onFinish(null);
+                        onFail(e);
                     }
                 });
     }
@@ -61,22 +62,19 @@ public abstract class SearchLrc {
                     @Override
                     public void onResponse(JLrc response) {
                         if (response == null || TextUtils.isEmpty(response.getLrcContent())) {
-                            onFinish(null);
+                            onFail(null);
                             return;
                         }
-                        String lrcPath = FileUtils.getLrcDir() + FileUtils.getLrcFileName(artist, title);
-                        FileUtils.saveLrcFile(lrcPath, response.getLrcContent());
-                        onFinish(lrcPath);
+
+                        String filePath = FileUtils.getLrcDir() + FileUtils.getLrcFileName(artist, title);
+                        FileUtils.saveLrcFile(filePath, response.getLrcContent());
+                        onSuccess(filePath);
                     }
 
                     @Override
                     public void onError(Call call, Exception e) {
-                        onFinish(null);
+                        onFail(e);
                     }
                 });
     }
-
-    public abstract void onPrepare();
-
-    public abstract void onFinish(@Nullable String lrcPath);
 }

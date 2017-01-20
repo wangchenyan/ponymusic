@@ -29,7 +29,7 @@ public class AppCache {
     // 歌单列表
     private final List<SongListInfo> mSongListInfos = new ArrayList<>();
     private final List<BaseActivity> mActivityStack = new ArrayList<>();
-    private LongSparseArray<String> mDownloadList = new LongSparseArray<>();
+    private final LongSparseArray<String> mDownloadList = new LongSparseArray<>();
     private AMapLocalWeatherLive mAMapLocalWeatherLive;
 
     private AppCache() {

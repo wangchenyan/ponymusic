@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -337,23 +338,34 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
                     @Override
                     public void onPrepare() {
                         // 设置tag防止歌词下载完成后已切换歌曲
-                        mLrcViewSingle.setTag(music);
+                        vpPlay.setTag(music);
 
                         loadLrc("");
                         setLrcLabel("正在搜索歌词");
                     }
 
                     @Override
-                    public void onFinish(@Nullable String lrcPath) {
-                        if (mLrcViewSingle.getTag() != music) {
+                    public void onSuccess(@NonNull String lrcPath) {
+                        if (vpPlay.getTag() != music) {
                             return;
                         }
 
                         // 清除tag
-                        mLrcViewSingle.setTag(null);
+                        vpPlay.setTag(null);
 
-                        lrcPath = lrcPath == null ? "" : lrcPath;
                         loadLrc(lrcPath);
+                        setLrcLabel("暂无歌词");
+                    }
+
+                    @Override
+                    public void onFail(Exception e) {
+                        if (vpPlay.getTag() != music) {
+                            return;
+                        }
+
+                        // 清除tag
+                        vpPlay.setTag(null);
+
                         setLrcLabel("暂无歌词");
                     }
                 }.execute();
