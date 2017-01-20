@@ -21,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import me.wcy.music.BuildConfig;
 import me.wcy.music.R;
 import me.wcy.music.adapter.FragmentAdapter;
 import me.wcy.music.constants.Extras;
@@ -356,11 +355,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
             return;
         }
 
-        if (BuildConfig.DEBUG) {
-            super.onBackPressed();
-        } else {
-            moveTaskToBack(false);
-        }
+        super.onBackPressed();
     }
 
     @Override

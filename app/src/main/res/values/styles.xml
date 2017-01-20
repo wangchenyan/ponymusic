@@ -8,10 +8,6 @@
 
     <style name="AppTheme" parent="AppBaseTheme" />
 
-    <style name="AppTheme.Splash" parent="AppBaseTheme">
-        <item name="android:windowIsTranslucent">true</item>
-    </style>
-
     <style name="AppTheme.Search" parent="AppBaseTheme">
         <item name="colorAccent">@color/white</item>
     </style>
