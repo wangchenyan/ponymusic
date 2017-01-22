@@ -38,7 +38,7 @@ public abstract class DownloadOnlineMusic extends DownloadMusic {
                 .execute(new JsonCallback<JDownloadInfo>(JDownloadInfo.class) {
                     @Override
                     public void onResponse(final JDownloadInfo response) {
-                        if (response == null) {
+                        if (response == null || response.getBitrate() == null) {
                             onFail(null);
                             return;
                         }

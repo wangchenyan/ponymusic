@@ -16,7 +16,7 @@ import okhttp3.Call;
  * 分享在线歌曲
  * Created by hzwangchenyan on 2016/1/13.
  */
-public abstract class ShareOnlineMusic implements IExecutor, Callback<Void> {
+public abstract class ShareOnlineMusic implements IExecutor<Void> {
     private Context mContext;
     private String mTitle;
     private String mSongId;

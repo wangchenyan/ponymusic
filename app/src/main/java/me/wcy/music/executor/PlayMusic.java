@@ -13,14 +13,15 @@ import me.wcy.music.utils.Preferences;
 /**
  * Created by hzwangchenyan on 2017/1/20.
  */
-public abstract class PlayMusic implements IExecutor, Callback<Music> {
+public abstract class PlayMusic implements IExecutor<Music> {
     private Activity mActivity;
     protected Music music;
-    protected int mMaxCount;
+    private int mTotalStep;
     protected int mCounter = 0;
 
-    public PlayMusic(Activity activity) {
+    public PlayMusic(Activity activity, int totalStep) {
         mActivity = activity;
+        mTotalStep = totalStep;
     }
 
     @Override
@@ -59,7 +60,7 @@ public abstract class PlayMusic implements IExecutor, Callback<Music> {
 
     protected void checkCounter() {
         mCounter++;
-        if (mCounter == mMaxCount) {
+        if (mCounter == mTotalStep) {
             onSuccess(music);
         }
     }

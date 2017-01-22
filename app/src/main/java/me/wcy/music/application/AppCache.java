@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.wcy.music.activity.BaseActivity;
-import me.wcy.music.executor.CrashHandler;
 import me.wcy.music.model.Music;
 import me.wcy.music.model.SongListInfo;
 import me.wcy.music.utils.Preferences;

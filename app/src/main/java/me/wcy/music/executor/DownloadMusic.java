@@ -18,7 +18,7 @@ import me.wcy.music.utils.Preferences;
 /**
  * Created by hzwangchenyan on 2017/1/20.
  */
-public abstract class DownloadMusic implements IExecutor, Callback<Void> {
+public abstract class DownloadMusic implements IExecutor<Void> {
     private Activity mActivity;
 
     public DownloadMusic(Activity activity) {

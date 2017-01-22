@@ -15,7 +15,7 @@ import okhttp3.Call;
  * 如果本地歌曲没有歌词则从网络搜索歌词
  * Created by wcy on 2016/4/26.
  */
-public abstract class SearchLrc implements IExecutor, Callback<String> {
+public abstract class SearchLrc implements IExecutor<String> {
     private String artist;
     private String title;
 
@@ -38,7 +38,7 @@ public abstract class SearchLrc implements IExecutor, Callback<String> {
                 .execute(new JsonCallback<JSearchMusic>(JSearchMusic.class) {
                     @Override
                     public void onResponse(JSearchMusic response) {
-                        if (response == null || response.getSong() == null || response.getSong().size() == 0) {
+                        if (response == null || response.getSong() == null || response.getSong().isEmpty()) {
                             onFail(null);
                             return;
                         }

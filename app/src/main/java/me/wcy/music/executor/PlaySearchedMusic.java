@@ -24,9 +24,8 @@ public abstract class PlaySearchedMusic extends PlayMusic {
     private JSearchMusic.JSong mJSong;
 
     public PlaySearchedMusic(Activity activity, JSearchMusic.JSong jSong) {
-        super(activity);
+        super(activity, 2);
         mJSong = jSong;
-        mMaxCount = 2;
     }
 
     @Override
@@ -52,7 +51,7 @@ public abstract class PlaySearchedMusic extends PlayMusic {
                 .execute(new JsonCallback<JDownloadInfo>(JDownloadInfo.class) {
                     @Override
                     public void onResponse(final JDownloadInfo response) {
-                        if (response == null) {
+                        if (response == null || response.getBitrate() == null) {
                             onFail(null);
                             return;
                         }

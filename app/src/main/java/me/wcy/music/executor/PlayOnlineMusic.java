@@ -26,9 +26,8 @@ public abstract class PlayOnlineMusic extends PlayMusic {
     private JOnlineMusic mJOnlineMusic;
 
     public PlayOnlineMusic(Activity activity, JOnlineMusic jOnlineMusic) {
-        super(activity);
+        super(activity, 3);
         mJOnlineMusic = jOnlineMusic;
-        mMaxCount = 3;
     }
 
     @Override
@@ -65,7 +64,7 @@ public abstract class PlayOnlineMusic extends PlayMusic {
                 .execute(new JsonCallback<JDownloadInfo>(JDownloadInfo.class) {
                     @Override
                     public void onResponse(final JDownloadInfo response) {
-                        if (response == null) {
+                        if (response == null || response.getBitrate() == null) {
                             onFail(null);
                             return;
                         }

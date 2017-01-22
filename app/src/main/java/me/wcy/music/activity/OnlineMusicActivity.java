@@ -225,7 +225,6 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
 
     private void play(JOnlineMusic jOnlineMusic) {
         new PlayOnlineMusic(this, jOnlineMusic) {
-
             @Override
             public void onPrepare() {
                 mProgressDialog.show();
