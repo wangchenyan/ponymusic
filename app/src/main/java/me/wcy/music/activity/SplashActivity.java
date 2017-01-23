@@ -10,11 +10,13 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
 
 import java.io.File;
+import java.util.Calendar;
 
 import me.wcy.music.R;
 import me.wcy.music.application.AppCache;
@@ -34,12 +36,17 @@ import okhttp3.Call;
 public class SplashActivity extends BaseActivity {
     @Bind(R.id.iv_splash)
     private ImageView ivSplash;
+    @Bind(R.id.tv_copyright)
+    private TextView tvCopyright;
     private ServiceConnection mPlayServiceConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        tvCopyright.setText(getString(R.string.copyright, year));
 
         checkService();
     }
