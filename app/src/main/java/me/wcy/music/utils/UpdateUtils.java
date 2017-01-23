@@ -22,9 +22,6 @@ import me.wcy.music.application.AppCache;
 import me.wcy.music.constants.Extras;
 import me.wcy.music.model.UpdateInfo;
 
-/**
- * Created by wcy on 2016/4/3.
- */
 public class UpdateUtils {
 
     public static void checkUpdate(final Activity activity) {
@@ -46,6 +43,7 @@ public class UpdateUtils {
                 try {
                     updateInfo = gson.fromJson(versionJson, UpdateInfo.class);
                 } catch (JsonSyntaxException e) {
+                    e.printStackTrace();
                     return;
                 }
                 int version = Integer.valueOf(updateInfo.version);
@@ -84,12 +82,12 @@ public class UpdateUtils {
                 .show();
     }
 
-    private static void download(Context context, UpdateInfo updateInfo) {
+    private static void download(Activity activity, UpdateInfo updateInfo) {
         String fileName = String.format("PonyMusic_%s.apk", updateInfo.versionShort);
-        DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+        DownloadManager downloadManager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
         Uri uri = Uri.parse(updateInfo.installUrl);
         DownloadManager.Request request = new DownloadManager.Request(uri);
-        request.setTitle(context.getString(R.string.app_name));
+        request.setTitle(activity.getString(R.string.app_name));
         request.setDescription("正在更新…");
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
         request.setMimeType(MimeTypeMap.getFileExtensionFromUrl(updateInfo.installUrl));

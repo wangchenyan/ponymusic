@@ -117,7 +117,7 @@ public class FileUtils {
     }
 
     public static float b2mb(int b) {
-        String mb = String.format(Locale.getDefault(), "%.2f", b / 1024f / 1024);
+        String mb = String.format(Locale.getDefault(), "%.2f", (float) b / 1024 / 1024);
         return Float.valueOf(mb);
     }
 

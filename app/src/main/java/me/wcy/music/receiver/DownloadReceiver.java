@@ -35,21 +35,21 @@ public class DownloadReceiver extends BroadcastReceiver {
                 // 下载更新
                 DownloadManager.Query query = new DownloadManager.Query();
                 query.setFilterById(id);
-                Cursor c = manager.query(query);
-                if (c.moveToFirst()) {
-                    String path = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
-                    if (TextUtils.isEmpty(path)) {
-                        return;
-                    }
-
-                    File file = new File(path);
-                    if (!file.exists()) {
-                        return;
-                    }
-
-                    install(context, Uri.fromFile(file));
+                Cursor cursor = manager.query(query);
+                if (cursor == null) {
+                    return;
                 }
-                c.close();
+
+                if (cursor.moveToFirst()) {
+                    String path = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME));
+                    if (!TextUtils.isEmpty(path)) {
+                        File file = new File(path);
+                        if (file.exists()) {
+                            install(context, Uri.fromFile(file));
+                        }
+                    }
+                }
+                cursor.close();
             } else {
                 // 下载歌曲
                 ToastUtils.show(context.getString(R.string.download_success, title));
