@@ -5,6 +5,7 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.webkit.MimeTypeMap;
 
@@ -14,15 +15,17 @@ import com.google.gson.JsonSyntaxException;
 import im.fir.sdk.FIR;
 import im.fir.sdk.VersionCheckCallback;
 import me.wcy.music.BuildConfig;
+import me.wcy.music.R;
 import me.wcy.music.activity.AboutActivity;
 import me.wcy.music.api.Key;
+import me.wcy.music.application.AppCache;
+import me.wcy.music.constants.Extras;
 import me.wcy.music.model.UpdateInfo;
 
 /**
  * Created by wcy on 2016/4/3.
  */
 public class UpdateUtils {
-    public static long sDownloadId = 0;
 
     public static void checkUpdate(final Activity activity) {
         FIR.checkForUpdateInFIR(Key.get(activity, Key.FIR_KEY), new VersionCheckCallback() {
@@ -81,17 +84,20 @@ public class UpdateUtils {
                 .show();
     }
 
-    private static void download(Activity activity, UpdateInfo updateInfo) {
-        DownloadManager downloadManager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
+    private static void download(Context context, UpdateInfo updateInfo) {
+        String fileName = String.format("PonyMusic_%s.apk", updateInfo.versionShort);
+        DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         Uri uri = Uri.parse(updateInfo.installUrl);
         DownloadManager.Request request = new DownloadManager.Request(uri);
-        String fileName = String.format("PonyMusic_%s.apk", updateInfo.versionShort);
-        request.setDestinationInExternalPublicDir("Download", fileName);
+        request.setTitle(context.getString(R.string.app_name));
+        request.setDescription("正在更新…");
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
         request.setMimeType(MimeTypeMap.getFileExtensionFromUrl(updateInfo.installUrl));
         request.allowScanningByMediaScanner();
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
         request.setAllowedOverRoaming(false);// 不允许漫游
-        sDownloadId = downloadManager.enqueue(request);
+        long id = downloadManager.enqueue(request);
+        AppCache.getDownloadList().put(id, Extras.DOWNLOAD_UPDATE);
         ToastUtils.show("正在后台下载");
     }
 }

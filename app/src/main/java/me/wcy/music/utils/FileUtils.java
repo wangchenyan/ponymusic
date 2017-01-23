@@ -79,7 +79,7 @@ public class FileUtils {
         return getFileName(artist, title) + Constants.FILENAME_LRC;
     }
 
-    private static String getFileName(String artist, String title) {
+    public static String getFileName(String artist, String title) {
         artist = stringFilter(artist);
         title = stringFilter(title);
         if (TextUtils.isEmpty(artist)) {

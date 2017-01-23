@@ -58,16 +58,19 @@ public abstract class DownloadMusic implements IExecutor<Void> {
 
     protected abstract void download();
 
-    protected static long downloadMusic(String url, String artist, String song) {
+    protected static void downloadMusic(String url, String artist, String song) {
+        String fileName = FileUtils.getMp3FileName(artist, song);
         Uri uri = Uri.parse(url);
         DownloadManager.Request request = new DownloadManager.Request(uri);
-        String mp3FileName = FileUtils.getMp3FileName(artist, song);
-        request.setDestinationInExternalPublicDir(FileUtils.getRelativeMusicDir(), mp3FileName);
+        request.setTitle(FileUtils.getFileName(artist, song));
+        request.setDescription("正在下载…");
+        request.setDestinationInExternalPublicDir(FileUtils.getRelativeMusicDir(), fileName);
         request.setMimeType(MimeTypeMap.getFileExtensionFromUrl(url));
         request.allowScanningByMediaScanner();
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
         request.setAllowedOverRoaming(false);// 不允许漫游
         DownloadManager downloadManager = (DownloadManager) AppCache.getContext().getSystemService(Context.DOWNLOAD_SERVICE);
-        return downloadManager.enqueue(request);
+        long id = downloadManager.enqueue(request);
+        AppCache.getDownloadList().put(id, song);
     }
 }

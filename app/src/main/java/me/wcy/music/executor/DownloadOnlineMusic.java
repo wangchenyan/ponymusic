@@ -8,7 +8,6 @@ import com.zhy.http.okhttp.callback.FileCallBack;
 
 import java.io.File;
 
-import me.wcy.music.application.AppCache;
 import me.wcy.music.callback.JsonCallback;
 import me.wcy.music.constants.Constants;
 import me.wcy.music.model.JDownloadInfo;
@@ -43,8 +42,7 @@ public abstract class DownloadOnlineMusic extends DownloadMusic {
                             return;
                         }
 
-                        long id = downloadMusic(response.getBitrate().getFile_link(), mJOnlineMusic.getArtist_name(), mJOnlineMusic.getTitle());
-                        AppCache.getDownloadList().put(id, mJOnlineMusic.getTitle());
+                        downloadMusic(response.getBitrate().getFile_link(), mJOnlineMusic.getArtist_name(), mJOnlineMusic.getTitle());
                         onSuccess(null);
                     }
 
