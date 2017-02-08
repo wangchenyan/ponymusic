@@ -1,5 +1,6 @@
 package me.wcy.music.application;
 
+import android.os.Process;
 import android.util.Log;
 
 import java.io.BufferedWriter;
@@ -37,10 +38,12 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
-        if (!BuildConfig.DEBUG) {
-            saveCrashInfo(ex);
+        saveCrashInfo(ex);
+        if (BuildConfig.DEBUG) {
+            mDefaultHandler.uncaughtException(thread, ex);
+        } else {
+            Process.killProcess(Process.myPid());
         }
-        mDefaultHandler.uncaughtException(thread, ex);
     }
 
     private void saveCrashInfo(Throwable ex) {
