@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import me.wcy.music.R;
-import me.wcy.music.model.JSearchMusic;
+import me.wcy.music.model.SearchMusic;
 import me.wcy.music.utils.binding.Bind;
 import me.wcy.music.utils.binding.ViewBinder;
 
@@ -19,10 +19,10 @@ import me.wcy.music.utils.binding.ViewBinder;
  * Created by hzwangchenyan on 2016/1/13.
  */
 public class SearchMusicAdapter extends BaseAdapter {
-    private List<JSearchMusic.JSong> mData;
+    private List<SearchMusic.Song> mData;
     private OnMoreClickListener mListener;
 
-    public SearchMusicAdapter(List<JSearchMusic.JSong> data) {
+    public SearchMusicAdapter(List<SearchMusic.Song> data) {
         mData = data;
     }
 

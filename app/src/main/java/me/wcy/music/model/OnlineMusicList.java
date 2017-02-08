@@ -8,29 +8,29 @@ import java.util.List;
  * JavaBean
  * Created by wcy on 2015/12/20.
  */
-public class JOnlineMusicList {
+public class OnlineMusicList {
     @SerializedName("song_list")
-    private List<JOnlineMusic> song_list;
+    private List<OnlineMusic> song_list;
     @SerializedName("billboard")
-    private JBillboard billboard;
+    private Billboard billboard;
 
-    public List<JOnlineMusic> getSong_list() {
+    public List<OnlineMusic> getSong_list() {
         return song_list;
     }
 
-    public void setSong_list(List<JOnlineMusic> song_list) {
+    public void setSong_list(List<OnlineMusic> song_list) {
         this.song_list = song_list;
     }
 
-    public JBillboard getBillboard() {
+    public Billboard getBillboard() {
         return billboard;
     }
 
-    public void setBillboard(JBillboard billboard) {
+    public void setBillboard(Billboard billboard) {
         this.billboard = billboard;
     }
 
-    public static class JBillboard {
+    public static class Billboard {
         @SerializedName("update_date")
         private String update_date;
         @SerializedName("name")

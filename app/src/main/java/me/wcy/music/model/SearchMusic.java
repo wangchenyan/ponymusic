@@ -8,19 +8,19 @@ import java.util.List;
  * JavaBean
  * Created by hzwangchenyan on 2016/1/13.
  */
-public class JSearchMusic {
+public class SearchMusic {
     @SerializedName("song")
-    private List<JSong> song;
+    private List<Song> song;
 
-    public List<JSong> getSong() {
+    public List<Song> getSong() {
         return song;
     }
 
-    public void setSong(List<JSong> song) {
+    public void setSong(List<Song> song) {
         this.song = song;
     }
 
-    public static class JSong {
+    public static class Song {
         @SerializedName("songname")
         private String songname;
         @SerializedName("artistname")

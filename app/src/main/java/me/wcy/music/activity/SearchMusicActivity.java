@@ -18,8 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.zhy.http.okhttp.OkHttpUtils;
-
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -28,20 +26,19 @@ import java.util.List;
 import me.wcy.music.R;
 import me.wcy.music.adapter.OnMoreClickListener;
 import me.wcy.music.adapter.SearchMusicAdapter;
-import me.wcy.music.callback.JsonCallback;
-import me.wcy.music.constants.Constants;
 import me.wcy.music.enums.LoadStateEnum;
 import me.wcy.music.executor.DownloadSearchedMusic;
 import me.wcy.music.executor.PlaySearchedMusic;
 import me.wcy.music.executor.ShareOnlineMusic;
-import me.wcy.music.model.JSearchMusic;
+import me.wcy.music.http.HttpCallback;
+import me.wcy.music.http.HttpClient;
+import me.wcy.music.model.SearchMusic;
 import me.wcy.music.model.Music;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.ViewUtils;
 import me.wcy.music.utils.binding.Bind;
-import okhttp3.Call;
 
 public class SearchMusicActivity extends BaseActivity implements SearchView.OnQueryTextListener
         , AdapterView.OnItemClickListener, OnMoreClickListener {
@@ -52,7 +49,7 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
     @Bind(R.id.ll_load_fail)
     private LinearLayout llLoadFail;
     private SearchMusicAdapter mAdapter;
-    private List<JSearchMusic.JSong> mSearchMusicList;
+    private List<SearchMusic.Song> mSearchMusicList;
     private PlayService mPlayService;
     private PlayServiceConnection mPlayServiceConnection;
     private ProgressDialog mProgressDialog;
@@ -128,35 +125,31 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
     }
 
     private void searchMusic(String keyword) {
-        OkHttpUtils.get().url(Constants.BASE_URL)
-                .addParams(Constants.PARAM_METHOD, Constants.METHOD_SEARCH_MUSIC)
-                .addParams(Constants.PARAM_QUERY, keyword)
-                .build()
-                .execute(new JsonCallback<JSearchMusic>(JSearchMusic.class) {
+        HttpClient.searchMusic(keyword, new HttpCallback<SearchMusic>() {
+            @Override
+            public void onSuccess(SearchMusic response) {
+                if (response == null || response.getSong() == null) {
+                    ViewUtils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
+                    return;
+                }
+                ViewUtils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
+                mSearchMusicList.clear();
+                mSearchMusicList.addAll(response.getSong());
+                mAdapter.notifyDataSetChanged();
+                lvSearchMusic.requestFocus();
+                mHandler.post(new Runnable() {
                     @Override
-                    public void onResponse(JSearchMusic response) {
-                        if (response == null || response.getSong() == null) {
-                            ViewUtils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
-                            return;
-                        }
-                        ViewUtils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
-                        mSearchMusicList.clear();
-                        mSearchMusicList.addAll(response.getSong());
-                        mAdapter.notifyDataSetChanged();
-                        lvSearchMusic.requestFocus();
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                lvSearchMusic.setSelection(0);
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        ViewUtils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
+                    public void run() {
+                        lvSearchMusic.setSelection(0);
                     }
                 });
+            }
+
+            @Override
+            public void onFail(Exception e) {
+                ViewUtils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
+            }
+        });
     }
 
     @Override
@@ -168,14 +161,14 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
             }
 
             @Override
-            public void onSuccess(Music music) {
+            public void onExecuteSuccess(Music music) {
                 mProgressDialog.cancel();
                 mPlayService.play(music);
                 ToastUtils.show(getString(R.string.now_play, music.getTitle()));
             }
 
             @Override
-            public void onFail(Exception e) {
+            public void onExecuteFail(Exception e) {
                 mProgressDialog.cancel();
                 ToastUtils.show(R.string.unable_to_play);
             }
@@ -184,10 +177,10 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
 
     @Override
     public void onMoreClick(int position) {
-        final JSearchMusic.JSong jSong = mSearchMusicList.get(position);
+        final SearchMusic.Song song = mSearchMusicList.get(position);
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle(jSong.getSongname());
-        String path = FileUtils.getMusicDir() + FileUtils.getMp3FileName(jSong.getArtistname(), jSong.getSongname());
+        dialog.setTitle(song.getSongname());
+        String path = FileUtils.getMusicDir() + FileUtils.getMp3FileName(song.getArtistname(), song.getSongname());
         File file = new File(path);
         int itemsId = file.exists() ? R.array.search_music_dialog_no_download : R.array.search_music_dialog;
         dialog.setItems(itemsId, new DialogInterface.OnClickListener() {
@@ -195,10 +188,10 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:// 分享
-                        share(jSong);
+                        share(song);
                         break;
                     case 1:// 下载
-                        download(jSong);
+                        download(song);
                         break;
                 }
             }
@@ -206,40 +199,40 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
         dialog.show();
     }
 
-    private void share(JSearchMusic.JSong jSong) {
-        new ShareOnlineMusic(this, jSong.getSongname(), jSong.getSongid()) {
+    private void share(SearchMusic.Song song) {
+        new ShareOnlineMusic(this, song.getSongname(), song.getSongid()) {
             @Override
             public void onPrepare() {
                 mProgressDialog.show();
             }
 
             @Override
-            public void onSuccess(Void aVoid) {
+            public void onExecuteSuccess(Void aVoid) {
                 mProgressDialog.cancel();
             }
 
             @Override
-            public void onFail(Exception e) {
+            public void onExecuteFail(Exception e) {
                 mProgressDialog.cancel();
             }
         }.execute();
     }
 
-    private void download(final JSearchMusic.JSong jSong) {
-        new DownloadSearchedMusic(this, jSong) {
+    private void download(final SearchMusic.Song song) {
+        new DownloadSearchedMusic(this, song) {
             @Override
             public void onPrepare() {
                 mProgressDialog.show();
             }
 
             @Override
-            public void onSuccess(Void aVoid) {
+            public void onExecuteSuccess(Void aVoid) {
                 mProgressDialog.cancel();
-                ToastUtils.show(getString(R.string.now_download, jSong.getSongname()));
+                ToastUtils.show(getString(R.string.now_download, song.getSongname()));
             }
 
             @Override
-            public void onFail(Exception e) {
+            public void onExecuteFail(Exception e) {
                 mProgressDialog.cancel();
                 ToastUtils.show(R.string.unable_to_download);
             }

@@ -345,7 +345,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
                     }
 
                     @Override
-                    public void onSuccess(@NonNull String lrcPath) {
+                    public void onExecuteSuccess(@NonNull String lrcPath) {
                         if (vpPlay.getTag() != music) {
                             return;
                         }
@@ -358,7 +358,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
                     }
 
                     @Override
-                    public void onFail(Exception e) {
+                    public void onExecuteFail(Exception e) {
                         if (vpPlay.getTag() != music) {
                             return;
                         }

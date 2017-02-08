@@ -177,10 +177,10 @@ public class WeatherExecutor implements IExecutor, AMapLocalWeatherListener {
     }
 
     @Override
-    public void onSuccess(Object o) {
+    public void onExecuteSuccess(Object o) {
     }
 
     @Override
-    public void onFail(Exception e) {
+    public void onExecuteFail(Exception e) {
     }
 }

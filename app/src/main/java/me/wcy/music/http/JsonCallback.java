@@ -1,4 +1,4 @@
-package me.wcy.music.callback;
+package me.wcy.music.http;
 
 import com.google.gson.Gson;
 import com.zhy.http.okhttp.callback.Callback;

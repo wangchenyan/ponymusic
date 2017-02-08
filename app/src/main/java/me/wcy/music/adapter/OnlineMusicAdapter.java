@@ -12,7 +12,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.List;
 
 import me.wcy.music.R;
-import me.wcy.music.model.JOnlineMusic;
+import me.wcy.music.model.OnlineMusic;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.ImageUtils;
 import me.wcy.music.utils.binding.Bind;
@@ -23,10 +23,10 @@ import me.wcy.music.utils.binding.ViewBinder;
  * Created by wcy on 2015/12/22.
  */
 public class OnlineMusicAdapter extends BaseAdapter {
-    private List<JOnlineMusic> mData;
+    private List<OnlineMusic> mData;
     private OnMoreClickListener mListener;
 
-    public OnlineMusicAdapter(List<JOnlineMusic> data) {
+    public OnlineMusicAdapter(List<OnlineMusic> data) {
         this.mData = data;
     }
 
@@ -55,10 +55,10 @@ public class OnlineMusicAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        JOnlineMusic jOnlineMusic = mData.get(position);
-        ImageLoader.getInstance().displayImage(jOnlineMusic.getPic_small(), holder.ivCover, ImageUtils.getCoverDisplayOptions());
-        holder.tvTitle.setText(jOnlineMusic.getTitle());
-        String artist = FileUtils.getArtistAndAlbum(jOnlineMusic.getArtist_name(), jOnlineMusic.getAlbum_title());
+        OnlineMusic onlineMusic = mData.get(position);
+        ImageLoader.getInstance().displayImage(onlineMusic.getPic_small(), holder.ivCover, ImageUtils.getCoverDisplayOptions());
+        holder.tvTitle.setText(onlineMusic.getTitle());
+        String artist = FileUtils.getArtistAndAlbum(onlineMusic.getArtist_name(), onlineMusic.getAlbum_title());
         holder.tvArtist.setText(artist);
         holder.ivMore.setOnClickListener(new View.OnClickListener() {
             @Override

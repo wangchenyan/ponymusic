@@ -16,17 +16,15 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.zhy.http.okhttp.OkHttpUtils;
 
 import me.wcy.music.R;
-import me.wcy.music.callback.JsonCallback;
-import me.wcy.music.constants.Constants;
 import me.wcy.music.constants.Extras;
 import me.wcy.music.enums.LoadStateEnum;
-import me.wcy.music.model.JArtistInfo;
+import me.wcy.music.http.HttpCallback;
+import me.wcy.music.http.HttpClient;
+import me.wcy.music.model.ArtistInfo;
 import me.wcy.music.utils.ViewUtils;
 import me.wcy.music.utils.binding.Bind;
-import okhttp3.Call;
 
 public class ArtistInfoActivity extends BaseActivity {
     @Bind(R.id.sv_artist_info)
@@ -59,38 +57,34 @@ public class ArtistInfoActivity extends BaseActivity {
     }
 
     private void getArtistInfo(String tingUid) {
-        OkHttpUtils.get().url(Constants.BASE_URL)
-                .addParams(Constants.PARAM_METHOD, Constants.METHOD_ARTIST_INFO)
-                .addParams(Constants.PARAM_TING_UID, tingUid)
-                .build()
-                .execute(new JsonCallback<JArtistInfo>(JArtistInfo.class) {
-                    @Override
-                    public void onResponse(JArtistInfo response) {
-                        if (response == null) {
-                            ViewUtils.changeViewState(svArtistInfo, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
-                            return;
-                        }
-                        ViewUtils.changeViewState(svArtistInfo, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
-                        onSuccess(response);
-                    }
+        HttpClient.getArtistInfo(tingUid, new HttpCallback<ArtistInfo>() {
+            @Override
+            public void onSuccess(ArtistInfo response) {
+                if (response == null) {
+                    onFail(null);
+                    return;
+                }
+                ViewUtils.changeViewState(svArtistInfo, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
+                setData(response);
+            }
 
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        ViewUtils.changeViewState(svArtistInfo, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
-                    }
-                });
+            @Override
+            public void onFail(Exception e) {
+                ViewUtils.changeViewState(svArtistInfo, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
+            }
+        });
     }
 
-    private void onSuccess(JArtistInfo jArtistInfo) {
-        String name = jArtistInfo.getName();
-        String avatarUri = jArtistInfo.getAvatar_s1000();
-        String country = jArtistInfo.getCountry();
-        String constellation = jArtistInfo.getConstellation();
-        float stature = jArtistInfo.getStature();
-        float weight = jArtistInfo.getWeight();
-        String birth = jArtistInfo.getBirth();
-        String intro = jArtistInfo.getIntro();
-        String url = jArtistInfo.getUrl();
+    private void setData(ArtistInfo artistInfo) {
+        String name = artistInfo.getName();
+        String avatarUri = artistInfo.getAvatar_s1000();
+        String country = artistInfo.getCountry();
+        String constellation = artistInfo.getConstellation();
+        float stature = artistInfo.getStature();
+        float weight = artistInfo.getWeight();
+        String birth = artistInfo.getBirth();
+        String intro = artistInfo.getIntro();
+        String url = artistInfo.getUrl();
         if (!TextUtils.isEmpty(avatarUri)) {
             ImageView ivAvatar = new ImageView(this);
             ivAvatar.setImageResource(R.drawable.default_artist);

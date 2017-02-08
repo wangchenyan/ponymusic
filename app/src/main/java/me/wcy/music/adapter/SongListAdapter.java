@@ -9,20 +9,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.List;
 
 import me.wcy.music.R;
-import me.wcy.music.callback.JsonCallback;
-import me.wcy.music.constants.Constants;
-import me.wcy.music.model.JOnlineMusic;
-import me.wcy.music.model.JOnlineMusicList;
+import me.wcy.music.http.HttpCallback;
+import me.wcy.music.http.HttpClient;
+import me.wcy.music.model.OnlineMusic;
+import me.wcy.music.model.OnlineMusicList;
 import me.wcy.music.model.SongListInfo;
 import me.wcy.music.utils.ImageUtils;
 import me.wcy.music.utils.binding.Bind;
 import me.wcy.music.utils.binding.ViewBinder;
-import okhttp3.Call;
 
 /**
  * 歌单列表适配器
@@ -116,52 +114,47 @@ public class SongListAdapter extends BaseAdapter {
             holderMusicList.tvMusic1.setText("1.加载中…");
             holderMusicList.tvMusic2.setText("2.加载中…");
             holderMusicList.tvMusic3.setText("3.加载中…");
-            OkHttpUtils.get().url(Constants.BASE_URL)
-                    .addParams(Constants.PARAM_METHOD, Constants.METHOD_GET_MUSIC_LIST)
-                    .addParams(Constants.PARAM_TYPE, songListInfo.getType())
-                    .addParams(Constants.PARAM_SIZE, "3")
-                    .build()
-                    .execute(new JsonCallback<JOnlineMusicList>(JOnlineMusicList.class) {
-                        @Override
-                        public void onResponse(JOnlineMusicList response) {
-                            if (response == null || response.getSong_list() == null) {
-                                return;
-                            }
-                            if (!songListInfo.getTitle().equals(holderMusicList.ivCover.getTag())) {
-                                return;
-                            }
-                            parse(response, songListInfo);
-                            setData(songListInfo, holderMusicList);
-                        }
+            HttpClient.getSongListInfo(songListInfo.getType(), 3, 0, new HttpCallback<OnlineMusicList>() {
+                @Override
+                public void onSuccess(OnlineMusicList response) {
+                    if (response == null || response.getSong_list() == null) {
+                        return;
+                    }
+                    if (!songListInfo.getTitle().equals(holderMusicList.ivCover.getTag())) {
+                        return;
+                    }
+                    parse(response, songListInfo);
+                    setData(songListInfo, holderMusicList);
+                }
 
-                        @Override
-                        public void onError(Call call, Exception e) {
-                        }
-                    });
+                @Override
+                public void onFail(Exception e) {
+                }
+            });
         } else {
             holderMusicList.ivCover.setTag(null);
             setData(songListInfo, holderMusicList);
         }
     }
 
-    private void parse(JOnlineMusicList response, SongListInfo songListInfo) {
-        List<JOnlineMusic> jOnlineMusics = response.getSong_list();
+    private void parse(OnlineMusicList response, SongListInfo songListInfo) {
+        List<OnlineMusic> onlineMusics = response.getSong_list();
         songListInfo.setCoverUrl(response.getBillboard().getPic_s260());
-        if (jOnlineMusics.size() >= 1) {
+        if (onlineMusics.size() >= 1) {
             songListInfo.setMusic1(mContext.getString(R.string.song_list_item_title_1,
-                    jOnlineMusics.get(0).getTitle(), jOnlineMusics.get(0).getArtist_name()));
+                    onlineMusics.get(0).getTitle(), onlineMusics.get(0).getArtist_name()));
         } else {
             songListInfo.setMusic1("");
         }
-        if (jOnlineMusics.size() >= 2) {
+        if (onlineMusics.size() >= 2) {
             songListInfo.setMusic2(mContext.getString(R.string.song_list_item_title_2,
-                    jOnlineMusics.get(1).getTitle(), jOnlineMusics.get(1).getArtist_name()));
+                    onlineMusics.get(1).getTitle(), onlineMusics.get(1).getArtist_name()));
         } else {
             songListInfo.setMusic2("");
         }
-        if (jOnlineMusics.size() >= 3) {
+        if (onlineMusics.size() >= 3) {
             songListInfo.setMusic3(mContext.getString(R.string.song_list_item_title_3,
-                    jOnlineMusics.get(2).getTitle(), jOnlineMusics.get(2).getArtist_name()));
+                    onlineMusics.get(2).getTitle(), onlineMusics.get(2).getArtist_name()));
         } else {
             songListInfo.setMusic3("");
         }

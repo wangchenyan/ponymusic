@@ -61,7 +61,7 @@ public abstract class PlayMusic implements IExecutor<Music> {
     protected void checkCounter() {
         mCounter++;
         if (mCounter == mTotalStep) {
-            onSuccess(music);
+            onExecuteSuccess(music);
         }
     }
 }

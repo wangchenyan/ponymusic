@@ -23,7 +23,6 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
-import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,15 +31,15 @@ import java.util.List;
 import me.wcy.music.R;
 import me.wcy.music.adapter.OnMoreClickListener;
 import me.wcy.music.adapter.OnlineMusicAdapter;
-import me.wcy.music.callback.JsonCallback;
-import me.wcy.music.constants.Constants;
 import me.wcy.music.constants.Extras;
 import me.wcy.music.enums.LoadStateEnum;
 import me.wcy.music.executor.DownloadOnlineMusic;
 import me.wcy.music.executor.PlayOnlineMusic;
 import me.wcy.music.executor.ShareOnlineMusic;
-import me.wcy.music.model.JOnlineMusic;
-import me.wcy.music.model.JOnlineMusicList;
+import me.wcy.music.http.HttpCallback;
+import me.wcy.music.http.HttpClient;
+import me.wcy.music.model.OnlineMusic;
+import me.wcy.music.model.OnlineMusicList;
 import me.wcy.music.model.Music;
 import me.wcy.music.model.SongListInfo;
 import me.wcy.music.service.PlayService;
@@ -51,10 +50,11 @@ import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.ViewUtils;
 import me.wcy.music.utils.binding.Bind;
 import me.wcy.music.widget.AutoLoadListView;
-import okhttp3.Call;
 
 public class OnlineMusicActivity extends BaseActivity implements OnItemClickListener
         , OnMoreClickListener, AutoLoadListView.OnLoadListener {
+    private static final int MUSIC_LIST_SIZE = 20;
+
     @Bind(R.id.lv_online_music_list)
     private AutoLoadListView lvOnlineMusic;
     @Bind(R.id.ll_loading)
@@ -63,8 +63,8 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
     private LinearLayout llLoadFail;
     private View vHeader;
     private SongListInfo mListInfo;
-    private JOnlineMusicList mJOnlineMusicList;
-    private List<JOnlineMusic> mMusicList;
+    private OnlineMusicList mOnlineMusicList;
+    private List<OnlineMusic> mMusicList;
     private OnlineMusicAdapter mAdapter;
     private PlayService mPlayService;
     private ProgressDialog mProgressDialog;
@@ -122,48 +122,42 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
     };
 
     private void getMusic(final int offset) {
-        OkHttpUtils.get().url(Constants.BASE_URL)
-                .addParams(Constants.PARAM_METHOD, Constants.METHOD_GET_MUSIC_LIST)
-                .addParams(Constants.PARAM_TYPE, mListInfo.getType())
-                .addParams(Constants.PARAM_SIZE, String.valueOf(Constants.MUSIC_LIST_SIZE))
-                .addParams(Constants.PARAM_OFFSET, String.valueOf(offset))
-                .build()
-                .execute(new JsonCallback<JOnlineMusicList>(JOnlineMusicList.class) {
-                    @Override
-                    public void onResponse(JOnlineMusicList response) {
-                        lvOnlineMusic.onLoadComplete();
-                        mJOnlineMusicList = response;
-                        if (offset == 0 && response == null) {
-                            ViewUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
-                            return;
-                        } else if (offset == 0) {
-                            initHeader();
-                            ViewUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
-                        }
-                        if (response == null || response.getSong_list() == null || response.getSong_list().size() == 0) {
-                            lvOnlineMusic.setEnable(false);
-                            return;
-                        }
-                        mOffset += Constants.MUSIC_LIST_SIZE;
-                        mMusicList.addAll(response.getSong_list());
-                        mAdapter.notifyDataSetChanged();
-                    }
+        HttpClient.getSongListInfo(mListInfo.getType(), MUSIC_LIST_SIZE, offset, new HttpCallback<OnlineMusicList>() {
+            @Override
+            public void onSuccess(OnlineMusicList response) {
+                lvOnlineMusic.onLoadComplete();
+                mOnlineMusicList = response;
+                if (offset == 0 && response == null) {
+                    ViewUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
+                    return;
+                } else if (offset == 0) {
+                    initHeader();
+                    ViewUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
+                }
+                if (response == null || response.getSong_list() == null || response.getSong_list().size() == 0) {
+                    lvOnlineMusic.setEnable(false);
+                    return;
+                }
+                mOffset += MUSIC_LIST_SIZE;
+                mMusicList.addAll(response.getSong_list());
+                mAdapter.notifyDataSetChanged();
+            }
 
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        lvOnlineMusic.onLoadComplete();
-                        if (e instanceof RuntimeException) {
-                            // 歌曲全部加载完成
-                            lvOnlineMusic.setEnable(false);
-                            return;
-                        }
-                        if (offset == 0) {
-                            ViewUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
-                        } else {
-                            ToastUtils.show(R.string.load_fail);
-                        }
-                    }
-                });
+            @Override
+            public void onFail(Exception e) {
+                lvOnlineMusic.onLoadComplete();
+                if (e instanceof RuntimeException) {
+                    // 歌曲全部加载完成
+                    lvOnlineMusic.setEnable(false);
+                    return;
+                }
+                if (offset == 0) {
+                    ViewUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
+                } else {
+                    ToastUtils.show(R.string.load_fail);
+                }
+            }
+        });
     }
 
     @Override
@@ -178,10 +172,10 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
 
     @Override
     public void onMoreClick(int position) {
-        final JOnlineMusic jOnlineMusic = mMusicList.get(position);
+        final OnlineMusic onlineMusic = mMusicList.get(position);
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle(mMusicList.get(position).getTitle());
-        String path = FileUtils.getMusicDir() + FileUtils.getMp3FileName(jOnlineMusic.getArtist_name(), jOnlineMusic.getTitle());
+        String path = FileUtils.getMusicDir() + FileUtils.getMp3FileName(onlineMusic.getArtist_name(), onlineMusic.getTitle());
         File file = new File(path);
         int itemsId = file.exists() ? R.array.online_music_dialog_without_download : R.array.online_music_dialog;
         dialog.setItems(itemsId, new DialogInterface.OnClickListener() {
@@ -189,13 +183,13 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:// 分享
-                        share(jOnlineMusic);
+                        share(onlineMusic);
                         break;
                     case 1:// 查看歌手信息
-                        artistInfo(jOnlineMusic);
+                        artistInfo(onlineMusic);
                         break;
                     case 2:// 下载
-                        download(jOnlineMusic);
+                        download(onlineMusic);
                         break;
                 }
             }
@@ -209,11 +203,11 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         TextView tvTitle = (TextView) vHeader.findViewById(R.id.tv_title);
         TextView tvUpdateDate = (TextView) vHeader.findViewById(R.id.tv_update_date);
         TextView tvComment = (TextView) vHeader.findViewById(R.id.tv_comment);
-        tvTitle.setText(mJOnlineMusicList.getBillboard().getName());
-        tvUpdateDate.setText(getString(R.string.recent_update, mJOnlineMusicList.getBillboard().getUpdate_date()));
-        tvComment.setText(mJOnlineMusicList.getBillboard().getComment());
+        tvTitle.setText(mOnlineMusicList.getBillboard().getName());
+        tvUpdateDate.setText(getString(R.string.recent_update, mOnlineMusicList.getBillboard().getUpdate_date()));
+        tvComment.setText(mOnlineMusicList.getBillboard().getComment());
         ImageSize imageSize = new ImageSize(200, 200);
-        ImageLoader.getInstance().loadImage(mJOnlineMusicList.getBillboard().getPic_s640(), imageSize,
+        ImageLoader.getInstance().loadImage(mOnlineMusicList.getBillboard().getPic_s640(), imageSize,
                 ImageUtils.getCoverDisplayOptions(), new SimpleImageLoadingListener() {
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
@@ -223,66 +217,66 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                 });
     }
 
-    private void play(JOnlineMusic jOnlineMusic) {
-        new PlayOnlineMusic(this, jOnlineMusic) {
+    private void play(OnlineMusic onlineMusic) {
+        new PlayOnlineMusic(this, onlineMusic) {
             @Override
             public void onPrepare() {
                 mProgressDialog.show();
             }
 
             @Override
-            public void onSuccess(Music music) {
+            public void onExecuteSuccess(Music music) {
                 mProgressDialog.cancel();
                 mPlayService.play(music);
                 ToastUtils.show(getString(R.string.now_play, music.getTitle()));
             }
 
             @Override
-            public void onFail(Exception e) {
+            public void onExecuteFail(Exception e) {
                 mProgressDialog.cancel();
                 ToastUtils.show(R.string.unable_to_play);
             }
         }.execute();
     }
 
-    private void share(final JOnlineMusic jOnlineMusic) {
-        new ShareOnlineMusic(this, jOnlineMusic.getTitle(), jOnlineMusic.getSong_id()) {
+    private void share(final OnlineMusic onlineMusic) {
+        new ShareOnlineMusic(this, onlineMusic.getTitle(), onlineMusic.getSong_id()) {
             @Override
             public void onPrepare() {
                 mProgressDialog.show();
             }
 
             @Override
-            public void onSuccess(Void aVoid) {
+            public void onExecuteSuccess(Void aVoid) {
                 mProgressDialog.cancel();
             }
 
             @Override
-            public void onFail(Exception e) {
+            public void onExecuteFail(Exception e) {
                 mProgressDialog.cancel();
             }
         }.execute();
     }
 
-    private void artistInfo(JOnlineMusic jOnlineMusic) {
-        ArtistInfoActivity.start(this, jOnlineMusic.getTing_uid());
+    private void artistInfo(OnlineMusic onlineMusic) {
+        ArtistInfoActivity.start(this, onlineMusic.getTing_uid());
     }
 
-    private void download(final JOnlineMusic jOnlineMusic) {
-        new DownloadOnlineMusic(this, jOnlineMusic) {
+    private void download(final OnlineMusic onlineMusic) {
+        new DownloadOnlineMusic(this, onlineMusic) {
             @Override
             public void onPrepare() {
                 mProgressDialog.show();
             }
 
             @Override
-            public void onSuccess(Void aVoid) {
+            public void onExecuteSuccess(Void aVoid) {
                 mProgressDialog.cancel();
-                ToastUtils.show(getString(R.string.now_download, jOnlineMusic.getTitle()));
+                ToastUtils.show(getString(R.string.now_download, onlineMusic.getTitle()));
             }
 
             @Override
-            public void onFail(Exception e) {
+            public void onExecuteFail(Exception e) {
                 mProgressDialog.cancel();
                 ToastUtils.show(R.string.unable_to_download);
             }

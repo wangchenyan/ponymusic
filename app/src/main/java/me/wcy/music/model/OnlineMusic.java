@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * JavaBean
  * Created by wcy on 2015/12/20.
  */
-public class JOnlineMusic {
+public class OnlineMusic {
     @SerializedName("pic_big")
     private String pic_big;
     @SerializedName("pic_small")

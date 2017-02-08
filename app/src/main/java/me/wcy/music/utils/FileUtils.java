@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
 
 import me.wcy.music.R;
 import me.wcy.music.application.AppCache;
-import me.wcy.music.constants.Constants;
 import me.wcy.music.model.Music;
 
 /**
@@ -22,6 +21,9 @@ import me.wcy.music.model.Music;
  * Created by wcy on 2016/1/3.
  */
 public class FileUtils {
+    private static final String MP3 = ".mp3";
+    private static final String LRC = ".lrc";
+
     private static String getAppDir() {
         return Environment.getExternalStorageDirectory() + "/PonyMusic";
     }
@@ -56,9 +58,9 @@ public class FileUtils {
      * 先从已下载文件夹中查找，如果不存在，则从歌曲文件所在文件夹查找
      */
     public static String getLrcFilePath(Music music) {
-        String lrcFilePath = getLrcDir() + music.getFileName().replace(Constants.FILENAME_MP3, Constants.FILENAME_LRC);
+        String lrcFilePath = getLrcDir() + music.getFileName().replace(MP3, LRC);
         if (!new File(lrcFilePath).exists()) {
-            lrcFilePath = music.getUri().replace(Constants.FILENAME_MP3, Constants.FILENAME_LRC);
+            lrcFilePath = music.getUri().replace(MP3, LRC);
         }
         return lrcFilePath;
     }
@@ -72,11 +74,11 @@ public class FileUtils {
     }
 
     public static String getMp3FileName(String artist, String title) {
-        return getFileName(artist, title) + Constants.FILENAME_MP3;
+        return getFileName(artist, title) + MP3;
     }
 
     public static String getLrcFileName(String artist, String title) {
-        return getFileName(artist, title) + Constants.FILENAME_LRC;
+        return getFileName(artist, title) + LRC;
     }
 
     public static String getFileName(String artist, String title) {

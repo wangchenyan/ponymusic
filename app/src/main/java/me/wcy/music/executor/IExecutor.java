@@ -8,7 +8,7 @@ public interface IExecutor<T> {
 
     void onPrepare();
 
-    void onSuccess(T t);
+    void onExecuteSuccess(T t);
 
-    void onFail(Exception e);
+    void onExecuteFail(Exception e);
 }

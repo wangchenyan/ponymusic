@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * 启动画面Java bean
  * Created by hzwangchenyan on 2016/3/2.
  */
-public class JSplash {
+public class Splash {
     @SerializedName("text")
     private String text;
     @SerializedName("img")

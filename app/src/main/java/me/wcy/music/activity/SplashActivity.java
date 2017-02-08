@@ -9,20 +9,18 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.FileCallBack;
 
 import java.io.File;
 import java.util.Calendar;
 
 import me.wcy.music.R;
 import me.wcy.music.application.AppCache;
-import me.wcy.music.callback.JsonCallback;
-import me.wcy.music.constants.Constants;
-import me.wcy.music.model.JSplash;
+import me.wcy.music.http.HttpCallback;
+import me.wcy.music.http.HttpClient;
+import me.wcy.music.model.Splash;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.Preferences;
@@ -31,7 +29,6 @@ import me.wcy.music.utils.binding.Bind;
 import me.wcy.music.utils.permission.PermissionReq;
 import me.wcy.music.utils.permission.PermissionResult;
 import me.wcy.music.utils.permission.Permissions;
-import okhttp3.Call;
 
 public class SplashActivity extends BaseActivity {
     @Bind(R.id.iv_splash)
@@ -125,38 +122,37 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void updateSplash() {
-        OkHttpUtils.get().url(Constants.SPLASH_URL).build()
-                .execute(new JsonCallback<JSplash>(JSplash.class) {
-                    @Override
-                    public void onResponse(final JSplash response) {
-                        if (response == null || TextUtils.isEmpty(response.getImg())) {
-                            return;
-                        }
-                        String lastImgUrl = Preferences.getSplashUrl();
-                        if (TextUtils.equals(lastImgUrl, response.getImg())) {
-                            return;
-                        }
-                        OkHttpUtils.get().url(response.getImg()).build()
-                                .execute(new FileCallBack(FileUtils.getSplashDir(AppCache.getContext()), "splash.jpg") {
-                                    @Override
-                                    public void inProgress(float progress, long total) {
-                                    }
+        HttpClient.getSplash(new HttpCallback<Splash>() {
+            @Override
+            public void onSuccess(final Splash response) {
+                if (response == null || TextUtils.isEmpty(response.getImg())) {
+                    return;
+                }
 
-                                    @Override
-                                    public void onResponse(File file) {
-                                        Preferences.saveSplashUrl(response.getImg());
-                                    }
+                String lastImgUrl = Preferences.getSplashUrl();
+                if (TextUtils.equals(lastImgUrl, response.getImg())) {
+                    return;
+                }
 
-                                    @Override
-                                    public void onError(Call call, Exception e) {
-                                    }
-                                });
-                    }
+                HttpClient.downloadFile(response.getImg(), FileUtils.getSplashDir(AppCache.getContext()),
+                        "splash.jpg", new HttpCallback<File>() {
+                            @Override
+                            public void onSuccess(File file) {
+                                Preferences.saveSplashUrl(response.getImg());
+                            }
 
-                    @Override
-                    public void onError(Call call, Exception e) {
-                    }
-                });
+                            @Override
+                            public void onFail(Exception e) {
+                                Log.e("T", "", e);
+                            }
+                        });
+            }
+
+            @Override
+            public void onFail(Exception e) {
+                Log.e("T", "", e);
+            }
+        });
     }
 
     private void startMusicActivity() {
