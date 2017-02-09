@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Process;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -38,22 +37,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "onCreate:" + getClass().getSimpleName());
+        Log.i(TAG, "onCreate: " + getClass().getSimpleName());
 
         setSystemBarTransparent();
         AppCache.addToStack(this);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        checkServiceAlive();
-    }
-
-    /**
-     * 应用运行期间进入“设置”修改应用权限会导致应用被kill。
-     * 如果这时从最近任务列表启动应用，检查下Service是否活着，如果已经被kill，则关闭应用。
-     */
-    protected void checkServiceAlive() {
-        if (!PlayService.isRunning(this)) {
-            Process.killProcess(Process.myPid());
-        }
     }
 
     @Override
@@ -96,6 +84,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void setListener() {
     }
 
+    public PlayService getPlayService() {
+        PlayService playService = AppCache.getPlayService();
+        if (playService == null) {
+            throw new NullPointerException("play service is null");
+        }
+        return playService;
+    }
+
     private void setSystemBarTransparent() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             // LOLLIPOP解决方案
@@ -121,7 +117,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         AppCache.removeFromStack(this);
         super.onDestroy();
-        Log.i(TAG, "onDestroy:" + getClass().getSimpleName());
+        Log.i(TAG, "onDestroy: " + getClass().getSimpleName());
     }
 
     @Override

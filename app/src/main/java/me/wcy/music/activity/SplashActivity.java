@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -48,16 +47,8 @@ public class SplashActivity extends BaseActivity {
         checkService();
     }
 
-    @Override
-    protected void checkServiceAlive() {
-        // SplashActivity不需要检查Service是否活着
-    }
-
     private void checkService() {
-        if (PlayService.isRunning(this)) {
-            startMusicActivity();
-            finish();
-        } else {
+        if (AppCache.getPlayService() == null) {
             startService();
             initSplash();
             updateSplash();
@@ -68,6 +59,9 @@ public class SplashActivity extends BaseActivity {
                     bindService();
                 }
             }, 1000);
+        } else {
+            startMusicActivity();
+            finish();
         }
     }
 
@@ -88,6 +82,7 @@ public class SplashActivity extends BaseActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             final PlayService playService = ((PlayService.PlayBinder) service).getService();
+            AppCache.setPlayService(playService);
             PermissionReq.with(SplashActivity.this)
                     .permissions(Permissions.STORAGE)
                     .result(new PermissionResult() {
@@ -143,14 +138,12 @@ public class SplashActivity extends BaseActivity {
 
                             @Override
                             public void onFail(Exception e) {
-                                Log.e("T", "", e);
                             }
                         });
             }
 
             @Override
             public void onFail(Exception e) {
-                Log.e("T", "", e);
             }
         });
     }

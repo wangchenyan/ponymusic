@@ -14,6 +14,7 @@ import java.util.List;
 import me.wcy.music.activity.BaseActivity;
 import me.wcy.music.model.Music;
 import me.wcy.music.model.SongListInfo;
+import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.Preferences;
 import me.wcy.music.utils.ScreenUtils;
 import me.wcy.music.utils.ToastUtils;
@@ -23,6 +24,7 @@ import me.wcy.music.utils.ToastUtils;
  */
 public class AppCache {
     private Context mContext;
+    private PlayService mPlayService;
     // 本地歌曲列表
     private final List<Music> mMusicList = new ArrayList<>();
     // 歌单列表
@@ -59,6 +61,14 @@ public class AppCache {
 
     public static Context getContext() {
         return getInstance().mContext;
+    }
+
+    public static PlayService getPlayService() {
+        return getInstance().mPlayService;
+    }
+
+    public static void setPlayService(PlayService service) {
+        getInstance().mPlayService = service;
     }
 
     public static void updateNightMode(boolean on) {

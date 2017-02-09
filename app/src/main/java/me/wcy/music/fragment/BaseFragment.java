@@ -1,6 +1,5 @@
 package me.wcy.music.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,7 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import me.wcy.music.activity.MusicActivity;
+import me.wcy.music.application.AppCache;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.binding.ViewBinder;
 import me.wcy.music.utils.permission.PermissionReq;
@@ -19,17 +18,8 @@ import me.wcy.music.utils.permission.PermissionReq;
  * Created by wcy on 2015/11/26.
  */
 public abstract class BaseFragment extends Fragment {
-    private PlayService mPlayService;
     protected Handler mHandler = new Handler(Looper.getMainLooper());
     private boolean isInitialized;
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof MusicActivity) {
-            mPlayService = ((MusicActivity) activity).getPlayService();
-        }
-    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -60,6 +50,10 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected PlayService getPlayService() {
-        return mPlayService;
+        PlayService playService = AppCache.getPlayService();
+        if (playService == null) {
+            throw new NullPointerException("play service is null");
+        }
+        return playService;
     }
 }

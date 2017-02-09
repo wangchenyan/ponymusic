@@ -53,7 +53,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i(TAG, "onCreate:" + getClass().getSimpleName());
+        Log.i(TAG, "onCreate: " + getClass().getSimpleName());
         mMusicList = AppCache.getMusicList();
         mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -64,6 +64,12 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     @Override
     public IBinder onBind(Intent intent) {
         return new PlayBinder();
+    }
+
+    public static void startCommand(Context context, String action) {
+        Intent intent = new Intent(context, PlayService.class);
+        intent.setAction(action);
+        context.startService(intent);
     }
 
     @Override
@@ -352,15 +358,9 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     };
 
     @Override
-    public boolean onUnbind(Intent intent) {
-        mListener = null;
-        return true;
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "onDestroy:" + getClass().getSimpleName());
+        Log.i(TAG, "onDestroy: " + getClass().getSimpleName());
     }
 
     public void stop() {
@@ -370,6 +370,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         mPlayer.release();
         mPlayer = null;
         mNotificationManager.cancel(NOTIFICATION_ID);
+        AppCache.setPlayService(null);
         stopSelf();
     }
 

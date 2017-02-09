@@ -1,14 +1,9 @@
 package me.wcy.music.activity;
 
 import android.app.ProgressDialog;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,11 +33,10 @@ import me.wcy.music.executor.PlayOnlineMusic;
 import me.wcy.music.executor.ShareOnlineMusic;
 import me.wcy.music.http.HttpCallback;
 import me.wcy.music.http.HttpClient;
+import me.wcy.music.model.Music;
 import me.wcy.music.model.OnlineMusic;
 import me.wcy.music.model.OnlineMusicList;
-import me.wcy.music.model.Music;
 import me.wcy.music.model.SongListInfo;
-import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.ImageUtils;
 import me.wcy.music.utils.ScreenUtils;
@@ -64,9 +58,8 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
     private View vHeader;
     private SongListInfo mListInfo;
     private OnlineMusicList mOnlineMusicList;
-    private List<OnlineMusic> mMusicList;
-    private OnlineMusicAdapter mAdapter;
-    private PlayService mPlayService;
+    private List<OnlineMusic> mMusicList = new ArrayList<>();
+    private OnlineMusicAdapter mAdapter = new OnlineMusicAdapter(mMusicList);
     private ProgressDialog mProgressDialog;
     private int mOffset = 0;
 
@@ -79,6 +72,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         setTitle(mListInfo.getTitle());
 
         init();
+        onLoad();
     }
 
     private void init() {
@@ -86,15 +80,11 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dp2px(150));
         vHeader.setLayoutParams(params);
         lvOnlineMusic.addHeaderView(vHeader, null, false);
-        mMusicList = new ArrayList<>();
-        mAdapter = new OnlineMusicAdapter(mMusicList);
         lvOnlineMusic.setAdapter(mAdapter);
         lvOnlineMusic.setOnLoadListener(this);
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.loading));
         ViewUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOADING);
-
-        bindService();
     }
 
     @Override
@@ -102,24 +92,6 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         lvOnlineMusic.setOnItemClickListener(this);
         mAdapter.setOnMoreClickListener(this);
     }
-
-    private void bindService() {
-        Intent intent = new Intent();
-        intent.setClass(this, PlayService.class);
-        bindService(intent, mPlayServiceConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    private ServiceConnection mPlayServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mPlayService = ((PlayService.PlayBinder) service).getService();
-            onLoad();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-        }
-    };
 
     private void getMusic(final int offset) {
         HttpClient.getSongListInfo(mListInfo.getType(), MUSIC_LIST_SIZE, offset, new HttpCallback<OnlineMusicList>() {
@@ -227,7 +199,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
             @Override
             public void onExecuteSuccess(Music music) {
                 mProgressDialog.cancel();
-                mPlayService.play(music);
+                getPlayService().play(music);
                 ToastUtils.show(getString(R.string.now_play, music.getTitle()));
             }
 
@@ -281,11 +253,5 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                 ToastUtils.show(R.string.unable_to_download);
             }
         }.execute();
-    }
-
-    @Override
-    protected void onDestroy() {
-        unbindService(mPlayServiceConnection);
-        super.onDestroy();
     }
 }

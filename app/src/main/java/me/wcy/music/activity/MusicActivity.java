@@ -1,13 +1,10 @@
 package me.wcy.music.activity;
 
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -23,6 +20,7 @@ import android.widget.TextView;
 
 import me.wcy.music.R;
 import me.wcy.music.adapter.FragmentAdapter;
+import me.wcy.music.application.AppCache;
 import me.wcy.music.constants.Extras;
 import me.wcy.music.executor.NaviMenuExecutor;
 import me.wcy.music.executor.WeatherExecutor;
@@ -76,8 +74,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     private LocalMusicFragment mLocalMusicFragment;
     private SongListFragment mSongListFragment;
     private PlayFragment mPlayFragment;
-    private PlayService mPlayService;
-    private PlayServiceConnection mPlayServiceConnection;
     private AudioManager mAudioManager;
     private ComponentName mRemoteReceiver;
     private boolean isPlayFragmentShow = false;
@@ -88,42 +84,20 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
 
-        bindService();
+        getPlayService().setOnPlayEventListener(this);
+
+        setupView();
+        updateWeather();
+        registerReceiver();
+        onChange(getPlayService().getPlayingMusic());
+        UpdateUtils.checkUpdate(this);
+        parseIntent(getIntent());
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         parseIntent(intent);
-    }
-
-    private void bindService() {
-        Intent intent = new Intent();
-        intent.setClass(this, PlayService.class);
-        mPlayServiceConnection = new PlayServiceConnection();
-        bindService(intent, mPlayServiceConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    private class PlayServiceConnection implements ServiceConnection {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mPlayService = ((PlayService.PlayBinder) service).getService();
-            mPlayService.setOnPlayEventListener(MusicActivity.this);
-            init();
-            parseIntent(getIntent());
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-        }
-    }
-
-    private void init() {
-        setupView();
-        updateWeather();
-        registerReceiver();
-        onChange(mPlayService.getPlayingMusic());
-        UpdateUtils.checkUpdate(this);
     }
 
     @Override
@@ -160,7 +134,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
                 .result(new PermissionResult() {
                     @Override
                     public void onGranted() {
-                        new WeatherExecutor(mPlayService, vNavigationHeader).execute();
+                        new WeatherExecutor(getPlayService(), vNavigationHeader).execute();
                     }
 
                     @Override
@@ -319,10 +293,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         getPlayService().next();
     }
 
-    public PlayService getPlayService() {
-        return mPlayService;
-    }
-
     private void showPlayingFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.fragment_slide_up, 0);
@@ -365,11 +335,12 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     protected void onDestroy() {
-        if (mPlayServiceConnection != null) {
-            unbindService(mPlayServiceConnection);
-        }
         if (mRemoteReceiver != null) {
             mAudioManager.unregisterMediaButtonEventReceiver(mRemoteReceiver);
+        }
+        PlayService service = AppCache.getPlayService();
+        if (service != null) {
+            service.setOnPlayEventListener(null);
         }
         super.onDestroy();
     }

@@ -1,13 +1,8 @@
 package me.wcy.music.activity;
 
 import android.app.ProgressDialog;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
@@ -32,9 +27,8 @@ import me.wcy.music.executor.PlaySearchedMusic;
 import me.wcy.music.executor.ShareOnlineMusic;
 import me.wcy.music.http.HttpCallback;
 import me.wcy.music.http.HttpClient;
-import me.wcy.music.model.SearchMusic;
 import me.wcy.music.model.Music;
-import me.wcy.music.service.PlayService;
+import me.wcy.music.model.SearchMusic;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.ViewUtils;
@@ -48,10 +42,8 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
     private LinearLayout llLoading;
     @Bind(R.id.ll_load_fail)
     private LinearLayout llLoadFail;
-    private SearchMusicAdapter mAdapter;
-    private List<SearchMusic.Song> mSearchMusicList;
-    private PlayService mPlayService;
-    private PlayServiceConnection mPlayServiceConnection;
+    private List<SearchMusic.Song> mSearchMusicList = new ArrayList<>();
+    private SearchMusicAdapter mAdapter = new SearchMusicAdapter(mSearchMusicList);
     private ProgressDialog mProgressDialog;
 
     @Override
@@ -59,9 +51,6 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_music);
 
-        bindService();
-        mSearchMusicList = new ArrayList<>();
-        mAdapter = new SearchMusicAdapter(mSearchMusicList);
         lvSearchMusic.setAdapter(mAdapter);
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.loading));
@@ -92,24 +81,6 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
             e.printStackTrace();
         }
         return super.onCreateOptionsMenu(menu);
-    }
-
-    private void bindService() {
-        Intent intent = new Intent();
-        intent.setClass(this, PlayService.class);
-        mPlayServiceConnection = new PlayServiceConnection();
-        bindService(intent, mPlayServiceConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    private class PlayServiceConnection implements ServiceConnection {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mPlayService = ((PlayService.PlayBinder) service).getService();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-        }
     }
 
     @Override
@@ -163,7 +134,7 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
             @Override
             public void onExecuteSuccess(Music music) {
                 mProgressDialog.cancel();
-                mPlayService.play(music);
+                getPlayService().play(music);
                 ToastUtils.show(getString(R.string.now_play, music.getTitle()));
             }
 
@@ -237,11 +208,5 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
                 ToastUtils.show(R.string.unable_to_download);
             }
         }.execute();
-    }
-
-    @Override
-    protected void onDestroy() {
-        unbindService(mPlayServiceConnection);
-        super.onDestroy();
     }
 }

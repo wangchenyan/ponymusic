@@ -90,6 +90,7 @@ public class NaviMenuExecutor {
         if (!(context instanceof MusicActivity)) {
             return;
         }
+
         MusicActivity activity = (MusicActivity) context;
         PlayService service = activity.getPlayService();
         service.startQuitTimer(minute * 60 * 1000);
@@ -104,6 +105,7 @@ public class NaviMenuExecutor {
         if (!(context instanceof MusicActivity)) {
             return;
         }
+
         MusicActivity activity = (MusicActivity) context;
         PlayService service = activity.getPlayService();
         activity.finish();
