@@ -359,6 +359,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
     @Override
     public void onDestroy() {
+        AppCache.setPlayService(null);
         super.onDestroy();
         Log.i(TAG, "onDestroy: " + getClass().getSimpleName());
     }
