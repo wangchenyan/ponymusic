@@ -11,8 +11,10 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -40,6 +42,7 @@ import me.wcy.music.utils.binding.Bind;
  * Created by wcy on 2015/11/26.
  */
 public class LocalMusicFragment extends BaseFragment implements AdapterView.OnItemClickListener, OnMoreClickListener {
+    private static final int REQUEST_WRITE_SETTINGS = 1;
     @Bind(R.id.lv_local_music)
     private ListView lvLocalMusic;
     @Bind(R.id.tv_empty)
@@ -91,7 +94,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         final Music music = AppCache.getMusicList().get(position);
         AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
         dialog.setTitle(music.getTitle());
-        int itemsId = position == getPlayService().getPlayingPosition() ? R.array.local_music_dialog_without_delete : R.array.local_music_dialog;
+        int itemsId = (position == getPlayService().getPlayingPosition()) ? R.array.local_music_dialog_without_delete : R.array.local_music_dialog;
         dialog.setItems(itemsId, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -100,7 +103,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
                         shareMusic(music);
                         break;
                     case 1:// 设为铃声
-                        setRingtone(music);
+                        requestSetRingtone(music);
                         break;
                     case 2:// 查看歌曲信息
                         musicInfo(music);
@@ -132,6 +135,17 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         startActivity(Intent.createChooser(intent, getString(R.string.share)));
     }
 
+    private void requestSetRingtone(final Music music) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.System.canWrite(getContext())) {
+            ToastUtils.show("没有权限，无法设置铃声，请授予权限");
+            Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+            intent.setData(Uri.parse("package:" + getContext().getPackageName()));
+            startActivityForResult(intent, REQUEST_WRITE_SETTINGS);
+        } else {
+            setRingtone(music);
+        }
+    }
+
     /**
      * 设置铃声
      */
@@ -152,11 +166,10 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
             values.put(MediaStore.Audio.Media.IS_NOTIFICATION, false);
             values.put(MediaStore.Audio.Media.IS_PODCAST, false);
 
-            getContext().getContentResolver().update(uri, values, MediaStore.MediaColumns.DATA +
-                    "=?", new String[]{music.getUri()});
+            getContext().getContentResolver().update(uri, values, MediaStore.MediaColumns.DATA + "=?",
+                    new String[]{music.getUri()});
             Uri newUri = ContentUris.withAppendedId(uri, Long.valueOf(_id));
-            RingtoneManager.setActualDefaultRingtoneUri(getContext(),
-                    RingtoneManager.TYPE_RINGTONE, newUri);
+            RingtoneManager.setActualDefaultRingtoneUri(getContext(), RingtoneManager.TYPE_RINGTONE, newUri);
             ToastUtils.show(R.string.setting_ringtone_success);
         }
         cursor.close();
@@ -212,6 +225,16 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         });
         dialog.setNegativeButton(R.string.cancel, null);
         dialog.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_WRITE_SETTINGS) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.System.canWrite(getContext())) {
+                ToastUtils.show("授权成功，请在再次操作以设置铃声");
+            }
+        }
     }
 
     @Override
