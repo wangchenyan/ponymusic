@@ -272,7 +272,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         ivPlayBarCover.setImageBitmap(cover);
         tvPlayBarTitle.setText(music.getTitle());
         tvPlayBarArtist.setText(music.getArtist());
-        if (getPlayService().isPlaying()) {
+        if (getPlayService().isPlaying() || getPlayService().isPreparing()) {
             ivPlayBarPlay.setSelected(true);
         } else {
             ivPlayBarPlay.setSelected(false);

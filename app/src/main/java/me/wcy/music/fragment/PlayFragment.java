@@ -229,7 +229,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         if (seekBar == sbProgress) {
-            if (getPlayService().isPlaying() || getPlayService().isPause()) {
+            if (getPlayService().isPlaying() || getPlayService().isPausing()) {
                 int progress = seekBar.getProgress();
                 getPlayService().seekTo(progress);
                 mLrcViewSingle.onDrag(progress);
@@ -258,7 +258,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         tvTotalTime.setText(formatTime(music.getDuration()));
         setCoverAndBg(music);
         setLrc(music);
-        if (getPlayService().isPlaying()) {
+        if (getPlayService().isPlaying() || getPlayService().isPreparing()) {
             ivPlay.setSelected(true);
             mAlbumCoverView.start();
         } else {
@@ -287,10 +287,10 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
                 ToastUtils.show(R.string.mode_shuffle);
                 break;
             case SHUFFLE:
-                mode = PlayModeEnum.ONE;
+                mode = PlayModeEnum.SINGLE;
                 ToastUtils.show(R.string.mode_one);
                 break;
-            case ONE:
+            case SINGLE:
                 mode = PlayModeEnum.LOOP;
                 ToastUtils.show(R.string.mode_loop);
                 break;

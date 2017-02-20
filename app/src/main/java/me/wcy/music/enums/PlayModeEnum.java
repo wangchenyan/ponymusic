@@ -7,7 +7,7 @@ package me.wcy.music.enums;
 public enum PlayModeEnum {
     LOOP(0),
     SHUFFLE(1),
-    ONE(2);
+    SINGLE(2);
 
     private int value;
 
@@ -17,12 +17,11 @@ public enum PlayModeEnum {
 
     public static PlayModeEnum valueOf(int value) {
         switch (value) {
-            case 0:
-                return LOOP;
             case 1:
                 return SHUFFLE;
             case 2:
-                return ONE;
+                return SINGLE;
+            case 0:
             default:
                 return LOOP;
         }

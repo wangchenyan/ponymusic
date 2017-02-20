@@ -47,7 +47,8 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     private Music mPlayingMusic;
     // 正在播放的本地歌曲的序号
     private int mPlayingPosition;
-    private boolean isPause = false;
+    private boolean isPausing;
+    private boolean isPreparing;
     private long quitTimerRemain;
 
     @Override
@@ -115,9 +116,9 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         mListener = listener;
     }
 
-    public int play(int position) {
+    public void play(int position) {
         if (mMusicList.isEmpty()) {
-            return -1;
+            return;
         }
 
         if (position < 0) {
@@ -127,22 +128,10 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         }
 
         mPlayingPosition = position;
-        mPlayingMusic = mMusicList.get(mPlayingPosition);
-
-        try {
-            mPlayer.reset();
-            mPlayer.setDataSource(mPlayingMusic.getUri());
-            mPlayer.prepare();
-            start();
-            if (mListener != null) {
-                mListener.onChange(mPlayingMusic);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         Preferences.saveCurrentSongId(mPlayingMusic.getId());
-        return mPlayingPosition;
+
+        Music music = mMusicList.get(mPlayingPosition);
+        play(music);
     }
 
     public void play(Music music) {
@@ -150,20 +139,34 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         try {
             mPlayer.reset();
             mPlayer.setDataSource(mPlayingMusic.getUri());
-            mPlayer.prepare();
-            start();
+            mPlayer.prepareAsync();
+            isPreparing = true;
+            mPlayer.setOnPreparedListener(mPreparedListener);
             if (mListener != null) {
                 mListener.onChange(mPlayingMusic);
             }
+            updateNotification(mPlayingMusic);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    private MediaPlayer.OnPreparedListener mPreparedListener = new MediaPlayer.OnPreparedListener() {
+        @Override
+        public void onPrepared(MediaPlayer mp) {
+            isPreparing = false;
+            start();
+        }
+    };
+
     public void playPause() {
+        if (isPreparing()) {
+            return;
+        }
+
         if (isPlaying()) {
             pause();
-        } else if (isPause()) {
+        } else if (isPausing()) {
             resume();
         } else {
             play(getPlayingPosition());
@@ -172,19 +175,20 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
     private void start() {
         mPlayer.start();
-        isPause = false;
+        isPausing = false;
         mHandler.post(mBackgroundRunnable);
         updateNotification(mPlayingMusic);
         mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         registerReceiver(mNoisyReceiver, mNoisyFilter);
     }
 
-    public int pause() {
-        if (!isPlaying()) {
-            return -1;
+    private void pause() {
+        if (isPausing() || isPreparing()) {
+            return;
         }
+
         mPlayer.pause();
-        isPause = true;
+        isPausing = true;
         mHandler.removeCallbacks(mBackgroundRunnable);
         cancelNotification(mPlayingMusic);
         mAudioManager.abandonAudioFocus(this);
@@ -192,47 +196,50 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         if (mListener != null) {
             mListener.onPlayerPause();
         }
-        return mPlayingPosition;
     }
 
-    public int resume() {
-        if (isPlaying()) {
-            return -1;
+    private void resume() {
+        if (isPlaying() || isPreparing()) {
+            return;
         }
+
         start();
         if (mListener != null) {
             mListener.onPlayerResume();
         }
-        return mPlayingPosition;
     }
 
-    public int next() {
+    public void next() {
         PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode());
         switch (mode) {
-            case LOOP:
-                return play(mPlayingPosition + 1);
             case SHUFFLE:
                 mPlayingPosition = new Random().nextInt(mMusicList.size());
-                return play(mPlayingPosition);
-            case ONE:
-                return play(mPlayingPosition);
+                play(mPlayingPosition);
+                break;
+            case SINGLE:
+                play(mPlayingPosition);
+                break;
+            case LOOP:
             default:
-                return play(mPlayingPosition + 1);
+                play(mPlayingPosition + 1);
+                break;
         }
     }
 
-    public int prev() {
+    public void prev() {
         PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode());
         switch (mode) {
-            case LOOP:
-                return play(mPlayingPosition - 1);
             case SHUFFLE:
                 mPlayingPosition = new Random().nextInt(mMusicList.size());
-                return play(mPlayingPosition);
-            case ONE:
-                return play(mPlayingPosition);
+                play(mPlayingPosition);
+                break;
+            case SINGLE:
+                play(mPlayingPosition);
+                break;
+            case LOOP:
             default:
-                return play(mPlayingPosition - 1);
+                play(mPlayingPosition - 1);
+                break;
         }
     }
 
@@ -242,7 +249,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
      * @param msec 时间
      */
     public void seekTo(int msec) {
-        if (isPlaying() || isPause()) {
+        if (isPlaying() || isPausing()) {
             mPlayer.seekTo(msec);
             if (mListener != null) {
                 mListener.onPublish(msec);
@@ -254,8 +261,12 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         return mPlayer != null && mPlayer.isPlaying();
     }
 
-    public boolean isPause() {
-        return mPlayer != null && isPause;
+    public boolean isPausing() {
+        return mPlayer != null && isPausing;
+    }
+
+    public boolean isPreparing() {
+        return mPlayer != null && isPreparing;
     }
 
     /**
