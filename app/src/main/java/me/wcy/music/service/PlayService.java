@@ -197,7 +197,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     }
 
     private void resume() {
-        if (isPlaying() || isPreparing()) {
+        if (!isPausing()) {
             return;
         }
 
