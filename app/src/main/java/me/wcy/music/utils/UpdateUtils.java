@@ -17,7 +17,7 @@ import im.fir.sdk.VersionCheckCallback;
 import me.wcy.music.BuildConfig;
 import me.wcy.music.R;
 import me.wcy.music.activity.AboutActivity;
-import me.wcy.music.api.Key;
+import me.wcy.music.api.KeyStore;
 import me.wcy.music.application.AppCache;
 import me.wcy.music.constants.Extras;
 import me.wcy.music.model.UpdateInfo;
@@ -25,7 +25,7 @@ import me.wcy.music.model.UpdateInfo;
 public class UpdateUtils {
 
     public static void checkUpdate(final Activity activity) {
-        FIR.checkForUpdateInFIR(Key.get(activity, Key.FIR_KEY), new VersionCheckCallback() {
+        FIR.checkForUpdateInFIR(KeyStore.getKey(KeyStore.FIR_KEY), new VersionCheckCallback() {
             @Override
             public void onStart() {
                 if (activity instanceof AboutActivity) {
