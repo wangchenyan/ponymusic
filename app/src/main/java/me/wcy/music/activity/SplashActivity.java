@@ -30,6 +30,8 @@ import me.wcy.music.utils.permission.PermissionResult;
 import me.wcy.music.utils.permission.Permissions;
 
 public class SplashActivity extends BaseActivity {
+    private static final String SPLASH_FILE_NAME = "splash";
+
     @Bind(R.id.iv_splash)
     private ImageView ivSplash;
     @Bind(R.id.tv_copyright)
@@ -109,9 +111,9 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void initSplash() {
-        File splashImg = new File(FileUtils.getSplashDir(this), "splash.jpg");
+        File splashImg = new File(FileUtils.getSplashDir(this), SPLASH_FILE_NAME);
         if (splashImg.exists()) {
-            Bitmap bitmap = BitmapFactory.decodeFile(splashImg.getAbsolutePath());
+            Bitmap bitmap = BitmapFactory.decodeFile(splashImg.getPath());
             ivSplash.setImageBitmap(bitmap);
         }
     }
@@ -119,21 +121,22 @@ public class SplashActivity extends BaseActivity {
     private void updateSplash() {
         HttpClient.getSplash(new HttpCallback<Splash>() {
             @Override
-            public void onSuccess(final Splash response) {
-                if (response == null || TextUtils.isEmpty(response.getImg())) {
+            public void onSuccess(Splash response) {
+                if (response == null || TextUtils.isEmpty(response.getUrl())) {
                     return;
                 }
 
+                final String url = response.getUrl();
                 String lastImgUrl = Preferences.getSplashUrl();
-                if (TextUtils.equals(lastImgUrl, response.getImg())) {
+                if (TextUtils.equals(lastImgUrl, url)) {
                     return;
                 }
 
-                HttpClient.downloadFile(response.getImg(), FileUtils.getSplashDir(AppCache.getContext()),
-                        "splash.jpg", new HttpCallback<File>() {
+                HttpClient.downloadFile(url, FileUtils.getSplashDir(AppCache.getContext()), SPLASH_FILE_NAME,
+                        new HttpCallback<File>() {
                             @Override
                             public void onSuccess(File file) {
-                                Preferences.saveSplashUrl(response.getImg());
+                                Preferences.saveSplashUrl(url);
                             }
 
                             @Override

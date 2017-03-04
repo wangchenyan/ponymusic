@@ -20,7 +20,7 @@ import okhttp3.Call;
  * Created by hzwangchenyan on 2017/2/8.
  */
 public class HttpClient {
-    private static final String SPLASH_URL = "http://news-at.zhihu.com/api/4/start-image/720*1184";
+    private static final String SPLASH_URL = "http://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1";
     private static final String BASE_URL = "http://tingapi.ting.baidu.com/v1/restserver/ting";
     private static final String METHOD_GET_MUSIC_LIST = "baidu.ting.billboard.billList";
     private static final String METHOD_DOWNLOAD_MUSIC = "baidu.ting.song.play";
