@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.3"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         applicationId "me.wcy.music"
@@ -40,7 +40,7 @@ android {
 }
 
 ext {
-    supportVersion = "24.2.1"
+    supportVersion = "25.2.0"
 }
 
 dependencies {
@@ -48,7 +48,7 @@ dependencies {
     compile "com.android.support:appcompat-v7:${supportVersion}"
     compile "com.android.support:design:${supportVersion}"
     compile 'com.zhy:okhttputils:2.3.8'
-    compile 'com.google.code.gson:gson:2.6.2'
+    compile 'com.google.code.gson:gson:2.7'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'im.fir:fir-sdk:latest.integration@aar'
     compile 'me.wcy:lrcview:1.4.1'

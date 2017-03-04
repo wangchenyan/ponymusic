@@ -128,12 +128,13 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         }
 
         mPlayingPosition = position;
-        mPlayingMusic = mMusicList.get(mPlayingPosition);
-        Preferences.saveCurrentSongId(mPlayingMusic.getId());
-        play(mPlayingMusic);
+        Music music = mMusicList.get(mPlayingPosition);
+        Preferences.saveCurrentSongId(music.getId());
+        play(music);
     }
 
     public void play(Music music) {
+        mPlayingMusic = music;
         try {
             mPlayer.reset();
             mPlayer.setDataSource(music.getUri());
