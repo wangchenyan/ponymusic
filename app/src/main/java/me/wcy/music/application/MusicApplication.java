@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import im.fir.sdk.FIR;
 import me.wcy.music.utils.Preferences;
+import okhttp3.OkHttpClient;
 
 /**
  * 自定义Application
@@ -29,9 +30,12 @@ public class MusicApplication extends Application {
     }
 
     private void initOkHttpUtils() {
-        OkHttpUtils.getInstance().setConnectTimeout(30, TimeUnit.SECONDS);
-        OkHttpUtils.getInstance().setReadTimeout(30, TimeUnit.SECONDS);
-        OkHttpUtils.getInstance().setWriteTimeout(30, TimeUnit.SECONDS);
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
+                .build();
+        OkHttpUtils.initClient(okHttpClient);
     }
 
     private void initImageLoader() {

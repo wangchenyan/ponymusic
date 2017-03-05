@@ -39,17 +39,17 @@ public class HttpClient {
         OkHttpUtils.get().url(SPLASH_URL).build()
                 .execute(new JsonCallback<Splash>(Splash.class) {
                     @Override
-                    public void onResponse(Splash response) {
+                    public void onResponse(Splash response, int id) {
                         callback.onSuccess(response);
                     }
 
                     @Override
-                    public void onError(Call call, Exception e) {
+                    public void onError(Call call, Exception e, int id) {
                         callback.onFail(e);
                     }
 
                     @Override
-                    public void onAfter() {
+                    public void onAfter(int id) {
                         callback.onFinish();
                     }
                 });
@@ -59,21 +59,21 @@ public class HttpClient {
         OkHttpUtils.get().url(url).build()
                 .execute(new FileCallBack(destFileDir, destFileName) {
                     @Override
-                    public void inProgress(float progress, long total) {
+                    public void inProgress(float progress, long total, int id) {
                     }
 
                     @Override
-                    public void onResponse(File file) {
+                    public void onResponse(File file, int id) {
                         callback.onSuccess(file);
                     }
 
                     @Override
-                    public void onError(Call call, Exception e) {
+                    public void onError(Call call, Exception e, int id) {
                         callback.onFail(e);
                     }
 
                     @Override
-                    public void onAfter() {
+                    public void onAfter(int id) {
                         callback.onFinish();
                     }
                 });
@@ -88,17 +88,17 @@ public class HttpClient {
                 .build()
                 .execute(new JsonCallback<OnlineMusicList>(OnlineMusicList.class) {
                     @Override
-                    public void onResponse(OnlineMusicList response) {
+                    public void onResponse(OnlineMusicList response, int id) {
                         callback.onSuccess(response);
                     }
 
                     @Override
-                    public void onError(Call call, Exception e) {
+                    public void onError(Call call, Exception e, int id) {
                         callback.onFail(e);
                     }
 
                     @Override
-                    public void onAfter() {
+                    public void onAfter(int id) {
                         callback.onFinish();
                     }
                 });
@@ -111,17 +111,17 @@ public class HttpClient {
                 .build()
                 .execute(new JsonCallback<DownloadInfo>(DownloadInfo.class) {
                     @Override
-                    public void onResponse(final DownloadInfo response) {
+                    public void onResponse(DownloadInfo response, int id) {
                         callback.onSuccess(response);
                     }
 
                     @Override
-                    public void onError(Call call, Exception e) {
+                    public void onError(Call call, Exception e, int id) {
                         callback.onFail(e);
                     }
 
                     @Override
-                    public void onAfter() {
+                    public void onAfter(int id) {
                         callback.onFinish();
                     }
                 });
@@ -131,17 +131,17 @@ public class HttpClient {
         OkHttpUtils.get().url(url).build()
                 .execute(new BitmapCallback() {
                     @Override
-                    public void onResponse(Bitmap bitmap) {
+                    public void onResponse(Bitmap bitmap, int id) {
                         callback.onSuccess(bitmap);
                     }
 
                     @Override
-                    public void onError(Call call, Exception e) {
+                    public void onError(Call call, Exception e, int id) {
                         callback.onFail(e);
                     }
 
                     @Override
-                    public void onAfter() {
+                    public void onAfter(int id) {
                         callback.onFinish();
                     }
                 });
@@ -154,17 +154,17 @@ public class HttpClient {
                 .build()
                 .execute(new JsonCallback<Lrc>(Lrc.class) {
                     @Override
-                    public void onResponse(Lrc response) {
+                    public void onResponse(Lrc response, int id) {
                         callback.onSuccess(response);
                     }
 
                     @Override
-                    public void onError(Call call, Exception e) {
+                    public void onError(Call call, Exception e, int id) {
                         callback.onFail(e);
                     }
 
                     @Override
-                    public void onAfter() {
+                    public void onAfter(int id) {
                         callback.onFinish();
                     }
                 });
@@ -177,17 +177,17 @@ public class HttpClient {
                 .build()
                 .execute(new JsonCallback<SearchMusic>(SearchMusic.class) {
                     @Override
-                    public void onResponse(SearchMusic response) {
+                    public void onResponse(SearchMusic response, int id) {
                         callback.onSuccess(response);
                     }
 
                     @Override
-                    public void onError(Call call, Exception e) {
+                    public void onError(Call call, Exception e, int id) {
                         callback.onFail(e);
                     }
 
                     @Override
-                    public void onAfter() {
+                    public void onAfter(int id) {
                         callback.onFinish();
                     }
                 });
@@ -200,17 +200,17 @@ public class HttpClient {
                 .build()
                 .execute(new JsonCallback<ArtistInfo>(ArtistInfo.class) {
                     @Override
-                    public void onResponse(ArtistInfo response) {
+                    public void onResponse(ArtistInfo response, int id) {
                         callback.onSuccess(response);
                     }
 
                     @Override
-                    public void onError(Call call, Exception e) {
+                    public void onError(Call call, Exception e, int id) {
                         callback.onFail(e);
                     }
 
                     @Override
-                    public void onAfter() {
+                    public void onAfter(int id) {
                         callback.onFinish();
                     }
                 });
