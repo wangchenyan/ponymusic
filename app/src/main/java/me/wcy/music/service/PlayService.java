@@ -335,9 +335,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
             case AudioManager.AUDIOFOCUS_LOSS:
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                if (isPlaying()) {
-                    pause();
-                }
+                pause();
                 break;
         }
     }
