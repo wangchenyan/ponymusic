@@ -47,12 +47,7 @@ public class SystemUtils {
     public static Notification createNotification(Context context, Music music) {
         String title = music.getTitle();
         String subtitle = FileUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum());
-        Bitmap cover;
-        if (music.getType() == Music.Type.LOCAL) {
-            cover = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
-        } else {
-            cover = music.getCover();
-        }
+        Bitmap cover = CoverLoader.getInstance().loadThumbnail(music);
         Intent intent = new Intent(context, SplashActivity.class);
         intent.putExtra(Extras.FROM_NOTIFICATION, true);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);

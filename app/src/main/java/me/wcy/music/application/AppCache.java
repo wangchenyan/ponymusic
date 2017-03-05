@@ -45,9 +45,6 @@ public class AppCache {
     }
 
     public static void init(Context context) {
-        if (getContext() != null) {
-            return;
-        }
         getInstance().onInit(context);
     }
 

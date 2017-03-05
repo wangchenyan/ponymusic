@@ -25,6 +25,9 @@ public abstract class DownloadOnlineMusic extends DownloadMusic {
 
     @Override
     protected void download() {
+        final String artist = mOnlineMusic.getArtist_name();
+        final String title = mOnlineMusic.getTitle();
+
         // 获取歌曲下载链接
         HttpClient.getMusicDownloadInfo(mOnlineMusic.getSong_id(), new HttpCallback<DownloadInfo>() {
             @Override
@@ -34,7 +37,7 @@ public abstract class DownloadOnlineMusic extends DownloadMusic {
                     return;
                 }
 
-                downloadMusic(response.getBitrate().getFile_link(), mOnlineMusic.getArtist_name(), mOnlineMusic.getTitle());
+                downloadMusic(response.getBitrate().getFile_link(), artist, title);
                 onExecuteSuccess(null);
             }
 
@@ -45,18 +48,45 @@ public abstract class DownloadOnlineMusic extends DownloadMusic {
         });
 
         // 下载歌词
-        String lrcFileName = FileUtils.getLrcFileName(mOnlineMusic.getArtist_name(), mOnlineMusic.getTitle());
+        String lrcFileName = FileUtils.getLrcFileName(artist, title);
         File lrcFile = new File(FileUtils.getLrcDir() + lrcFileName);
         if (!TextUtils.isEmpty(mOnlineMusic.getLrclink()) && !lrcFile.exists()) {
-            HttpClient.downloadFile(mOnlineMusic.getLrclink(), FileUtils.getLrcDir(), lrcFileName, new HttpCallback<File>() {
-                @Override
-                public void onSuccess(File file) {
-                }
-
-                @Override
-                public void onFail(Exception e) {
-                }
-            });
+            downloadLrc(mOnlineMusic.getLrclink(), lrcFileName);
         }
+
+        // 下载封面
+        String albumFileName = FileUtils.getAlbumFileName(artist, title);
+        File albumFile = new File(FileUtils.getAlbumDir(), albumFileName);
+        String picUrl = mOnlineMusic.getPic_big();
+        if (TextUtils.isEmpty(picUrl)) {
+            picUrl = mOnlineMusic.getPic_small();
+        }
+        if (!albumFile.exists() && !TextUtils.isEmpty(picUrl)) {
+            downloadAlbum(picUrl, albumFileName);
+        }
+    }
+
+    private void downloadLrc(String url, String fileName) {
+        HttpClient.downloadFile(url, FileUtils.getLrcDir(), fileName, new HttpCallback<File>() {
+            @Override
+            public void onSuccess(File file) {
+            }
+
+            @Override
+            public void onFail(Exception e) {
+            }
+        });
+    }
+
+    private void downloadAlbum(String picUrl, String fileName) {
+        HttpClient.downloadFile(picUrl, FileUtils.getAlbumDir(), fileName, new HttpCallback<File>() {
+            @Override
+            public void onSuccess(File file) {
+            }
+
+            @Override
+            public void onFail(Exception e) {
+            }
+        });
     }
 }

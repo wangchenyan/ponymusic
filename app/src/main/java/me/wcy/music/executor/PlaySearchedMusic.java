@@ -49,7 +49,7 @@ public abstract class PlaySearchedMusic extends PlayMusic {
                     return;
                 }
 
-                music.setUri(response.getBitrate().getFile_link());
+                music.setPath(response.getBitrate().getFile_link());
                 music.setDuration(response.getBitrate().getFile_duration() * 1000);
                 checkCounter();
             }

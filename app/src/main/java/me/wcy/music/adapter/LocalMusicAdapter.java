@@ -55,8 +55,8 @@ public class LocalMusicAdapter extends BaseAdapter {
         } else {
             holder.vPlaying.setVisibility(View.INVISIBLE);
         }
-        final Music music = AppCache.getMusicList().get(position);
-        Bitmap cover = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
+        Music music = AppCache.getMusicList().get(position);
+        Bitmap cover = CoverLoader.getInstance().loadThumbnail(music);
         holder.ivCover.setImageBitmap(cover);
         holder.tvTitle.setText(music.getTitle());
         String artist = FileUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum());

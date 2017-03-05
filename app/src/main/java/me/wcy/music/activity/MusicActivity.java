@@ -263,12 +263,8 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         if (music == null) {
             return;
         }
-        Bitmap cover;
-        if (music.getCover() == null) {
-            cover = CoverLoader.getInstance().loadThumbnail(music.getCoverUri());
-        } else {
-            cover = music.getCover();
-        }
+
+        Bitmap cover = CoverLoader.getInstance().loadThumbnail(music);
         ivPlayBarCover.setImageBitmap(cover);
         tvPlayBarTitle.setText(music.getTitle());
         tvPlayBarArtist.setText(music.getArtist());

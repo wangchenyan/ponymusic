@@ -38,6 +38,11 @@ public class FileUtils {
         return mkdirs(dir);
     }
 
+    public static String getAlbumDir() {
+        String dir = getAppDir() + "/Album/";
+        return mkdirs(dir);
+    }
+
     public static String getLogDir() {
         String dir = getAppDir() + "/Log/";
         return mkdirs(dir);
@@ -54,15 +59,44 @@ public class FileUtils {
     }
 
     /**
-     * 获取歌词路径
-     * 先从已下载文件夹中查找，如果不存在，则从歌曲文件所在文件夹查找
+     * 获取歌词路径<br>
+     * 先从已下载文件夹中查找，如果不存在，则从歌曲文件所在文件夹查找。
+     *
+     * @return 如果存在返回路径，否则返回null
      */
     public static String getLrcFilePath(Music music) {
-        String lrcFilePath = getLrcDir() + music.getFileName().replace(MP3, LRC);
-        if (!new File(lrcFilePath).exists()) {
-            lrcFilePath = music.getUri().replace(MP3, LRC);
+        if (music == null) {
+            return null;
+        }
+
+        String lrcFilePath = getLrcDir() + getLrcFileName(music.getArtist(), music.getTitle());
+        if (!exists(lrcFilePath)) {
+            lrcFilePath = music.getPath().replace(MP3, LRC);
+            if (!exists(lrcFilePath)) {
+                lrcFilePath = null;
+            }
         }
         return lrcFilePath;
+    }
+
+    /**
+     * 获取封面图片路径<br>
+     *
+     * @return 如果存在返回路径，否则返回null
+     */
+    public static String getAlbumFilePath(Music music) {
+        if (music == null) {
+            return null;
+        }
+
+        String albumFilePath = music.getCoverPath();
+        if (TextUtils.isEmpty(albumFilePath) || !exists(albumFilePath)) {
+            albumFilePath = getAlbumDir() + getAlbumFileName(music.getArtist(), music.getTitle());
+            if (!exists(albumFilePath)) {
+                albumFilePath = null;
+            }
+        }
+        return albumFilePath;
     }
 
     private static String mkdirs(String dir) {
@@ -73,12 +107,21 @@ public class FileUtils {
         return dir;
     }
 
+    private static boolean exists(String path) {
+        File file = new File(path);
+        return file.exists();
+    }
+
     public static String getMp3FileName(String artist, String title) {
         return getFileName(artist, title) + MP3;
     }
 
     public static String getLrcFileName(String artist, String title) {
         return getFileName(artist, title) + LRC;
+    }
+
+    public static String getAlbumFileName(String artist, String title) {
+        return getFileName(artist, title);
     }
 
     public static String getFileName(String artist, String title) {

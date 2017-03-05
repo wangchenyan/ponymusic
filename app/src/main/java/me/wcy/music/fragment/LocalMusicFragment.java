@@ -128,7 +128,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
      * 分享音乐
      */
     private void shareMusic(Music music) {
-        File file = new File(music.getUri());
+        File file = new File(music.getPath());
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("audio/*");
         intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
@@ -150,10 +150,10 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
      * 设置铃声
      */
     private void setRingtone(Music music) {
-        Uri uri = MediaStore.Audio.Media.getContentUriForPath(music.getUri());
+        Uri uri = MediaStore.Audio.Media.getContentUriForPath(music.getPath());
         // 查询音乐文件在媒体库是否存在
         Cursor cursor = getContext().getContentResolver().query(uri, null,
-                MediaStore.MediaColumns.DATA + "=?", new String[]{music.getUri()}, null);
+                MediaStore.MediaColumns.DATA + "=?", new String[]{music.getPath()}, null);
         if (cursor == null) {
             return;
         }
@@ -167,7 +167,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
             values.put(MediaStore.Audio.Media.IS_PODCAST, false);
 
             getContext().getContentResolver().update(uri, values, MediaStore.MediaColumns.DATA + "=?",
-                    new String[]{music.getUri()});
+                    new String[]{music.getPath()});
             Uri newUri = ContentUris.withAppendedId(uri, Long.valueOf(_id));
             RingtoneManager.setActualDefaultRingtoneUri(getContext(), RingtoneManager.TYPE_RINGTONE, newUri);
             ToastUtils.show(R.string.setting_ringtone_success);
@@ -196,7 +196,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
                 .append("MB")
                 .append("\n\n")
                 .append("文件路径：")
-                .append(new File(music.getUri()).getParent());
+                .append(new File(music.getPath()).getParent());
         dialog.setMessage(sb.toString());
         dialog.show();
     }
@@ -213,12 +213,12 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 AppCache.getMusicList().remove(music);
-                File file = new File(music.getUri());
+                File file = new File(music.getPath());
                 if (file.delete()) {
                     getPlayService().updatePlayingPosition();
                     updateView();
                     // 刷新媒体库
-                    Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + music.getUri()));
+                    Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + music.getPath()));
                     getContext().sendBroadcast(intent);
                 }
             }

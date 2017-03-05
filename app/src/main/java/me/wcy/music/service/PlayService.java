@@ -137,7 +137,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         mPlayingMusic = music;
         try {
             mPlayer.reset();
-            mPlayer.setDataSource(music.getUri());
+            mPlayer.setDataSource(music.getPath());
             mPlayer.prepareAsync();
             isPreparing = true;
             mPlayer.setOnPreparedListener(mPreparedListener);
@@ -209,6 +209,10 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     }
 
     public void next() {
+        if (mMusicList.isEmpty()) {
+            return;
+        }
+
         PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode());
         switch (mode) {
             case SHUFFLE:
@@ -226,6 +230,10 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     }
 
     public void prev() {
+        if (mMusicList.isEmpty()) {
+            return;
+        }
+
         PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode());
         switch (mode) {
             case SHUFFLE:

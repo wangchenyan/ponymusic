@@ -1,13 +1,11 @@
 package me.wcy.music.model;
 
-import android.graphics.Bitmap;
-
 /**
  * 单曲信息
  * Created by wcy on 2015/11/27.
  */
 public class Music {
-    // 歌曲类型 本地/网络
+    // 歌曲类型:本地/网络
     private Type type;
     // [本地歌曲]歌曲id
     private long id;
@@ -20,17 +18,18 @@ public class Music {
     // 持续时间
     private long duration;
     // 音乐路径
-    private String uri;
-    // [本地歌曲]专辑封面路径
-    private String coverUri;
+    private String path;
+    // 专辑封面路径
+    private String coverPath;
     // 文件名
     private String fileName;
-    // [网络歌曲]专辑封面bitmap
-    private Bitmap cover;
     // 文件大小
     private long fileSize;
-    // 发行日期
-    private String year;
+
+    public enum Type {
+        LOCAL,
+        ONLINE
+    }
 
     public Type getType() {
         return type;
@@ -80,20 +79,20 @@ public class Music {
         this.duration = duration;
     }
 
-    public String getUri() {
-        return uri;
+    public String getPath() {
+        return path;
     }
 
-    public void setUri(String uri) {
-        this.uri = uri;
+    public void setPath(String path) {
+        this.path = path;
     }
 
-    public String getCoverUri() {
-        return coverUri;
+    public String getCoverPath() {
+        return coverPath;
     }
 
-    public void setCoverUri(String coverUri) {
-        this.coverUri = coverUri;
+    public void setCoverPath(String coverPath) {
+        this.coverPath = coverPath;
     }
 
     public String getFileName() {
@@ -104,14 +103,6 @@ public class Music {
         this.fileName = fileName;
     }
 
-    public Bitmap getCover() {
-        return cover;
-    }
-
-    public void setCover(Bitmap cover) {
-        this.cover = cover;
-    }
-
     public long getFileSize() {
         return fileSize;
     }
@@ -120,27 +111,14 @@ public class Music {
         this.fileSize = fileSize;
     }
 
-    public String getYear() {
-        return year;
-    }
-
-    public void setYear(String year) {
-        this.year = year;
-    }
-
     /**
      * 对比本地歌曲是否相同
      */
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Music)) {
+        if (o == null || !(o instanceof Music)) {
             return false;
         }
         return this.getId() == ((Music) o).getId();
-    }
-
-    public enum Type {
-        LOCAL,
-        ONLINE
     }
 }

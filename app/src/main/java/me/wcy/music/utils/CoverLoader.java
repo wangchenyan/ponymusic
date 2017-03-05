@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import me.wcy.music.R;
 import me.wcy.music.application.AppCache;
+import me.wcy.music.model.Music;
 
 /**
  * 专辑封面图片加载器
@@ -61,53 +62,56 @@ public class CoverLoader {
         private static CoverLoader instance = new CoverLoader();
     }
 
-    public Bitmap loadThumbnail(String uri) {
+    public Bitmap loadThumbnail(Music music) {
         Bitmap bitmap;
-        if (TextUtils.isEmpty(uri)) {
+        String path = FileUtils.getAlbumFilePath(music);
+        if (TextUtils.isEmpty(path)) {
             bitmap = mThumbnailCache.get(KEY_NULL);
             if (bitmap == null) {
                 bitmap = BitmapFactory.decodeResource(AppCache.getContext().getResources(), R.drawable.default_cover);
                 mThumbnailCache.put(KEY_NULL, bitmap);
             }
         } else {
-            bitmap = mThumbnailCache.get(uri);
+            bitmap = mThumbnailCache.get(path);
             if (bitmap == null) {
-                bitmap = loadBitmap(uri, ScreenUtils.getScreenWidth() / 10);
+                bitmap = loadBitmap(path, ScreenUtils.getScreenWidth() / 10);
                 if (bitmap == null) {
                     bitmap = loadThumbnail(null);
                 }
-                mThumbnailCache.put(uri, bitmap);
+                mThumbnailCache.put(path, bitmap);
             }
         }
         return bitmap;
     }
 
-    public Bitmap loadBlur(String uri) {
+    public Bitmap loadBlur(Music music) {
         Bitmap bitmap;
-        if (TextUtils.isEmpty(uri)) {
+        String path = FileUtils.getAlbumFilePath(music);
+        if (TextUtils.isEmpty(path)) {
             bitmap = mBlurCache.get(KEY_NULL);
             if (bitmap == null) {
                 bitmap = BitmapFactory.decodeResource(AppCache.getContext().getResources(), R.drawable.play_page_default_bg);
                 mBlurCache.put(KEY_NULL, bitmap);
             }
         } else {
-            bitmap = mBlurCache.get(uri);
+            bitmap = mBlurCache.get(path);
             if (bitmap == null) {
-                bitmap = loadBitmap(uri, ScreenUtils.getScreenWidth() / 2);
+                bitmap = loadBitmap(path, ScreenUtils.getScreenWidth() / 2);
                 if (bitmap == null) {
                     bitmap = loadBlur(null);
                 } else {
-                    bitmap = ImageUtils.blur(bitmap, ImageUtils.BLUR_RADIUS);
+                    bitmap = ImageUtils.blur(bitmap);
                 }
-                mBlurCache.put(uri, bitmap);
+                mBlurCache.put(path, bitmap);
             }
         }
         return bitmap;
     }
 
-    public Bitmap loadRound(String uri) {
+    public Bitmap loadRound(Music music) {
         Bitmap bitmap;
-        if (TextUtils.isEmpty(uri)) {
+        String path = FileUtils.getAlbumFilePath(music);
+        if (TextUtils.isEmpty(path)) {
             bitmap = mRoundCache.get(KEY_NULL);
             if (bitmap == null) {
                 bitmap = BitmapFactory.decodeResource(AppCache.getContext().getResources(), R.drawable.play_page_default_cover);
@@ -115,16 +119,16 @@ public class CoverLoader {
                 mRoundCache.put(KEY_NULL, bitmap);
             }
         } else {
-            bitmap = mRoundCache.get(uri);
+            bitmap = mRoundCache.get(path);
             if (bitmap == null) {
-                bitmap = loadBitmap(uri, ScreenUtils.getScreenWidth() / 2);
+                bitmap = loadBitmap(path, ScreenUtils.getScreenWidth() / 2);
                 if (bitmap == null) {
                     bitmap = loadRound(null);
                 } else {
                     bitmap = ImageUtils.resizeImage(bitmap, ScreenUtils.getScreenWidth() / 2, ScreenUtils.getScreenWidth() / 2);
                     bitmap = ImageUtils.createCircleImage(bitmap);
                 }
-                mRoundCache.put(uri, bitmap);
+                mRoundCache.put(path, bitmap);
             }
         }
         return bitmap;
@@ -133,11 +137,11 @@ public class CoverLoader {
     /**
      * 获得指定大小的bitmap
      */
-    private Bitmap loadBitmap(String uri, int length) {
+    private Bitmap loadBitmap(String path, int length) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         // 仅获取大小
         options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(uri, options);
+        BitmapFactory.decodeFile(path, options);
         int maxLength = options.outWidth > options.outHeight ? options.outWidth : options.outHeight;
         // 压缩尺寸，避免卡顿
         int inSampleSize = maxLength / length;
@@ -147,6 +151,6 @@ public class CoverLoader {
         options.inSampleSize = inSampleSize;
         // 获取bitmap
         options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeFile(uri, options);
+        return BitmapFactory.decodeFile(path, options);
     }
 }

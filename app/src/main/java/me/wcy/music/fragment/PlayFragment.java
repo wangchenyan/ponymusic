@@ -4,13 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +32,6 @@ import me.wcy.music.executor.SearchLrc;
 import me.wcy.music.model.Music;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.FileUtils;
-import me.wcy.music.utils.ImageUtils;
 import me.wcy.music.utils.Preferences;
 import me.wcy.music.utils.ScreenUtils;
 import me.wcy.music.utils.SystemUtils;
@@ -311,27 +310,14 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void setCoverAndBg(Music music) {
-        if (music.getType() == Music.Type.LOCAL) {
-            mAlbumCoverView.setCoverBitmap(CoverLoader.getInstance().loadRound(music.getCoverUri()));
-            ivPlayingBg.setImageBitmap(CoverLoader.getInstance().loadBlur(music.getCoverUri()));
-        } else {
-            if (music.getCover() == null) {
-                mAlbumCoverView.setCoverBitmap(CoverLoader.getInstance().loadRound(null));
-                ivPlayingBg.setImageResource(R.drawable.play_page_default_bg);
-            } else {
-                Bitmap cover = ImageUtils.resizeImage(music.getCover(), ScreenUtils.getScreenWidth() / 2, ScreenUtils.getScreenWidth() / 2);
-                cover = ImageUtils.createCircleImage(cover);
-                mAlbumCoverView.setCoverBitmap(cover);
-                Bitmap bg = ImageUtils.blur(music.getCover(), ImageUtils.BLUR_RADIUS);
-                ivPlayingBg.setImageBitmap(bg);
-            }
-        }
+        mAlbumCoverView.setCoverBitmap(CoverLoader.getInstance().loadRound(music));
+        ivPlayingBg.setImageBitmap(CoverLoader.getInstance().loadBlur(music));
     }
 
     private void setLrc(final Music music) {
         if (music.getType() == Music.Type.LOCAL) {
             String lrcPath = FileUtils.getLrcFilePath(music);
-            if (new File(lrcPath).exists()) {
+            if (!TextUtils.isEmpty(lrcPath)) {
                 loadLrc(lrcPath);
             } else {
                 new SearchLrc(music.getArtist(), music.getTitle()) {

@@ -26,6 +26,9 @@ public abstract class DownloadSearchedMusic extends DownloadMusic {
 
     @Override
     protected void download() {
+        final String artist = mSong.getArtistname();
+        final String title = mSong.getSongname();
+
         // 获取歌曲下载链接
         HttpClient.getMusicDownloadInfo(mSong.getSongid(), new HttpCallback<DownloadInfo>() {
             @Override
@@ -35,7 +38,7 @@ public abstract class DownloadSearchedMusic extends DownloadMusic {
                     return;
                 }
 
-                downloadMusic(response.getBitrate().getFile_link(), mSong.getArtistname(), mSong.getSongname());
+                downloadMusic(response.getBitrate().getFile_link(), artist, title);
                 onExecuteSuccess(null);
             }
 
@@ -46,24 +49,28 @@ public abstract class DownloadSearchedMusic extends DownloadMusic {
         });
 
         // 下载歌词
-        String lrcFileName = FileUtils.getLrcFileName(mSong.getArtistname(), mSong.getSongname());
+        String lrcFileName = FileUtils.getLrcFileName(artist, title);
         File lrcFile = new File(FileUtils.getLrcDir() + lrcFileName);
         if (!lrcFile.exists()) {
-            HttpClient.getLrc(mSong.getSongid(), new HttpCallback<Lrc>() {
-                @Override
-                public void onSuccess(Lrc response) {
-                    if (response == null || TextUtils.isEmpty(response.getLrcContent())) {
-                        return;
-                    }
-
-                    String filePath = FileUtils.getLrcDir() + FileUtils.getLrcFileName(mSong.getArtistname(), mSong.getSongname());
-                    FileUtils.saveLrcFile(filePath, response.getLrcContent());
-                }
-
-                @Override
-                public void onFail(Exception e) {
-                }
-            });
+            downloadLrc(mSong.getSongid(), lrcFileName);
         }
+    }
+
+    private void downloadLrc(String songId, final String fileName) {
+        HttpClient.getLrc(songId, new HttpCallback<Lrc>() {
+            @Override
+            public void onSuccess(Lrc response) {
+                if (response == null || TextUtils.isEmpty(response.getLrcContent())) {
+                    return;
+                }
+
+                String filePath = FileUtils.getLrcDir() + fileName;
+                FileUtils.saveLrcFile(filePath, response.getLrcContent());
+            }
+
+            @Override
+            public void onFail(Exception e) {
+            }
+        });
     }
 }
