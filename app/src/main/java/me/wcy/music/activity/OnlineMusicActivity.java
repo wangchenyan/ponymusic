@@ -139,7 +139,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        play(mMusicList.get(position - 1));
+        play((OnlineMusic) parent.getAdapter().getItem(position));
     }
 
     @Override
