@@ -57,7 +57,6 @@
         <activity
             android:name=".activity.MusicActivity"
             android:label="@string/app_name"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.OnlineMusicActivity"

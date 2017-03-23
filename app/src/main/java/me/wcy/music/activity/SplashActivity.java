@@ -155,6 +155,8 @@ public class SplashActivity extends BaseActivity {
         Intent intent = new Intent();
         intent.setClass(this, MusicActivity.class);
         intent.putExtras(getIntent());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
     }
 

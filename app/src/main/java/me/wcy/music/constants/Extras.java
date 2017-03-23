@@ -5,8 +5,8 @@ package me.wcy.music.constants;
  * Created by hzwangchenyan on 2015/12/25.
  */
 public interface Extras {
+    String EXTRA_NOTIFICATION = "me.wcy.music.notification";
     String MUSIC_LIST_TYPE = "music_list_type";
     String TING_UID = "ting_uid";
-    String FROM_NOTIFICATION = "from_notification";
     String DOWNLOAD_UPDATE = "download_update";
 }

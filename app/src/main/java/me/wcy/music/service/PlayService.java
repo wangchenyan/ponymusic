@@ -311,12 +311,12 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
      */
     private void updateNotification(Music music) {
         mNotificationManager.cancel(NOTIFICATION_ID);
-        startForeground(NOTIFICATION_ID, SystemUtils.createNotification(this, music));
+        startForeground(NOTIFICATION_ID, SystemUtils.buildNotification(this, music));
     }
 
     private void cancelNotification(Music music) {
         stopForeground(true);
-        mNotificationManager.notify(NOTIFICATION_ID, SystemUtils.createNotification(this, music));
+        mNotificationManager.notify(NOTIFICATION_ID, SystemUtils.buildNotification(this, music));
     }
 
     private Runnable mBackgroundRunnable = new Runnable() {

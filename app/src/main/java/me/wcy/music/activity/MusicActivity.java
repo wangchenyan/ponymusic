@@ -91,13 +91,13 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         registerReceiver();
         onChange(getPlayService().getPlayingMusic());
         UpdateUtils.checkUpdate(this);
-        parseIntent(getIntent());
+        parseIntent();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        parseIntent(intent);
+        setIntent(intent);
+        parseIntent();
     }
 
     @Override
@@ -151,9 +151,11 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         mAudioManager.registerMediaButtonEventReceiver(mRemoteReceiver);
     }
 
-    private void parseIntent(Intent intent) {
-        if (intent.hasExtra(Extras.FROM_NOTIFICATION)) {
+    private void parseIntent() {
+        Intent intent = getIntent();
+        if (intent.hasExtra(Extras.EXTRA_NOTIFICATION)) {
             showPlayingFragment();
+            setIntent(new Intent());
         }
     }
 
@@ -290,6 +292,10 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void showPlayingFragment() {
+        if (isPlayFragmentShow) {
+            return;
+        }
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.fragment_slide_up, 0);
         if (mPlayFragment == null) {
@@ -298,7 +304,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         } else {
             ft.show(mPlayFragment);
         }
-        ft.commit();
+        ft.commitAllowingStateLoss();
         isPlayFragmentShow = true;
     }
 
@@ -306,7 +312,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(0, R.anim.fragment_slide_down);
         ft.hide(mPlayFragment);
-        ft.commit();
+        ft.commitAllowingStateLoss();
         isPlayFragmentShow = false;
     }
 
