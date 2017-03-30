@@ -2,18 +2,18 @@
 ![](https://raw.githubusercontent.com/wangchenyan/PonyMusic/master/app/src/main/res/drawable-xxhdpi/ic_launcher.png)
 
 ## 系列文章
-* [Android开源在线音乐播放器——波尼音乐](http://www.jianshu.com/p/1c0f5c4f64fa)
-* [Android开源音乐播放器之播放器基本功能](http://www.jianshu.com/p/bc2f779a5400)
-* [Android开源音乐播放器之高仿云音乐黑胶唱片](http://www.jianshu.com/p/f1d8eb8bb3e5)
-* [Android开源音乐播放器之自动滚动歌词](http://www.jianshu.com/p/0feb6171b0c5)
-* [Android开源音乐播放器之在线音乐列表自动加载更多](http://www.jianshu.com/p/576564627c96)
+- [Android开源在线音乐播放器——波尼音乐](http://www.jianshu.com/p/1c0f5c4f64fa)
+- [Android开源音乐播放器之播放器基本功能](http://www.jianshu.com/p/bc2f779a5400)
+- [Android开源音乐播放器之高仿云音乐黑胶唱片](http://www.jianshu.com/p/f1d8eb8bb3e5)
+- [Android开源音乐播放器之自动滚动歌词](http://www.jianshu.com/p/0feb6171b0c5)
+- [Android开源音乐播放器之在线音乐列表自动加载更多](http://www.jianshu.com/p/576564627c96)
 
 ## 前言
 毕业设计做的项目，答辩完了，就共享出来。<br>
 
-* **开源不易，希望能给个Star鼓励**
-* 项目地址：https://github.com/wangchenyan/PonyMusic
-* 有问题请提Issues
+- **开源不易，希望能给个Star鼓励**
+- 项目地址：https://github.com/wangchenyan/PonyMusic
+- 有问题请提Issues
 
 ## 简介
 波尼音乐是一款开源Android在线音乐播放器。
@@ -43,18 +43,18 @@
 fir.im：http://fir.im/ponymusic
 
 ## TODO
-* 在线音乐可以免下载加入我的音乐列表
-* 在线音乐自动缓存
-* 编辑音乐信息
+- 在线音乐可以免下载加入我的音乐列表
+- 在线音乐自动缓存
+- 编辑音乐信息
 
 ## 项目
 ### 公开API
-* 在线音乐：[百度音乐](http://mrasong.com/a/baidu-mp3-api-full)
-* 天气数据：[高德地图](http://lbs.amap.com/)
+- 在线音乐：[百度音乐](http://mrasong.com/a/baidu-mp3-api-full)
+- 天气数据：[高德地图](http://lbs.amap.com/)
 
 ### 开源技术
-* [okhttp-utils](https://github.com/hongyangAndroid/okhttp-utils)
-* [Android-Universal-Image-Loader](https://github.com/nostra13/Android-Universal-Image-Loader)
+- [okhttp-utils](https://github.com/hongyangAndroid/okhttp-utils)
+- [Android-Universal-Image-Loader](https://github.com/nostra13/Android-Universal-Image-Loader)
 
 ### 关键代码
 黑胶唱片专辑封面绘制流程
