@@ -1,6 +1,5 @@
 package me.wcy.music.service;
 
-import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +18,7 @@ import java.util.List;
 import java.util.Random;
 
 import me.wcy.music.application.AppCache;
+import me.wcy.music.application.Notifier;
 import me.wcy.music.constants.Actions;
 import me.wcy.music.enums.PlayModeEnum;
 import me.wcy.music.model.Music;
@@ -27,13 +27,14 @@ import me.wcy.music.utils.MusicUtils;
 import me.wcy.music.utils.Preferences;
 import me.wcy.music.utils.SystemUtils;
 
+import static me.wcy.music.application.Notifier.updateNotification;
+
 /**
  * 音乐播放后台服务
  * Created by wcy on 2015/11/27.
  */
 public class PlayService extends Service implements MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
     private static final String TAG = "Service";
-    private static final int NOTIFICATION_ID = 0x111;
     private static final long TIME_UPDATE = 100L;
     private List<Music> mMusicList;
     private MediaPlayer mPlayer = new MediaPlayer();
@@ -41,7 +42,6 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     private NoisyAudioStreamReceiver mNoisyReceiver = new NoisyAudioStreamReceiver();
     private Handler mHandler = new Handler();
     private AudioManager mAudioManager;
-    private NotificationManager mNotificationManager;
     private OnPlayerEventListener mListener;
     // 正在播放的歌曲[本地|网络]
     private Music mPlayingMusic;
@@ -57,8 +57,8 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         Log.i(TAG, "onCreate: " + getClass().getSimpleName());
         mMusicList = AppCache.getMusicList();
         mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mPlayer.setOnCompletionListener(this);
+        Notifier.init(this);
     }
 
     @Nullable
@@ -144,7 +144,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
             if (mListener != null) {
                 mListener.onChange(music);
             }
-            updateNotification(music);
+            Notifier.updateNotification(music);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -189,7 +189,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         mPlayer.pause();
         isPausing = true;
         mHandler.removeCallbacks(mBackgroundRunnable);
-        cancelNotification(mPlayingMusic);
+        Notifier.cancelNotification(mPlayingMusic);
         mAudioManager.abandonAudioFocus(this);
         unregisterReceiver(mNoisyReceiver);
         if (mListener != null) {
@@ -306,19 +306,6 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         Preferences.saveCurrentSongId(mMusicList.get(mPlayingPosition).getId());
     }
 
-    /**
-     * 更新通知栏
-     */
-    private void updateNotification(Music music) {
-        mNotificationManager.cancel(NOTIFICATION_ID);
-        startForeground(NOTIFICATION_ID, SystemUtils.buildNotification(this, music));
-    }
-
-    private void cancelNotification(Music music) {
-        stopForeground(true);
-        mNotificationManager.notify(NOTIFICATION_ID, SystemUtils.buildNotification(this, music));
-    }
-
     private Runnable mBackgroundRunnable = new Runnable() {
         @Override
         public void run() {
@@ -386,7 +373,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         mPlayer.reset();
         mPlayer.release();
         mPlayer = null;
-        mNotificationManager.cancel(NOTIFICATION_ID);
+        Notifier.cancelAll();
         AppCache.setPlayService(null);
         stopSelf();
     }
