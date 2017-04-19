@@ -13,7 +13,7 @@ import me.wcy.music.service.PlayService;
  */
 public class StatusBarReceiver extends BroadcastReceiver {
     public static final String ACTION_STATUS_BAR = "me.wcy.music.STATUS_BAR_ACTIONS";
-    public static final String EXTRA_ACTION = "action";
+    public static final String EXTRA = "extra";
     public static final String EXTRA_NEXT = "next";
     public static final String EXTRA_PLAY_PAUSE = "play_pause";
 
@@ -23,7 +23,7 @@ public class StatusBarReceiver extends BroadcastReceiver {
             return;
         }
 
-        String extra = intent.getStringExtra(EXTRA_ACTION);
+        String extra = intent.getStringExtra(EXTRA);
         if (TextUtils.equals(extra, EXTRA_NEXT)) {
             PlayService.startCommand(context, Actions.ACTION_MEDIA_NEXT);
         } else if (TextUtils.equals(extra, EXTRA_PLAY_PAUSE)) {

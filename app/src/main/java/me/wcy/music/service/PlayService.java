@@ -25,9 +25,6 @@ import me.wcy.music.model.Music;
 import me.wcy.music.receiver.NoisyAudioStreamReceiver;
 import me.wcy.music.utils.MusicUtils;
 import me.wcy.music.utils.Preferences;
-import me.wcy.music.utils.SystemUtils;
-
-import static me.wcy.music.application.Notifier.updateNotification;
 
 /**
  * 音乐播放后台服务
@@ -91,10 +88,6 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         return START_NOT_STICKY;
     }
 
-    public static boolean isRunning(Context context) {
-        return SystemUtils.isServiceRunning(context, PlayService.class);
-    }
-
     /**
      * 每次启动时扫描音乐
      */
@@ -144,7 +137,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
             if (mListener != null) {
                 mListener.onChange(music);
             }
-            Notifier.updateNotification(music);
+            Notifier.showPlay(music);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -176,7 +169,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         mPlayer.start();
         isPausing = false;
         mHandler.post(mBackgroundRunnable);
-        updateNotification(mPlayingMusic);
+        Notifier.showPlay(mPlayingMusic);
         mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         registerReceiver(mNoisyReceiver, mNoisyFilter);
     }
@@ -189,7 +182,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         mPlayer.pause();
         isPausing = true;
         mHandler.removeCallbacks(mBackgroundRunnable);
-        Notifier.cancelNotification(mPlayingMusic);
+        Notifier.showPause(mPlayingMusic);
         mAudioManager.abandonAudioFocus(this);
         unregisterReceiver(mNoisyReceiver);
         if (mListener != null) {
