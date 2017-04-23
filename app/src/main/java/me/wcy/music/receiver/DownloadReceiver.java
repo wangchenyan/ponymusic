@@ -17,19 +17,10 @@ import me.wcy.music.utils.ToastUtils;
 public class DownloadReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        String action = intent.getAction();
-        DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-        if (action.equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
-            long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
-            String title = AppCache.getDownloadList().get(id);
-            if (!TextUtils.isEmpty(title)) {
-                ToastUtils.show(context.getString(R.string.download_success, title));
-            }
-        } else if (action.equals(DownloadManager.ACTION_NOTIFICATION_CLICKED)) {
-            // 点击通知取消下载
-            long[] ids = intent.getLongArrayExtra(DownloadManager.EXTRA_NOTIFICATION_CLICK_DOWNLOAD_IDS);
-            manager.remove(ids);
-            ToastUtils.show("已取消下载");
+        long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
+        String title = AppCache.getDownloadList().get(id);
+        if (!TextUtils.isEmpty(title)) {
+            ToastUtils.show(context.getString(R.string.download_success, title));
         }
     }
 }
