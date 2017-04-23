@@ -31,7 +31,7 @@ public class MusicApplication extends Application {
         AppCache.updateNightMode(Preferences.isNightMode());
         initOkHttpUtils();
         initImageLoader();
-        Bugly.init(this, KeyStore.getKey(KeyStore.BUGLY_APP_ID), BuildConfig.DEBUG);
+        initBugly();
     }
 
     private void initOkHttpUtils() {
@@ -51,5 +51,11 @@ public class MusicApplication extends Application {
                 .diskCacheSize(50 * 1024 * 1024) // 50MB
                 .build();
         ImageLoader.getInstance().init(configuration);
+    }
+
+    private void initBugly() {
+        if (!BuildConfig.DEBUG) {
+            Bugly.init(this, KeyStore.getKey(KeyStore.BUGLY_APP_ID), false);
+        }
     }
 }
