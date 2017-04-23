@@ -4,12 +4,14 @@ import android.app.Application;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.tencent.bugly.Bugly;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.log.LoggerInterceptor;
 
 import java.util.concurrent.TimeUnit;
 
-import im.fir.sdk.FIR;
+import me.wcy.music.BuildConfig;
+import me.wcy.music.api.KeyStore;
 import me.wcy.music.http.HttpInterceptor;
 import me.wcy.music.utils.Preferences;
 import okhttp3.OkHttpClient;
@@ -29,7 +31,7 @@ public class MusicApplication extends Application {
         AppCache.updateNightMode(Preferences.isNightMode());
         initOkHttpUtils();
         initImageLoader();
-        FIR.init(this);
+        Bugly.init(this, KeyStore.getKey(KeyStore.BUGLY_APP_ID), BuildConfig.DEBUG);
     }
 
     private void initOkHttpUtils() {

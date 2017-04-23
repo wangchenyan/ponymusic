@@ -6,15 +6,13 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.1'
+        classpath 'com.tencent.bugly:symtabfileuploader:2.0.9'
     }
 }
 
 allprojects {
     repositories {
         jcenter()
-        maven {
-            url "http://maven.bughd.com/public"
-        }
     }
 }
 

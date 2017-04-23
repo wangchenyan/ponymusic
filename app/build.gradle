@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'bugly'
 
 android {
     compileSdkVersion 25
@@ -17,9 +18,9 @@ android {
             Properties properties = new Properties()
             properties.load(project.rootProject.file('local.properties').newDataInputStream())
             storeFile file("wangchenyan.keystore")
-            storePassword properties.get("storePassword")
-            keyAlias properties.get("keyAlias")
-            keyPassword properties.get("keyPassword")
+            storePassword properties.get("STORE_PASSWORD")
+            keyAlias properties.get("KEY_ALIAS")
+            keyPassword properties.get("KEY_PASSWORD")
         }
         debug {
             storeFile file("debug.keystore")
@@ -39,8 +40,15 @@ android {
     }
 }
 
+bugly {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    appId = properties.get("BUGLY_APP_ID")
+    appKey = properties.get("BUGLY_APP_KEY")
+}
+
 ext {
-    supportVersion = "25.2.0"
+    supportVersion = "25.3.1"
 }
 
 dependencies {
@@ -50,6 +58,6 @@ dependencies {
     compile 'com.zhy:okhttputils:2.6.2'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-    compile 'im.fir:fir-sdk:latest.integration@aar'
     compile 'me.wcy:lrcview:1.4.1'
+    compile 'com.tencent.bugly:crashreport_upgrade:1.2.5'
 }

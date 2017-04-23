@@ -1,6 +1,5 @@
 package me.wcy.music.application;
 
-import android.os.Process;
 import android.util.Log;
 
 import java.io.BufferedWriter;
@@ -10,7 +9,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import me.wcy.music.BuildConfig;
 import me.wcy.music.utils.FileUtils;
 
 /**
@@ -39,11 +37,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
         saveCrashInfo(ex);
-        if (BuildConfig.DEBUG) {
-            mDefaultHandler.uncaughtException(thread, ex);
-        } else {
-            Process.killProcess(Process.myPid());
-        }
+        mDefaultHandler.uncaughtException(thread, ex);
     }
 
     private void saveCrashInfo(Throwable ex) {

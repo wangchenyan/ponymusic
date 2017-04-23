@@ -16,15 +16,15 @@
 #   public *;
 #}
 
--keepattributes Signature,InnerClasses,SourceFile,LineNumberTable
+-keepattributes Signature, InnerClasses, LineNumberTable
 
 # android-support
 -dontwarn android.support.**
 -keep class android.support.** { *; }
 
 # app
--keep class me.wcy.music.utils.proguard.ExProGuard { *; }
--keep class * extends me.wcy.music.utils.proguard.ExProGuard { *; }
+-keep class me.wcy.music.utils.proguard.NoProGuard { *; }
+-keep class * extends me.wcy.music.utils.proguard.NoProGuard { *; }
 
 # okhttputils
 -dontwarn com.zhy.http.**
@@ -41,3 +41,7 @@
 # amap
 -dontwarn com.amap.api.**
 -keep class com.amap.api.** { *; }
+
+# bugly
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.** { *; }

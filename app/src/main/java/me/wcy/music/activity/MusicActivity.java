@@ -34,7 +34,6 @@ import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.SystemUtils;
 import me.wcy.music.utils.ToastUtils;
-import me.wcy.music.utils.UpdateUtils;
 import me.wcy.music.utils.binding.Bind;
 import me.wcy.music.utils.permission.PermissionReq;
 import me.wcy.music.utils.permission.PermissionResult;
@@ -90,7 +89,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         updateWeather();
         registerReceiver();
         onChange(getPlayService().getPlayingMusic());
-        UpdateUtils.checkUpdate(this);
         parseIntent();
     }
 
