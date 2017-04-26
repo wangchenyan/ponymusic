@@ -51,8 +51,7 @@ public class SplashActivity extends BaseActivity {
 
     private void checkService() {
         if (AppCache.getPlayService() == null) {
-            startService();
-            initSplash();
+            showSplash();
             updateSplash();
 
             mHandler.postDelayed(new Runnable() {
@@ -65,12 +64,6 @@ public class SplashActivity extends BaseActivity {
             startMusicActivity();
             finish();
         }
-    }
-
-    private void startService() {
-        Intent intent = new Intent();
-        intent.setClass(this, PlayService.class);
-        startService(intent);
     }
 
     private void bindService() {
@@ -110,7 +103,7 @@ public class SplashActivity extends BaseActivity {
         }
     }
 
-    private void initSplash() {
+    private void showSplash() {
         File splashImg = new File(FileUtils.getSplashDir(this), SPLASH_FILE_NAME);
         if (splashImg.exists()) {
             Bitmap bitmap = BitmapFactory.decodeFile(splashImg.getPath());

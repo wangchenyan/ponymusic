@@ -93,11 +93,10 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
      */
     public void updateMusicList() {
         MusicUtils.scanMusic(this, mMusicList);
-        if (mMusicList.isEmpty()) {
-            return;
+        if (!mMusicList.isEmpty()) {
+            updatePlayingPosition();
+            mPlayingMusic = (mPlayingMusic == null) ? mMusicList.get(mPlayingPosition) : mPlayingMusic;
         }
-        updatePlayingPosition();
-        mPlayingMusic = (mPlayingMusic == null) ? mMusicList.get(mPlayingPosition) : mPlayingMusic;
     }
 
     @Override

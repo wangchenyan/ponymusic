@@ -1,6 +1,7 @@
 package me.wcy.music.application;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.support.v4.util.LongSparseArray;
@@ -54,6 +55,7 @@ public class AppCache {
         Preferences.init(mContext);
         ScreenUtils.init(mContext);
         CrashHandler.getInstance().init();
+        startService(mContext);
     }
 
     public static Context getContext() {
@@ -114,5 +116,10 @@ public class AppCache {
 
     public static void setAMapLocalWeatherLive(AMapLocalWeatherLive aMapLocalWeatherLive) {
         getInstance().mAMapLocalWeatherLive = aMapLocalWeatherLive;
+    }
+
+    private void startService(Context context) {
+        Intent intent = new Intent(context, PlayService.class);
+        context.startService(intent);
     }
 }
