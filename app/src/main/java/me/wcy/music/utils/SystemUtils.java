@@ -1,6 +1,7 @@
 package me.wcy.music.utils;
 
 import android.app.ActivityManager;
+import android.app.Service;
 import android.content.Context;
 import android.text.format.DateUtils;
 
@@ -25,7 +26,7 @@ public class SystemUtils {
     /**
      * 判断Service是否在运行
      */
-    public static boolean isServiceRunning(Context context, Class<?> serviceClass) {
+    public static boolean isServiceRunning(Context context, Class<? extends Service> serviceClass) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(service.service.getClassName())) {

@@ -51,6 +51,10 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_music);
 
+        if (!checkServiceAlive()) {
+            return;
+        }
+
         lvSearchMusic.setAdapter(mAdapter);
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.loading));

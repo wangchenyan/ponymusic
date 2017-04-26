@@ -68,6 +68,10 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online_music);
 
+        if (!checkServiceAlive()) {
+            return;
+        }
+
         mListInfo = (SongListInfo) getIntent().getSerializableExtra(Extras.MUSIC_LIST_TYPE);
         setTitle(mListInfo.getTitle());
 

@@ -15,6 +15,10 @@ public class SettingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
+        if (!checkServiceAlive()) {
+            return;
+        }
+
         getFragmentManager().beginTransaction().replace(R.id.ll_fragment_container, new SettingFragment()).commit();
     }
 

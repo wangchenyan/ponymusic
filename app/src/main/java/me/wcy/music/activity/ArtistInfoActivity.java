@@ -47,6 +47,10 @@ public class ArtistInfoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_artist_info);
 
+        if (!checkServiceAlive()) {
+            return;
+        }
+
         String tingUid = getIntent().getStringExtra(Extras.TING_UID);
         getArtistInfo(tingUid);
         ViewUtils.changeViewState(svArtistInfo, llLoading, llLoadFail, LoadStateEnum.LOADING);

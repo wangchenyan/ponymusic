@@ -1,6 +1,7 @@
 package me.wcy.music.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Build;
@@ -90,6 +91,15 @@ public abstract class BaseActivity extends AppCompatActivity {
             throw new NullPointerException("play service is null");
         }
         return playService;
+    }
+
+    protected boolean checkServiceAlive() {
+        if (AppCache.getPlayService() == null) {
+            startActivity(new Intent(this, SplashActivity.class));
+            AppCache.clearStack();
+            return false;
+        }
+        return true;
     }
 
     private void setSystemBarTransparent() {

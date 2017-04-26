@@ -83,6 +83,10 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
 
+        if (!checkServiceAlive()) {
+            return;
+        }
+
         getPlayService().setOnPlayEventListener(this);
 
         setupView();

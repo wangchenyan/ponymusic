@@ -6,7 +6,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.tencent.bugly.Bugly;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.log.LoggerInterceptor;
 
 import java.util.concurrent.TimeUnit;
 
@@ -21,7 +20,6 @@ import okhttp3.OkHttpClient;
  * Created by wcy on 2015/11/27.
  */
 public class MusicApplication extends Application {
-    private static final String TAG = "PonyMusic";
 
     @Override
     public void onCreate() {
@@ -40,7 +38,6 @@ public class MusicApplication extends Application {
                 .readTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(10, TimeUnit.SECONDS)
                 .addInterceptor(new HttpInterceptor())
-                .addInterceptor(new LoggerInterceptor(TAG, true))
                 .build();
         OkHttpUtils.initClient(okHttpClient);
     }
