@@ -19,7 +19,12 @@ public class ImageUtils {
     public static final int BLUR_RADIUS = 50;
 
     public static Bitmap blur(Bitmap sentBitmap) {
-        return blur(sentBitmap, BLUR_RADIUS);
+        try {
+            return blur(sentBitmap, BLUR_RADIUS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -51,11 +56,11 @@ public class ImageUtils {
      * <p>
      * Stack Blur Algorithm by Mario Klingemann <mario@quasimondo.com>
      */
-    public static Bitmap blur(Bitmap sentBitmap, int radius) {
+    private static Bitmap blur(Bitmap sentBitmap, int radius) {
         Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
 
         if (radius < 1) {
-            return (null);
+            return null;
         }
 
         int w = bitmap.getWidth();
@@ -249,7 +254,7 @@ public class ImageUtils {
 
         bitmap.setPixels(pix, 0, w, 0, 0, w, h);
 
-        return (bitmap);
+        return bitmap;
     }
 
     /**
