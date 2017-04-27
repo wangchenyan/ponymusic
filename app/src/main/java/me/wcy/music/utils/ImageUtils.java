@@ -6,6 +6,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.support.annotation.Nullable;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
@@ -18,6 +19,7 @@ import me.wcy.music.R;
 public class ImageUtils {
     public static final int BLUR_RADIUS = 50;
 
+    @Nullable
     public static Bitmap blur(Bitmap sentBitmap) {
         try {
             return blur(sentBitmap, BLUR_RADIUS);
@@ -274,7 +276,7 @@ public class ImageUtils {
      * 将图片剪裁为圆形
      */
     public static Bitmap createCircleImage(Bitmap source) {
-        int length = source.getWidth() < source.getHeight() ? source.getWidth() : source.getHeight();
+        int length = Math.min(source.getWidth(), source.getHeight());
         Paint paint = new Paint();
         paint.setAntiAlias(true);
         Bitmap target = Bitmap.createBitmap(length, length, Bitmap.Config.ARGB_8888);
@@ -287,11 +289,11 @@ public class ImageUtils {
 
     public static DisplayImageOptions getCoverDisplayOptions() {
         return new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.default_cover)
+                .showImageOnLoading(R.drawable.default_cover)
                 .showImageForEmptyUri(R.drawable.default_cover)
                 .showImageOnFail(R.drawable.default_cover)
                 .cacheInMemory(true)
-                .cacheOnDisc(true)
+                .cacheOnDisk(true)
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
     }

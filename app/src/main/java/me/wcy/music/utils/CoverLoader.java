@@ -2,6 +2,7 @@ package me.wcy.music.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.support.v4.util.LruCache;
 import android.text.TextUtils;
 
@@ -36,22 +37,32 @@ public class CoverLoader {
         mThumbnailCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected int sizeOf(String key, Bitmap bitmap) {
-                // 转换为KB，以达到与cacheSize的单位统一
-                return bitmap.getByteCount() / 1024;
+                return sizeOfBitmap(bitmap);
             }
         };
         mBlurCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected int sizeOf(String key, Bitmap bitmap) {
-                return bitmap.getByteCount() / 1024;
+                return sizeOfBitmap(bitmap);
             }
         };
         mRoundCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected int sizeOf(String key, Bitmap bitmap) {
-                return bitmap.getByteCount() / 1024;
+                return sizeOfBitmap(bitmap);
             }
         };
+    }
+
+    /**
+     * 获取bitmap内存，单位KB
+     */
+    private int sizeOfBitmap(Bitmap bitmap) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            return bitmap.getAllocationByteCount() / 1024;
+        } else {
+            return bitmap.getByteCount() / 1024;
+        }
     }
 
     public static CoverLoader getInstance() {
@@ -97,10 +108,9 @@ public class CoverLoader {
             bitmap = mBlurCache.get(path);
             if (bitmap == null) {
                 bitmap = loadBitmap(path, ScreenUtils.getScreenWidth() / 2);
+                bitmap = ImageUtils.blur(bitmap);
                 if (bitmap == null) {
                     bitmap = loadBlur(null);
-                } else {
-                    bitmap = ImageUtils.blur(bitmap);
                 }
                 mBlurCache.put(path, bitmap);
             }
@@ -142,7 +152,7 @@ public class CoverLoader {
         // 仅获取大小
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);
-        int maxLength = options.outWidth > options.outHeight ? options.outWidth : options.outHeight;
+        int maxLength = Math.max(options.outWidth, options.outHeight);
         // 压缩尺寸，避免卡顿
         int inSampleSize = maxLength / length;
         if (inSampleSize < 1) {
@@ -151,6 +161,7 @@ public class CoverLoader {
         options.inSampleSize = inSampleSize;
         // 获取bitmap
         options.inJustDecodeBounds = false;
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
         return BitmapFactory.decodeFile(path, options);
     }
 }
