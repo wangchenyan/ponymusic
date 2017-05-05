@@ -107,8 +107,10 @@ public class NaviMenuExecutor {
         }
 
         MusicActivity activity = (MusicActivity) context;
-        PlayService service = activity.getPlayService();
         activity.finish();
-        service.stop();
+        PlayService service = AppCache.getPlayService();
+        if (service != null) {
+            service.stop();
+        }
     }
 }

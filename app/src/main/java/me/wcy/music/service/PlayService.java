@@ -89,7 +89,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     }
 
     /**
-     * 每次启动时扫描音乐
+     * 扫描音乐
      */
     public void updateMusicList() {
         MusicUtils.scanMusic(this, mMusicList);
@@ -102,6 +102,10 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     @Override
     public void onCompletion(MediaPlayer mp) {
         next();
+    }
+
+    public OnPlayerEventListener getOnPlayEventListener() {
+        return mListener;
     }
 
     public void setOnPlayEventListener(OnPlayerEventListener listener) {

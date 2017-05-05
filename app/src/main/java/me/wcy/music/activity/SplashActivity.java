@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
@@ -51,6 +52,7 @@ public class SplashActivity extends BaseActivity {
 
     private void checkService() {
         if (AppCache.getPlayService() == null) {
+            startService();
             showSplash();
             updateSplash();
 
@@ -64,6 +66,11 @@ public class SplashActivity extends BaseActivity {
             startMusicActivity();
             finish();
         }
+    }
+
+    private void startService() {
+        Intent intent = new Intent(this, PlayService.class);
+        startService(intent);
     }
 
     private void bindService() {
@@ -83,9 +90,7 @@ public class SplashActivity extends BaseActivity {
                     .result(new PermissionResult() {
                         @Override
                         public void onGranted() {
-                            playService.updateMusicList();
-                            startMusicActivity();
-                            finish();
+                            scanMusic(playService);
                         }
 
                         @Override
@@ -101,6 +106,23 @@ public class SplashActivity extends BaseActivity {
         @Override
         public void onServiceDisconnected(ComponentName name) {
         }
+    }
+
+    private void scanMusic(final PlayService playService) {
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                playService.updateMusicList();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                startMusicActivity();
+                finish();
+            }
+        }.execute();
     }
 
     private void showSplash() {

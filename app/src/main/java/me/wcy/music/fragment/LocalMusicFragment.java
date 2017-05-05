@@ -1,13 +1,9 @@
 package me.wcy.music.fragment;
 
-import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -17,7 +13,6 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,9 +59,6 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
             lvLocalMusic.setSelection(getPlayService().getPlayingPosition());
         }
         updateView();
-
-        IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
-        getContext().registerReceiver(mDownloadReceiver, filter);
     }
 
     @Override
@@ -118,9 +110,17 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     }
 
     public void onItemPlay() {
-        updateView();
-        if (getPlayService().getPlayingMusic().getType() == Music.Type.LOCAL) {
-            lvLocalMusic.smoothScrollToPosition(getPlayService().getPlayingPosition());
+        if (isAdded()) {
+            updateView();
+            if (getPlayService().getPlayingMusic().getType() == Music.Type.LOCAL) {
+                lvLocalMusic.smoothScrollToPosition(getPlayService().getPlayingPosition());
+            }
+        }
+    }
+
+    public void onMusicListUpdate() {
+        if (isAdded()) {
+            updateView();
         }
     }
 
@@ -236,32 +236,4 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
             }
         }
     }
-
-    @Override
-    public void onDestroy() {
-        getContext().unregisterReceiver(mDownloadReceiver);
-        super.onDestroy();
-    }
-
-    private BroadcastReceiver mDownloadReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-            String title = AppCache.getDownloadList().get(id);
-            if (TextUtils.isEmpty(title)) {
-                return;
-            }
-            // 由于系统扫描音乐是异步执行，因此延迟刷新音乐列表
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (!isAdded()) {
-                        return;
-                    }
-                    getPlayService().updateMusicList();
-                    updateView();
-                }
-            }, 1000);
-        }
-    };
 }

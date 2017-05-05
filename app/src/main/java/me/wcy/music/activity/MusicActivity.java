@@ -167,7 +167,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onPublish(int progress) {
         mProgressBar.setProgress(progress);
-        if (mPlayFragment != null && mPlayFragment.isInitialized()) {
+        if (mPlayFragment != null) {
             mPlayFragment.onPublish(progress);
         }
     }
@@ -175,7 +175,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onChange(Music music) {
         onPlay(music);
-        if (mPlayFragment != null && mPlayFragment.isInitialized()) {
+        if (mPlayFragment != null) {
             mPlayFragment.onChange(music);
         }
     }
@@ -183,7 +183,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onPlayerPause() {
         ivPlayBarPlay.setSelected(false);
-        if (mPlayFragment != null && mPlayFragment.isInitialized()) {
+        if (mPlayFragment != null) {
             mPlayFragment.onPlayerPause();
         }
     }
@@ -191,7 +191,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onPlayerResume() {
         ivPlayBarPlay.setSelected(true);
-        if (mPlayFragment != null && mPlayFragment.isInitialized()) {
+        if (mPlayFragment != null) {
             mPlayFragment.onPlayerResume();
         }
     }
@@ -203,6 +203,13 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         }
         String title = getString(R.string.menu_timer);
         timerItem.setTitle(remain == 0 ? title : SystemUtils.formatTime(title + "(mm:ss)", remain));
+    }
+
+    @Override
+    public void onMusicListUpdate() {
+        if (mLocalMusicFragment != null) {
+            mLocalMusicFragment.onMusicListUpdate();
+        }
     }
 
     @Override
@@ -280,7 +287,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         mProgressBar.setMax((int) music.getDuration());
         mProgressBar.setProgress(0);
 
-        if (mLocalMusicFragment != null && mLocalMusicFragment.isInitialized()) {
+        if (mLocalMusicFragment != null) {
             mLocalMusicFragment.onItemPlay();
         }
     }

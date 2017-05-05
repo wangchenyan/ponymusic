@@ -19,20 +19,12 @@ import me.wcy.music.utils.permission.PermissionReq;
  */
 public abstract class BaseFragment extends Fragment {
     protected Handler mHandler = new Handler(Looper.getMainLooper());
-    private boolean isInitialized;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         ViewBinder.bind(this, view);
         init();
         setListener();
-
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                isInitialized = true;
-            }
-        });
     }
 
     @Override
@@ -44,10 +36,6 @@ public abstract class BaseFragment extends Fragment {
     protected abstract void init();
 
     protected abstract void setListener();
-
-    public boolean isInitialized() {
-        return isInitialized;
-    }
 
     protected PlayService getPlayService() {
         PlayService playService = AppCache.getPlayService();

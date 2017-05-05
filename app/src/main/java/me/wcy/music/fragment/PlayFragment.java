@@ -157,30 +157,38 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
      * 更新播放进度
      */
     public void onPublish(int progress) {
-        sbProgress.setProgress(progress);
-        if (mLrcViewSingle.hasLrc()) {
-            mLrcViewSingle.updateTime(progress);
-            mLrcViewFull.updateTime(progress);
-        }
-        //更新当前播放时间
-        if (progress - mLastProgress >= 1000) {
-            tvCurrentTime.setText(formatTime(progress));
-            mLastProgress = progress;
+        if (isAdded()) {
+            sbProgress.setProgress(progress);
+            if (mLrcViewSingle.hasLrc()) {
+                mLrcViewSingle.updateTime(progress);
+                mLrcViewFull.updateTime(progress);
+            }
+            //更新当前播放时间
+            if (progress - mLastProgress >= 1000) {
+                tvCurrentTime.setText(formatTime(progress));
+                mLastProgress = progress;
+            }
         }
     }
 
     public void onChange(Music music) {
-        onPlay(music);
+        if (isAdded()) {
+            onPlay(music);
+        }
     }
 
     public void onPlayerPause() {
-        ivPlay.setSelected(false);
-        mAlbumCoverView.pause();
+        if (isAdded()) {
+            ivPlay.setSelected(false);
+            mAlbumCoverView.pause();
+        }
     }
 
     public void onPlayerResume() {
-        ivPlay.setSelected(true);
-        mAlbumCoverView.start();
+        if (isAdded()) {
+            ivPlay.setSelected(true);
+            mAlbumCoverView.start();
+        }
     }
 
     @Override
