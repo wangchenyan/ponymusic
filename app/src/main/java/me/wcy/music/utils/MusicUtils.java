@@ -28,11 +28,11 @@ public class MusicUtils {
             return;
         }
         while (cursor.moveToNext()) {
-            // 是否为音乐
-            int isMusic = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC));
-            if (isMusic == 0) {
-                continue;
-            }
+            // 是否为音乐，魅族手机上始终为0
+            // int isMusic = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC));
+            // if (isMusic == 0) {
+            //     continue;
+            // }
             long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
             String title = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)));
             String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
@@ -67,9 +67,10 @@ public class MusicUtils {
         Cursor cursor = context.getContentResolver().query(
                 Uri.parse("content://media/external/audio/albums/" + albumId),
                 new String[]{"album_art"}, null, null, null);
-        if (cursor != null) {
-            cursor.moveToNext();
-            path = cursor.getString(0);
+        if (cursor != null && cursor.moveToNext()) {
+            if (cursor.getColumnCount() > 0) {
+                path = cursor.getString(0);
+            }
             cursor.close();
         }
         return path;
