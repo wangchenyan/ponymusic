@@ -67,8 +67,8 @@ public class MusicUtils {
         Cursor cursor = context.getContentResolver().query(
                 Uri.parse("content://media/external/audio/albums/" + albumId),
                 new String[]{"album_art"}, null, null, null);
-        if (cursor != null && cursor.moveToNext()) {
-            if (cursor.getColumnCount() > 0) {
+        if (cursor != null) {
+            if (cursor.moveToNext() && cursor.getColumnCount() > 0) {
                 path = cursor.getString(0);
             }
             cursor.close();
