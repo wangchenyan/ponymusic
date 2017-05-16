@@ -1,5 +1,6 @@
 package me.wcy.music.application;
 
+import android.os.Build;
 import android.util.Log;
 
 import java.io.BufferedWriter;
@@ -9,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import me.wcy.music.BuildConfig;
 import me.wcy.music.utils.FileUtils;
 
 /**
@@ -16,8 +18,7 @@ import me.wcy.music.utils.FileUtils;
  * Created by hzwangchenyan on 2016/1/25.
  */
 public class CrashHandler implements Thread.UncaughtExceptionHandler {
-    private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
-    private static SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault());
+    private static SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("MM-dd HH:mm:ss.SSS", Locale.getDefault());
 
     private Thread.UncaughtExceptionHandler mDefaultHandler;
 
@@ -42,20 +43,29 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     private void saveCrashInfo(Throwable ex) {
         String stackTrace = Log.getStackTraceString(ex);
-        Date date = new Date();
-        String dateStr = DATE_FORMAT.format(date);
-        String filePath = FileUtils.getLogDir() + String.format("log_%s.log", dateStr);
-        String time = TIME_FORMAT.format(date);
+        String filePath = FileUtils.getLogDir() + "crash.log";
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true));
-            bw.write(String.format(Locale.getDefault(), "*** crash at %s *** ", time));
-            bw.newLine();
+            bw.write("*** crash ***\n");
+            bw.write(getInfo());
             bw.write(stackTrace);
+            bw.newLine();
             bw.newLine();
             bw.flush();
             bw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private String getInfo() {
+        String time = TIME_FORMAT.format(new Date());
+        String version = BuildConfig.VERSION_NAME + "/" + BuildConfig.VERSION_CODE;
+        String device = Build.MANUFACTURER + "/" + Build.MODEL + "/" + Build.VERSION.RELEASE;
+        StringBuilder sb = new StringBuilder();
+        sb.append("*** time: ").append(time).append(" ***").append("\n");
+        sb.append("*** version: ").append(version).append(" ***").append("\n");
+        sb.append("*** device: ").append(device).append(" ***").append("\n");
+        return sb.toString();
     }
 }

@@ -12,7 +12,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,16 +31,13 @@ import me.wcy.music.utils.permission.PermissionReq;
  * Created by wcy on 2015/11/26.
  */
 public abstract class BaseActivity extends AppCompatActivity {
-    private static final String TAG = "Activity";
     protected Handler mHandler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "onCreate: " + getClass().getSimpleName());
 
         setSystemBarTransparent();
-        AppCache.addToStack(this);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
     }
 
@@ -121,13 +117,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onDestroy() {
-        AppCache.removeFromStack(this);
-        super.onDestroy();
-        Log.i(TAG, "onDestroy: " + getClass().getSimpleName());
     }
 
     @Override
