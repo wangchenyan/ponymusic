@@ -14,6 +14,7 @@ import me.wcy.music.application.AppCache;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.NetworkUtils;
 import me.wcy.music.utils.Preferences;
+import me.wcy.music.utils.ToastUtils;
 
 /**
  * Created by hzwangchenyan on 2017/1/20.
@@ -59,18 +60,23 @@ public abstract class DownloadMusic implements IExecutor<Void> {
     protected abstract void download();
 
     protected static void downloadMusic(String url, String artist, String song) {
-        String fileName = FileUtils.getMp3FileName(artist, song);
-        Uri uri = Uri.parse(url);
-        DownloadManager.Request request = new DownloadManager.Request(uri);
-        request.setTitle(FileUtils.getFileName(artist, song));
-        request.setDescription("正在下载…");
-        request.setDestinationInExternalPublicDir(FileUtils.getRelativeMusicDir(), fileName);
-        request.setMimeType(MimeTypeMap.getFileExtensionFromUrl(url));
-        request.allowScanningByMediaScanner();
-        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
-        request.setAllowedOverRoaming(false);// 不允许漫游
-        DownloadManager downloadManager = (DownloadManager) AppCache.getContext().getSystemService(Context.DOWNLOAD_SERVICE);
-        long id = downloadManager.enqueue(request);
-        AppCache.getDownloadList().put(id, song);
+        try {
+            String fileName = FileUtils.getMp3FileName(artist, song);
+            Uri uri = Uri.parse(url);
+            DownloadManager.Request request = new DownloadManager.Request(uri);
+            request.setTitle(FileUtils.getFileName(artist, song));
+            request.setDescription("正在下载…");
+            request.setDestinationInExternalPublicDir(FileUtils.getRelativeMusicDir(), fileName);
+            request.setMimeType(MimeTypeMap.getFileExtensionFromUrl(url));
+            request.allowScanningByMediaScanner();
+            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
+            request.setAllowedOverRoaming(false);// 不允许漫游
+            DownloadManager downloadManager = (DownloadManager) AppCache.getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+            long id = downloadManager.enqueue(request);
+            AppCache.getDownloadList().put(id, song);
+        } catch (Throwable th) {
+            th.printStackTrace();
+            ToastUtils.show("下载失败");
+        }
     }
 }
