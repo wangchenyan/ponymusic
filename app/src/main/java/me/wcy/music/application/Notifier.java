@@ -124,7 +124,11 @@ public class Notifier {
     private static int getNotificationTextColor(Context context) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         Notification notification = builder.build();
-        int layoutId = notification.contentView.getLayoutId();
+        RemoteViews remoteViews = notification.contentView;
+        if (remoteViews == null) {
+            return Color.BLACK;
+        }
+        int layoutId = remoteViews.getLayoutId();
         ViewGroup notificationLayout = (ViewGroup) LayoutInflater.from(context).inflate(layoutId, null);
         TextView title = (TextView) notificationLayout.findViewById(android.R.id.title);
         if (title != null) {
