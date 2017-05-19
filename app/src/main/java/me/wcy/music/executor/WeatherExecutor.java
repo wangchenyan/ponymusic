@@ -1,6 +1,7 @@
 package me.wcy.music.executor;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -123,6 +124,10 @@ public class WeatherExecutor implements IExecutor, AMapLocalWeatherListener {
     }
 
     private int getWeatherIcon(String weather) {
+        if (TextUtils.isEmpty(weather)) {
+            return R.drawable.ic_weather_sunny;
+        }
+
         if (weather.contains("-")) {
             weather = weather.substring(0, weather.indexOf("-"));
         }
