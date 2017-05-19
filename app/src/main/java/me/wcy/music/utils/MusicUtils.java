@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 
 import java.util.List;
 
@@ -29,15 +30,15 @@ public class MusicUtils {
         }
         while (cursor.moveToNext()) {
             // 是否为音乐，魅族手机上始终为0
-            // int isMusic = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC));
-            // if (isMusic == 0) {
-            //     continue;
-            // }
+            int isMusic = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC));
+            if (!SystemUtils.isFlyme() && isMusic == 0) {
+                continue;
+            }
             long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
             String title = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)));
             String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
             String unknown = context.getString(R.string.unknown);
-            artist = artist.equals("<unknown>") ? unknown : artist;
+            artist = (TextUtils.isEmpty(artist) || artist.toLowerCase().contains("unknown")) ? unknown : artist;
             String album = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)));
             long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
             String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
