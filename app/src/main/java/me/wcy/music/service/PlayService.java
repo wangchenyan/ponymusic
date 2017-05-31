@@ -141,6 +141,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
             mPlayer.prepareAsync();
             playState = STATE_PREPARING;
             mPlayer.setOnPreparedListener(mPreparedListener);
+            mPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);
             if (mListener != null) {
                 mListener.onChange(music);
             }
@@ -154,6 +155,15 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         @Override
         public void onPrepared(MediaPlayer mp) {
             start();
+        }
+    };
+
+    private MediaPlayer.OnBufferingUpdateListener mBufferingUpdateListener = new MediaPlayer.OnBufferingUpdateListener() {
+        @Override
+        public void onBufferingUpdate(MediaPlayer mp, int percent) {
+            if (mListener != null) {
+                mListener.onBufferingUpdate(percent);
+            }
         }
     };
 

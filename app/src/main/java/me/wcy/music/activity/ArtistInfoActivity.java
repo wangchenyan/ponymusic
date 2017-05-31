@@ -4,11 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.text.Html;
+import android.support.v4.content.ContextCompat;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -115,7 +119,7 @@ public class ArtistInfoActivity extends BaseActivity {
             tvCountry.setText(getString(R.string.artist_info_country, country));
             llArtistInfoContainer.addView(tvCountry);
         }
-        if (!TextUtils.isEmpty(constellation) && !constellation.equals("未知")) {
+        if (!TextUtils.isEmpty(constellation) && !TextUtils.equals(constellation, "未知")) {
             TextView tvConstellation = (TextView) LayoutInflater.from(this).inflate(R.layout.item_artist_info, llArtistInfoContainer, false);
             tvConstellation.setText(getString(R.string.artist_info_constellation, constellation));
             llArtistInfoContainer.addView(tvConstellation);
@@ -130,7 +134,7 @@ public class ArtistInfoActivity extends BaseActivity {
             tvWeight.setText(getString(R.string.artist_info_weight, String.valueOf(weight)));
             llArtistInfoContainer.addView(tvWeight);
         }
-        if (!TextUtils.isEmpty(birth) && !birth.equals("0000-00-00")) {
+        if (!TextUtils.isEmpty(birth) && !TextUtils.equals(birth, "0000-00-00")) {
             TextView tvBirth = (TextView) LayoutInflater.from(this).inflate(R.layout.item_artist_info, llArtistInfoContainer, false);
             tvBirth.setText(getString(R.string.artist_info_birth, birth));
             llArtistInfoContainer.addView(tvBirth);
@@ -142,10 +146,15 @@ public class ArtistInfoActivity extends BaseActivity {
         }
         if (!TextUtils.isEmpty(url)) {
             TextView tvUrl = (TextView) LayoutInflater.from(this).inflate(R.layout.item_artist_info, llArtistInfoContainer, false);
-            String html = "<font color='#2196F3'><a href='%s'>查看更多信息</a></font>";
-            tvUrl.setText(Html.fromHtml(String.format(html, url)));
-            tvUrl.setMovementMethod(LinkMovementMethod.getInstance());
             tvUrl.setGravity(Gravity.CENTER);
+            tvUrl.setLinkTextColor(ContextCompat.getColor(this, R.color.blue));
+            tvUrl.setMovementMethod(LinkMovementMethod.getInstance());
+            SpannableString spannableString = new SpannableString("查看更多信息");
+            spannableString.setSpan(new URLSpan(url), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            tvUrl.setText(spannableString);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+            tvUrl.setLayoutParams(layoutParams);
             llArtistInfoContainer.addView(tvUrl);
         }
 

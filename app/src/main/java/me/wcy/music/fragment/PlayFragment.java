@@ -171,6 +171,12 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         }
     }
 
+    public void onBufferingUpdate(int percent) {
+        if (isAdded()) {
+            sbProgress.setSecondaryProgress(sbProgress.getMax() * 100 / percent);
+        }
+    }
+
     public void onChange(Music music) {
         if (isAdded()) {
             onPlay(music);
@@ -256,10 +262,12 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         if (music == null) {
             return;
         }
+
         tvTitle.setText(music.getTitle());
         tvArtist.setText(music.getArtist());
-        sbProgress.setMax((int) music.getDuration());
         sbProgress.setProgress(0);
+        sbProgress.setSecondaryProgress(0);
+        sbProgress.setMax((int) music.getDuration());
         mLastProgress = 0;
         tvCurrentTime.setText(R.string.play_time_start);
         tvTotalTime.setText(formatTime(music.getDuration()));

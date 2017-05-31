@@ -2,7 +2,6 @@ package me.wcy.music.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -263,13 +262,7 @@ public class ImageUtils {
      * 将图片放大或缩小到指定尺寸
      */
     public static Bitmap resizeImage(Bitmap source, int w, int h) {
-        int width = source.getWidth();
-        int height = source.getHeight();
-        float scaleWidth = ((float) w) / width;
-        float scaleHeight = ((float) h) / height;
-        Matrix matrix = new Matrix();
-        matrix.postScale(scaleWidth, scaleHeight);
-        return Bitmap.createBitmap(source, 0, 0, width, height, matrix, true);
+        return Bitmap.createScaledBitmap(source, w, h, true);
     }
 
     /**

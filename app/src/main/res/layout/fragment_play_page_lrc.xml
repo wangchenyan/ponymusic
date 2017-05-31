@@ -17,6 +17,6 @@
         lrc:lrcAnimationDuration="1000"
         lrc:lrcCurrentTextColor="@color/white"
         lrc:lrcDividerHeight="24dp"
-        lrc:lrcNormalTextColor="@color/translucent_white"
+        lrc:lrcNormalTextColor="@color/white_50p"
         lrc:lrcTextSize="@dimen/text_size_common" />
 </LinearLayout>

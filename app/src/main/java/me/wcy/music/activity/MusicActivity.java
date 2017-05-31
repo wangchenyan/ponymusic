@@ -173,6 +173,13 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
+    public void onBufferingUpdate(int percent) {
+        if (mPlayFragment != null) {
+            mPlayFragment.onBufferingUpdate(percent);
+        }
+    }
+
+    @Override
     public void onChange(Music music) {
         onPlay(music);
         if (mPlayFragment != null) {
