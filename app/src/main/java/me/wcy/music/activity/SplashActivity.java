@@ -1,5 +1,6 @@
 package me.wcy.music.activity;
 
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -28,7 +29,6 @@ import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.binding.Bind;
 import me.wcy.music.utils.permission.PermissionReq;
 import me.wcy.music.utils.permission.PermissionResult;
-import me.wcy.music.utils.permission.Permissions;
 
 public class SplashActivity extends BaseActivity {
     private static final String SPLASH_FILE_NAME = "splash";
@@ -86,7 +86,8 @@ public class SplashActivity extends BaseActivity {
             final PlayService playService = ((PlayService.PlayBinder) service).getService();
             AppCache.setPlayService(playService);
             PermissionReq.with(SplashActivity.this)
-                    .permissions(Permissions.STORAGE)
+                    .permissions(Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     .result(new PermissionResult() {
                         @Override
                         public void onGranted() {
@@ -95,7 +96,7 @@ public class SplashActivity extends BaseActivity {
 
                         @Override
                         public void onDenied() {
-                            ToastUtils.show(getString(R.string.no_permission, Permissions.STORAGE_DESC, "扫描本地歌曲"));
+                            ToastUtils.show(getString(R.string.no_permission, "存储空间", "扫描本地歌曲"));
                             finish();
                             playService.stop();
                         }

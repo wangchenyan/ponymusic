@@ -14,6 +14,53 @@ import android.util.SparseArray;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Android运行时权限申请
+ * <p>
+ * 需要申请的权限列表，<a "href=https://developer.android.google.cn/guide/topics/security/permissions.html?hl=zh-cn#normal-dangerous">Google Doc</a>
+ * <p>
+ * -CALENDAR<br>
+ * {@link android.Manifest.permission#READ_CALENDAR}<br>
+ * {@link android.Manifest.permission#WRITE_CALENDAR}<br>
+ * <p>
+ * -CAMERA<br>
+ * {@link android.Manifest.permission#CAMERA}<br>
+ * <p>
+ * -CONTACTS<br>
+ * {@link android.Manifest.permission#READ_CONTACTS}<br>
+ * {@link android.Manifest.permission#WRITE_CONTACTS}<br>
+ * {@link android.Manifest.permission#GET_ACCOUNTS}<br>
+ * <p>
+ * -LOCATION<br>
+ * {@link android.Manifest.permission#ACCESS_FINE_LOCATION}<br>
+ * {@link android.Manifest.permission#ACCESS_COARSE_LOCATION}<br>
+ * <p>
+ * -MICROPHONE<br>
+ * {@link android.Manifest.permission#RECORD_AUDIO}<br>
+ * <p>
+ * -PHONE<br>
+ * {@link android.Manifest.permission#READ_PHONE_STATE}<br>
+ * {@link android.Manifest.permission#CALL_PHONE}<br>
+ * {@link android.Manifest.permission#READ_CALL_LOG}<br>
+ * {@link android.Manifest.permission#WRITE_CALL_LOG}<br>
+ * {@link android.Manifest.permission#ADD_VOICEMAIL}<br>
+ * {@link android.Manifest.permission#USE_SIP}<br>
+ * {@link android.Manifest.permission#PROCESS_OUTGOING_CALLS}<br>
+ * <p>
+ * -SENSORS<br>
+ * {@link android.Manifest.permission#BODY_SENSORS}<br>
+ * <p>
+ * -SMS<br>
+ * {@link android.Manifest.permission#SEND_SMS}<br>
+ * {@link android.Manifest.permission#RECEIVE_SMS}<br>
+ * {@link android.Manifest.permission#READ_SMS}<br>
+ * {@link android.Manifest.permission#RECEIVE_WAP_PUSH}<br>
+ * {@link android.Manifest.permission#RECEIVE_MMS}<br>
+ * <p>
+ * -STORAGE<br>
+ * {@link android.Manifest.permission#READ_EXTERNAL_STORAGE}<br>
+ * {@link android.Manifest.permission#WRITE_EXTERNAL_STORAGE}<br>
+ */
 public class PermissionReq {
     private static int sRequestCode = 0;
     private static SparseArray<PermissionResult> sResultArray = new SparseArray<>();
