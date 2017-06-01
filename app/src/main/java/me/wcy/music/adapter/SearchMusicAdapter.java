@@ -73,15 +73,15 @@ public class SearchMusicAdapter extends BaseAdapter {
 
     private static class ViewHolder {
         @Bind(R.id.iv_cover)
-        ImageView ivCover;
+        private ImageView ivCover;
         @Bind(R.id.tv_title)
-        TextView tvTitle;
+        private TextView tvTitle;
         @Bind(R.id.tv_artist)
-        TextView tvArtist;
+        private TextView tvArtist;
         @Bind(R.id.iv_more)
-        ImageView ivMore;
+        private ImageView ivMore;
         @Bind(R.id.v_divider)
-        View vDivider;
+        private View vDivider;
 
         public ViewHolder(View view) {
             ViewBinder.bind(this, view);

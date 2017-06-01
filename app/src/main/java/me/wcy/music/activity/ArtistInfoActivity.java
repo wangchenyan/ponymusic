@@ -2,7 +2,6 @@ package me.wcy.music.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
@@ -18,8 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import me.wcy.music.R;
 import me.wcy.music.constants.Extras;
@@ -95,17 +94,13 @@ public class ArtistInfoActivity extends BaseActivity {
         String url = artistInfo.getUrl();
         if (!TextUtils.isEmpty(avatarUri)) {
             ImageView ivAvatar = new ImageView(this);
-            ivAvatar.setImageResource(R.drawable.default_artist);
             ivAvatar.setScaleType(ImageView.ScaleType.FIT_START);
-            DisplayImageOptions options = new DisplayImageOptions.Builder()
-                    .showStubImage(R.drawable.default_artist)
-                    .showImageForEmptyUri(R.drawable.default_artist)
-                    .showImageOnFail(R.drawable.default_artist)
-                    .cacheInMemory(true)
-                    .cacheOnDisk(true)
-                    .bitmapConfig(Bitmap.Config.RGB_565)
-                    .build();
-            ImageLoader.getInstance().displayImage(avatarUri, ivAvatar, options);
+            Glide.with(this)
+                    .load(avatarUri)
+                    .apply(new RequestOptions()
+                            .placeholder(R.drawable.default_artist)
+                            .error(R.drawable.default_artist))
+                    .into(ivAvatar);
             llArtistInfoContainer.addView(ivAvatar);
         }
         if (!TextUtils.isEmpty(name)) {
@@ -146,7 +141,6 @@ public class ArtistInfoActivity extends BaseActivity {
         }
         if (!TextUtils.isEmpty(url)) {
             TextView tvUrl = (TextView) LayoutInflater.from(this).inflate(R.layout.item_artist_info, llArtistInfoContainer, false);
-            tvUrl.setGravity(Gravity.CENTER);
             tvUrl.setLinkTextColor(ContextCompat.getColor(this, R.color.blue));
             tvUrl.setMovementMethod(LinkMovementMethod.getInstance());
             SpannableString spannableString = new SpannableString("查看更多信息");

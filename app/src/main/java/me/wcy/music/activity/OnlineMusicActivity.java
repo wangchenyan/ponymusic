@@ -15,9 +15,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageSize;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -182,13 +183,18 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         tvTitle.setText(mOnlineMusicList.getBillboard().getName());
         tvUpdateDate.setText(getString(R.string.recent_update, mOnlineMusicList.getBillboard().getUpdate_date()));
         tvComment.setText(mOnlineMusicList.getBillboard().getComment());
-        ImageSize imageSize = new ImageSize(200, 200);
-        ImageLoader.getInstance().loadImage(mOnlineMusicList.getBillboard().getPic_s640(), imageSize,
-                ImageUtils.getCoverDisplayOptions(), new SimpleImageLoadingListener() {
+        Glide.with(this)
+                .asBitmap()
+                .load(mOnlineMusicList.getBillboard().getPic_s640())
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.default_cover)
+                        .error(R.drawable.default_cover)
+                        .override(200, 200))
+                .into(new SimpleTarget<Bitmap>() {
                     @Override
-                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                        ivCover.setImageBitmap(loadedImage);
-                        ivHeaderBg.setImageBitmap(ImageUtils.blur(loadedImage));
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        ivCover.setImageBitmap(resource);
+                        ivHeaderBg.setImageBitmap(ImageUtils.blur(resource));
                     }
                 });
     }

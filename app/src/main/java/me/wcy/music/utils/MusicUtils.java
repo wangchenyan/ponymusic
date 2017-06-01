@@ -28,12 +28,15 @@ public class MusicUtils {
         if (cursor == null) {
             return;
         }
+
+        int i = 0;
         while (cursor.moveToNext()) {
             // 是否为音乐，魅族手机上始终为0
             int isMusic = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC));
             if (!SystemUtils.isFlyme() && isMusic == 0) {
                 continue;
             }
+
             long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
             String title = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)));
             String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
@@ -57,7 +60,10 @@ public class MusicUtils {
             music.setCoverPath(coverPath);
             music.setFileName(fileName);
             music.setFileSize(fileSize);
-            CoverLoader.getInstance().loadThumbnail(music);
+            if (++i <= 20) {
+                // 只加载前20首的缩略图
+                CoverLoader.getInstance().loadThumbnail(music);
+            }
             musicList.add(music);
         }
         cursor.close();

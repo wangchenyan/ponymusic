@@ -8,7 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
@@ -18,7 +19,6 @@ import me.wcy.music.http.HttpClient;
 import me.wcy.music.model.OnlineMusic;
 import me.wcy.music.model.OnlineMusicList;
 import me.wcy.music.model.SongListInfo;
-import me.wcy.music.utils.ImageUtils;
 import me.wcy.music.utils.binding.Bind;
 import me.wcy.music.utils.binding.ViewBinder;
 
@@ -109,7 +109,7 @@ public class SongListAdapter extends BaseAdapter {
 
     private void getMusicListInfo(final SongListInfo songListInfo, final ViewHolderMusicList holderMusicList) {
         if (songListInfo.getCoverUrl() == null) {
-            holderMusicList.ivCover.setTag(songListInfo.getTitle());
+            holderMusicList.tvMusic1.setTag(songListInfo.getTitle());
             holderMusicList.ivCover.setImageResource(R.drawable.default_cover);
             holderMusicList.tvMusic1.setText("1.加载中…");
             holderMusicList.tvMusic2.setText("2.加载中…");
@@ -120,7 +120,7 @@ public class SongListAdapter extends BaseAdapter {
                     if (response == null || response.getSong_list() == null) {
                         return;
                     }
-                    if (!songListInfo.getTitle().equals(holderMusicList.ivCover.getTag())) {
+                    if (!songListInfo.getTitle().equals(holderMusicList.tvMusic1.getTag())) {
                         return;
                     }
                     parse(response, songListInfo);
@@ -132,7 +132,7 @@ public class SongListAdapter extends BaseAdapter {
                 }
             });
         } else {
-            holderMusicList.ivCover.setTag(null);
+            holderMusicList.tvMusic1.setTag(null);
             setData(songListInfo, holderMusicList);
         }
     }
@@ -161,15 +161,20 @@ public class SongListAdapter extends BaseAdapter {
     }
 
     private void setData(SongListInfo songListInfo, ViewHolderMusicList holderMusicList) {
-        ImageLoader.getInstance().displayImage(songListInfo.getCoverUrl(), holderMusicList.ivCover, ImageUtils.getCoverDisplayOptions());
         holderMusicList.tvMusic1.setText(songListInfo.getMusic1());
         holderMusicList.tvMusic2.setText(songListInfo.getMusic2());
         holderMusicList.tvMusic3.setText(songListInfo.getMusic3());
+        Glide.with(mContext)
+                .load(songListInfo.getCoverUrl())
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.default_cover)
+                        .error(R.drawable.default_cover))
+                .into(holderMusicList.ivCover);
     }
 
     private static class ViewHolderProfile {
         @Bind(R.id.tv_profile)
-        TextView tvProfile;
+        private TextView tvProfile;
 
         public ViewHolderProfile(View view) {
             ViewBinder.bind(this, view);
@@ -178,15 +183,15 @@ public class SongListAdapter extends BaseAdapter {
 
     private static class ViewHolderMusicList {
         @Bind(R.id.iv_cover)
-        ImageView ivCover;
+        private ImageView ivCover;
         @Bind(R.id.tv_music_1)
-        TextView tvMusic1;
+        private TextView tvMusic1;
         @Bind(R.id.tv_music_2)
-        TextView tvMusic2;
+        private TextView tvMusic2;
         @Bind(R.id.tv_music_3)
-        TextView tvMusic3;
+        private TextView tvMusic3;
         @Bind(R.id.v_divider)
-        View vDivider;
+        private View vDivider;
 
         public ViewHolderMusicList(View view) {
             ViewBinder.bind(this, view);

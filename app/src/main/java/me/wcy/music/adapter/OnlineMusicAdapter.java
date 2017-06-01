@@ -7,14 +7,14 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
 import me.wcy.music.R;
 import me.wcy.music.model.OnlineMusic;
 import me.wcy.music.utils.FileUtils;
-import me.wcy.music.utils.ImageUtils;
 import me.wcy.music.utils.binding.Bind;
 import me.wcy.music.utils.binding.ViewBinder;
 
@@ -56,7 +56,12 @@ public class OnlineMusicAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         OnlineMusic onlineMusic = mData.get(position);
-        ImageLoader.getInstance().displayImage(onlineMusic.getPic_small(), holder.ivCover, ImageUtils.getCoverDisplayOptions());
+        Glide.with(parent)
+                .load(onlineMusic.getPic_small())
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.default_cover)
+                        .error(R.drawable.default_cover))
+                .into(holder.ivCover);
         holder.tvTitle.setText(onlineMusic.getTitle());
         String artist = FileUtils.getArtistAndAlbum(onlineMusic.getArtist_name(), onlineMusic.getAlbum_title());
         holder.tvArtist.setText(artist);
@@ -80,15 +85,15 @@ public class OnlineMusicAdapter extends BaseAdapter {
 
     private static class ViewHolder {
         @Bind(R.id.iv_cover)
-        ImageView ivCover;
+        private ImageView ivCover;
         @Bind(R.id.tv_title)
-        TextView tvTitle;
+        private TextView tvTitle;
         @Bind(R.id.tv_artist)
-        TextView tvArtist;
+        private TextView tvArtist;
         @Bind(R.id.iv_more)
-        ImageView ivMore;
+        private ImageView ivMore;
         @Bind(R.id.v_divider)
-        View vDivider;
+        private View vDivider;
 
         public ViewHolder(View view) {
             ViewBinder.bind(this, view);
