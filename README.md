@@ -9,11 +9,11 @@
 - [Android开源音乐播放器之在线音乐列表自动加载更多](http://www.jianshu.com/p/576564627c96)
 
 ## 前言
-毕业设计做的项目，答辩完了，就共享出来。<br>
+毕业设计做的项目，答辩完了，就共享出来。
 
-- **开源不易，希望能给个Star鼓励**
 - 项目地址：https://github.com/wangchenyan/PonyMusic
 - 有问题请提Issues
+- 如果喜欢，欢迎Star！
 
 ## 简介
 波尼音乐是一款开源Android在线音乐播放器。
