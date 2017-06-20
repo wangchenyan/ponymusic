@@ -27,7 +27,7 @@ import me.wcy.music.executor.NaviMenuExecutor;
 import me.wcy.music.executor.WeatherExecutor;
 import me.wcy.music.fragment.LocalMusicFragment;
 import me.wcy.music.fragment.PlayFragment;
-import me.wcy.music.fragment.SongListFragment;
+import me.wcy.music.fragment.PlaylistFragment;
 import me.wcy.music.model.Music;
 import me.wcy.music.receiver.RemoteControlReceiver;
 import me.wcy.music.service.OnPlayerEventListener;
@@ -71,7 +71,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     private ProgressBar mProgressBar;
     private View vNavigationHeader;
     private LocalMusicFragment mLocalMusicFragment;
-    private SongListFragment mSongListFragment;
+    private PlaylistFragment mPlaylistFragment;
     private PlayFragment mPlayFragment;
     private AudioManager mAudioManager;
     private ComponentName mRemoteReceiver;
@@ -122,10 +122,10 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
         // setup view pager
         mLocalMusicFragment = new LocalMusicFragment();
-        mSongListFragment = new SongListFragment();
+        mPlaylistFragment = new PlaylistFragment();
         FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
         adapter.addFragment(mLocalMusicFragment);
-        adapter.addFragment(mSongListFragment);
+        adapter.addFragment(mPlaylistFragment);
         mViewPager.setAdapter(adapter);
         tvLocalMusic.setSelected(true);
     }

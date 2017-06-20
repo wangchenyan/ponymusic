@@ -26,13 +26,13 @@ import me.wcy.music.utils.binding.ViewBinder;
  * 歌单列表适配器
  * Created by wcy on 2015/12/19.
  */
-public class SongListAdapter extends BaseAdapter {
+public class PlaylistAdapter extends BaseAdapter {
     private static final int TYPE_PROFILE = 0;
     private static final int TYPE_MUSIC_LIST = 1;
     private Context mContext;
     private List<SongListInfo> mData;
 
-    public SongListAdapter(List<SongListInfo> data) {
+    public PlaylistAdapter(List<SongListInfo> data) {
         mData = data;
     }
 
@@ -80,7 +80,7 @@ public class SongListAdapter extends BaseAdapter {
         switch (itemViewType) {
             case TYPE_PROFILE:
                 if (convertView == null) {
-                    convertView = LayoutInflater.from(mContext).inflate(R.layout.view_holder_song_list_profile, parent, false);
+                    convertView = LayoutInflater.from(mContext).inflate(R.layout.view_holder_playlist_profile, parent, false);
                     holderProfile = new ViewHolderProfile(convertView);
                     convertView.setTag(holderProfile);
                 } else {
@@ -90,7 +90,7 @@ public class SongListAdapter extends BaseAdapter {
                 break;
             case TYPE_MUSIC_LIST:
                 if (convertView == null) {
-                    convertView = LayoutInflater.from(mContext).inflate(R.layout.view_holder_song_list, parent, false);
+                    convertView = LayoutInflater.from(mContext).inflate(R.layout.view_holder_playlist, parent, false);
                     holderMusicList = new ViewHolderMusicList(convertView);
                     convertView.setTag(holderMusicList);
                 } else {

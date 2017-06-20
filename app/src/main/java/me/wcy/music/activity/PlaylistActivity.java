@@ -46,7 +46,7 @@ import me.wcy.music.utils.ViewUtils;
 import me.wcy.music.utils.binding.Bind;
 import me.wcy.music.widget.AutoLoadListView;
 
-public class OnlineMusicActivity extends BaseActivity implements OnItemClickListener
+public class PlaylistActivity extends BaseActivity implements OnItemClickListener
         , OnMoreClickListener, AutoLoadListView.OnLoadListener {
     private static final int MUSIC_LIST_SIZE = 20;
 
@@ -67,7 +67,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_online_music);
+        setContentView(R.layout.activity_playlist);
 
         if (!checkServiceAlive()) {
             return;

@@ -76,7 +76,7 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.OnlineMusicActivity"
+            android:name=".activity.PlaylistActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ArtistInfoActivity"
