@@ -59,7 +59,7 @@ fir.im：http://fir.im/ponymusic
 
 ### 开源技术
 - [okhttp-utils](https://github.com/hongyangAndroid/okhttp-utils)
-- [Android-Universal-Image-Loader](https://github.com/nostra13/Android-Universal-Image-Loader)
+- [Glide](https://github.com/bumptech/glide)
 
 ### 关键代码
 黑胶唱片专辑封面绘制流程
