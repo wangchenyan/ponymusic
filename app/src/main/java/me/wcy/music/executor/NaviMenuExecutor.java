@@ -110,7 +110,7 @@ public class NaviMenuExecutor {
         activity.finish();
         PlayService service = AppCache.getPlayService();
         if (service != null) {
-            service.stop();
+            service.quit();
         }
     }
 }

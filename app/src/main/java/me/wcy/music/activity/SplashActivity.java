@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
@@ -19,6 +18,7 @@ import java.util.Calendar;
 
 import me.wcy.music.R;
 import me.wcy.music.application.AppCache;
+import me.wcy.music.service.EventCallback;
 import me.wcy.music.http.HttpCallback;
 import me.wcy.music.http.HttpClient;
 import me.wcy.music.model.Splash;
@@ -98,7 +98,7 @@ public class SplashActivity extends BaseActivity {
                         public void onDenied() {
                             ToastUtils.show(getString(R.string.no_permission, "存储空间", "扫描本地歌曲"));
                             finish();
-                            playService.stop();
+                            playService.quit();
                         }
                     })
                     .request();
@@ -110,20 +110,13 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void scanMusic(final PlayService playService) {
-        new AsyncTask<Void, Void, Void>() {
-
+        playService.updateMusicList(new EventCallback<Void>() {
             @Override
-            protected Void doInBackground(Void... params) {
-                playService.updateMusicList();
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
+            public void onEvent(Void aVoid) {
                 startMusicActivity();
                 finish();
             }
-        }.execute();
+        });
     }
 
     private void showSplash() {

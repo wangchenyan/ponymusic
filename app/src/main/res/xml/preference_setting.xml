@@ -1,18 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
     <PreferenceCategory android:title="@string/network">
+
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/setting_key_mobile_network_play"
             android:title="@string/mobile_network_play" />
+
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/setting_key_mobile_network_download"
             android:title="@string/mobile_network_download" />
     </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/play">
+
         <Preference
             android:key="@string/setting_key_sound_effect"
             android:title="@string/sound_effect" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="文件过滤">
+
+        <ListPreference
+            android:defaultValue="0"
+            android:dialogTitle="最小大小"
+            android:entries="@array/filter_size_entries"
+            android:entryValues="@array/filter_size_entry_values"
+            android:key="@string/setting_key_filter_size"
+            android:summary="不过滤"
+            android:title="按大小过滤" />
+
+        <ListPreference
+            android:defaultValue="0"
+            android:dialogTitle="最小时长"
+            android:entries="@array/filter_time_entries"
+            android:entryValues="@array/filter_time_entry_values"
+            android:key="@string/setting_key_filter_time"
+            android:summary="不过滤"
+            android:title="按时长过滤" />
     </PreferenceCategory>
 </PreferenceScreen>

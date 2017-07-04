@@ -59,16 +59,28 @@ public class Preferences {
         return getBoolean(sContext.getString(R.string.setting_key_mobile_network_download), false);
     }
 
-    public static void saveMobileNetworkDownload(boolean enable) {
-        saveBoolean(sContext.getString(R.string.setting_key_mobile_network_download), enable);
-    }
-
     public static boolean isNightMode() {
         return getBoolean(NIGHT_MODE, false);
     }
 
     public static void saveNightMode(boolean on) {
         saveBoolean(NIGHT_MODE, on);
+    }
+
+    public static String getFilterSize() {
+        return getString(sContext.getString(R.string.setting_key_filter_size), null);
+    }
+
+    public static void saveFilterSize(String value) {
+        saveString(sContext.getString(R.string.setting_key_filter_size), value);
+    }
+
+    public static String getFilterTime() {
+        return getString(sContext.getString(R.string.setting_key_filter_time), null);
+    }
+
+    public static void saveFilterTime(String value) {
+        saveString(sContext.getString(R.string.setting_key_filter_time), value);
     }
 
     private static boolean getBoolean(String key, boolean defValue) {

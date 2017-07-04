@@ -4,7 +4,6 @@ import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.text.TextUtils;
 
@@ -37,24 +36,11 @@ public class DownloadReceiver extends BroadcastReceiver {
     }
 
     private void scanMusic() {
-        new AsyncTask<Void, Void, Void>() {
+        PlayService playService = AppCache.getPlayService();
+        if (playService == null) {
+            return;
+        }
 
-            @Override
-            protected Void doInBackground(Void... params) {
-                PlayService playService = AppCache.getPlayService();
-                if (playService != null) {
-                    playService.updateMusicList();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                PlayService playService = AppCache.getPlayService();
-                if (playService != null && playService.getOnPlayEventListener() != null) {
-                    playService.getOnPlayEventListener().onMusicListUpdate();
-                }
-            }
-        }.execute();
+        playService.updateMusicList(null);
     }
 }

@@ -29,11 +29,20 @@ public class MusicUtils {
             return;
         }
 
+        long filterSize = Long.parseLong(Preferences.getFilterSize()) * 1024;
+        long filterTime = Long.parseLong(Preferences.getFilterTime()) * 1000;
+
         int i = 0;
         while (cursor.moveToNext()) {
             // 是否为音乐，魅族手机上始终为0
             int isMusic = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC));
             if (!SystemUtils.isFlyme() && isMusic == 0) {
+                continue;
+            }
+
+            long fileSize = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
+            long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
+            if (fileSize < filterSize || duration < filterTime) {
                 continue;
             }
 
@@ -43,12 +52,11 @@ public class MusicUtils {
             String unknown = context.getString(R.string.unknown);
             artist = (TextUtils.isEmpty(artist) || artist.toLowerCase().contains("unknown")) ? unknown : artist;
             String album = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)));
-            long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
             String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
             long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
             String coverPath = getCoverPath(context, albumId);
             String fileName = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)));
-            long fileSize = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
+
             Music music = new Music();
             music.setId(id);
             music.setType(Music.Type.LOCAL);

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
@@ -50,7 +51,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     // 正在播放的本地歌曲的序号
     private int mPlayingPosition;
     private long quitTimerRemain;
-    private int playState = STATE_IDLE;
+    private int mPlayState = STATE_IDLE;
 
     @Override
     public void onCreate() {
@@ -95,12 +96,30 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     /**
      * 扫描音乐
      */
-    public void updateMusicList() {
-        MusicUtils.scanMusic(this, mMusicList);
-        if (!mMusicList.isEmpty()) {
-            updatePlayingPosition();
-            mPlayingMusic = (mPlayingMusic == null) ? mMusicList.get(mPlayingPosition) : mPlayingMusic;
-        }
+    public void updateMusicList(final EventCallback<Void> callback) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                MusicUtils.scanMusic(PlayService.this, mMusicList);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if (!mMusicList.isEmpty()) {
+                    updatePlayingPosition();
+                    mPlayingMusic = mMusicList.get(mPlayingPosition);
+                }
+
+                if (mListener != null) {
+                    mListener.onMusicListUpdate();
+                }
+
+                if (callback != null) {
+                    callback.onEvent(null);
+                }
+            }
+        }.execute();
     }
 
     @Override
@@ -139,7 +158,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
             mPlayer.reset();
             mPlayer.setDataSource(music.getPath());
             mPlayer.prepareAsync();
-            playState = STATE_PREPARING;
+            mPlayState = STATE_PREPARING;
             mPlayer.setOnPreparedListener(mPreparedListener);
             mPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);
             if (mListener != null) {
@@ -154,7 +173,9 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     private MediaPlayer.OnPreparedListener mPreparedListener = new MediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(MediaPlayer mp) {
-            start();
+            if (isPreparing()) {
+                start();
+            }
         }
     };
 
@@ -169,10 +190,8 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
     public void playPause() {
         if (isPreparing()) {
-            return;
-        }
-
-        if (isPlaying()) {
+            stop();
+        } else if (isPlaying()) {
             pause();
         } else if (isPausing()) {
             resume();
@@ -184,7 +203,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     private boolean start() {
         mPlayer.start();
         if (mPlayer.isPlaying()) {
-            playState = STATE_PLAYING;
+            mPlayState = STATE_PLAYING;
             mHandler.post(mPublishRunnable);
             Notifier.showPlay(mPlayingMusic);
             mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
@@ -199,7 +218,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         }
 
         mPlayer.pause();
-        playState = STATE_PAUSE;
+        mPlayState = STATE_PAUSE;
         mHandler.removeCallbacks(mPublishRunnable);
         Notifier.showPause(mPlayingMusic);
         mAudioManager.abandonAudioFocus(this);
@@ -207,6 +226,16 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         if (mListener != null) {
             mListener.onPlayerPause();
         }
+    }
+
+    public void stop() {
+        if (isIdle()) {
+            return;
+        }
+
+        pause();
+        mPlayer.reset();
+        mPlayState = STATE_IDLE;
     }
 
     private void resume() {
@@ -278,15 +307,19 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     }
 
     public boolean isPlaying() {
-        return playState == STATE_PLAYING;
+        return mPlayState == STATE_PLAYING;
     }
 
     public boolean isPausing() {
-        return playState == STATE_PAUSE;
+        return mPlayState == STATE_PAUSE;
     }
 
     public boolean isPreparing() {
-        return playState == STATE_PREPARING;
+        return mPlayState == STATE_PREPARING;
+    }
+
+    public boolean isIdle() {
+        return mPlayState == STATE_IDLE;
     }
 
     /**
@@ -368,7 +401,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
                 mHandler.postDelayed(this, DateUtils.SECOND_IN_MILLIS);
             } else {
                 AppCache.clearStack();
-                stop();
+                quit();
             }
         }
     };
@@ -380,8 +413,8 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         Log.i(TAG, "onDestroy: " + getClass().getSimpleName());
     }
 
-    public void stop() {
-        pause();
+    public void quit() {
+        stop();
         stopQuitTimer();
         mPlayer.reset();
         mPlayer.release();
