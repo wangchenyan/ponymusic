@@ -1,7 +1,10 @@
 package me.wcy.music.utils;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.audiofx.AudioEffect;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -75,6 +78,14 @@ public class MusicUtils {
             musicList.add(music);
         }
         cursor.close();
+    }
+
+    public static boolean isAudioControlPanelAvailable(Context context) {
+        return isIntentAvailable(context, new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL));
+    }
+
+    private static boolean isIntentAvailable(Context context, Intent intent) {
+        return context.getPackageManager().resolveActivity(intent, PackageManager.GET_RESOLVED_FILTER) != null;
     }
 
     private static String getCoverPath(Context context, long albumId) {

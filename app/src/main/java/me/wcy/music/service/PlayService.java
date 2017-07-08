@@ -39,11 +39,11 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     private static final int STATE_PLAYING = 2;
     private static final int STATE_PAUSE = 3;
 
-    private List<Music> mMusicList;
+    private final List<Music> mMusicList = AppCache.getMusicList();
+    private final IntentFilter mNoisyFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+    private final NoisyAudioStreamReceiver mNoisyReceiver = new NoisyAudioStreamReceiver();
+    private final Handler mHandler = new Handler();
     private MediaPlayer mPlayer = new MediaPlayer();
-    private IntentFilter mNoisyFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
-    private NoisyAudioStreamReceiver mNoisyReceiver = new NoisyAudioStreamReceiver();
-    private Handler mHandler = new Handler();
     private AudioManager mAudioManager;
     private OnPlayerEventListener mListener;
     // 正在播放的歌曲[本地|网络]
@@ -57,7 +57,6 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     public void onCreate() {
         super.onCreate();
         Log.i(TAG, "onCreate: " + getClass().getSimpleName());
-        mMusicList = AppCache.getMusicList();
         mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         mPlayer.setOnCompletionListener(this);
         Notifier.init(this);
@@ -350,6 +349,10 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         }
         mPlayingPosition = position;
         Preferences.saveCurrentSongId(mMusicList.get(mPlayingPosition).getId());
+    }
+
+    public int getAudioSessionId() {
+        return mPlayer.getAudioSessionId();
     }
 
     private Runnable mPublishRunnable = new Runnable() {

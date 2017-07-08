@@ -1,7 +1,9 @@
 package me.wcy.music.activity;
 
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.media.audiofx.AudioEffect;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -11,6 +13,7 @@ import me.wcy.music.R;
 import me.wcy.music.service.EventCallback;
 import me.wcy.music.service.OnPlayerEventListener;
 import me.wcy.music.service.PlayService;
+import me.wcy.music.utils.MusicUtils;
 import me.wcy.music.utils.Preferences;
 import me.wcy.music.utils.ToastUtils;
 
@@ -64,20 +67,32 @@ public class SettingActivity extends BaseActivity {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             if (preference == mSoundEffect) {
-                Intent intent = new Intent("android.media.action.DISPLAY_AUDIO_EFFECT_CONTROL_PANEL");
-                intent.putExtra("android.media.extra.PACKAGE_NAME", getActivity().getPackageName());
-                intent.putExtra("android.media.extra.CONTENT_TYPE", 0);
-                intent.putExtra("android.media.extra.AUDIO_SESSION", 0);
-                try {
-                    startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    ToastUtils.show(R.string.device_not_support);
-                }
+                startEqualizer();
                 return true;
             }
             return false;
         }
+
+        private void startEqualizer() {
+            if (MusicUtils.isAudioControlPanelAvailable(getActivity())) {
+                Intent intent = new Intent();
+                String packageName = getActivity().getPackageName();
+                intent.setAction(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
+                intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, packageName);
+                intent.putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC);
+                intent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, mPlayService.getAudioSessionId());
+
+                try {
+                    startActivityForResult(intent, 1);
+                } catch (ActivityNotFoundException e) {
+                    e.printStackTrace();
+                    ToastUtils.show(R.string.device_not_support);
+                }
+            } else {
+                ToastUtils.show(R.string.device_not_support);
+            }
+        }
+
 
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
