@@ -32,8 +32,8 @@ public class MusicUtils {
             return;
         }
 
-        long filterSize = Long.parseLong(Preferences.getFilterSize()) * 1024;
-        long filterTime = Long.parseLong(Preferences.getFilterTime()) * 1000;
+        long filterSize = ParseUtils.parseLong(Preferences.getFilterSize()) * 1024;
+        long filterTime = ParseUtils.parseLong(Preferences.getFilterTime()) * 1000;
 
         int i = 0;
         while (cursor.moveToNext()) {

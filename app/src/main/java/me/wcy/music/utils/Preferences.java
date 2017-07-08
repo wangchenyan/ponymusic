@@ -68,7 +68,7 @@ public class Preferences {
     }
 
     public static String getFilterSize() {
-        return getString(sContext.getString(R.string.setting_key_filter_size), null);
+        return getString(sContext.getString(R.string.setting_key_filter_size), "0");
     }
 
     public static void saveFilterSize(String value) {
@@ -76,7 +76,7 @@ public class Preferences {
     }
 
     public static String getFilterTime() {
-        return getString(sContext.getString(R.string.setting_key_filter_time), null);
+        return getString(sContext.getString(R.string.setting_key_filter_time), "0");
     }
 
     public static void saveFilterTime(String value) {
