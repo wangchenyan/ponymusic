@@ -18,7 +18,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 
 import me.wcy.music.R;
 import me.wcy.music.constants.Extras;
@@ -97,9 +96,8 @@ public class ArtistInfoActivity extends BaseActivity {
             ivAvatar.setScaleType(ImageView.ScaleType.FIT_START);
             Glide.with(this)
                     .load(avatarUri)
-                    .apply(new RequestOptions()
-                            .placeholder(R.drawable.default_artist)
-                            .error(R.drawable.default_artist))
+                    .placeholder(R.drawable.default_artist)
+                    .error(R.drawable.default_artist)
                     .into(ivAvatar);
             llArtistInfoContainer.addView(ivAvatar);
         }

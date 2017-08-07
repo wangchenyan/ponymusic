@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
@@ -166,9 +165,8 @@ public class PlaylistAdapter extends BaseAdapter {
         holderMusicList.tvMusic3.setText(songListInfo.getMusic3());
         Glide.with(mContext)
                 .load(songListInfo.getCoverUrl())
-                .apply(new RequestOptions()
-                        .placeholder(R.drawable.default_cover)
-                        .error(R.drawable.default_cover))
+                .placeholder(R.drawable.default_cover)
+                .error(R.drawable.default_cover)
                 .into(holderMusicList.ivCover);
     }
 

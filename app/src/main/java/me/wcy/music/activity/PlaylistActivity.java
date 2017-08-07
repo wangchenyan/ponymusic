@@ -16,9 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -184,15 +183,14 @@ public class PlaylistActivity extends BaseActivity implements OnItemClickListene
         tvUpdateDate.setText(getString(R.string.recent_update, mOnlineMusicList.getBillboard().getUpdate_date()));
         tvComment.setText(mOnlineMusicList.getBillboard().getComment());
         Glide.with(this)
-                .asBitmap()
                 .load(mOnlineMusicList.getBillboard().getPic_s640())
-                .apply(new RequestOptions()
-                        .placeholder(R.drawable.default_cover)
-                        .error(R.drawable.default_cover)
-                        .override(200, 200))
+                .asBitmap()
+                .placeholder(R.drawable.default_cover)
+                .error(R.drawable.default_cover)
+                .override(200, 200)
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                         ivCover.setImageBitmap(resource);
                         ivHeaderBg.setImageBitmap(ImageUtils.blur(resource));
                     }

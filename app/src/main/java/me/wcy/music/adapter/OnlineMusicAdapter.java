@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
@@ -56,11 +55,10 @@ public class OnlineMusicAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         OnlineMusic onlineMusic = mData.get(position);
-        Glide.with(parent)
+        Glide.with(parent.getContext())
                 .load(onlineMusic.getPic_small())
-                .apply(new RequestOptions()
-                        .placeholder(R.drawable.default_cover)
-                        .error(R.drawable.default_cover))
+                .placeholder(R.drawable.default_cover)
+                .error(R.drawable.default_cover)
                 .into(holder.ivCover);
         holder.tvTitle.setText(onlineMusic.getTitle());
         String artist = FileUtils.getArtistAndAlbum(onlineMusic.getArtist_name(), onlineMusic.getAlbum_title());
