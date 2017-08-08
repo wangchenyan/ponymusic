@@ -11,7 +11,6 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.text.format.DateUtils;
 import android.util.Log;
 
 import java.io.IOException;
@@ -31,9 +30,10 @@ import me.wcy.music.utils.Preferences;
  * 音乐播放后台服务
  * Created by wcy on 2015/11/27.
  */
-public class PlayService extends Service implements MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
+public class PlayService extends Service implements MediaPlayer.OnCompletionListener {
     private static final String TAG = "Service";
     private static final long TIME_UPDATE = 100L;
+
     private static final int STATE_IDLE = 0;
     private static final int STATE_PREPARING = 1;
     private static final int STATE_PLAYING = 2;
@@ -44,22 +44,29 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     private final NoisyAudioStreamReceiver mNoisyReceiver = new NoisyAudioStreamReceiver();
     private final Handler mHandler = new Handler();
     private MediaPlayer mPlayer = new MediaPlayer();
-    private AudioManager mAudioManager;
+    private AudioFocusManager mAudioFocusManager;
     private OnPlayerEventListener mListener;
     // 正在播放的歌曲[本地|网络]
     private Music mPlayingMusic;
     // 正在播放的本地歌曲的序号
     private int mPlayingPosition;
-    private long quitTimerRemain;
     private int mPlayState = STATE_IDLE;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Log.i(TAG, "onCreate: " + getClass().getSimpleName());
-        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+        mAudioFocusManager = new AudioFocusManager(this);
         mPlayer.setOnCompletionListener(this);
         Notifier.init(this);
+        QuitTimer.getInstance().init(this, mHandler, new EventCallback<Long>() {
+            @Override
+            public void onEvent(Long aLong) {
+                if (mListener != null) {
+                    mListener.onTimer(aLong);
+                }
+            }
+        });
     }
 
     @Nullable
@@ -193,25 +200,31 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         } else if (isPlaying()) {
             pause();
         } else if (isPausing()) {
-            resume();
+            start();
         } else {
             play(getPlayingPosition());
         }
     }
 
-    private boolean start() {
-        mPlayer.start();
-        if (mPlayer.isPlaying()) {
+    void start() {
+        if (!isPreparing() && !isPausing()) {
+            return;
+        }
+
+        if (mAudioFocusManager.requestAudioFocus()) {
+            mPlayer.start();
             mPlayState = STATE_PLAYING;
             mHandler.post(mPublishRunnable);
             Notifier.showPlay(mPlayingMusic);
-            mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
             registerReceiver(mNoisyReceiver, mNoisyFilter);
+
+            if (mListener != null) {
+                mListener.onPlayerStart();
+            }
         }
-        return mPlayer.isPlaying();
     }
 
-    private void pause() {
+    void pause() {
         if (!isPlaying()) {
             return;
         }
@@ -220,8 +233,8 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         mPlayState = STATE_PAUSE;
         mHandler.removeCallbacks(mPublishRunnable);
         Notifier.showPause(mPlayingMusic);
-        mAudioManager.abandonAudioFocus(this);
         unregisterReceiver(mNoisyReceiver);
+
         if (mListener != null) {
             mListener.onPlayerPause();
         }
@@ -235,18 +248,6 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         pause();
         mPlayer.reset();
         mPlayState = STATE_IDLE;
-    }
-
-    private void resume() {
-        if (!isPausing()) {
-            return;
-        }
-
-        if (start()) {
-            if (mListener != null) {
-                mListener.onPlayerResume();
-            }
-        }
     }
 
     public void next() {
@@ -366,50 +367,6 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     };
 
     @Override
-    public void onAudioFocusChange(int focusChange) {
-        switch (focusChange) {
-            case AudioManager.AUDIOFOCUS_LOSS:
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                pause();
-                break;
-        }
-    }
-
-    public void startQuitTimer(long milli) {
-        stopQuitTimer();
-        if (milli > 0) {
-            quitTimerRemain = milli + DateUtils.SECOND_IN_MILLIS;
-            mHandler.post(mQuitRunnable);
-        } else {
-            quitTimerRemain = 0;
-            if (mListener != null) {
-                mListener.onTimer(quitTimerRemain);
-            }
-        }
-    }
-
-    private void stopQuitTimer() {
-        mHandler.removeCallbacks(mQuitRunnable);
-    }
-
-    private Runnable mQuitRunnable = new Runnable() {
-        @Override
-        public void run() {
-            quitTimerRemain -= DateUtils.SECOND_IN_MILLIS;
-            if (quitTimerRemain > 0) {
-                if (mListener != null) {
-                    mListener.onTimer(quitTimerRemain);
-                }
-                mHandler.postDelayed(this, DateUtils.SECOND_IN_MILLIS);
-            } else {
-                AppCache.clearStack();
-                quit();
-            }
-        }
-    };
-
-    @Override
     public void onDestroy() {
         AppCache.setPlayService(null);
         super.onDestroy();
@@ -418,7 +375,8 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
     public void quit() {
         stop();
-        stopQuitTimer();
+        QuitTimer.getInstance().stop();
+        mAudioFocusManager.abandonAudioFocus();
         mPlayer.reset();
         mPlayer.release();
         mPlayer = null;

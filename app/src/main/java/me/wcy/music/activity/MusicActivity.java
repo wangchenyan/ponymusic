@@ -162,6 +162,30 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
+    @Override
+    public void onChange(Music music) {
+        onChangeImpl(music);
+        if (mPlayFragment != null) {
+            mPlayFragment.onChange(music);
+        }
+    }
+
+    @Override
+    public void onPlayerStart() {
+        ivPlayBarPlay.setSelected(true);
+        if (mPlayFragment != null) {
+            mPlayFragment.onPlayerStart();
+        }
+    }
+
+    @Override
+    public void onPlayerPause() {
+        ivPlayBarPlay.setSelected(false);
+        if (mPlayFragment != null) {
+            mPlayFragment.onPlayerPause();
+        }
+    }
+
     /**
      * 更新播放进度
      */
@@ -177,30 +201,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     public void onBufferingUpdate(int percent) {
         if (mPlayFragment != null) {
             mPlayFragment.onBufferingUpdate(percent);
-        }
-    }
-
-    @Override
-    public void onChange(Music music) {
-        onPlay(music);
-        if (mPlayFragment != null) {
-            mPlayFragment.onChange(music);
-        }
-    }
-
-    @Override
-    public void onPlayerPause() {
-        ivPlayBarPlay.setSelected(false);
-        if (mPlayFragment != null) {
-            mPlayFragment.onPlayerPause();
-        }
-    }
-
-    @Override
-    public void onPlayerResume() {
-        ivPlayBarPlay.setSelected(true);
-        if (mPlayFragment != null) {
-            mPlayFragment.onPlayerResume();
         }
     }
 
@@ -278,7 +278,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     public void onPageScrollStateChanged(int state) {
     }
 
-    public void onPlay(Music music) {
+    private void onChangeImpl(Music music) {
         if (music == null) {
             return;
         }
@@ -287,11 +287,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         ivPlayBarCover.setImageBitmap(cover);
         tvPlayBarTitle.setText(music.getTitle());
         tvPlayBarArtist.setText(music.getArtist());
-        if (getPlayService().isPlaying() || getPlayService().isPreparing()) {
-            ivPlayBarPlay.setSelected(true);
-        } else {
-            ivPlayBarPlay.setSelected(false);
-        }
+        ivPlayBarPlay.setSelected(false);
         mProgressBar.setMax((int) music.getDuration());
         mProgressBar.setProgress(0);
 

@@ -7,6 +7,22 @@ import me.wcy.music.model.Music;
  * Created by hzwangchenyan on 2015/12/17.
  */
 public interface OnPlayerEventListener {
+
+    /**
+     * 切换歌曲
+     */
+    void onChange(Music music);
+
+    /**
+     * 继续播放
+     */
+    void onPlayerStart();
+
+    /**
+     * 暂停播放
+     */
+    void onPlayerPause();
+
     /**
      * 更新进度
      */
@@ -16,21 +32,6 @@ public interface OnPlayerEventListener {
      * 缓冲百分比
      */
     void onBufferingUpdate(int percent);
-
-    /**
-     * 切换歌曲
-     */
-    void onChange(Music music);
-
-    /**
-     * 暂停播放
-     */
-    void onPlayerPause();
-
-    /**
-     * 继续播放
-     */
-    void onPlayerResume();
 
     /**
      * 更新定时停止播放时间

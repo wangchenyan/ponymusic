@@ -94,7 +94,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         initViewPager();
         ilIndicator.create(mViewPagerContent.size());
         initPlayMode();
-        onChange(getPlayService().getPlayingMusic());
+        onChangeImpl(getPlayService().getPlayingMusic());
+        initPlayState();
     }
 
     @Override
@@ -153,6 +154,36 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         ivMode.setImageLevel(mode);
     }
 
+    private void initPlayState() {
+        if (getPlayService().isPlaying()) {
+            ivPlay.setSelected(true);
+            mAlbumCoverView.start();
+        } else {
+            ivPlay.setSelected(false);
+            mAlbumCoverView.pause();
+        }
+    }
+
+    public void onChange(Music music) {
+        if (isAdded()) {
+            onChangeImpl(music);
+        }
+    }
+
+    public void onPlayerStart() {
+        if (isAdded()) {
+            ivPlay.setSelected(true);
+            mAlbumCoverView.start();
+        }
+    }
+
+    public void onPlayerPause() {
+        if (isAdded()) {
+            ivPlay.setSelected(false);
+            mAlbumCoverView.pause();
+        }
+    }
+
     /**
      * 更新播放进度
      */
@@ -174,26 +205,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     public void onBufferingUpdate(int percent) {
         if (isAdded()) {
             sbProgress.setSecondaryProgress(sbProgress.getMax() * 100 / percent);
-        }
-    }
-
-    public void onChange(Music music) {
-        if (isAdded()) {
-            onPlay(music);
-        }
-    }
-
-    public void onPlayerPause() {
-        if (isAdded()) {
-            ivPlay.setSelected(false);
-            mAlbumCoverView.pause();
-        }
-    }
-
-    public void onPlayerResume() {
-        if (isAdded()) {
-            ivPlay.setSelected(true);
-            mAlbumCoverView.start();
         }
     }
 
@@ -258,7 +269,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         }
     }
 
-    private void onPlay(Music music) {
+    private void onChangeImpl(Music music) {
         if (music == null) {
             return;
         }
@@ -273,13 +284,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         tvTotalTime.setText(formatTime(music.getDuration()));
         setCoverAndBg(music);
         setLrc(music);
-        if (getPlayService().isPlaying() || getPlayService().isPreparing()) {
-            ivPlay.setSelected(true);
-            mAlbumCoverView.start();
-        } else {
-            ivPlay.setSelected(false);
-            mAlbumCoverView.pause();
-        }
+        ivPlay.setSelected(false);
+        mAlbumCoverView.pause();
     }
 
     private void play() {

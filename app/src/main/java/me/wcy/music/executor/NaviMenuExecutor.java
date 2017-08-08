@@ -14,6 +14,7 @@ import me.wcy.music.activity.MusicActivity;
 import me.wcy.music.activity.SettingActivity;
 import me.wcy.music.application.AppCache;
 import me.wcy.music.service.PlayService;
+import me.wcy.music.service.QuitTimer;
 import me.wcy.music.utils.Preferences;
 import me.wcy.music.utils.ToastUtils;
 
@@ -23,22 +24,22 @@ import me.wcy.music.utils.ToastUtils;
  */
 public class NaviMenuExecutor {
 
-    public static boolean onNavigationItemSelected(MenuItem item, Context context) {
+    public static boolean onNavigationItemSelected(MenuItem item, MusicActivity activity) {
         switch (item.getItemId()) {
             case R.id.action_setting:
-                startActivity(context, SettingActivity.class);
+                startActivity(activity, SettingActivity.class);
                 return true;
             case R.id.action_night:
-                nightMode(context);
+                nightMode(activity);
                 break;
             case R.id.action_timer:
-                timerDialog(context);
+                timerDialog(activity);
                 return true;
             case R.id.action_exit:
-                exit(context);
+                exit(activity);
                 return true;
             case R.id.action_about:
-                startActivity(context, AboutActivity.class);
+                startActivity(activity, AboutActivity.class);
                 return true;
         }
         return false;
@@ -49,11 +50,7 @@ public class NaviMenuExecutor {
         context.startActivity(intent);
     }
 
-    private static void nightMode(Context context) {
-        if (!(context instanceof MusicActivity)) {
-            return;
-        }
-        final MusicActivity activity = (MusicActivity) context;
+    private static void nightMode(final MusicActivity activity) {
         final boolean on = !Preferences.isNightMode();
         final ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setCancelable(false);
@@ -70,30 +67,21 @@ public class NaviMenuExecutor {
         }, 500);
     }
 
-    private static void timerDialog(final Context context) {
-        if (!(context instanceof MusicActivity)) {
-            return;
-        }
-        new AlertDialog.Builder(context)
+    private static void timerDialog(final MusicActivity activity) {
+        new AlertDialog.Builder(activity)
                 .setTitle(R.string.menu_timer)
-                .setItems(context.getResources().getStringArray(R.array.timer_text), new DialogInterface.OnClickListener() {
+                .setItems(activity.getResources().getStringArray(R.array.timer_text), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        int[] times = context.getResources().getIntArray(R.array.timer_int);
-                        startTimer(context, times[which]);
+                        int[] times = activity.getResources().getIntArray(R.array.timer_int);
+                        startTimer(activity, times[which]);
                     }
                 })
                 .show();
     }
 
     private static void startTimer(Context context, int minute) {
-        if (!(context instanceof MusicActivity)) {
-            return;
-        }
-
-        MusicActivity activity = (MusicActivity) context;
-        PlayService service = activity.getPlayService();
-        service.startQuitTimer(minute * 60 * 1000);
+        QuitTimer.getInstance().start(minute * 60 * 1000);
         if (minute > 0) {
             ToastUtils.show(context.getString(R.string.timer_set, String.valueOf(minute)));
         } else {
@@ -101,12 +89,7 @@ public class NaviMenuExecutor {
         }
     }
 
-    private static void exit(Context context) {
-        if (!(context instanceof MusicActivity)) {
-            return;
-        }
-
-        MusicActivity activity = (MusicActivity) context;
+    private static void exit(MusicActivity activity) {
         activity.finish();
         PlayService service = AppCache.getPlayService();
         if (service != null) {
