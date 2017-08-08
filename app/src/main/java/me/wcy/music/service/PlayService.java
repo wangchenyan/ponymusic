@@ -40,16 +40,17 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     private static final int STATE_PAUSE = 3;
 
     private final List<Music> mMusicList = AppCache.getMusicList();
-    private final IntentFilter mNoisyFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
     private final NoisyAudioStreamReceiver mNoisyReceiver = new NoisyAudioStreamReceiver();
+    private final IntentFilter mNoisyFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
     private final Handler mHandler = new Handler();
     private MediaPlayer mPlayer = new MediaPlayer();
     private AudioFocusManager mAudioFocusManager;
+    private MediaSessionManager mMediaSessionManager;
     private OnPlayerEventListener mListener;
     // 正在播放的歌曲[本地|网络]
     private Music mPlayingMusic;
     // 正在播放的本地歌曲的序号
-    private int mPlayingPosition;
+    private int mPlayingPosition = -1;
     private int mPlayState = STATE_IDLE;
 
     @Override
@@ -57,6 +58,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         super.onCreate();
         Log.i(TAG, "onCreate: " + getClass().getSimpleName());
         mAudioFocusManager = new AudioFocusManager(this);
+        mMediaSessionManager = new MediaSessionManager(this);
         mPlayer.setOnCompletionListener(this);
         Notifier.init(this);
         QuitTimer.getInstance().init(this, mHandler, new EventCallback<Long>() {
@@ -171,6 +173,8 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
                 mListener.onChange(music);
             }
             Notifier.showPlay(music);
+            mMediaSessionManager.updateMetaData(mPlayingMusic);
+            mMediaSessionManager.updatePlaybackState();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -216,6 +220,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
             mPlayState = STATE_PLAYING;
             mHandler.post(mPublishRunnable);
             Notifier.showPlay(mPlayingMusic);
+            mMediaSessionManager.updatePlaybackState();
             registerReceiver(mNoisyReceiver, mNoisyFilter);
 
             if (mListener != null) {
@@ -233,6 +238,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         mPlayState = STATE_PAUSE;
         mHandler.removeCallbacks(mPublishRunnable);
         Notifier.showPause(mPlayingMusic);
+        mMediaSessionManager.updatePlaybackState();
         unregisterReceiver(mNoisyReceiver);
 
         if (mListener != null) {
@@ -300,6 +306,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     public void seekTo(int msec) {
         if (isPlaying() || isPausing()) {
             mPlayer.seekTo(msec);
+            mMediaSessionManager.updatePlaybackState();
             if (mListener != null) {
                 mListener.onPublish(msec);
             }
@@ -356,6 +363,14 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         return mPlayer.getAudioSessionId();
     }
 
+    public long getCurrentPosition() {
+        if (isPlaying() || isPausing()) {
+            return mPlayer.getCurrentPosition();
+        } else {
+            return 0;
+        }
+    }
+
     private Runnable mPublishRunnable = new Runnable() {
         @Override
         public void run() {
@@ -368,6 +383,12 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
     @Override
     public void onDestroy() {
+        mPlayer.reset();
+        mPlayer.release();
+        mPlayer = null;
+        mAudioFocusManager.abandonAudioFocus();
+        mMediaSessionManager.release();
+        Notifier.cancelAll();
         AppCache.setPlayService(null);
         super.onDestroy();
         Log.i(TAG, "onDestroy: " + getClass().getSimpleName());
@@ -376,12 +397,6 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     public void quit() {
         stop();
         QuitTimer.getInstance().stop();
-        mAudioFocusManager.abandonAudioFocus();
-        mPlayer.reset();
-        mPlayer.release();
-        mPlayer = null;
-        Notifier.cancelAll();
-        AppCache.setPlayService(null);
         stopSelf();
     }
 

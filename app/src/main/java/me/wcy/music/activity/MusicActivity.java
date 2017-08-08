@@ -92,7 +92,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         setupView();
         updateWeather();
         registerReceiver();
-        onChange(getPlayService().getPlayingMusic());
+        onChangeImpl(getPlayService().getPlayingMusic());
         parseIntent();
     }
 
@@ -287,9 +287,9 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         ivPlayBarCover.setImageBitmap(cover);
         tvPlayBarTitle.setText(music.getTitle());
         tvPlayBarArtist.setText(music.getArtist());
-        ivPlayBarPlay.setSelected(false);
+        ivPlayBarPlay.setSelected(getPlayService().isPlaying());
         mProgressBar.setMax((int) music.getDuration());
-        mProgressBar.setProgress(0);
+        mProgressBar.setProgress((int) getPlayService().getCurrentPosition());
 
         if (mLocalMusicFragment != null) {
             mLocalMusicFragment.onItemPlay();

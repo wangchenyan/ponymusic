@@ -95,7 +95,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         ilIndicator.create(mViewPagerContent.size());
         initPlayMode();
         onChangeImpl(getPlayService().getPlayingMusic());
-        initPlayState();
     }
 
     @Override
@@ -152,16 +151,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     private void initPlayMode() {
         int mode = Preferences.getPlayMode();
         ivMode.setImageLevel(mode);
-    }
-
-    private void initPlayState() {
-        if (getPlayService().isPlaying()) {
-            ivPlay.setSelected(true);
-            mAlbumCoverView.start();
-        } else {
-            ivPlay.setSelected(false);
-            mAlbumCoverView.pause();
-        }
     }
 
     public void onChange(Music music) {
@@ -276,7 +265,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
 
         tvTitle.setText(music.getTitle());
         tvArtist.setText(music.getArtist());
-        sbProgress.setProgress(0);
+        sbProgress.setProgress((int) getPlayService().getCurrentPosition());
         sbProgress.setSecondaryProgress(0);
         sbProgress.setMax((int) music.getDuration());
         mLastProgress = 0;
@@ -284,8 +273,13 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         tvTotalTime.setText(formatTime(music.getDuration()));
         setCoverAndBg(music);
         setLrc(music);
-        ivPlay.setSelected(false);
-        mAlbumCoverView.pause();
+        if (getPlayService().isPlaying()) {
+            ivPlay.setSelected(true);
+            mAlbumCoverView.start();
+        } else {
+            ivPlay.setSelected(false);
+            mAlbumCoverView.pause();
+        }
     }
 
     private void play() {
