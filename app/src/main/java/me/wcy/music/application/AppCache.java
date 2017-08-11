@@ -15,6 +15,7 @@ import com.amap.api.location.AMapLocalWeatherLive;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.wcy.music.executor.DownloadMusicInfo;
 import me.wcy.music.model.Music;
 import me.wcy.music.model.SongListInfo;
 import me.wcy.music.service.PlayService;
@@ -33,7 +34,7 @@ public class AppCache {
     // 歌单列表
     private final List<SongListInfo> mSongListInfos = new ArrayList<>();
     private final List<Activity> mActivityStack = new ArrayList<>();
-    private final LongSparseArray<String> mDownloadList = new LongSparseArray<>();
+    private final LongSparseArray<DownloadMusicInfo> mDownloadList = new LongSparseArray<>();
     private AMapLocalWeatherLive mAMapLocalWeatherLive;
 
     private AppCache() {
@@ -100,7 +101,7 @@ public class AppCache {
         activityStack.clear();
     }
 
-    public static LongSparseArray<String> getDownloadList() {
+    public static LongSparseArray<DownloadMusicInfo> getDownloadList() {
         return getInstance().mDownloadList;
     }
 

@@ -90,12 +90,12 @@ public class FileUtils {
         }
 
         String albumFilePath = music.getCoverPath();
-        if (TextUtils.isEmpty(albumFilePath) || !exists(albumFilePath)) {
-            albumFilePath = getAlbumDir() + getAlbumFileName(music.getArtist(), music.getTitle());
-            if (!exists(albumFilePath)) {
-                albumFilePath = null;
-            }
-        }
+//        if (TextUtils.isEmpty(albumFilePath) || !exists(albumFilePath)) {
+//            albumFilePath = getAlbumDir() + getAlbumFileName(music.getArtist(), music.getTitle());
+//            if (!exists(albumFilePath)) {
+//                albumFilePath = null;
+//            }
+//        }
         return albumFilePath;
     }
 

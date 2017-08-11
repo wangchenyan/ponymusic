@@ -1,6 +1,8 @@
 package me.wcy.music.http;
 
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.BitmapCallback;
@@ -35,7 +37,7 @@ public class HttpClient {
     private static final String PARAM_TING_UID = "tinguid";
     private static final String PARAM_QUERY = "query";
 
-    public static void getSplash(final HttpCallback<Splash> callback) {
+    public static void getSplash(@NonNull final HttpCallback<Splash> callback) {
         OkHttpUtils.get().url(SPLASH_URL).build()
                 .execute(new JsonCallback<Splash>(Splash.class) {
                     @Override
@@ -55,7 +57,7 @@ public class HttpClient {
                 });
     }
 
-    public static void downloadFile(String url, String destFileDir, String destFileName, final HttpCallback<File> callback) {
+    public static void downloadFile(String url, String destFileDir, String destFileName, @Nullable final HttpCallback<File> callback) {
         OkHttpUtils.get().url(url).build()
                 .execute(new FileCallBack(destFileDir, destFileName) {
                     @Override
@@ -64,22 +66,28 @@ public class HttpClient {
 
                     @Override
                     public void onResponse(File file, int id) {
-                        callback.onSuccess(file);
+                        if (callback != null) {
+                            callback.onSuccess(file);
+                        }
                     }
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        callback.onFail(e);
+                        if (callback != null) {
+                            callback.onFail(e);
+                        }
                     }
 
                     @Override
                     public void onAfter(int id) {
-                        callback.onFinish();
+                        if (callback != null) {
+                            callback.onFinish();
+                        }
                     }
                 });
     }
 
-    public static void getSongListInfo(String type, int size, int offset, final HttpCallback<OnlineMusicList> callback) {
+    public static void getSongListInfo(String type, int size, int offset, @NonNull final HttpCallback<OnlineMusicList> callback) {
         OkHttpUtils.get().url(BASE_URL)
                 .addParams(PARAM_METHOD, METHOD_GET_MUSIC_LIST)
                 .addParams(PARAM_TYPE, type)
@@ -104,7 +112,7 @@ public class HttpClient {
                 });
     }
 
-    public static void getMusicDownloadInfo(String songId, final HttpCallback<DownloadInfo> callback) {
+    public static void getMusicDownloadInfo(String songId, @NonNull final HttpCallback<DownloadInfo> callback) {
         OkHttpUtils.get().url(BASE_URL)
                 .addParams(PARAM_METHOD, METHOD_DOWNLOAD_MUSIC)
                 .addParams(PARAM_SONG_ID, songId)
@@ -127,7 +135,7 @@ public class HttpClient {
                 });
     }
 
-    public static void getBitmap(String url, final HttpCallback<Bitmap> callback) {
+    public static void getBitmap(String url, @NonNull final HttpCallback<Bitmap> callback) {
         OkHttpUtils.get().url(url).build()
                 .execute(new BitmapCallback() {
                     @Override
@@ -147,7 +155,7 @@ public class HttpClient {
                 });
     }
 
-    public static void getLrc(String songId, final HttpCallback<Lrc> callback) {
+    public static void getLrc(String songId, @NonNull final HttpCallback<Lrc> callback) {
         OkHttpUtils.get().url(BASE_URL)
                 .addParams(PARAM_METHOD, METHOD_LRC)
                 .addParams(PARAM_SONG_ID, songId)
@@ -170,7 +178,7 @@ public class HttpClient {
                 });
     }
 
-    public static void searchMusic(String keyword, final HttpCallback<SearchMusic> callback) {
+    public static void searchMusic(String keyword, @NonNull final HttpCallback<SearchMusic> callback) {
         OkHttpUtils.get().url(BASE_URL)
                 .addParams(PARAM_METHOD, METHOD_SEARCH_MUSIC)
                 .addParams(PARAM_QUERY, keyword)
@@ -193,7 +201,7 @@ public class HttpClient {
                 });
     }
 
-    public static void getArtistInfo(String tingUid, final HttpCallback<ArtistInfo> callback) {
+    public static void getArtistInfo(String tingUid, @NonNull final HttpCallback<ArtistInfo> callback) {
         OkHttpUtils.get().url(BASE_URL)
                 .addParams(PARAM_METHOD, METHOD_ARTIST_INFO)
                 .addParams(PARAM_TING_UID, tingUid)

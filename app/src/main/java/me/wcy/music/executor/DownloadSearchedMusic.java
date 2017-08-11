@@ -38,7 +38,7 @@ public abstract class DownloadSearchedMusic extends DownloadMusic {
                     return;
                 }
 
-                downloadMusic(response.getBitrate().getFile_link(), artist, title);
+                downloadMusic(response.getBitrate().getFile_link(), artist, title, null);
                 onExecuteSuccess(null);
             }
 

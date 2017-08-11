@@ -59,21 +59,23 @@ public abstract class DownloadMusic implements IExecutor<Void> {
 
     protected abstract void download();
 
-    protected static void downloadMusic(String url, String artist, String song) {
+    protected void downloadMusic(String url, String artist, String title, String coverPath) {
         try {
-            String fileName = FileUtils.getMp3FileName(artist, song);
+            String fileName = FileUtils.getMp3FileName(artist, title);
             Uri uri = Uri.parse(url);
             DownloadManager.Request request = new DownloadManager.Request(uri);
-            request.setTitle(FileUtils.getFileName(artist, song));
+            request.setTitle(FileUtils.getFileName(artist, title));
             request.setDescription("正在下载…");
             request.setDestinationInExternalPublicDir(FileUtils.getRelativeMusicDir(), fileName);
             request.setMimeType(MimeTypeMap.getFileExtensionFromUrl(url));
             request.allowScanningByMediaScanner();
             request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
-            request.setAllowedOverRoaming(false);// 不允许漫游
+            request.setAllowedOverRoaming(false); // 不允许漫游
             DownloadManager downloadManager = (DownloadManager) AppCache.getContext().getSystemService(Context.DOWNLOAD_SERVICE);
             long id = downloadManager.enqueue(request);
-            AppCache.getDownloadList().put(id, song);
+            String musicAbsPath = FileUtils.getMusicDir().concat(fileName);
+            DownloadMusicInfo downloadMusicInfo = new DownloadMusicInfo(title, musicAbsPath, coverPath);
+            AppCache.getDownloadList().put(id, downloadMusicInfo);
         } catch (Throwable th) {
             th.printStackTrace();
             ToastUtils.show("下载失败");
