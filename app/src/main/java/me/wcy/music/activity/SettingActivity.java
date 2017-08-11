@@ -93,7 +93,6 @@ public class SettingActivity extends BaseActivity {
             }
         }
 
-
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             if (preference == mFilterSize) {

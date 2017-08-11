@@ -8,7 +8,7 @@ android {
     defaultConfig {
         applicationId "me.wcy.music"
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 25
         versionCode 123
         versionName "1.2.3"
     }
