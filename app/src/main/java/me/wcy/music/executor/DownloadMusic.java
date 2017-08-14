@@ -68,7 +68,6 @@ public abstract class DownloadMusic implements IExecutor<Void> {
             request.setDescription("正在下载…");
             request.setDestinationInExternalPublicDir(FileUtils.getRelativeMusicDir(), fileName);
             request.setMimeType(MimeTypeMap.getFileExtensionFromUrl(url));
-            request.allowScanningByMediaScanner();
             request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
             request.setAllowedOverRoaming(false); // 不允许漫游
             DownloadManager downloadManager = (DownloadManager) AppCache.getContext().getSystemService(Context.DOWNLOAD_SERVICE);

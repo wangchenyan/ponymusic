@@ -4,7 +4,6 @@ import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
 
@@ -42,12 +41,6 @@ public class DownloadReceiver extends BroadcastReceiver {
                             .setCoverFile(coverFile)
                             .build();
                     ID3TagUtils.setID3Tags(musicFile, id3Tags, false);
-
-                    // 刷新媒体库
-                    intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                    Uri uri = Uri.fromFile(musicFile);
-                    intent.setData(uri);
-                    context.sendBroadcast(intent);
                 }
             }
 
