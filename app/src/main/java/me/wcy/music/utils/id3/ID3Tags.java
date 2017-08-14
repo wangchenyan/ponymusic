@@ -27,7 +27,7 @@ public class ID3Tags {
     // 流派
     private String genre;
     // 年份
-    private Integer year;
+    private int year;
     // 注释
     private String comment;
     // 封面图片
@@ -47,7 +47,7 @@ public class ID3Tags {
         if (genre != null) {
             id3V2_3_0Tag.setGenre(genre);
         }
-        if (year != null && year >= 0 && year <= 9999) {
+        if (year > 0 && year <= 9999) {
             id3V2_3_0Tag.setYear(year);
         }
         if (comment != null) {
@@ -96,7 +96,7 @@ public class ID3Tags {
             return this;
         }
 
-        public Builder setYear(Integer year) {
+        public Builder setYear(int year) {
             id3Tags.year = year;
             return this;
         }

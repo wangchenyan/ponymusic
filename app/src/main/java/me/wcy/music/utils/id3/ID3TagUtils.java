@@ -18,7 +18,7 @@ public class ID3TagUtils {
     private static final String TAG = "ID3TagUtils";
 
     /**
-     * @param clearOriginal 是否清楚原始标签
+     * @param clearOriginal 是否清除原始标签
      */
     public static boolean setID3Tags(File sourceFile, ID3Tags id3Tags, boolean clearOriginal) {
         if (sourceFile == null || !sourceFile.exists()) {
