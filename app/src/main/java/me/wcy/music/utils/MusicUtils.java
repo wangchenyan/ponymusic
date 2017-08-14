@@ -6,12 +6,11 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.audiofx.AudioEffect;
 import android.net.Uri;
+import android.provider.BaseColumns;
 import android.provider.MediaStore;
-import android.text.TextUtils;
 
 import java.util.List;
 
-import me.wcy.music.R;
 import me.wcy.music.model.Music;
 
 /**
@@ -19,46 +18,59 @@ import me.wcy.music.model.Music;
  * Created by wcy on 2015/11/27.
  */
 public class MusicUtils {
+    private static final String SELECTION = MediaStore.Audio.AudioColumns.SIZE + " >= ? AND " + MediaStore.Audio.AudioColumns.DURATION + " >= ?";
 
     /**
      * 扫描歌曲
      */
     public static void scanMusic(Context context, List<Music> musicList) {
         musicList.clear();
+
+        long filterSize = ParseUtils.parseLong(Preferences.getFilterSize()) * 1024;
+        long filterTime = ParseUtils.parseLong(Preferences.getFilterTime()) * 1000;
+
         Cursor cursor = context.getContentResolver().query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null,
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                new String[]{
+                        BaseColumns._ID,
+                        MediaStore.Audio.AudioColumns.IS_MUSIC,
+                        MediaStore.Audio.AudioColumns.TITLE,
+                        MediaStore.Audio.AudioColumns.ARTIST,
+                        MediaStore.Audio.AudioColumns.ALBUM,
+                        MediaStore.Audio.AudioColumns.ALBUM_ID,
+                        MediaStore.Audio.AudioColumns.DATA,
+                        MediaStore.Audio.AudioColumns.DISPLAY_NAME,
+                        MediaStore.Audio.AudioColumns.SIZE,
+                        MediaStore.Audio.AudioColumns.DURATION
+                },
+                SELECTION,
+                new String[]{
+                        String.valueOf(filterSize),
+                        String.valueOf(filterTime)
+                },
                 MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
         if (cursor == null) {
             return;
         }
 
-        long filterSize = ParseUtils.parseLong(Preferences.getFilterSize()) * 1024;
-        long filterTime = ParseUtils.parseLong(Preferences.getFilterTime()) * 1000;
-
         int i = 0;
         while (cursor.moveToNext()) {
             // 是否为音乐，魅族手机上始终为0
-            int isMusic = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC));
+            int isMusic = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.IS_MUSIC));
             if (!SystemUtils.isFlyme() && isMusic == 0) {
                 continue;
             }
 
+            long id = cursor.getLong(cursor.getColumnIndex(BaseColumns._ID));
+            String title = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.AudioColumns.TITLE)));
+            String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ARTIST));
+            String album = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM)));
+            String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.DATA));
+            long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM_ID));
+            String coverPath = getCoverPath(context, albumId);
+            String fileName = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.AudioColumns.DISPLAY_NAME)));
             long fileSize = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
             long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
-            if (fileSize < filterSize || duration < filterTime) {
-                continue;
-            }
-
-            long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
-            String title = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)));
-            String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-            String unknown = context.getString(R.string.unknown);
-            artist = (TextUtils.isEmpty(artist) || artist.toLowerCase().contains("unknown")) ? unknown : artist;
-            String album = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)));
-            String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
-            long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
-            String coverPath = getCoverPath(context, albumId);
-            String fileName = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)));
 
             Music music = new Music();
             music.setId(id);
@@ -92,7 +104,7 @@ public class MusicUtils {
         String path = null;
         Cursor cursor = context.getContentResolver().query(
                 Uri.parse("content://media/external/audio/albums/" + albumId),
-                new String[]{"album_art"}, null, null, null);
+                new String[]{MediaStore.Audio.AlbumColumns.ALBUM_ART}, null, null, null);
         if (cursor != null) {
             if (cursor.moveToNext() && cursor.getColumnCount() > 0) {
                 path = cursor.getString(0);
