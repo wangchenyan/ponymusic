@@ -29,6 +29,12 @@ public abstract class PlayOnlineMusic extends PlayMusic {
         String artist = mOnlineMusic.getArtist_name();
         String title = mOnlineMusic.getTitle();
 
+        music = new Music();
+        music.setType(Music.Type.ONLINE);
+        music.setTitle(title);
+        music.setArtist(artist);
+        music.setAlbum(mOnlineMusic.getAlbum_title());
+
         // 下载歌词
         String lrcFileName = FileUtils.getLrcFileName(artist, title);
         File lrcFile = new File(FileUtils.getLrcDir() + lrcFileName);
@@ -50,12 +56,7 @@ public abstract class PlayOnlineMusic extends PlayMusic {
         } else {
             mCounter++;
         }
-
-        music = new Music();
-        music.setType(Music.Type.ONLINE);
-        music.setTitle(title);
-        music.setArtist(artist);
-        music.setAlbum(mOnlineMusic.getAlbum_title());
+        music.setCoverPath(albumFile.getPath());
 
         // 获取歌曲播放链接
         HttpClient.getMusicDownloadInfo(mOnlineMusic.getSong_id(), new HttpCallback<DownloadInfo>() {
@@ -99,7 +100,6 @@ public abstract class PlayOnlineMusic extends PlayMusic {
         HttpClient.downloadFile(picUrl, FileUtils.getAlbumDir(), fileName, new HttpCallback<File>() {
             @Override
             public void onSuccess(File file) {
-                music.setCoverPath(file.getPath());
             }
 
             @Override
