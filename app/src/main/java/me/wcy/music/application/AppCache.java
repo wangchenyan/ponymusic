@@ -19,6 +19,7 @@ import me.wcy.music.executor.DownloadMusicInfo;
 import me.wcy.music.model.Music;
 import me.wcy.music.model.SongListInfo;
 import me.wcy.music.service.PlayService;
+import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.Preferences;
 import me.wcy.music.utils.ScreenUtils;
 import me.wcy.music.utils.ToastUtils;
@@ -58,6 +59,7 @@ public class AppCache {
         Preferences.init(mContext);
         ScreenUtils.init(mContext);
         CrashHandler.getInstance().init();
+        CoverLoader.getInstance().init(mContext);
         application.registerActivityLifecycleCallbacks(new ActivityLifecycle());
     }
 

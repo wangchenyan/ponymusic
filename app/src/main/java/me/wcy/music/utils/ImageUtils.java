@@ -15,13 +15,17 @@ public class ImageUtils {
     public static final int BLUR_RADIUS = 50;
 
     @Nullable
-    public static Bitmap blur(Bitmap sentBitmap) {
+    public static Bitmap blur(Bitmap source) {
+        if (source == null) {
+            return null;
+        }
+
         try {
-            return blur(sentBitmap, BLUR_RADIUS);
+            return blur(source, BLUR_RADIUS);
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     /**
@@ -257,6 +261,10 @@ public class ImageUtils {
      * 将图片放大或缩小到指定尺寸
      */
     public static Bitmap resizeImage(Bitmap source, int dstWidth, int dstHeight) {
+        if (source == null) {
+            return null;
+        }
+
         return Bitmap.createScaledBitmap(source, dstWidth, dstHeight, true);
     }
 
@@ -264,6 +272,10 @@ public class ImageUtils {
      * 将图片剪裁为圆形
      */
     public static Bitmap createCircleImage(Bitmap source) {
+        if (source == null) {
+            return null;
+        }
+
         int length = Math.min(source.getWidth(), source.getHeight());
         Paint paint = new Paint();
         paint.setAntiAlias(true);

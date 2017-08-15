@@ -79,26 +79,6 @@ public class FileUtils {
         return lrcFilePath;
     }
 
-    /**
-     * 获取封面图片路径<br>
-     *
-     * @return 如果存在返回路径，否则返回null
-     */
-    public static String getAlbumFilePath(Music music) {
-        if (music == null) {
-            return null;
-        }
-
-        String albumFilePath = music.getCoverPath();
-//        if (TextUtils.isEmpty(albumFilePath) || !exists(albumFilePath)) {
-//            albumFilePath = getAlbumDir() + getAlbumFileName(music.getArtist(), music.getTitle());
-//            if (!exists(albumFilePath)) {
-//                albumFilePath = null;
-//            }
-//        }
-        return albumFilePath;
-    }
-
     private static String mkdirs(String dir) {
         File file = new File(dir);
         if (!file.exists()) {

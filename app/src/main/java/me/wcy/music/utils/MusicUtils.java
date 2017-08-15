@@ -1,5 +1,6 @@
 package me.wcy.music.utils;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -65,12 +66,11 @@ public class MusicUtils {
             String title = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.AudioColumns.TITLE)));
             String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ARTIST));
             String album = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM)));
-            String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.DATA));
             long albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM_ID));
-            String coverPath = getCoverPath(context, albumId);
+            long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
+            String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.DATA));
             String fileName = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.AudioColumns.DISPLAY_NAME)));
             long fileSize = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
-            long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
 
             Music music = new Music();
             music.setId(id);
@@ -78,9 +78,9 @@ public class MusicUtils {
             music.setTitle(title);
             music.setArtist(artist);
             music.setAlbum(album);
+            music.setAlbumId(albumId);
             music.setDuration(duration);
             music.setPath(path);
-            music.setCoverPath(coverPath);
             music.setFileName(fileName);
             music.setFileSize(fileSize);
             if (++i <= 20) {
@@ -92,25 +92,16 @@ public class MusicUtils {
         cursor.close();
     }
 
+    public static Uri getMediaStoreAlbumCoverUri(long albumId) {
+        Uri artworkUri = Uri.parse("content://media/external/audio/albumart");
+        return ContentUris.withAppendedId(artworkUri, albumId);
+    }
+
     public static boolean isAudioControlPanelAvailable(Context context) {
         return isIntentAvailable(context, new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL));
     }
 
     private static boolean isIntentAvailable(Context context, Intent intent) {
         return context.getPackageManager().resolveActivity(intent, PackageManager.GET_RESOLVED_FILTER) != null;
-    }
-
-    private static String getCoverPath(Context context, long albumId) {
-        String path = null;
-        Cursor cursor = context.getContentResolver().query(
-                Uri.parse("content://media/external/audio/albums/" + albumId),
-                new String[]{MediaStore.Audio.AlbumColumns.ALBUM_ART}, null, null, null);
-        if (cursor != null) {
-            if (cursor.moveToNext() && cursor.getColumnCount() > 0) {
-                path = cursor.getString(0);
-            }
-            cursor.close();
-        }
-        return path;
     }
 }

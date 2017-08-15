@@ -15,12 +15,14 @@ public class Music {
     private String artist;
     // 专辑
     private String album;
+    // [本地歌曲]专辑ID
+    private long albumId;
+    // [在线歌曲]专辑封面路径
+    private String coverPath;
     // 持续时间
     private long duration;
     // 音乐路径
     private String path;
-    // 专辑封面路径
-    private String coverPath;
     // 文件名
     private String fileName;
     // 文件大小
@@ -71,6 +73,22 @@ public class Music {
         this.album = album;
     }
 
+    public long getAlbumId() {
+        return albumId;
+    }
+
+    public void setAlbumId(long albumId) {
+        this.albumId = albumId;
+    }
+
+    public String getCoverPath() {
+        return coverPath;
+    }
+
+    public void setCoverPath(String coverPath) {
+        this.coverPath = coverPath;
+    }
+
     public long getDuration() {
         return duration;
     }
@@ -85,14 +103,6 @@ public class Music {
 
     public void setPath(String path) {
         this.path = path;
-    }
-
-    public String getCoverPath() {
-        return coverPath;
-    }
-
-    public void setCoverPath(String coverPath) {
-        this.coverPath = coverPath;
     }
 
     public String getFileName() {
@@ -116,9 +126,6 @@ public class Music {
      */
     @Override
     public boolean equals(Object o) {
-        if (o == null || !(o instanceof Music)) {
-            return false;
-        }
-        return this.getId() == ((Music) o).getId();
+        return o instanceof Music && this.getId() == ((Music) o).getId();
     }
 }
