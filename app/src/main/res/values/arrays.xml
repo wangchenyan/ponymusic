@@ -7,12 +7,6 @@
         <item>删除</item>
     </string-array>
 
-    <string-array name="local_music_dialog_without_delete">
-        <item>分享</item>
-        <item>设为铃声</item>
-        <item>查看歌曲信息</item>
-    </string-array>
-
     <string-array name="online_music_dialog">
         <item>分享</item>
         <item>查看歌手信息</item>

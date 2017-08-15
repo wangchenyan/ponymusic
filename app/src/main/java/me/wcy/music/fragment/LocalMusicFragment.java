@@ -86,8 +86,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         final Music music = AppCache.getMusicList().get(position);
         AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
         dialog.setTitle(music.getTitle());
-        int itemsId = (position == getPlayService().getPlayingPosition()) ? R.array.local_music_dialog_without_delete : R.array.local_music_dialog;
-        dialog.setItems(itemsId, new DialogInterface.OnClickListener() {
+        dialog.setItems(R.array.local_music_dialog, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
@@ -212,13 +211,20 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         dialog.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                AppCache.getMusicList().remove(music);
                 File file = new File(music.getPath());
                 if (file.delete()) {
-                    getPlayService().updatePlayingPosition();
+                    boolean playing = (music == getPlayService().getPlayingMusic());
+                    AppCache.getMusicList().remove(music);
+                    if (playing) {
+                        getPlayService().stop();
+                        getPlayService().playPause();
+                    } else {
+                        getPlayService().updatePlayingPosition();
+                    }
                     updateView();
+
                     // 刷新媒体库
-                    Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + music.getPath()));
+                    Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://".concat(music.getPath())));
                     getContext().sendBroadcast(intent);
                 }
             }
