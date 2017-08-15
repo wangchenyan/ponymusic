@@ -287,7 +287,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         ivPlayBarCover.setImageBitmap(cover);
         tvPlayBarTitle.setText(music.getTitle());
         tvPlayBarArtist.setText(music.getArtist());
-        ivPlayBarPlay.setSelected(getPlayService().isPlaying());
+        ivPlayBarPlay.setSelected(getPlayService().isPlaying() || getPlayService().isPreparing());
         mProgressBar.setMax((int) music.getDuration());
         mProgressBar.setProgress((int) getPlayService().getCurrentPosition());
 

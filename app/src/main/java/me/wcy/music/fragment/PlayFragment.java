@@ -273,7 +273,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         tvTotalTime.setText(formatTime(music.getDuration()));
         setCoverAndBg(music);
         setLrc(music);
-        if (getPlayService().isPlaying()) {
+        if (getPlayService().isPlaying() || getPlayService().isPreparing()) {
             ivPlay.setSelected(true);
             mAlbumCoverView.start();
         } else {

@@ -38,7 +38,7 @@ public class MediaSessionManager {
     }
 
     public void updatePlaybackState() {
-        int state = mPlayService.isPlaying() ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED;
+        int state = (mPlayService.isPlaying() || mPlayService.isPreparing()) ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED;
         mMediaSession.setPlaybackState(
                 new PlaybackStateCompat.Builder()
                         .setActions(MEDIA_SESSION_ACTIONS)
