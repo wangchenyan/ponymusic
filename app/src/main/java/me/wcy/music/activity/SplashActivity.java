@@ -18,17 +18,16 @@ import java.util.Calendar;
 
 import me.wcy.music.R;
 import me.wcy.music.application.AppCache;
-import me.wcy.music.service.EventCallback;
 import me.wcy.music.http.HttpCallback;
 import me.wcy.music.http.HttpClient;
 import me.wcy.music.model.Splash;
+import me.wcy.music.service.EventCallback;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.FileUtils;
+import me.wcy.music.utils.PermissionReq;
 import me.wcy.music.utils.Preferences;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.binding.Bind;
-import me.wcy.music.utils.permission.PermissionReq;
-import me.wcy.music.utils.permission.PermissionResult;
 
 public class SplashActivity extends BaseActivity {
     private static final String SPLASH_FILE_NAME = "splash";
@@ -88,7 +87,7 @@ public class SplashActivity extends BaseActivity {
             PermissionReq.with(SplashActivity.this)
                     .permissions(Manifest.permission.READ_EXTERNAL_STORAGE,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    .result(new PermissionResult() {
+                    .result(new PermissionReq.Result() {
                         @Override
                         public void onGranted() {
                             scanMusic(playService);

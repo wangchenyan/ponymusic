@@ -11,7 +11,7 @@ import android.view.View;
 import me.wcy.music.application.AppCache;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.binding.ViewBinder;
-import me.wcy.music.utils.permission.PermissionReq;
+import me.wcy.music.utils.PermissionReq;
 
 /**
  * 基类<br>

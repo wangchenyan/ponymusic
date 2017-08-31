@@ -1,8 +1,9 @@
-package me.wcy.music.utils.permission;
+package me.wcy.music.utils;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -12,7 +13,11 @@ import android.support.v4.content.ContextCompat;
 import android.util.SparseArray;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Android运行时权限申请
@@ -62,12 +67,19 @@ import java.util.List;
  * {@link android.Manifest.permission#WRITE_EXTERNAL_STORAGE}<br>
  */
 public class PermissionReq {
-    private static int sRequestCode = 0;
-    private static SparseArray<PermissionResult> sResultArray = new SparseArray<>();
+    private static AtomicInteger sRequestCode = new AtomicInteger(0);
+    private static SparseArray<Result> sResultArray = new SparseArray<>();
+    private static Set<String> sManifestPermissionSet;
+
+    public interface Result {
+        void onGranted();
+
+        void onDenied();
+    }
 
     private Object mObject;
     private String[] mPermissions;
-    private PermissionResult mResult;
+    private Result mResult;
 
     private PermissionReq(Object object) {
         mObject = object;
@@ -86,22 +98,32 @@ public class PermissionReq {
         return this;
     }
 
-    public PermissionReq result(@Nullable PermissionResult result) {
+    public PermissionReq result(@Nullable Result result) {
         mResult = result;
         return this;
     }
 
     public void request() {
+        Activity activity = getActivity(mObject);
+        if (activity == null) {
+            throw new IllegalArgumentException(mObject.getClass().getName() + " is not supported");
+        }
+
+        initManifestPermission(activity);
+        for (String permission : mPermissions) {
+            if (!sManifestPermissionSet.contains(permission)) {
+                if (mResult != null) {
+                    mResult.onDenied();
+                }
+                return;
+            }
+        }
+
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             if (mResult != null) {
                 mResult.onGranted();
             }
             return;
-        }
-
-        Activity activity = getActivity(mObject);
-        if (activity == null) {
-            throw new IllegalArgumentException(mObject.getClass().getName() + " is not supported");
         }
 
         List<String> deniedPermissionList = getDeniedPermissions(activity, mPermissions);
@@ -119,7 +141,7 @@ public class PermissionReq {
     }
 
     public static void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        PermissionResult result = sResultArray.get(requestCode);
+        Result result = sResultArray.get(requestCode);
 
         if (result == null) {
             return;
@@ -155,6 +177,19 @@ public class PermissionReq {
         return deniedPermissionList;
     }
 
+    private static synchronized void initManifestPermission(Context context) {
+        if (sManifestPermissionSet == null) {
+            sManifestPermissionSet = new HashSet<>();
+            try {
+                PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_PERMISSIONS);
+                String[] permissions = packageInfo.requestedPermissions;
+                Collections.addAll(sManifestPermissionSet, permissions);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private static Activity getActivity(Object object) {
         if (object != null) {
             if (object instanceof Activity) {
@@ -167,6 +202,6 @@ public class PermissionReq {
     }
 
     private static int genRequestCode() {
-        return ++sRequestCode;
+        return sRequestCode.incrementAndGet();
     }
 }
