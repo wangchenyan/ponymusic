@@ -40,7 +40,7 @@
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="95d96be4e4a8db30b0442e575867ca3c" />
+            android:value="${AMAP_KEY}" />
 
         <service android:name=".service.PlayService" />
 

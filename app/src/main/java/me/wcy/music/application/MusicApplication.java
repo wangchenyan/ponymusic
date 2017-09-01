@@ -8,7 +8,6 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import java.util.concurrent.TimeUnit;
 
 import me.wcy.music.BuildConfig;
-import me.wcy.music.api.KeyStore;
 import me.wcy.music.http.HttpInterceptor;
 import me.wcy.music.utils.Preferences;
 import okhttp3.OkHttpClient;
@@ -41,7 +40,7 @@ public class MusicApplication extends Application {
 
     private void initBugly() {
         if (!BuildConfig.DEBUG) {
-            Bugly.init(this, KeyStore.getKey(KeyStore.BUGLY_APP_ID), false);
+            Bugly.init(this, BuildConfig.BUGLY_APP_ID, false);
         }
     }
 }

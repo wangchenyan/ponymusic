@@ -11,16 +11,18 @@ android {
         targetSdkVersion 25
         versionCode 123
         versionName "1.2.3"
+
+        buildConfigField 'String', 'BUGLY_APP_ID', getLocalValue("BUGLY_APP_ID", true)
+
+        manifestPlaceholders = [AMAP_KEY: getLocalValue("AMAP_KEY")]
     }
 
     signingConfigs {
         release {
-            Properties properties = new Properties()
-            properties.load(project.rootProject.file('local.properties').newDataInputStream())
             storeFile file("wangchenyan.keystore")
-            storePassword properties.get("STORE_PASSWORD")
-            keyAlias properties.get("KEY_ALIAS")
-            keyPassword properties.get("KEY_PASSWORD")
+            storePassword getLocalValue("STORE_PASSWORD")
+            keyAlias getLocalValue("KEY_ALIAS")
+            keyPassword getLocalValue("KEY_PASSWORD")
         }
         debug {
             storeFile file("debug.keystore")
@@ -41,10 +43,22 @@ android {
 }
 
 bugly {
+    appId = getLocalValue("BUGLY_APP_ID")
+    appKey = getLocalValue("BUGLY_APP_KEY")
+}
+
+def getLocalValue(String key) {
+    return getLocalValue(key, false)
+}
+
+def getLocalValue(String key, boolean quot) {
     Properties properties = new Properties()
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    appId = properties.get("BUGLY_APP_ID")
-    appKey = properties.get("BUGLY_APP_KEY")
+    def value = properties.containsKey(key) ? properties.get(key) : ""
+    if (quot) {
+        value = "\"" + value + "\"";
+    }
+    return value
 }
 
 ext {

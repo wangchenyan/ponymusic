@@ -52,3 +52,6 @@
 # bugly
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.** { *; }
+
+# jid3
+-dontwarn org.blinkenlights.jid3.**
