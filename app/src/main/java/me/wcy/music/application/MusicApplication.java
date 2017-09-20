@@ -24,6 +24,7 @@ public class MusicApplication extends Application {
 
         AppCache.init(this);
         AppCache.updateNightMode(Preferences.isNightMode());
+        ForegroundObserver.init(this);
         initOkHttpUtils();
         initBugly();
     }
