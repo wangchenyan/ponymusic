@@ -1,15 +1,15 @@
 package me.wcy.music.utils.id3;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import org.blinkenlights.jid3.ID3Exception;
 import org.blinkenlights.jid3.io.TextEncoding;
 import org.blinkenlights.jid3.v2.APICID3V2Frame;
 import org.blinkenlights.jid3.v2.ID3V2_3_0Tag;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 
 /**
  * Created by hzwangchenyan on 2017/8/11.
@@ -31,7 +31,7 @@ public class ID3Tags {
     // 注释
     private String comment;
     // 封面图片
-    private File coverFile;
+    private Bitmap coverBitmap;
 
     public void fillID3Tag(ID3V2_3_0Tag id3V2_3_0Tag) throws ID3Exception {
         TextEncoding.setDefaultTextEncoding(TextEncoding.UNICODE);
@@ -55,8 +55,8 @@ public class ID3Tags {
         }
 
         TextEncoding.setDefaultTextEncoding(TextEncoding.ISO_8859_1);
-        if (coverFile != null && coverFile.exists()) {
-            byte[] data = toByteArray(coverFile);
+        if (coverBitmap != null && !coverBitmap.isRecycled()) {
+            byte[] data = bitmapToBytes(coverBitmap);
             if (data != null) {
                 id3V2_3_0Tag.removeAPICFrame(FRONT_COVER_DESC);
                 APICID3V2Frame apicid3V2Frame = new APICID3V2Frame(MIME_TYPE_JPEG, APICID3V2Frame.PictureType.FrontCover, FRONT_COVER_DESC, data);
@@ -107,42 +107,21 @@ public class ID3Tags {
         }
 
         public Builder setCoverFile(File coverFile) {
-            id3Tags.coverFile = coverFile;
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.RGB_565;
+            Bitmap coverBitmap = BitmapFactory.decodeFile(coverFile.getPath(), options);
+            return setCoverBitmap(coverBitmap);
+        }
+
+        public Builder setCoverBitmap(Bitmap coverBitmap) {
+            id3Tags.coverBitmap = coverBitmap;
             return this;
         }
     }
 
-    private byte[] toByteArray(File file) {
-        ByteArrayOutputStream bos = null;
-        BufferedInputStream in = null;
-        try {
-            bos = new ByteArrayOutputStream((int) file.length());
-            in = new BufferedInputStream(new FileInputStream(file));
-            int buf_size = 1024;
-            byte[] buffer = new byte[buf_size];
-            int len;
-            while ((len = in.read(buffer, 0, buf_size)) > 0) {
-                bos.write(buffer, 0, len);
-            }
-            return bos.toByteArray();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        } finally {
-            try {
-                if (bos != null) {
-                    bos.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                if (in != null) {
-                    in.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    private byte[] bitmapToBytes(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        return baos.toByteArray();
     }
 }

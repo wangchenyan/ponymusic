@@ -23,12 +23,12 @@ import android.widget.TextView;
 import java.io.File;
 
 import me.wcy.music.R;
+import me.wcy.music.activity.MusicInfoActivity;
 import me.wcy.music.adapter.LocalMusicAdapter;
 import me.wcy.music.adapter.OnMoreClickListener;
 import me.wcy.music.application.AppCache;
+import me.wcy.music.constants.RequestCode;
 import me.wcy.music.model.Music;
-import me.wcy.music.utils.FileUtils;
-import me.wcy.music.utils.SystemUtils;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.binding.Bind;
 
@@ -37,11 +37,11 @@ import me.wcy.music.utils.binding.Bind;
  * Created by wcy on 2015/11/26.
  */
 public class LocalMusicFragment extends BaseFragment implements AdapterView.OnItemClickListener, OnMoreClickListener {
-    private static final int REQUEST_WRITE_SETTINGS = 1;
     @Bind(R.id.lv_local_music)
     private ListView lvLocalMusic;
     @Bind(R.id.tv_empty)
     private TextView tvEmpty;
+
     private LocalMusicAdapter mAdapter;
 
     @Nullable
@@ -97,7 +97,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
                         requestSetRingtone(music);
                         break;
                     case 2:// 查看歌曲信息
-                        musicInfo(music);
+                        MusicInfoActivity.start(getContext(), music);
                         break;
                     case 3:// 删除
                         deleteMusic(music);
@@ -139,7 +139,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
             ToastUtils.show("没有权限，无法设置铃声，请授予权限");
             Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
             intent.setData(Uri.parse("package:" + getContext().getPackageName()));
-            startActivityForResult(intent, REQUEST_WRITE_SETTINGS);
+            startActivityForResult(intent, RequestCode.REQUEST_WRITE_SETTINGS);
         } else {
             setRingtone(music);
         }
@@ -172,32 +172,6 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
             ToastUtils.show(R.string.setting_ringtone_success);
         }
         cursor.close();
-    }
-
-    private void musicInfo(Music music) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
-        dialog.setTitle(music.getTitle());
-        StringBuilder sb = new StringBuilder();
-        sb.append("艺术家：")
-                .append(music.getArtist())
-                .append("\n\n")
-                .append("专辑：")
-                .append(music.getAlbum())
-                .append("\n\n")
-                .append("播放时长：")
-                .append(SystemUtils.formatTime("mm:ss", music.getDuration()))
-                .append("\n\n")
-                .append("文件名称：")
-                .append(music.getFileName())
-                .append("\n\n")
-                .append("文件大小：")
-                .append(FileUtils.b2mb((int) music.getFileSize()))
-                .append("MB")
-                .append("\n\n")
-                .append("文件路径：")
-                .append(new File(music.getPath()).getParent());
-        dialog.setMessage(sb.toString());
-        dialog.show();
     }
 
     /**
@@ -236,7 +210,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_WRITE_SETTINGS) {
+        if (requestCode == RequestCode.REQUEST_WRITE_SETTINGS) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.System.canWrite(getContext())) {
                 ToastUtils.show("授权成功，请在再次操作以设置铃声");
             }

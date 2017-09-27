@@ -58,6 +58,10 @@ public class FileUtils {
         return mkdirs(dir);
     }
 
+    public static String getCorpImagePath(Context context) {
+        return context.getExternalCacheDir() + "/corp.jpg";
+    }
+
     /**
      * 获取歌词路径<br>
      * 先从已下载文件夹中查找，如果不存在，则从歌曲文件所在文件夹查找。

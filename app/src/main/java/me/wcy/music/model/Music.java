@@ -1,10 +1,12 @@
 package me.wcy.music.model;
 
+import java.io.Serializable;
+
 /**
  * 单曲信息
  * Created by wcy on 2015/11/27.
  */
-public class Music {
+public class Music implements Serializable {
     // 歌曲类型:本地/网络
     private Type type;
     // [本地歌曲]歌曲id

@@ -141,7 +141,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
                     @Override
                     public void onDenied() {
-                        ToastUtils.show(getString(R.string.no_permission, "位置信息", "更新天气"));
+                        ToastUtils.show("没有位置信息权限，无法更新天气！");
                     }
                 })
                 .request();

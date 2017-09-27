@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 
 import java.io.File;
@@ -22,6 +23,7 @@ import me.wcy.music.utils.id3.ID3Tags;
  * Created by hzwangchenyan on 2015/12/30.
  */
 public class DownloadReceiver extends BroadcastReceiver {
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -45,8 +47,7 @@ public class DownloadReceiver extends BroadcastReceiver {
             }
 
             // 由于系统扫描音乐是异步执行，因此延迟刷新音乐列表
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
+            mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     scanMusic();

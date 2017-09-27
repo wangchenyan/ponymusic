@@ -1,18 +1,26 @@
 package me.wcy.music.utils;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+
+import java.io.File;
+
+import me.wcy.music.constants.RequestCode;
 
 /**
  * 图像工具类
  * Created by wcy on 2015/11/29.
  */
 public class ImageUtils {
-    public static final int BLUR_RADIUS = 50;
+    private static final int BLUR_RADIUS = 50;
 
     @Nullable
     public static Bitmap blur(Bitmap source) {
@@ -24,7 +32,7 @@ public class ImageUtils {
             return blur(source, BLUR_RADIUS);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return source;
         }
     }
 
@@ -285,5 +293,30 @@ public class ImageUtils {
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(source, 0, 0, paint);
         return target;
+    }
+
+    public static void startAlbum(Activity activity) {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        activity.startActivityForResult(intent, RequestCode.REQUEST_ALBUM);
+    }
+
+    public static void startCorp(Activity activity, Uri uri) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        intent.putExtra("crop", "true");
+        intent.putExtra("scale", true);
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        intent.putExtra("outputX", CoverLoader.THUMBNAIL_MAX_LENGTH);
+        intent.putExtra("outputY", CoverLoader.THUMBNAIL_MAX_LENGTH);
+        intent.putExtra("return-data", false);
+        File outFile = new File(FileUtils.getCorpImagePath(activity));
+        Uri outUri = Uri.fromFile(outFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, outUri);
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        // 取消人脸识别
+        intent.putExtra("noFaceDetection", true);
+        activity.startActivityForResult(intent, RequestCode.REQUEST_CORP);
     }
 }

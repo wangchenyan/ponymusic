@@ -95,7 +95,7 @@ public class SplashActivity extends BaseActivity {
 
                         @Override
                         public void onDenied() {
-                            ToastUtils.show(getString(R.string.no_permission, "存储空间", "扫描本地歌曲"));
+                            ToastUtils.show("没有存储空间权限，无法扫描本地歌曲！");
                             finish();
                             playService.quit();
                         }

@@ -3,9 +3,9 @@
     <string name="sure">确定</string>
     <string name="cancel">取消</string>
     <string name="share">分享</string>
-    <string name="about">关于</string>
     <string name="delete">删除</string>
     <string name="search">搜索</string>
+    <string name="save">保存</string>
     <string name="loading">努力加载中…</string>
     <string name="load_fail">加载失败，请检查网络后重试</string>
     <string name="local_music">我的音乐</string>
@@ -40,7 +40,6 @@
     <string name="share_music">我用%1$s分享了歌曲《%2$s》%3$s</string>
     <string name="search_tips">歌曲名、歌手名</string>
     <string name="search_empty">未找到相关结果</string>
-    <string name="menu_search">在线搜索</string>
     <string name="menu_setting">功能设置</string>
     <string name="menu_share">推荐给朋友</string>
     <string name="menu_about">关于波尼音乐</string>
@@ -68,5 +67,5 @@
     <string name="about_weibo">http://weibo.com/wangchenyan1993</string>
     <string name="about_jianshu">http://www.jianshu.com/users/3231579893ac</string>
     <string name="about_github">https://github.com/wangchenyan</string>
-    <string name="no_permission">没有%1$s权限，无法%2$s！</string>
+    <string name="music_info">歌曲信息</string>
 </resources>

@@ -13,7 +13,7 @@ import android.widget.ListView;
 import java.util.List;
 
 import me.wcy.music.R;
-import me.wcy.music.activity.PlaylistActivity;
+import me.wcy.music.activity.OnlineMusicActivity;
 import me.wcy.music.adapter.PlaylistAdapter;
 import me.wcy.music.application.AppCache;
 import me.wcy.music.constants.Extras;
@@ -71,7 +71,7 @@ public class PlaylistFragment extends BaseFragment implements AdapterView.OnItem
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         SongListInfo songListInfo = mSongLists.get(position);
-        Intent intent = new Intent(getContext(), PlaylistActivity.class);
+        Intent intent = new Intent(getContext(), OnlineMusicActivity.class);
         intent.putExtra(Extras.MUSIC_LIST_TYPE, songListInfo);
         startActivity(intent);
     }
