@@ -48,9 +48,9 @@
 fir.im：http://fir.im/ponymusic
 
 ## TODO
-- 在线音乐可以免下载加入我的音乐列表
-- 在线音乐自动缓存
-- 编辑音乐信息
+- [ ] 在线音乐可以免下载加入我的音乐列表
+- [ ] 在线音乐自动缓存
+- [x] 编辑音乐信息
 
 ## 项目
 ### 公开API
@@ -63,7 +63,7 @@ fir.im：http://fir.im/ponymusic
 
 ### 关键代码
 黑胶唱片专辑封面绘制流程
-```java
+```
 @Override
 protected void onDraw(Canvas canvas) {
     // 1.绘制顶部虚线
@@ -91,7 +91,7 @@ protected void onDraw(Canvas canvas) {
 }
 ```
 歌词绘制流程
-```java
+```
 @Override
 protected void onDraw(Canvas canvas) {
     super.onDraw(canvas);
