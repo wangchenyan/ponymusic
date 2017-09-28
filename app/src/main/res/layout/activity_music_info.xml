@@ -34,17 +34,14 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:background="@color/black_50p"
-                android:gravity="center"
-                android:paddingBottom="2dp"
-                android:paddingTop="2dp"
-                android:text="点击更换"
-                android:textColor="@color/white"
+                android:contentDescription="@null"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_edit"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_music_info_cover"
-                app:layout_constraintLeft_toLeftOf="@+id/iv_music_info_cover"
                 app:layout_constraintRight_toRightOf="@+id/iv_music_info_cover" />
 
             <android.support.design.widget.TextInputLayout

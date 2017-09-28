@@ -64,6 +64,10 @@ public class MusicInfoActivity extends BaseActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_info);
 
+        if (!checkServiceAlive()) {
+            return;
+        }
+
         mMusic = (Music) getIntent().getSerializableExtra(Extras.MUSIC);
         if (mMusic == null || mMusic.getType() != Music.Type.LOCAL) {
             finish();
