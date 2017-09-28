@@ -23,6 +23,7 @@ import me.wcy.music.R;
 import me.wcy.music.adapter.FragmentAdapter;
 import me.wcy.music.application.AppCache;
 import me.wcy.music.constants.Extras;
+import me.wcy.music.constants.Keys;
 import me.wcy.music.executor.NaviMenuExecutor;
 import me.wcy.music.executor.WeatherExecutor;
 import me.wcy.music.fragment.LocalMusicFragment;
@@ -34,6 +35,7 @@ import me.wcy.music.service.OnPlayerEventListener;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.PermissionReq;
+import me.wcy.music.utils.Preferences;
 import me.wcy.music.utils.SystemUtils;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.binding.Bind;
@@ -127,6 +129,10 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         adapter.addFragment(mPlaylistFragment);
         mViewPager.setAdapter(adapter);
         tvLocalMusic.setSelected(true);
+
+        if (Preferences.isNightMode()) {
+            flPlayBar.setBackgroundResource(R.drawable.play_bar_bg_selector_dark);
+        }
     }
 
     private void updateWeather() {
@@ -344,7 +350,21 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        // 切换夜间模式不保存状态
+        outState.putInt(Keys.VIEW_PAGER_INDEX, mViewPager.getCurrentItem());
+        mLocalMusicFragment.onSaveInstanceState(outState);
+        mPlaylistFragment.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(final Bundle savedInstanceState) {
+        mViewPager.post(new Runnable() {
+            @Override
+            public void run() {
+                mViewPager.setCurrentItem(savedInstanceState.getInt(Keys.VIEW_PAGER_INDEX), false);
+                mLocalMusicFragment.onRestoreInstanceState(savedInstanceState);
+                mPlaylistFragment.onRestoreInstanceState(savedInstanceState);
+            }
+        });
     }
 
     @Override

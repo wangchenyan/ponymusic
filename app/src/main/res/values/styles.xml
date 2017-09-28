@@ -1,12 +1,20 @@
 <resources>
 
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/red</item>
+        <item name="colorPrimaryDark">@color/red</item>
+        <item name="colorAccent">@color/red</item>
+    </style>
+
+    <style name="AppBaseThemeDark" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/grey_900</item>
+        <item name="colorPrimaryDark">@color/grey_900</item>
+        <item name="colorAccent">@color/grey_900</item>
     </style>
 
     <style name="AppTheme" parent="AppBaseTheme" />
+
+    <style name="AppThemeDark" parent="AppBaseThemeDark" />
 
     <style name="AppTheme.Search" parent="AppBaseTheme">
         <item name="colorAccent">@color/white</item>
@@ -16,7 +24,5 @@
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
-    <style name="AppTheme.Text" parent="TextAppearance.AppCompat">
-        <item name="android:textColor">@color/black</item>
-    </style>
+    <style name="AppTheme.Text" parent="TextAppearance.AppCompat" />
 </resources>

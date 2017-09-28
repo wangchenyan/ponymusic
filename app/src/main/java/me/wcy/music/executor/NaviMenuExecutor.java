@@ -1,10 +1,8 @@
 package me.wcy.music.executor;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 
@@ -52,19 +50,8 @@ public class NaviMenuExecutor {
 
     private static void nightMode(final MusicActivity activity) {
         final boolean on = !Preferences.isNightMode();
-        final ProgressDialog dialog = new ProgressDialog(activity);
-        dialog.setCancelable(false);
-        dialog.show();
-        AppCache.updateNightMode(on);
-        Handler handler = new Handler(activity.getMainLooper());
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                dialog.cancel();
-                activity.recreate();
-                Preferences.saveNightMode(on);
-            }
-        }, 500);
+        Preferences.saveNightMode(on);
+        activity.recreate();
     }
 
     private static void timerDialog(final MusicActivity activity) {

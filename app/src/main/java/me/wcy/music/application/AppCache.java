@@ -3,11 +3,8 @@ package me.wcy.music.application;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.util.LongSparseArray;
-import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.amap.api.location.AMapLocalWeatherLive;
@@ -73,15 +70,6 @@ public class AppCache {
 
     public static void setPlayService(PlayService service) {
         getInstance().mPlayService = service;
-    }
-
-    public static void updateNightMode(boolean on) {
-        Resources resources = getContext().getResources();
-        DisplayMetrics dm = resources.getDisplayMetrics();
-        Configuration config = resources.getConfiguration();
-        config.uiMode &= ~Configuration.UI_MODE_NIGHT_MASK;
-        config.uiMode |= on ? Configuration.UI_MODE_NIGHT_YES : Configuration.UI_MODE_NIGHT_NO;
-        resources.updateConfiguration(config, dm);
     }
 
     public static List<Music> getMusicList() {

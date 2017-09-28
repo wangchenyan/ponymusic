@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 
 import me.wcy.music.BuildConfig;
 import me.wcy.music.http.HttpInterceptor;
-import me.wcy.music.utils.Preferences;
 import okhttp3.OkHttpClient;
 
 /**
@@ -23,7 +22,6 @@ public class MusicApplication extends Application {
         super.onCreate();
 
         AppCache.init(this);
-        AppCache.updateNightMode(Preferences.isNightMode());
         ForegroundObserver.init(this);
         initOkHttpUtils();
         initBugly();

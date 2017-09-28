@@ -20,6 +20,7 @@ import me.wcy.music.R;
 import me.wcy.music.application.AppCache;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.PermissionReq;
+import me.wcy.music.utils.Preferences;
 import me.wcy.music.utils.binding.ViewBinder;
 
 /**
@@ -32,6 +33,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        if (Preferences.isNightMode()) {
+            setTheme(R.style.AppThemeDark);
+        }
+
         super.onCreate(savedInstanceState);
 
         setSystemBarTransparent();

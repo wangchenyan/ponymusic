@@ -27,6 +27,7 @@ import me.wcy.music.activity.MusicInfoActivity;
 import me.wcy.music.adapter.LocalMusicAdapter;
 import me.wcy.music.adapter.OnMoreClickListener;
 import me.wcy.music.application.AppCache;
+import me.wcy.music.constants.Keys;
 import me.wcy.music.constants.RequestCode;
 import me.wcy.music.model.Music;
 import me.wcy.music.utils.ToastUtils;
@@ -51,7 +52,9 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     }
 
     @Override
-    protected void init() {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
         mAdapter = new LocalMusicAdapter();
         mAdapter.setOnMoreClickListener(this);
         lvLocalMusic.setAdapter(mAdapter);
@@ -215,5 +218,24 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
                 ToastUtils.show("授权成功，请在再次操作以设置铃声");
             }
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        int position = lvLocalMusic.getFirstVisiblePosition();
+        int offset = (lvLocalMusic.getChildAt(0) == null) ? 0 : lvLocalMusic.getChildAt(0).getTop();
+        outState.putInt(Keys.LOCAL_MUSIC_POSITION, position);
+        outState.putInt(Keys.LOCAL_MUSIC_OFFSET, offset);
+    }
+
+    public void onRestoreInstanceState(final Bundle savedInstanceState) {
+        lvLocalMusic.post(new Runnable() {
+            @Override
+            public void run() {
+                int position = savedInstanceState.getInt(Keys.LOCAL_MUSIC_POSITION);
+                int offset = savedInstanceState.getInt(Keys.LOCAL_MUSIC_OFFSET);
+                lvLocalMusic.setSelectionFromTop(position, offset);
+            }
+        });
     }
 }

@@ -89,7 +89,9 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     }
 
     @Override
-    protected void init() {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
         initSystemBar();
         initViewPager();
         ilIndicator.create(mViewPagerContent.size());
