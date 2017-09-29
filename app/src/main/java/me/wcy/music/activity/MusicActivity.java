@@ -1,10 +1,8 @@
 package me.wcy.music.activity;
 
 import android.Manifest;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -30,7 +28,6 @@ import me.wcy.music.fragment.LocalMusicFragment;
 import me.wcy.music.fragment.PlayFragment;
 import me.wcy.music.fragment.PlaylistFragment;
 import me.wcy.music.model.Music;
-import me.wcy.music.receiver.RemoteControlReceiver;
 import me.wcy.music.service.OnPlayerEventListener;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.CoverLoader;
@@ -74,8 +71,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     private LocalMusicFragment mLocalMusicFragment;
     private PlaylistFragment mPlaylistFragment;
     private PlayFragment mPlayFragment;
-    private AudioManager mAudioManager;
-    private ComponentName mRemoteReceiver;
     private boolean isPlayFragmentShow = false;
     private MenuItem timerItem;
 
@@ -92,7 +87,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
         setupView();
         updateWeather();
-        registerReceiver();
         onChangeImpl(getPlayService().getPlayingMusic());
         parseIntent();
     }
@@ -151,12 +145,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
                     }
                 })
                 .request();
-    }
-
-    private void registerReceiver() {
-        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-        mRemoteReceiver = new ComponentName(getPackageName(), RemoteControlReceiver.class.getName());
-        mAudioManager.registerMediaButtonEventReceiver(mRemoteReceiver);
     }
 
     private void parseIntent() {
@@ -369,9 +357,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     protected void onDestroy() {
-        if (mRemoteReceiver != null) {
-            mAudioManager.unregisterMediaButtonEventReceiver(mRemoteReceiver);
-        }
         PlayService service = AppCache.getPlayService();
         if (service != null) {
             service.setOnPlayEventListener(null);
