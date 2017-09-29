@@ -129,7 +129,7 @@ public class MusicInfoActivity extends BaseActivity implements View.OnClickListe
 
                     @Override
                     public void onDenied() {
-                        ToastUtils.show("没有权限，无法选择图片");
+                        ToastUtils.show(R.string.no_permission_select_image);
                     }
                 })
                 .request();

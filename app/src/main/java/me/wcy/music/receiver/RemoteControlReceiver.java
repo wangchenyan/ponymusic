@@ -3,14 +3,14 @@ package me.wcy.music.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.view.KeyEvent;
 
 import me.wcy.music.constants.Actions;
 import me.wcy.music.service.PlayService;
 
 /**
- * 耳机线控，仅在{@link android.os.Build.VERSION_CODES#KITKAT}以下有效，
- * 5.0以上被{@link android.support.v4.media.session.MediaSessionCompat}接管。
+ * 耳机线控，仅在5.0以下有效，5.0以上被{@link MediaSessionCompat}接管。
  * Created by hzwangchenyan on 2016/1/21.
  */
 public class RemoteControlReceiver extends BroadcastReceiver {

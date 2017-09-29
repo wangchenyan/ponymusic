@@ -112,18 +112,14 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     }
 
     public void onItemPlay() {
-        if (isAdded()) {
-            updateView();
-            if (getPlayService().getPlayingMusic().getType() == Music.Type.LOCAL) {
-                lvLocalMusic.smoothScrollToPosition(getPlayService().getPlayingPosition());
-            }
+        updateView();
+        if (getPlayService().getPlayingMusic().getType() == Music.Type.LOCAL) {
+            lvLocalMusic.smoothScrollToPosition(getPlayService().getPlayingPosition());
         }
     }
 
     public void onMusicListUpdate() {
-        if (isAdded()) {
-            updateView();
-        }
+        updateView();
     }
 
     /**
@@ -139,7 +135,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
 
     private void requestSetRingtone(final Music music) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.System.canWrite(getContext())) {
-            ToastUtils.show("没有权限，无法设置铃声，请授予权限");
+            ToastUtils.show(R.string.no_permission_setting);
             Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
             intent.setData(Uri.parse("package:" + getContext().getPackageName()));
             startActivityForResult(intent, RequestCode.REQUEST_WRITE_SETTINGS);
@@ -215,7 +211,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RequestCode.REQUEST_WRITE_SETTINGS) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.System.canWrite(getContext())) {
-                ToastUtils.show("授权成功，请在再次操作以设置铃声");
+                ToastUtils.show(R.string.grant_permission_setting);
             }
         }
     }

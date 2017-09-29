@@ -141,7 +141,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
                     @Override
                     public void onDenied() {
-                        ToastUtils.show("没有位置信息权限，无法更新天气！");
+                        ToastUtils.show(R.string.no_permission_location);
                     }
                 })
                 .request();
@@ -158,7 +158,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onChange(Music music) {
         onChangeImpl(music);
-        if (mPlayFragment != null) {
+        if (mPlayFragment != null && mPlayFragment.isAdded()) {
             mPlayFragment.onChange(music);
         }
     }
@@ -166,7 +166,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onPlayerStart() {
         ivPlayBarPlay.setSelected(true);
-        if (mPlayFragment != null) {
+        if (mPlayFragment != null && mPlayFragment.isAdded()) {
             mPlayFragment.onPlayerStart();
         }
     }
@@ -174,7 +174,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onPlayerPause() {
         ivPlayBarPlay.setSelected(false);
-        if (mPlayFragment != null) {
+        if (mPlayFragment != null && mPlayFragment.isAdded()) {
             mPlayFragment.onPlayerPause();
         }
     }
@@ -185,14 +185,14 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onPublish(int progress) {
         mProgressBar.setProgress(progress);
-        if (mPlayFragment != null) {
+        if (mPlayFragment != null && mPlayFragment.isAdded()) {
             mPlayFragment.onPublish(progress);
         }
     }
 
     @Override
     public void onBufferingUpdate(int percent) {
-        if (mPlayFragment != null) {
+        if (mPlayFragment != null && mPlayFragment.isAdded()) {
             mPlayFragment.onBufferingUpdate(percent);
         }
     }
@@ -208,7 +208,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onMusicListUpdate() {
-        if (mLocalMusicFragment != null) {
+        if (mLocalMusicFragment != null && mLocalMusicFragment.isAdded()) {
             mLocalMusicFragment.onMusicListUpdate();
         }
     }
@@ -284,7 +284,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         mProgressBar.setMax((int) music.getDuration());
         mProgressBar.setProgress((int) getPlayService().getCurrentPosition());
 
-        if (mLocalMusicFragment != null) {
+        if (mLocalMusicFragment != null && mLocalMusicFragment.isAdded()) {
             mLocalMusicFragment.onItemPlay();
         }
     }

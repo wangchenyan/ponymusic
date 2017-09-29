@@ -30,6 +30,7 @@ import me.wcy.music.constants.Actions;
 import me.wcy.music.enums.PlayModeEnum;
 import me.wcy.music.executor.SearchLrc;
 import me.wcy.music.model.Music;
+import me.wcy.music.service.OnPlayerEventListener;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.Preferences;
@@ -45,7 +46,7 @@ import me.wcy.music.widget.IndicatorLayout;
  * Created by wcy on 2015/11/27.
  */
 public class PlayFragment extends BaseFragment implements View.OnClickListener,
-        ViewPager.OnPageChangeListener, SeekBar.OnSeekBarChangeListener {
+        ViewPager.OnPageChangeListener, SeekBar.OnSeekBarChangeListener, OnPlayerEventListener {
     @Bind(R.id.ll_content)
     private LinearLayout llContent;
     @Bind(R.id.iv_play_page_bg)
@@ -155,48 +156,51 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         ivMode.setImageLevel(mode);
     }
 
+    @Override
     public void onChange(Music music) {
-        if (isAdded()) {
-            onChangeImpl(music);
-        }
+        onChangeImpl(music);
     }
 
+    @Override
     public void onPlayerStart() {
-        if (isAdded()) {
-            ivPlay.setSelected(true);
-            mAlbumCoverView.start();
-        }
+        ivPlay.setSelected(true);
+        mAlbumCoverView.start();
     }
 
+    @Override
     public void onPlayerPause() {
-        if (isAdded()) {
-            ivPlay.setSelected(false);
-            mAlbumCoverView.pause();
-        }
+        ivPlay.setSelected(false);
+        mAlbumCoverView.pause();
     }
 
     /**
      * 更新播放进度
      */
+    @Override
     public void onPublish(int progress) {
-        if (isAdded()) {
-            sbProgress.setProgress(progress);
-            if (mLrcViewSingle.hasLrc()) {
-                mLrcViewSingle.updateTime(progress);
-                mLrcViewFull.updateTime(progress);
-            }
-            //更新当前播放时间
-            if (progress - mLastProgress >= 1000) {
-                tvCurrentTime.setText(formatTime(progress));
-                mLastProgress = progress;
-            }
+        sbProgress.setProgress(progress);
+        if (mLrcViewSingle.hasLrc()) {
+            mLrcViewSingle.updateTime(progress);
+            mLrcViewFull.updateTime(progress);
+        }
+        // 更新当前播放时间
+        if (progress - mLastProgress >= 1000) {
+            tvCurrentTime.setText(formatTime(progress));
+            mLastProgress = progress;
         }
     }
 
+    @Override
     public void onBufferingUpdate(int percent) {
-        if (isAdded()) {
-            sbProgress.setSecondaryProgress(sbProgress.getMax() * 100 / percent);
-        }
+        sbProgress.setSecondaryProgress(sbProgress.getMax() * 100 / percent);
+    }
+
+    @Override
+    public void onTimer(long remain) {
+    }
+
+    @Override
+    public void onMusicListUpdate() {
     }
 
     @Override
