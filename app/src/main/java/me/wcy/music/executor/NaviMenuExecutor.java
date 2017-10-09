@@ -49,8 +49,7 @@ public class NaviMenuExecutor {
     }
 
     private static void nightMode(final MusicActivity activity) {
-        final boolean on = !Preferences.isNightMode();
-        Preferences.saveNightMode(on);
+        Preferences.saveNightMode(!Preferences.isNightMode());
         activity.recreate();
     }
 

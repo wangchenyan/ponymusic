@@ -32,7 +32,6 @@ import me.wcy.music.service.OnPlayerEventListener;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.PermissionReq;
-import me.wcy.music.utils.Preferences;
 import me.wcy.music.utils.SystemUtils;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.binding.Bind;
@@ -103,7 +102,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         ivSearch.setOnClickListener(this);
         tvLocalMusic.setOnClickListener(this);
         tvOnlineMusic.setOnClickListener(this);
-        mViewPager.setOnPageChangeListener(this);
+        mViewPager.addOnPageChangeListener(this);
         flPlayBar.setOnClickListener(this);
         ivPlayBarPlay.setOnClickListener(this);
         ivPlayBarNext.setOnClickListener(this);
@@ -123,10 +122,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         adapter.addFragment(mPlaylistFragment);
         mViewPager.setAdapter(adapter);
         tvLocalMusic.setSelected(true);
-
-        if (Preferences.isNightMode()) {
-            flPlayBar.setBackgroundResource(R.drawable.play_bar_bg_selector_dark);
-        }
     }
 
     private void updateWeather() {

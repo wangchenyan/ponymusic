@@ -57,9 +57,9 @@
 
     <View
         android:id="@+id/v_divider"
-        style="@style/AppTheme.Divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/divider_height"
         android:layout_gravity="bottom"
-        android:layout_marginLeft="110dp" />
+        android:layout_marginLeft="110dp"
+        android:background="?android:attr/listDivider" />
 </FrameLayout>

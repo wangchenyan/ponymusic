@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StyleRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -34,13 +35,18 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         if (Preferences.isNightMode()) {
-            setTheme(R.style.AppThemeDark);
+            setTheme(getDarkTheme());
         }
 
         super.onCreate(savedInstanceState);
 
         setSystemBarTransparent();
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+    }
+
+    @StyleRes
+    protected int getDarkTheme() {
+        return R.style.AppThemeDark;
     }
 
     @Override

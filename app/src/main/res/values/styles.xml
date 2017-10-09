@@ -4,13 +4,17 @@
         <item name="colorPrimary">@color/red</item>
         <item name="colorPrimaryDark">@color/red</item>
         <item name="colorAccent">@color/red</item>
+        <item name="playBarBackground">@drawable/play_bar_bg_selector</item>
     </style>
 
     <style name="AppBaseThemeDark" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/grey_900</item>
         <item name="colorPrimaryDark">@color/grey_900</item>
         <item name="colorAccent">@color/grey_900</item>
+        <item name="playBarBackground">@drawable/play_bar_bg_selector_dark</item>
     </style>
+
+    <attr name="playBarBackground" format="reference" />
 
     <style name="AppTheme" parent="AppBaseTheme" />
 
@@ -20,8 +24,8 @@
         <item name="colorAccent">@color/white</item>
     </style>
 
-    <style name="AppTheme.Divider">
-        <item name="android:background">?android:attr/listDivider</item>
+    <style name="AppThemeDark.Search" parent="AppBaseThemeDark">
+        <item name="colorAccent">@color/white</item>
     </style>
 
     <style name="AppTheme.Text" parent="TextAppearance.AppCompat" />

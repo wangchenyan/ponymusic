@@ -62,6 +62,11 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
     }
 
     @Override
+    protected int getDarkTheme() {
+        return R.style.AppThemeDark_Search;
+    }
+
+    @Override
     protected void setListener() {
         lvSearchMusic.setOnItemClickListener(this);
         mAdapter.setOnMoreClickListener(this);
