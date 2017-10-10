@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,9 +80,11 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     private LrcView mLrcViewSingle;
     private LrcView mLrcViewFull;
     private SeekBar sbVolume;
+
     private AudioManager mAudioManager;
     private List<View> mViewPagerContent;
     private int mLastProgress;
+    private boolean isDraggingProgress;
 
     @Nullable
     @Override
@@ -116,7 +119,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         ivNext.setOnClickListener(this);
         sbProgress.setOnSeekBarChangeListener(this);
         sbVolume.setOnSeekBarChangeListener(this);
-        vpPlay.setOnPageChangeListener(this);
+        vpPlay.addOnPageChangeListener(this);
     }
 
     /**
@@ -124,7 +127,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
      */
     private void initSystemBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            int top = ScreenUtils.getSystemBarHeight();
+            int top = ScreenUtils.getStatusBarHeight();
             llContent.setPadding(0, top, 0, 0);
         }
     }
@@ -178,15 +181,13 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
      */
     @Override
     public void onPublish(int progress) {
-        sbProgress.setProgress(progress);
+        if (!isDraggingProgress) {
+            sbProgress.setProgress(progress);
+        }
+
         if (mLrcViewSingle.hasLrc()) {
             mLrcViewSingle.updateTime(progress);
             mLrcViewFull.updateTime(progress);
-        }
-        // 更新当前播放时间
-        if (progress - mLastProgress >= 1000) {
-            tvCurrentTime.setText(formatTime(progress));
-            mLastProgress = progress;
         }
     }
 
@@ -239,22 +240,33 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if (seekBar == sbProgress) {
+            if (Math.abs(progress - mLastProgress) >= DateUtils.SECOND_IN_MILLIS) {
+                tvCurrentTime.setText(formatTime(progress));
+                mLastProgress = progress;
+            }
+        }
     }
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
+        if (seekBar == sbProgress) {
+            isDraggingProgress = true;
+        }
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         if (seekBar == sbProgress) {
+            isDraggingProgress = false;
             if (getPlayService().isPlaying() || getPlayService().isPausing()) {
                 int progress = seekBar.getProgress();
                 getPlayService().seekTo(progress);
-                mLrcViewSingle.onDrag(progress);
-                mLrcViewFull.onDrag(progress);
-                tvCurrentTime.setText(formatTime(progress));
-                mLastProgress = progress;
+
+                if (mLrcViewSingle.hasLrc()) {
+                    mLrcViewSingle.onDrag(progress);
+                    mLrcViewFull.onDrag(progress);
+                }
             } else {
                 seekBar.setProgress(0);
             }
