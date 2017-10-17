@@ -32,7 +32,7 @@ import me.wcy.music.utils.Preferences;
  */
 public class PlayService extends Service implements MediaPlayer.OnCompletionListener {
     private static final String TAG = "Service";
-    private static final long TIME_UPDATE = 100L;
+    private static final long TIME_UPDATE = 300L;
 
     private static final int STATE_IDLE = 0;
     private static final int STATE_PREPARING = 1;

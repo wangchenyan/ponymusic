@@ -264,8 +264,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
                 getPlayService().seekTo(progress);
 
                 if (mLrcViewSingle.hasLrc()) {
-                    mLrcViewSingle.onDrag(progress);
-                    mLrcViewFull.onDrag(progress);
+                    mLrcViewSingle.updateTime(progress);
+                    mLrcViewFull.updateTime(progress);
                 }
             } else {
                 seekBar.setProgress(0);
