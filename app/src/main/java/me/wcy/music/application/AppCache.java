@@ -73,7 +73,9 @@ public class AppCache {
     }
 
     public static List<Music> getMusicList() {
-        return getInstance().mMusicList;
+        synchronized (getInstance().mMusicList) {
+            return getInstance().mMusicList;
+        }
     }
 
     public static List<SongListInfo> getSongListInfos() {
