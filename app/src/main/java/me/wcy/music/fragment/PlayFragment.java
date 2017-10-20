@@ -47,7 +47,8 @@ import me.wcy.music.widget.IndicatorLayout;
  * Created by wcy on 2015/11/27.
  */
 public class PlayFragment extends BaseFragment implements View.OnClickListener,
-        ViewPager.OnPageChangeListener, SeekBar.OnSeekBarChangeListener, OnPlayerEventListener {
+        ViewPager.OnPageChangeListener, SeekBar.OnSeekBarChangeListener, OnPlayerEventListener,
+        LrcView.OnPlayClickListener {
     @Bind(R.id.ll_content)
     private LinearLayout llContent;
     @Bind(R.id.iv_play_page_bg)
@@ -140,6 +141,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         mLrcViewFull = (LrcView) lrcView.findViewById(R.id.lrc_view_full);
         sbVolume = (SeekBar) lrcView.findViewById(R.id.sb_volume);
         mAlbumCoverView.initNeedle(getPlayService().isPlaying());
+        mLrcViewFull.setOnPlayClickListener(this);
         initVolume();
 
         mViewPagerContent = new ArrayList<>(2);
@@ -274,6 +276,18 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
             mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, seekBar.getProgress(),
                     AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
         }
+    }
+
+    @Override
+    public boolean onPlayClick(long time) {
+        if (getPlayService().isPlaying() || getPlayService().isPausing()) {
+            getPlayService().seekTo((int) time);
+            if (getPlayService().isPausing()) {
+                getPlayService().playPause();
+            }
+            return true;
+        }
+        return false;
     }
 
     private void onChangeImpl(Music music) {

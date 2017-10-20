@@ -73,6 +73,6 @@ dependencies {
     compile 'com.zhy:okhttputils:2.6.2'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.github.bumptech.glide:glide:3.8.0'
-    compile 'me.wcy:lrcview:1.4.4'
+    compile 'me.wcy:lrcview:2.0.0'
     compile 'com.tencent.bugly:crashreport_upgrade:1.2.5'
 }

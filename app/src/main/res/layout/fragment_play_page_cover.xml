@@ -4,15 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="10dp"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin">
+    android:paddingBottom="10dp">
 
     <me.wcy.music.widget.AlbumCoverView
         android:id="@+id/album_cover_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin" />
 
     <me.wcy.lrcview.LrcView
         android:id="@+id/lrc_view_single"
@@ -22,5 +22,6 @@
         lrc:lrcCurrentTextColor="@color/white"
         lrc:lrcDividerHeight="10dp"
         lrc:lrcNormalTextColor="@color/white"
+        lrc:lrcPadding="40dp"
         lrc:lrcTextSize="@dimen/text_size_common" />
 </LinearLayout>

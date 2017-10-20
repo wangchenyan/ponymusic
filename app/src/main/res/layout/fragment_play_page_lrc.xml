@@ -3,9 +3,7 @@
     xmlns:lrc="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin">
+    android:orientation="vertical">
 
     <include layout="@layout/include_play_page_volume_bar" />
 
@@ -18,5 +16,8 @@
         lrc:lrcCurrentTextColor="@color/white"
         lrc:lrcDividerHeight="24dp"
         lrc:lrcNormalTextColor="@color/white_50p"
-        lrc:lrcTextSize="@dimen/text_size_common" />
+        lrc:lrcPadding="40dp"
+        lrc:lrcTextSize="@dimen/text_size_common"
+        lrc:lrcTimelineColor="@color/white_50p"
+        lrc:lrcTimelineTextColor="#CCFFFFFF" />
 </LinearLayout>
