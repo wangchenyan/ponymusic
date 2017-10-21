@@ -9,7 +9,9 @@ import android.media.audiofx.AudioEffect;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import me.wcy.music.model.Music;
@@ -24,8 +26,9 @@ public class MusicUtils {
     /**
      * 扫描歌曲
      */
-    public static void scanMusic(Context context, List<Music> musicList) {
-        musicList.clear();
+    @NonNull
+    public static List<Music> scanMusic(Context context) {
+        List<Music> musicList = new ArrayList<>();
 
         long filterSize = ParseUtils.parseLong(Preferences.getFilterSize()) * 1024;
         long filterTime = ParseUtils.parseLong(Preferences.getFilterTime()) * 1000;
@@ -51,7 +54,7 @@ public class MusicUtils {
                 },
                 MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
         if (cursor == null) {
-            return;
+            return musicList;
         }
 
         int i = 0;
@@ -90,6 +93,8 @@ public class MusicUtils {
             musicList.add(music);
         }
         cursor.close();
+
+        return musicList;
     }
 
     public static Uri getMediaStoreAlbumCoverUri(long albumId) {

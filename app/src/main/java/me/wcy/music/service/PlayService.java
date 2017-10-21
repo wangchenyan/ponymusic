@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Random;
 
 import me.wcy.music.application.AppCache;
@@ -103,17 +104,17 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
      * 扫描音乐
      */
     public void updateMusicList(final EventCallback<Void> callback) {
-        new AsyncTask<Void, Void, Void>() {
+        new AsyncTask<Void, Void, List<Music>>() {
             @Override
-            protected Void doInBackground(Void... params) {
-                synchronized (AppCache.getMusicList()) {
-                    MusicUtils.scanMusic(PlayService.this, AppCache.getMusicList());
-                }
-                return null;
+            protected List<Music> doInBackground(Void... params) {
+                return MusicUtils.scanMusic(PlayService.this);
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
+            protected void onPostExecute(List<Music> musicList) {
+                AppCache.getMusicList().clear();
+                AppCache.getMusicList().addAll(musicList);
+
                 if (!AppCache.getMusicList().isEmpty()) {
                     updatePlayingPosition();
                     mPlayingMusic = AppCache.getMusicList().get(mPlayingPosition);
