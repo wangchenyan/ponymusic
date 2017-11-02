@@ -9,8 +9,8 @@ android {
         applicationId "me.wcy.music"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 123
-        versionName "1.2.3"
+        versionCode 130
+        versionName "1.3.0"
 
         buildConfigField 'String', 'BUGLY_APP_ID', getLocalValue("BUGLY_APP_ID", true)
 
