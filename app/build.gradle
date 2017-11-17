@@ -2,15 +2,15 @@ apply plugin: 'com.android.application'
 apply plugin: 'bugly'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "me.wcy.music"
-        minSdkVersion 14
-        targetSdkVersion 25
-        versionCode 130
-        versionName "1.3.0"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
 
         buildConfigField 'String', 'BUGLY_APP_ID', getLocalValue("BUGLY_APP_ID", true)
 
@@ -56,23 +56,19 @@ def getLocalValue(String key, boolean quot) {
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
     def value = properties.containsKey(key) ? properties.get(key) : ""
     if (quot) {
-        value = "\"" + value + "\"";
+        value = "\"" + value + "\""
     }
     return value
 }
 
-ext {
-    supportVersion = "25.3.1"
-}
-
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile "com.android.support:appcompat-v7:${supportVersion}"
-    compile "com.android.support:design:${supportVersion}"
+    compile "com.android.support:appcompat-v7:${rootProject.ext.supportVersion}"
+    compile "com.android.support:design:${rootProject.ext.supportVersion}"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.zhy:okhttputils:2.6.2'
-    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.github.bumptech.glide:glide:3.8.0'
-    compile 'me.wcy:lrcview:2.0.0'
+    compile 'me.wcy:lrcview:2.0.1'
     compile 'com.tencent.bugly:crashreport_upgrade:1.2.5'
 }
