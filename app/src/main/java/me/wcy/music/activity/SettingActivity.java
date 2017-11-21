@@ -76,14 +76,14 @@ public class SettingActivity extends BaseActivity {
         private void startEqualizer() {
             if (MusicUtils.isAudioControlPanelAvailable(getActivity())) {
                 Intent intent = new Intent();
-                String packageName = getActivity().getPackageName();
+//                String packageName = getActivity().getPackageName();
                 intent.setAction(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
-                intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, packageName);
-                intent.putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC);
+//                intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, packageName);
+//                intent.putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC);
                 intent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, mPlayService.getAudioSessionId());
 
                 try {
-                    startActivityForResult(intent, 1);
+                    startActivityForResult(intent, 666);
                 } catch (ActivityNotFoundException e) {
                     e.printStackTrace();
                     ToastUtils.show(R.string.device_not_support);
