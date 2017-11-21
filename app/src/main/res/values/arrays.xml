@@ -87,37 +87,37 @@
 
     <string-array name="filter_size_entries">
         <item>不过滤</item>
-        <item>100KB</item>
-        <item>200KB</item>
         <item>500KB</item>
-        <item>1MB</item>
         <item>2MB</item>
+        <item>6MB</item>
+        <item>10MB</item>
+        <item>20MB</item>
     </string-array>
 
     <string-array name="filter_size_entry_values">
         <item>0</item>
-        <item>100</item>
-        <item>200</item>
         <item>500</item>
-        <item>1024</item>
         <item>2048</item>
+        <item>6144</item>
+        <item>10240</item>
+        <item>20480</item>
     </string-array>
 
     <string-array name="filter_time_entries">
         <item>不过滤</item>
-        <item>15秒</item>
         <item>30秒</item>
-        <item>1分钟</item>
-        <item>1分30秒</item>
         <item>2分钟</item>
+        <item>3分钟</item>
+        <item>4分钟</item>
+        <item>5分钟</item>
     </string-array>
 
     <string-array name="filter_time_entry_values">
         <item>0</item>
-        <item>15</item>
         <item>30</item>
-        <item>60</item>
-        <item>90</item>
         <item>120</item>
+        <item>180</item>
+        <item>240</item>
+        <item>300</item>
     </string-array>
 </resources>
