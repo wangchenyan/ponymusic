@@ -27,11 +27,13 @@ import java.util.List;
 import me.wcy.lrcview.LrcView;
 import me.wcy.music.R;
 import me.wcy.music.adapter.PlayPagerAdapter;
+import me.wcy.music.application.AppCache;
 import me.wcy.music.constants.Actions;
 import me.wcy.music.enums.PlayModeEnum;
 import me.wcy.music.executor.SearchLrc;
 import me.wcy.music.model.Music;
 import me.wcy.music.service.OnPlayerEventListener;
+import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.Preferences;
@@ -86,6 +88,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     private List<View> mViewPagerContent;
     private int mLastProgress;
     private boolean isDraggingProgress;
+    private int mMaxVolume;
 
     @Nullable
     @Override
@@ -154,6 +157,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         mAudioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
         sbVolume.setMax(mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
         sbVolume.setProgress(mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+        mMaxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
     }
 
     private void initPlayMode() {
@@ -200,6 +204,13 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
 
     @Override
     public void onTimer(long remain) {
+        if(remain <= 0) {
+            getActivity().finish();
+            PlayService service = AppCache.getPlayService();
+            if (service != null) {
+                service.quit();
+            }
+        }
     }
 
     @Override
@@ -247,6 +258,13 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
                 tvCurrentTime.setText(formatTime(progress));
                 mLastProgress = progress;
             }
+        } else if(seekBar == sbVolume) {
+            int index = (int) (mMaxVolume * progress * 0.01);
+            if (index > mMaxVolume)
+                index = mMaxVolume;
+            else if (index < 0)
+                index = 0;
+            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, index, 0);
         }
     }
 
