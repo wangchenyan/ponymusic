@@ -59,6 +59,10 @@ public class Preferences {
         return getBoolean(sContext.getString(R.string.setting_key_mobile_network_download), false);
     }
 
+    public static void saveMobileNetworkDownload(boolean enable) {
+        saveBoolean(sContext.getString(R.string.setting_key_mobile_network_download), enable);
+    }
+
     public static boolean isNightMode() {
         return getBoolean(NIGHT_MODE, false);
     }
