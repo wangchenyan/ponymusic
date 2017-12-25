@@ -112,10 +112,10 @@ public class FileUtils {
         artist = stringFilter(artist);
         title = stringFilter(title);
         if (TextUtils.isEmpty(artist)) {
-            artist = AppCache.getContext().getString(R.string.unknown);
+            artist = AppCache.get().getContext().getString(R.string.unknown);
         }
         if (TextUtils.isEmpty(title)) {
-            title = AppCache.getContext().getString(R.string.unknown);
+            title = AppCache.get().getContext().getString(R.string.unknown);
         }
         return artist + " - " + title;
     }

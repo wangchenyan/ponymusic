@@ -112,12 +112,12 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
 
             @Override
             protected void onPostExecute(List<Music> musicList) {
-                AppCache.getMusicList().clear();
-                AppCache.getMusicList().addAll(musicList);
+                AppCache.get().getMusicList().clear();
+                AppCache.get().getMusicList().addAll(musicList);
 
-                if (!AppCache.getMusicList().isEmpty()) {
+                if (!AppCache.get().getMusicList().isEmpty()) {
                     updatePlayingPosition();
-                    mPlayingMusic = AppCache.getMusicList().get(mPlayingPosition);
+                    mPlayingMusic = AppCache.get().getMusicList().get(mPlayingPosition);
                 }
 
                 if (mListener != null) {
@@ -145,18 +145,18 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     }
 
     public void play(int position) {
-        if (AppCache.getMusicList().isEmpty()) {
+        if (AppCache.get().getMusicList().isEmpty()) {
             return;
         }
 
         if (position < 0) {
-            position = AppCache.getMusicList().size() - 1;
-        } else if (position >= AppCache.getMusicList().size()) {
+            position = AppCache.get().getMusicList().size() - 1;
+        } else if (position >= AppCache.get().getMusicList().size()) {
             position = 0;
         }
 
         mPlayingPosition = position;
-        Music music = AppCache.getMusicList().get(mPlayingPosition);
+        Music music = AppCache.get().getMusicList().get(mPlayingPosition);
         Preferences.saveCurrentSongId(music.getId());
         play(music);
     }
@@ -258,14 +258,14 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     }
 
     public void next() {
-        if (AppCache.getMusicList().isEmpty()) {
+        if (AppCache.get().getMusicList().isEmpty()) {
             return;
         }
 
         PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode());
         switch (mode) {
             case SHUFFLE:
-                mPlayingPosition = new Random().nextInt(AppCache.getMusicList().size());
+                mPlayingPosition = new Random().nextInt(AppCache.get().getMusicList().size());
                 play(mPlayingPosition);
                 break;
             case SINGLE:
@@ -279,14 +279,14 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     }
 
     public void prev() {
-        if (AppCache.getMusicList().isEmpty()) {
+        if (AppCache.get().getMusicList().isEmpty()) {
             return;
         }
 
         PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode());
         switch (mode) {
             case SHUFFLE:
-                mPlayingPosition = new Random().nextInt(AppCache.getMusicList().size());
+                mPlayingPosition = new Random().nextInt(AppCache.get().getMusicList().size());
                 play(mPlayingPosition);
                 break;
             case SINGLE:
@@ -350,14 +350,14 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
     public void updatePlayingPosition() {
         int position = 0;
         long id = Preferences.getCurrentSongId();
-        for (int i = 0; i < AppCache.getMusicList().size(); i++) {
-            if (AppCache.getMusicList().get(i).getId() == id) {
+        for (int i = 0; i < AppCache.get().getMusicList().size(); i++) {
+            if (AppCache.get().getMusicList().get(i).getId() == id) {
                 position = i;
                 break;
             }
         }
         mPlayingPosition = position;
-        Preferences.saveCurrentSongId(AppCache.getMusicList().get(mPlayingPosition).getId());
+        Preferences.saveCurrentSongId(AppCache.get().getMusicList().get(mPlayingPosition).getId());
     }
 
     public int getAudioSessionId() {
@@ -390,7 +390,7 @@ public class PlayService extends Service implements MediaPlayer.OnCompletionList
         mAudioFocusManager.abandonAudioFocus();
         mMediaSessionManager.release();
         Notifier.cancelAll();
-        AppCache.setPlayService(null);
+        AppCache.get().setPlayService(null);
         super.onDestroy();
         Log.i(TAG, "onDestroy: " + getClass().getSimpleName());
     }

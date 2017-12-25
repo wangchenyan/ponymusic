@@ -90,7 +90,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public PlayService getPlayService() {
-        PlayService playService = AppCache.getPlayService();
+        PlayService playService = AppCache.get().getPlayService();
         if (playService == null) {
             throw new NullPointerException("play service is null");
         }
@@ -98,9 +98,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected boolean checkServiceAlive() {
-        if (AppCache.getPlayService() == null) {
+        if (AppCache.get().getPlayService() == null) {
             startActivity(new Intent(this, SplashActivity.class));
-            AppCache.clearStack();
+            AppCache.get().clearStack();
             return false;
         }
         return true;

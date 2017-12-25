@@ -70,7 +70,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     }
 
     private void updateView() {
-        if (AppCache.getMusicList().isEmpty()) {
+        if (AppCache.get().getMusicList().isEmpty()) {
             tvEmpty.setVisibility(View.VISIBLE);
         } else {
             tvEmpty.setVisibility(View.GONE);
@@ -86,7 +86,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
 
     @Override
     public void onMoreClick(final int position) {
-        final Music music = AppCache.getMusicList().get(position);
+        final Music music = AppCache.get().getMusicList().get(position);
         AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
         dialog.setTitle(music.getTitle());
         dialog.setItems(R.array.local_music_dialog, new DialogInterface.OnClickListener() {
@@ -187,7 +187,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
                 File file = new File(music.getPath());
                 if (file.delete()) {
                     boolean playing = (music == getPlayService().getPlayingMusic());
-                    AppCache.getMusicList().remove(music);
+                    AppCache.get().getMusicList().remove(music);
                     if (playing) {
                         getPlayService().stop();
                         getPlayService().playPause();

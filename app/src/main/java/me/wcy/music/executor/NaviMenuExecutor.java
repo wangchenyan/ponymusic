@@ -77,7 +77,7 @@ public class NaviMenuExecutor {
 
     private static void exit(MusicActivity activity) {
         activity.finish();
-        PlayService service = AppCache.getPlayService();
+        PlayService service = AppCache.get().getPlayService();
         if (service != null) {
             service.quit();
         }

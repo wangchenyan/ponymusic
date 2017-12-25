@@ -39,18 +39,14 @@ public class AppCache {
     }
 
     private static class SingletonHolder {
-        private static AppCache sAppCache = new AppCache();
+        private static AppCache instance = new AppCache();
     }
 
-    private static AppCache getInstance() {
-        return SingletonHolder.sAppCache;
+    public static AppCache get() {
+        return SingletonHolder.instance;
     }
 
-    public static void init(Application application) {
-        getInstance().onInit(application);
-    }
-
-    private void onInit(Application application) {
+    public void init(Application application) {
         mContext = application.getApplicationContext();
         ToastUtils.init(mContext);
         Preferences.init(mContext);
@@ -60,28 +56,28 @@ public class AppCache {
         application.registerActivityLifecycleCallbacks(new ActivityLifecycle());
     }
 
-    public static Context getContext() {
-        return getInstance().mContext;
+    public Context getContext() {
+        return mContext;
     }
 
-    public static PlayService getPlayService() {
-        return getInstance().mPlayService;
+    public PlayService getPlayService() {
+        return mPlayService;
     }
 
-    public static void setPlayService(PlayService service) {
-        getInstance().mPlayService = service;
+    public void setPlayService(PlayService service) {
+        mPlayService = service;
     }
 
-    public static List<Music> getMusicList() {
-        return getInstance().mMusicList;
+    public List<Music> getMusicList() {
+        return mMusicList;
     }
 
-    public static List<SongListInfo> getSongListInfos() {
-        return getInstance().mSongListInfos;
+    public List<SongListInfo> getSongListInfos() {
+        return mSongListInfos;
     }
 
-    public static void clearStack() {
-        List<Activity> activityStack = getInstance().mActivityStack;
+    public void clearStack() {
+        List<Activity> activityStack = mActivityStack;
         for (int i = activityStack.size() - 1; i >= 0; i--) {
             Activity activity = activityStack.get(i);
             if (!activity.isFinishing()) {
@@ -91,25 +87,25 @@ public class AppCache {
         activityStack.clear();
     }
 
-    public static LongSparseArray<DownloadMusicInfo> getDownloadList() {
-        return getInstance().mDownloadList;
+    public LongSparseArray<DownloadMusicInfo> getDownloadList() {
+        return mDownloadList;
     }
 
-    public static AMapLocalWeatherLive getAMapLocalWeatherLive() {
-        return getInstance().mAMapLocalWeatherLive;
+    public AMapLocalWeatherLive getAMapLocalWeatherLive() {
+        return mAMapLocalWeatherLive;
     }
 
-    public static void setAMapLocalWeatherLive(AMapLocalWeatherLive aMapLocalWeatherLive) {
-        getInstance().mAMapLocalWeatherLive = aMapLocalWeatherLive;
+    public void setAMapLocalWeatherLive(AMapLocalWeatherLive aMapLocalWeatherLive) {
+        mAMapLocalWeatherLive = aMapLocalWeatherLive;
     }
 
-    private static class ActivityLifecycle implements Application.ActivityLifecycleCallbacks {
+    private class ActivityLifecycle implements Application.ActivityLifecycleCallbacks {
         private static final String TAG = "Activity";
 
         @Override
         public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
             Log.i(TAG, "onCreate: " + activity.getClass().getSimpleName());
-            getInstance().mActivityStack.add(activity);
+            mActivityStack.add(activity);
         }
 
         @Override
@@ -135,7 +131,7 @@ public class AppCache {
         @Override
         public void onActivityDestroyed(Activity activity) {
             Log.i(TAG, "onDestroy: " + activity.getClass().getSimpleName());
-            getInstance().mActivityStack.remove(activity);
+            mActivityStack.remove(activity);
         }
     }
 }

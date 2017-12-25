@@ -35,7 +35,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected PlayService getPlayService() {
-        PlayService playService = AppCache.getPlayService();
+        PlayService playService = AppCache.get().getPlayService();
         if (playService == null) {
             throw new NullPointerException("play service is null");
         }

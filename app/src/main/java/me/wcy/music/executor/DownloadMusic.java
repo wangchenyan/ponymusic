@@ -70,11 +70,11 @@ public abstract class DownloadMusic implements IExecutor<Void> {
             request.setMimeType(MimeTypeMap.getFileExtensionFromUrl(url));
             request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
             request.setAllowedOverRoaming(false); // 不允许漫游
-            DownloadManager downloadManager = (DownloadManager) AppCache.getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+            DownloadManager downloadManager = (DownloadManager) AppCache.get().getContext().getSystemService(Context.DOWNLOAD_SERVICE);
             long id = downloadManager.enqueue(request);
             String musicAbsPath = FileUtils.getMusicDir().concat(fileName);
             DownloadMusicInfo downloadMusicInfo = new DownloadMusicInfo(title, musicAbsPath, coverPath);
-            AppCache.getDownloadList().put(id, downloadMusicInfo);
+            AppCache.get().getDownloadList().put(id, downloadMusicInfo);
         } catch (Throwable th) {
             th.printStackTrace();
             ToastUtils.show("下载失败");

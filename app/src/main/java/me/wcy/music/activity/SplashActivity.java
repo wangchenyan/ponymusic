@@ -50,7 +50,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void checkService() {
-        if (AppCache.getPlayService() == null) {
+        if (AppCache.get().getPlayService() == null) {
             startService();
             showSplash();
             updateSplash();
@@ -83,7 +83,7 @@ public class SplashActivity extends BaseActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             final PlayService playService = ((PlayService.PlayBinder) service).getService();
-            AppCache.setPlayService(playService);
+            AppCache.get().setPlayService(playService);
             PermissionReq.with(SplashActivity.this)
                     .permissions(Manifest.permission.READ_EXTERNAL_STORAGE,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -140,7 +140,7 @@ public class SplashActivity extends BaseActivity {
                     return;
                 }
 
-                HttpClient.downloadFile(url, FileUtils.getSplashDir(AppCache.getContext()), SPLASH_FILE_NAME,
+                HttpClient.downloadFile(url, FileUtils.getSplashDir(AppCache.get().getContext()), SPLASH_FILE_NAME,
                         new HttpCallback<File>() {
                             @Override
                             public void onSuccess(File file) {

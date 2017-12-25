@@ -352,7 +352,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     protected void onDestroy() {
-        PlayService service = AppCache.getPlayService();
+        PlayService service = AppCache.get().getPlayService();
         if (service != null) {
             service.setOnPlayEventListener(null);
         }
