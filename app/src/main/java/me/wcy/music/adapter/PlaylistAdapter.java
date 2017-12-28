@@ -163,7 +163,7 @@ public class PlaylistAdapter extends BaseAdapter {
         holderMusicList.tvMusic1.setText(songListInfo.getMusic1());
         holderMusicList.tvMusic2.setText(songListInfo.getMusic2());
         holderMusicList.tvMusic3.setText(songListInfo.getMusic3());
-        Glide.with(mContext)
+        Glide.with(mContext.getApplicationContext())
                 .load(songListInfo.getCoverUrl())
                 .placeholder(R.drawable.default_cover)
                 .error(R.drawable.default_cover)
