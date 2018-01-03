@@ -29,22 +29,22 @@
 
     <string-array name="timer_text">
         <item>不开启</item>
+        <item>1分钟后</item>
+        <item>5分钟后</item>
         <item>10分钟后</item>
         <item>20分钟后</item>
-        <item>30分钟后</item>
-        <item>45分钟后</item>
-        <item>60分钟后</item>
-        <item>90分钟后</item>
+        <item>40分钟后</item>
+        <item>80分钟后</item>
     </string-array>
 
     <integer-array name="timer_int">
         <item>0</item>
+        <item>1</item>
+        <item>5</item>
         <item>10</item>
         <item>20</item>
-        <item>30</item>
-        <item>45</item>
-        <item>60</item>
-        <item>90</item>
+        <item>40</item>
+        <item>80</item>
     </integer-array>
 
     <string-array name="online_music_list_title">
@@ -87,37 +87,37 @@
 
     <string-array name="filter_size_entries">
         <item>不过滤</item>
-        <item>100KB</item>
-        <item>200KB</item>
         <item>500KB</item>
-        <item>1MB</item>
         <item>2MB</item>
+        <item>6MB</item>
+        <item>10MB</item>
+        <item>20MB</item>
     </string-array>
 
     <string-array name="filter_size_entry_values">
         <item>0</item>
-        <item>100</item>
-        <item>200</item>
         <item>500</item>
-        <item>1024</item>
         <item>2048</item>
+        <item>6144</item>
+        <item>10240</item>
+        <item>20480</item>
     </string-array>
 
     <string-array name="filter_time_entries">
         <item>不过滤</item>
-        <item>15秒</item>
         <item>30秒</item>
-        <item>1分钟</item>
-        <item>1分30秒</item>
         <item>2分钟</item>
+        <item>3分钟</item>
+        <item>4分钟</item>
+        <item>5分钟</item>
     </string-array>
 
     <string-array name="filter_time_entry_values">
         <item>0</item>
-        <item>15</item>
         <item>30</item>
-        <item>60</item>
-        <item>90</item>
         <item>120</item>
+        <item>180</item>
+        <item>240</item>
+        <item>300</item>
     </string-array>
 </resources>

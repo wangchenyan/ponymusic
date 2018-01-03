@@ -38,8 +38,6 @@ public class MusicApplication extends Application {
     }
 
     private void initBugly() {
-        if (!BuildConfig.DEBUG) {
-            Bugly.init(this, BuildConfig.BUGLY_APP_ID, false);
-        }
+            Bugly.init(this, "13f3416c48", false);
     }
 }

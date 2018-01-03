@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -28,13 +29,15 @@ import me.wcy.music.utils.binding.Bind;
  * 在线音乐
  * Created by wcy on 2015/11/26.
  */
-public class PlaylistFragment extends BaseFragment implements AdapterView.OnItemClickListener {
+public class PlaylistFragment extends BaseFragment implements AdapterView.OnItemClickListener, View.OnClickListener {
     @Bind(R.id.lv_playlist)
     private ListView lvPlaylist;
     @Bind(R.id.ll_loading)
     private LinearLayout llLoading;
     @Bind(R.id.ll_load_fail)
     private LinearLayout llLoadFail;
+    @Bind(R.id.tv_load_fail_text)
+    private TextView txLoadFail;
 
     private List<SongListInfo> mSongLists;
 
@@ -71,6 +74,13 @@ public class PlaylistFragment extends BaseFragment implements AdapterView.OnItem
     @Override
     protected void setListener() {
         lvPlaylist.setOnItemClickListener(this);
+        txLoadFail.setClickable(true);
+        txLoadFail.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        getActivity().recreate();
     }
 
     @Override

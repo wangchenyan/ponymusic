@@ -1,12 +1,16 @@
 package me.wcy.music.activity;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.audiofx.AudioEffect;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.SwitchPreference;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 
 import me.wcy.music.R;
@@ -40,6 +44,11 @@ public class SettingActivity extends BaseActivity {
         private Preference mSoundEffect;
         private Preference mFilterSize;
         private Preference mFilterTime;
+        private SwitchPreference enableNetworkPlay;
+        private SwitchPreference enableNetworkDownload;
+
+        private boolean isEnableNetworkPlay = false;
+        private boolean isEnableNetworkDownload =false;
 
         private PlayService mPlayService;
         private ProgressDialog mProgressDialog;
@@ -53,6 +62,13 @@ public class SettingActivity extends BaseActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preference_setting);
 
+            enableNetworkPlay = (SwitchPreference) findPreference(getString(R.string.setting_key_mobile_network_play));
+            enableNetworkDownload = (SwitchPreference) findPreference(getString(R.string.setting_key_mobile_network_download));
+            enableNetworkPlay.setDefaultValue(Preferences.enableMobileNetworkPlay());
+            enableNetworkDownload.setDefaultValue(Preferences.enableMobileNetworkDownload());
+            enableNetworkPlay.setOnPreferenceClickListener(this);
+            enableNetworkDownload.setOnPreferenceClickListener(this);
+
             mSoundEffect = findPreference(getString(R.string.setting_key_sound_effect));
             mFilterSize = findPreference(getString(R.string.setting_key_filter_size));
             mFilterTime = findPreference(getString(R.string.setting_key_filter_time));
@@ -65,10 +81,58 @@ public class SettingActivity extends BaseActivity {
         }
 
         @Override
-        public boolean onPreferenceClick(Preference preference) {
+        public boolean onPreferenceClick(final Preference preference) {
             if (preference == mSoundEffect) {
                 startEqualizer();
                 return true;
+            } else if(preference == enableNetworkPlay) {
+                if(!enableNetworkPlay.isChecked()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(R.string.tips);
+                    builder.setMessage(R.string.play_tips);
+                    builder.setPositiveButton(R.string.play_tips_sure, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            isEnableNetworkPlay = true;
+                            Preferences.saveMobileNetworkPlay(isEnableNetworkPlay);
+                            enableNetworkPlay.setChecked(true);
+                        }
+                    });
+                    builder.setNegativeButton(R.string.cancel, null);
+                    Dialog dialog = builder.create();
+                    dialog.setCanceledOnTouchOutside(false);
+                    dialog.show();
+                    return isEnableNetworkPlay;
+                } else if(enableNetworkPlay.isChecked()) {
+                    isEnableNetworkPlay = false;
+                    Preferences.saveMobileNetworkPlay(isEnableNetworkPlay);
+                    enableNetworkPlay.setChecked(isEnableNetworkPlay);
+                    return isEnableNetworkPlay;
+                }
+            } else if(preference == enableNetworkDownload) {
+                if(!enableNetworkDownload.isChecked()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(R.string.tips);
+                    builder.setMessage(R.string.download_tips);
+                    builder.setPositiveButton(R.string.download_tips_sure, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            isEnableNetworkDownload = true;
+                            Preferences.saveMobileNetworkDownload(isEnableNetworkDownload);
+                            enableNetworkDownload.setChecked(true);
+                        }
+                    });
+                    builder.setNegativeButton(R.string.cancel, null);
+                    Dialog dialog = builder.create();
+                    dialog.setCanceledOnTouchOutside(false);
+                    dialog.show();
+                    return isEnableNetworkDownload;
+                } else if(enableNetworkDownload.isChecked()) {
+                    isEnableNetworkDownload = false;
+                    Preferences.saveMobileNetworkDownload(isEnableNetworkDownload);
+                    enableNetworkDownload.setChecked(isEnableNetworkDownload);
+                    return isEnableNetworkDownload;
+                }
             }
             return false;
         }
@@ -76,14 +140,14 @@ public class SettingActivity extends BaseActivity {
         private void startEqualizer() {
             if (MusicUtils.isAudioControlPanelAvailable(getActivity())) {
                 Intent intent = new Intent();
-                String packageName = getActivity().getPackageName();
+//                String packageName = getActivity().getPackageName();
                 intent.setAction(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
-                intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, packageName);
-                intent.putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC);
+//                intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, packageName);
+//                intent.putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC);
                 intent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, mPlayService.getAudioSessionId());
 
                 try {
-                    startActivityForResult(intent, 1);
+                    startActivityForResult(intent, 666);
                 } catch (ActivityNotFoundException e) {
                     e.printStackTrace();
                     ToastUtils.show(R.string.device_not_support);
@@ -94,7 +158,7 @@ public class SettingActivity extends BaseActivity {
         }
 
         @Override
-        public boolean onPreferenceChange(Preference preference, Object newValue) {
+        public boolean onPreferenceChange(final Preference preference, Object newValue) {
             if (preference == mFilterSize) {
                 Preferences.saveFilterSize((String) newValue);
                 mFilterSize.setSummary(getSummary(Preferences.getFilterSize(), R.array.filter_size_entries, R.array.filter_size_entry_values));
