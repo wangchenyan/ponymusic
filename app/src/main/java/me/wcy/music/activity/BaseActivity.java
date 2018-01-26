@@ -1,24 +1,28 @@
 package me.wcy.music.activity;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import me.wcy.music.R;
-import me.wcy.music.application.AppCache;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.PermissionReq;
 import me.wcy.music.utils.Preferences;
@@ -30,7 +34,9 @@ import me.wcy.music.utils.binding.ViewBinder;
  * Created by wcy on 2015/11/26.
  */
 public abstract class BaseActivity extends AppCompatActivity {
-    protected Handler mHandler = new Handler(Looper.getMainLooper());
+    protected Handler mHandler;
+    public PlayService playService;
+    private ServiceConnection mPlayServiceConnection;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,6 +48,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         setSystemBarTransparent();
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        mHandler = new Handler(Looper.getMainLooper());
+        bindService();
     }
 
     @StyleRes
@@ -70,7 +78,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private void initView() {
         ViewBinder.bind(this);
 
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar mToolbar = findViewById(R.id.toolbar);
         if (mToolbar == null) {
             throw new IllegalStateException("Layout is required to include a Toolbar with id 'toolbar'");
         }
@@ -89,21 +97,27 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void setListener() {
     }
 
-    public PlayService getPlayService() {
-        PlayService playService = AppCache.get().getPlayService();
-        if (playService == null) {
-            throw new NullPointerException("play service is null");
-        }
-        return playService;
+    private void bindService() {
+        Intent intent = new Intent();
+        intent.setClass(this, PlayService.class);
+        mPlayServiceConnection = new PlayServiceConnection();
+        bindService(intent, mPlayServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
-    protected boolean checkServiceAlive() {
-        if (AppCache.get().getPlayService() == null) {
-            startActivity(new Intent(this, SplashActivity.class));
-            AppCache.get().clearStack();
-            return false;
+    private class PlayServiceConnection implements ServiceConnection {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            playService = ((PlayService.PlayBinder) service).getService();
+            onServiceBound();
         }
-        return true;
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            Log.e(getClass().getSimpleName(),"service disconnected");
+        }
+    }
+
+    protected void onServiceBound(){
     }
 
     private void setSystemBarTransparent() {
@@ -131,5 +145,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         PermissionReq.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mPlayServiceConnection != null) {
+            unbindService(mPlayServiceConnection);
+        }
+        super.onDestroy();
     }
 }

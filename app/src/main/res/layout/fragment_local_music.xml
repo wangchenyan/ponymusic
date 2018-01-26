@@ -12,12 +12,12 @@
         android:paddingBottom="@dimen/play_bar_height" />
 
     <TextView
-        android:id="@+id/tv_empty"
+        android:id="@+id/v_searching"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/screen_tips_top"
-        android:text="@string/no_local_music"
+        android:text="正在扫描…"
         android:textColor="@color/grey"
         android:textSize="14sp"
         android:visibility="gone" />

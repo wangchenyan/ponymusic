@@ -14,8 +14,7 @@ import java.util.List;
 
 import me.wcy.music.executor.DownloadMusicInfo;
 import me.wcy.music.model.Music;
-import me.wcy.music.model.SongListInfo;
-import me.wcy.music.service.PlayService;
+import me.wcy.music.model.SheetInfo;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.Preferences;
 import me.wcy.music.utils.ScreenUtils;
@@ -26,11 +25,8 @@ import me.wcy.music.utils.ToastUtils;
  */
 public class AppCache {
     private Context mContext;
-    private PlayService mPlayService;
-    // 本地歌曲列表
-    private final List<Music> mMusicList = new ArrayList<>();
-    // 歌单列表
-    private final List<SongListInfo> mSongListInfos = new ArrayList<>();
+    private final List<Music> mLocalMusicList = new ArrayList<>();
+    private final List<SheetInfo> mSheetList = new ArrayList<>();
     private final List<Activity> mActivityStack = new ArrayList<>();
     private final LongSparseArray<DownloadMusicInfo> mDownloadList = new LongSparseArray<>();
     private AMapLocalWeatherLive mAMapLocalWeatherLive;
@@ -60,20 +56,12 @@ public class AppCache {
         return mContext;
     }
 
-    public PlayService getPlayService() {
-        return mPlayService;
+    public List<Music> getLocalMusicList() {
+        return mLocalMusicList;
     }
 
-    public void setPlayService(PlayService service) {
-        mPlayService = service;
-    }
-
-    public List<Music> getMusicList() {
-        return mMusicList;
-    }
-
-    public List<SongListInfo> getSongListInfos() {
-        return mSongListInfos;
+    public List<SheetInfo> getSheetList() {
+        return mSheetList;
     }
 
     public void clearStack() {

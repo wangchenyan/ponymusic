@@ -53,12 +53,7 @@ public class SearchMusicAdapter extends BaseAdapter {
         }
         holder.tvTitle.setText(mData.get(position).getSongname());
         holder.tvArtist.setText(mData.get(position).getArtistname());
-        holder.ivMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onMoreClick(position);
-            }
-        });
+        holder.ivMore.setOnClickListener(v -> mListener.onMoreClick(position));
         holder.vDivider.setVisibility(isShowDivider(position) ? View.VISIBLE : View.GONE);
         return convertView;
     }

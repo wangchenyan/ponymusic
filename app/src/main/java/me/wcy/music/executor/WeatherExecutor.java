@@ -17,7 +17,6 @@ import java.util.Calendar;
 
 import me.wcy.music.R;
 import me.wcy.music.application.AppCache;
-import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.binding.Bind;
 import me.wcy.music.utils.binding.ViewBinder;
 
@@ -67,7 +66,6 @@ import me.wcy.music.utils.binding.ViewBinder;
  */
 public class WeatherExecutor implements IExecutor, AMapLocalWeatherListener {
     private static final String TAG = "WeatherExecutor";
-    private PlayService mPlayService;
     private Context mContext;
     @Bind(R.id.ll_weather)
     private LinearLayout llWeather;
@@ -80,9 +78,8 @@ public class WeatherExecutor implements IExecutor, AMapLocalWeatherListener {
     @Bind(R.id.tv_weather_wind)
     private TextView tvWind;
 
-    public WeatherExecutor(PlayService playService, View navigationHeader) {
-        mPlayService = playService;
-        mContext = mPlayService.getApplicationContext();
+    public WeatherExecutor(Context context, View navigationHeader) {
+        mContext = context.getApplicationContext();
         ViewBinder.bind(this, navigationHeader);
     }
 
@@ -168,7 +165,6 @@ public class WeatherExecutor implements IExecutor, AMapLocalWeatherListener {
     }
 
     private void release() {
-        mPlayService = null;
         mContext = null;
         llWeather = null;
         ivIcon = null;

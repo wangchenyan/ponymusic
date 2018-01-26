@@ -1,5 +1,7 @@
 package me.wcy.music.model;
 
+import android.text.TextUtils;
+
 import java.io.Serializable;
 
 /**
@@ -33,6 +35,24 @@ public class Music implements Serializable {
     public enum Type {
         LOCAL,
         ONLINE
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Music)) {
+            return false;
+        }
+        Music music = (Music) o;
+        if (music.id == this.id) {
+            return true;
+        }
+        if (TextUtils.equals(music.title, this.title)
+                || TextUtils.equals(music.artist, this.artist)
+                || TextUtils.equals(music.album, this.album)
+                || music.duration == this.duration) {
+            return true;
+        }
+        return false;
     }
 
     public Type getType() {
@@ -121,13 +141,5 @@ public class Music implements Serializable {
 
     public void setFileSize(long fileSize) {
         this.fileSize = fileSize;
-    }
-
-    /**
-     * 对比本地歌曲是否相同
-     */
-    @Override
-    public boolean equals(Object o) {
-        return o instanceof Music && this.getId() == ((Music) o).getId();
     }
 }

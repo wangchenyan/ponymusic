@@ -1,14 +1,9 @@
 package me.wcy.music.activity;
 
-import android.Manifest;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,16 +12,11 @@ import java.io.File;
 import java.util.Calendar;
 
 import me.wcy.music.R;
-import me.wcy.music.application.AppCache;
 import me.wcy.music.http.HttpCallback;
 import me.wcy.music.http.HttpClient;
 import me.wcy.music.model.Splash;
-import me.wcy.music.service.EventCallback;
-import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.FileUtils;
-import me.wcy.music.utils.PermissionReq;
 import me.wcy.music.utils.Preferences;
-import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.binding.Bind;
 
 public class SplashActivity extends BaseActivity {
@@ -36,7 +26,6 @@ public class SplashActivity extends BaseActivity {
     private ImageView ivSplash;
     @Bind(R.id.tv_copyright)
     private TextView tvCopyright;
-    private ServiceConnection mPlayServiceConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,77 +34,14 @@ public class SplashActivity extends BaseActivity {
 
         int year = Calendar.getInstance().get(Calendar.YEAR);
         tvCopyright.setText(getString(R.string.copyright, year));
-
-        checkService();
+        showSplash();
+        updateSplash();
     }
 
-    private void checkService() {
-        if (AppCache.get().getPlayService() == null) {
-            startService();
-            showSplash();
-            updateSplash();
-
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    bindService();
-                }
-            }, 1000);
-        } else {
-            startMusicActivity();
-            finish();
-        }
-    }
-
-    private void startService() {
-        Intent intent = new Intent(this, PlayService.class);
-        startService(intent);
-    }
-
-    private void bindService() {
-        Intent intent = new Intent();
-        intent.setClass(this, PlayService.class);
-        mPlayServiceConnection = new PlayServiceConnection();
-        bindService(intent, mPlayServiceConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    private class PlayServiceConnection implements ServiceConnection {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            final PlayService playService = ((PlayService.PlayBinder) service).getService();
-            AppCache.get().setPlayService(playService);
-            PermissionReq.with(SplashActivity.this)
-                    .permissions(Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    .result(new PermissionReq.Result() {
-                        @Override
-                        public void onGranted() {
-                            scanMusic(playService);
-                        }
-
-                        @Override
-                        public void onDenied() {
-                            ToastUtils.show(R.string.no_permission_storage);
-                            finish();
-                            playService.quit();
-                        }
-                    })
-                    .request();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-        }
-    }
-
-    private void scanMusic(final PlayService playService) {
-        playService.updateMusicList(new EventCallback<Void>() {
-            @Override
-            public void onEvent(Void aVoid) {
-                startMusicActivity();
-                finish();
-            }
-        });
+    @Override
+    protected void onServiceBound() {
+        startMusicActivity();
+        finish();
     }
 
     private void showSplash() {
@@ -140,7 +66,8 @@ public class SplashActivity extends BaseActivity {
                     return;
                 }
 
-                HttpClient.downloadFile(url, FileUtils.getSplashDir(AppCache.get().getContext()), SPLASH_FILE_NAME,
+                String dir = FileUtils.getSplashDir(SplashActivity.this);
+                HttpClient.downloadFile(url, dir, SPLASH_FILE_NAME,
                         new HttpCallback<File>() {
                             @Override
                             public void onSuccess(File file) {
@@ -164,19 +91,10 @@ public class SplashActivity extends BaseActivity {
         intent.setClass(this, MusicActivity.class);
         intent.putExtras(getIntent());
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
     }
 
     @Override
     public void onBackPressed() {
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (mPlayServiceConnection != null) {
-            unbindService(mPlayServiceConnection);
-        }
-        super.onDestroy();
     }
 }

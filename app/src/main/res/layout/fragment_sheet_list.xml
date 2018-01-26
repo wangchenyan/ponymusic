@@ -4,20 +4,10 @@
     android:layout_height="match_parent">
 
     <ListView
-        android:id="@+id/lv_playlist"
+        android:id="@+id/lv_sheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:divider="@null"
         android:paddingBottom="@dimen/play_bar_height" />
-
-    <include
-        android:id="@+id/ll_loading"
-        layout="@layout/include_loading"
-        android:visibility="gone" />
-
-    <include
-        android:id="@+id/ll_load_fail"
-        layout="@layout/include_load_fail"
-        android:visibility="gone" />
 </FrameLayout>

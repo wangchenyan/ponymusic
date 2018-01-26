@@ -18,10 +18,6 @@ public class AboutActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-        if (!checkServiceAlive()) {
-            return;
-        }
-
         getFragmentManager().beginTransaction().replace(R.id.ll_fragment_container, new AboutFragment()).commit();
     }
 

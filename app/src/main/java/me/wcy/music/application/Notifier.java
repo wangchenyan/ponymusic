@@ -31,28 +31,39 @@ import me.wcy.music.utils.FileUtils;
  */
 public class Notifier {
     private static final int NOTIFICATION_ID = 0x111;
-    private static PlayService playService;
-    private static NotificationManager notificationManager;
+    private PlayService playService;
+    private NotificationManager notificationManager;
 
-    public static void init(PlayService playService) {
-        Notifier.playService = playService;
+    public static Notifier get() {
+        return SingletonHolder.instance;
+    }
+
+    private static class SingletonHolder {
+        private static Notifier instance = new Notifier();
+    }
+
+    private Notifier() {
+    }
+
+    public void init(PlayService playService) {
+        this.playService = playService;
         notificationManager = (NotificationManager) playService.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
-    public static void showPlay(Music music) {
+    public void showPlay(Music music) {
         playService.startForeground(NOTIFICATION_ID, buildNotification(playService, music, true));
     }
 
-    public static void showPause(Music music) {
+    public void showPause(Music music) {
         playService.stopForeground(false);
         notificationManager.notify(NOTIFICATION_ID, buildNotification(playService, music, false));
     }
 
-    public static void cancelAll() {
+    public void cancelAll() {
         notificationManager.cancelAll();
     }
 
-    private static Notification buildNotification(Context context, Music music, boolean isPlaying) {
+    private Notification buildNotification(Context context, Music music, boolean isPlaying) {
         Intent intent = new Intent(context, SplashActivity.class);
         intent.putExtra(Extras.EXTRA_NOTIFICATION, true);
         intent.setAction(Intent.ACTION_VIEW);
@@ -67,7 +78,7 @@ public class Notifier {
         return builder.build();
     }
 
-    private static RemoteViews getRemoteViews(Context context, Music music, boolean isPlaying) {
+    private RemoteViews getRemoteViews(Context context, Music music, boolean isPlaying) {
         String title = music.getTitle();
         String subtitle = FileUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum());
         Bitmap cover = CoverLoader.getInstance().loadThumbnail(music);
@@ -98,7 +109,7 @@ public class Notifier {
         return remoteViews;
     }
 
-    private static int getPlayIconRes(boolean isLightNotificationTheme, boolean isPlaying) {
+    private int getPlayIconRes(boolean isLightNotificationTheme, boolean isPlaying) {
         if (isPlaying) {
             return isLightNotificationTheme
                     ? R.drawable.ic_status_bar_pause_dark_selector
@@ -110,18 +121,18 @@ public class Notifier {
         }
     }
 
-    private static int getNextIconRes(boolean isLightNotificationTheme) {
+    private int getNextIconRes(boolean isLightNotificationTheme) {
         return isLightNotificationTheme
                 ? R.drawable.ic_status_bar_next_dark_selector
                 : R.drawable.ic_status_bar_next_light_selector;
     }
 
-    private static boolean isLightNotificationTheme(Context context) {
+    private boolean isLightNotificationTheme(Context context) {
         int notificationTextColor = getNotificationTextColor(context);
         return isSimilarColor(Color.BLACK, notificationTextColor);
     }
 
-    private static int getNotificationTextColor(Context context) {
+    private int getNotificationTextColor(Context context) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         Notification notification = builder.build();
         RemoteViews remoteViews = notification.contentView;
@@ -130,7 +141,7 @@ public class Notifier {
         }
         int layoutId = remoteViews.getLayoutId();
         ViewGroup notificationLayout = (ViewGroup) LayoutInflater.from(context).inflate(layoutId, null);
-        TextView title = (TextView) notificationLayout.findViewById(android.R.id.title);
+        TextView title = notificationLayout.findViewById(android.R.id.title);
         if (title != null) {
             return title.getCurrentTextColor();
         } else {
@@ -142,7 +153,7 @@ public class Notifier {
      * 如果通过 android.R.id.title 无法获得 title ，
      * 则通过遍历 notification 布局找到 textSize 最大的 TextView ，应该就是 title 了。
      */
-    private static int findTextColor(ViewGroup notificationLayout) {
+    private int findTextColor(ViewGroup notificationLayout) {
         List<TextView> textViewList = new ArrayList<>();
         findTextView(notificationLayout, textViewList);
 
@@ -161,7 +172,7 @@ public class Notifier {
         return Color.BLACK;
     }
 
-    private static void findTextView(View view, List<TextView> textViewList) {
+    private void findTextView(View view, List<TextView> textViewList) {
         if (view instanceof ViewGroup) {
             ViewGroup viewGroup = (ViewGroup) view;
             for (int i = 0; i < viewGroup.getChildCount(); i++) {
@@ -172,7 +183,7 @@ public class Notifier {
         }
     }
 
-    private static boolean isSimilarColor(int baseColor, int color) {
+    private boolean isSimilarColor(int baseColor, int color) {
         int simpleBaseColor = baseColor | 0xff000000;
         int simpleColor = color | 0xff000000;
         int baseRed = Color.red(simpleBaseColor) - Color.red(simpleColor);

@@ -73,4 +73,5 @@
     <string name="no_permission_setting">没有权限，无法设置铃声，请授予权限</string>
     <string name="grant_permission_setting">授权成功，请在再次操作以设置铃声</string>
     <string name="no_permission_select_image">没有权限，无法选择图片！</string>
+    <string name="activity_playlist">播放列表</string>
 </resources>

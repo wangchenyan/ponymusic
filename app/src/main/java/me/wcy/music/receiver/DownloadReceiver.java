@@ -8,12 +8,14 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
+import com.hwangjr.rxbus.RxBus;
+
 import java.io.File;
 
 import me.wcy.music.R;
 import me.wcy.music.application.AppCache;
+import me.wcy.music.constants.RxBusTags;
 import me.wcy.music.executor.DownloadMusicInfo;
-import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.id3.ID3TagUtils;
 import me.wcy.music.utils.id3.ID3Tags;
@@ -47,19 +49,7 @@ public class DownloadReceiver extends BroadcastReceiver {
             }
 
             // 由于系统扫描音乐是异步执行，因此延迟刷新音乐列表
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    scanMusic();
-                }
-            }, 1000);
-        }
-    }
-
-    private void scanMusic() {
-        PlayService playService = AppCache.get().getPlayService();
-        if (playService != null) {
-            playService.updateMusicList(null);
+            mHandler.postDelayed(() -> RxBus.get().post(RxBusTags.SCAN_MUSIC, new Object()), 1000);
         }
     }
 }

@@ -10,8 +10,6 @@ import me.wcy.music.R;
 import me.wcy.music.activity.AboutActivity;
 import me.wcy.music.activity.MusicActivity;
 import me.wcy.music.activity.SettingActivity;
-import me.wcy.music.application.AppCache;
-import me.wcy.music.service.PlayService;
 import me.wcy.music.service.QuitTimer;
 import me.wcy.music.utils.Preferences;
 import me.wcy.music.utils.ToastUtils;
@@ -34,7 +32,7 @@ public class NaviMenuExecutor {
                 timerDialog(activity);
                 return true;
             case R.id.action_exit:
-                exit(activity);
+                activity.finish();
                 return true;
             case R.id.action_about:
                 startActivity(activity, AboutActivity.class);
@@ -72,14 +70,6 @@ public class NaviMenuExecutor {
             ToastUtils.show(context.getString(R.string.timer_set, String.valueOf(minute)));
         } else {
             ToastUtils.show(R.string.timer_cancel);
-        }
-    }
-
-    private static void exit(MusicActivity activity) {
-        activity.finish();
-        PlayService service = AppCache.get().getPlayService();
-        if (service != null) {
-            service.quit();
         }
     }
 }

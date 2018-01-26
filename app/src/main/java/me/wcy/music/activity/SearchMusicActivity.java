@@ -29,6 +29,7 @@ import me.wcy.music.http.HttpCallback;
 import me.wcy.music.http.HttpClient;
 import me.wcy.music.model.Music;
 import me.wcy.music.model.SearchMusic;
+import me.wcy.music.service.AudioPlayer;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.ViewUtils;
@@ -50,11 +51,10 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_music);
+    }
 
-        if (!checkServiceAlive()) {
-            return;
-        }
-
+    @Override
+    protected void onServiceBound() {
         lvSearchMusic.setAdapter(mAdapter);
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.loading));
@@ -143,8 +143,8 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
             @Override
             public void onExecuteSuccess(Music music) {
                 mProgressDialog.cancel();
-                getPlayService().play(music);
-                ToastUtils.show(getString(R.string.now_play, music.getTitle()));
+                AudioPlayer.get().addAndPlay(music);
+                ToastUtils.show("已添加到播放列表");
             }
 
             @Override

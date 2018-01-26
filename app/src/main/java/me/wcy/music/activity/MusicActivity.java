@@ -1,8 +1,8 @@
 package me.wcy.music.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -14,23 +14,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import me.wcy.music.executor.ControlPanel;
 import me.wcy.music.R;
 import me.wcy.music.adapter.FragmentAdapter;
-import me.wcy.music.application.AppCache;
 import me.wcy.music.constants.Extras;
 import me.wcy.music.constants.Keys;
 import me.wcy.music.executor.NaviMenuExecutor;
 import me.wcy.music.executor.WeatherExecutor;
 import me.wcy.music.fragment.LocalMusicFragment;
 import me.wcy.music.fragment.PlayFragment;
-import me.wcy.music.fragment.PlaylistFragment;
+import me.wcy.music.fragment.SheetListFragment;
 import me.wcy.music.model.Music;
+import me.wcy.music.service.AudioPlayer;
 import me.wcy.music.service.OnPlayerEventListener;
-import me.wcy.music.service.PlayService;
-import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.PermissionReq;
 import me.wcy.music.utils.SystemUtils;
 import me.wcy.music.utils.ToastUtils;
@@ -54,40 +52,30 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     private ViewPager mViewPager;
     @Bind(R.id.fl_play_bar)
     private FrameLayout flPlayBar;
-    @Bind(R.id.iv_play_bar_cover)
-    private ImageView ivPlayBarCover;
-    @Bind(R.id.tv_play_bar_title)
-    private TextView tvPlayBarTitle;
-    @Bind(R.id.tv_play_bar_artist)
-    private TextView tvPlayBarArtist;
-    @Bind(R.id.iv_play_bar_play)
-    private ImageView ivPlayBarPlay;
-    @Bind(R.id.iv_play_bar_next)
-    private ImageView ivPlayBarNext;
-    @Bind(R.id.pb_play_bar)
-    private ProgressBar mProgressBar;
+
     private View vNavigationHeader;
     private LocalMusicFragment mLocalMusicFragment;
-    private PlaylistFragment mPlaylistFragment;
+    private SheetListFragment mSheetListFragment;
     private PlayFragment mPlayFragment;
     private boolean isPlayFragmentShow = false;
     private MenuItem timerItem;
+    private ControlPanel controlPanel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
+    }
 
-        if (!checkServiceAlive()) {
-            return;
-        }
-
-        getPlayService().setOnPlayEventListener(this);
+    @Override
+    protected void onServiceBound() {
+        playService.setOnPlayEventListener(this);
 
         setupView();
         updateWeather();
-        onChangeImpl(getPlayService().getPlayingMusic());
+        onChangeImpl(AudioPlayer.get().getPlayingMusic());
         parseIntent();
+        controlPanel = new ControlPanel(flPlayBar);
     }
 
     @Override
@@ -102,10 +90,8 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         ivSearch.setOnClickListener(this);
         tvLocalMusic.setOnClickListener(this);
         tvOnlineMusic.setOnClickListener(this);
-        mViewPager.addOnPageChangeListener(this);
         flPlayBar.setOnClickListener(this);
-        ivPlayBarPlay.setOnClickListener(this);
-        ivPlayBarNext.setOnClickListener(this);
+        mViewPager.addOnPageChangeListener(this);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -116,10 +102,10 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
         // setup view pager
         mLocalMusicFragment = new LocalMusicFragment();
-        mPlaylistFragment = new PlaylistFragment();
+        mSheetListFragment = new SheetListFragment();
         FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
         adapter.addFragment(mLocalMusicFragment);
-        adapter.addFragment(mPlaylistFragment);
+        adapter.addFragment(mSheetListFragment);
         mViewPager.setAdapter(adapter);
         tvLocalMusic.setSelected(true);
     }
@@ -131,7 +117,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
                 .result(new PermissionReq.Result() {
                     @Override
                     public void onGranted() {
-                        new WeatherExecutor(getPlayService(), vNavigationHeader).execute();
+                        new WeatherExecutor(MusicActivity.this, vNavigationHeader).execute();
                     }
 
                     @Override
@@ -160,7 +146,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onPlayerStart() {
-        ivPlayBarPlay.setSelected(true);
+        controlPanel.onPlayerStart();
         if (mPlayFragment != null && mPlayFragment.isAdded()) {
             mPlayFragment.onPlayerStart();
         }
@@ -168,7 +154,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onPlayerPause() {
-        ivPlayBarPlay.setSelected(false);
+        controlPanel.onPlayerPause();
         if (mPlayFragment != null && mPlayFragment.isAdded()) {
             mPlayFragment.onPlayerPause();
         }
@@ -179,7 +165,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
      */
     @Override
     public void onPublish(int progress) {
-        mProgressBar.setProgress(progress);
+        controlPanel.onPublish(progress);
         if (mPlayFragment != null && mPlayFragment.isAdded()) {
             mPlayFragment.onPublish(progress);
         }
@@ -202,13 +188,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
-    public void onMusicListUpdate() {
-        if (mLocalMusicFragment != null && mLocalMusicFragment.isAdded()) {
-            mLocalMusicFragment.onMusicListUpdate();
-        }
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_menu:
@@ -226,24 +205,13 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
             case R.id.fl_play_bar:
                 showPlayingFragment();
                 break;
-            case R.id.iv_play_bar_play:
-                play();
-                break;
-            case R.id.iv_play_bar_next:
-                next();
-                break;
         }
     }
 
     @Override
     public boolean onNavigationItemSelected(final MenuItem item) {
         drawerLayout.closeDrawers();
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                item.setChecked(false);
-            }
-        }, 500);
+        mHandler.postDelayed(() -> item.setChecked(false), 500);
         return NaviMenuExecutor.onNavigationItemSelected(item, this);
     }
 
@@ -271,25 +239,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
             return;
         }
 
-        Bitmap cover = CoverLoader.getInstance().loadThumbnail(music);
-        ivPlayBarCover.setImageBitmap(cover);
-        tvPlayBarTitle.setText(music.getTitle());
-        tvPlayBarArtist.setText(music.getArtist());
-        ivPlayBarPlay.setSelected(getPlayService().isPlaying() || getPlayService().isPreparing());
-        mProgressBar.setMax((int) music.getDuration());
-        mProgressBar.setProgress((int) getPlayService().getCurrentPosition());
-
-        if (mLocalMusicFragment != null && mLocalMusicFragment.isAdded()) {
-            mLocalMusicFragment.onItemPlay();
-        }
-    }
-
-    private void play() {
-        getPlayService().playPause();
-    }
-
-    private void next() {
-        getPlayService().next();
+        controlPanel.onChange(music);
     }
 
     private void showPlayingFragment() {
@@ -331,11 +281,12 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         super.onBackPressed();
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(Keys.VIEW_PAGER_INDEX, mViewPager.getCurrentItem());
         mLocalMusicFragment.onSaveInstanceState(outState);
-        mPlaylistFragment.onSaveInstanceState(outState);
+        mSheetListFragment.onSaveInstanceState(outState);
     }
 
     @Override
@@ -345,16 +296,15 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
             public void run() {
                 mViewPager.setCurrentItem(savedInstanceState.getInt(Keys.VIEW_PAGER_INDEX), false);
                 mLocalMusicFragment.onRestoreInstanceState(savedInstanceState);
-                mPlaylistFragment.onRestoreInstanceState(savedInstanceState);
+                mSheetListFragment.onRestoreInstanceState(savedInstanceState);
             }
         });
     }
 
     @Override
     protected void onDestroy() {
-        PlayService service = AppCache.get().getPlayService();
-        if (service != null) {
-            service.setOnPlayEventListener(null);
+        if (playService != null) {
+            playService.setOnPlayEventListener(null);
         }
         super.onDestroy();
     }

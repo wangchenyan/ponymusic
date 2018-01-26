@@ -40,6 +40,11 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 bugly {
@@ -67,8 +72,9 @@ dependencies {
     compile "com.android.support:design:${rootProject.ext.supportVersion}"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.zhy:okhttputils:2.6.2'
-    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.google.code.gson:gson:2.8.2'
     compile 'com.github.bumptech.glide:glide:3.8.0'
     compile 'me.wcy:lrcview:2.0.1'
     compile 'com.tencent.bugly:crashreport_upgrade:1.2.5'
+    implementation 'com.hwangjr.rxbus:rxbus:1.0.6'
 }

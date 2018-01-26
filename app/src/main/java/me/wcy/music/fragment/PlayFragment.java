@@ -31,6 +31,7 @@ import me.wcy.music.constants.Actions;
 import me.wcy.music.enums.PlayModeEnum;
 import me.wcy.music.executor.SearchLrc;
 import me.wcy.music.model.Music;
+import me.wcy.music.service.AudioPlayer;
 import me.wcy.music.service.OnPlayerEventListener;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.FileUtils;
@@ -101,7 +102,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         initViewPager();
         ilIndicator.create(mViewPagerContent.size());
         initPlayMode();
-        onChangeImpl(getPlayService().getPlayingMusic());
+        onChangeImpl(AudioPlayer.get().getPlayingMusic());
     }
 
     @Override
@@ -136,11 +137,11 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     private void initViewPager() {
         View coverView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_play_page_cover, null);
         View lrcView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_play_page_lrc, null);
-        mAlbumCoverView = (AlbumCoverView) coverView.findViewById(R.id.album_cover_view);
-        mLrcViewSingle = (LrcView) coverView.findViewById(R.id.lrc_view_single);
-        mLrcViewFull = (LrcView) lrcView.findViewById(R.id.lrc_view_full);
-        sbVolume = (SeekBar) lrcView.findViewById(R.id.sb_volume);
-        mAlbumCoverView.initNeedle(getPlayService().isPlaying());
+        mAlbumCoverView = coverView.findViewById(R.id.album_cover_view);
+        mLrcViewSingle = coverView.findViewById(R.id.lrc_view_single);
+        mLrcViewFull = lrcView.findViewById(R.id.lrc_view_full);
+        sbVolume = lrcView.findViewById(R.id.sb_volume);
+        mAlbumCoverView.initNeedle(AudioPlayer.get().isPlaying());
         mLrcViewFull.setOnPlayClickListener(this);
         initVolume();
 
@@ -203,10 +204,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     }
 
     @Override
-    public void onMusicListUpdate() {
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_back:
@@ -261,9 +258,9 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     public void onStopTrackingTouch(SeekBar seekBar) {
         if (seekBar == sbProgress) {
             isDraggingProgress = false;
-            if (getPlayService().isPlaying() || getPlayService().isPausing()) {
+            if (AudioPlayer.get().isPlaying() || AudioPlayer.get().isPausing()) {
                 int progress = seekBar.getProgress();
-                getPlayService().seekTo(progress);
+                AudioPlayer.get().seekTo(progress);
 
                 if (mLrcViewSingle.hasLrc()) {
                     mLrcViewSingle.updateTime(progress);
@@ -280,10 +277,10 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
 
     @Override
     public boolean onPlayClick(long time) {
-        if (getPlayService().isPlaying() || getPlayService().isPausing()) {
-            getPlayService().seekTo((int) time);
-            if (getPlayService().isPausing()) {
-                getPlayService().playPause();
+        if (AudioPlayer.get().isPlaying() || AudioPlayer.get().isPausing()) {
+            AudioPlayer.get().seekTo((int) time);
+            if (AudioPlayer.get().isPausing()) {
+                AudioPlayer.get().playPause();
             }
             return true;
         }
@@ -297,7 +294,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
 
         tvTitle.setText(music.getTitle());
         tvArtist.setText(music.getArtist());
-        sbProgress.setProgress((int) getPlayService().getCurrentPosition());
+        sbProgress.setProgress((int) AudioPlayer.get().getAudioPosition());
         sbProgress.setSecondaryProgress(0);
         sbProgress.setMax((int) music.getDuration());
         mLastProgress = 0;
@@ -305,7 +302,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         tvTotalTime.setText(formatTime(music.getDuration()));
         setCoverAndBg(music);
         setLrc(music);
-        if (getPlayService().isPlaying() || getPlayService().isPreparing()) {
+        if (AudioPlayer.get().isPlaying() || AudioPlayer.get().isPreparing()) {
             ivPlay.setSelected(true);
             mAlbumCoverView.start();
         } else {
@@ -315,15 +312,15 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void play() {
-        getPlayService().playPause();
+        AudioPlayer.get().playPause();
     }
 
     private void next() {
-        getPlayService().next();
+        AudioPlayer.get().next();
     }
 
     private void prev() {
-        getPlayService().prev();
+        AudioPlayer.get().prev();
     }
 
     private void switchPlayMode() {
@@ -349,12 +346,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     private void onBackPressed() {
         getActivity().onBackPressed();
         ivBack.setEnabled(false);
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ivBack.setEnabled(true);
-            }
-        }, 300);
+        mHandler.postDelayed(() -> ivBack.setEnabled(true), 300);
     }
 
     private void setCoverAndBg(Music music) {

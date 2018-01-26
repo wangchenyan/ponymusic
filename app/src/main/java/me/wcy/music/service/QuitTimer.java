@@ -1,6 +1,7 @@
 package me.wcy.music.service;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.text.format.DateUtils;
 
@@ -10,10 +11,10 @@ import me.wcy.music.application.AppCache;
  * Created by hzwangchenyan on 2017/8/8.
  */
 public class QuitTimer {
-    private PlayService mPlayService;
-    private EventCallback<Long> mTimerCallback;
-    private Handler mHandler;
-    private long mTimerRemain;
+    private PlayService playService;
+    private EventCallback<Long> timerCallback;
+    private Handler handler;
+    private long timerRemain;
 
     public static QuitTimer getInstance() {
         return SingletonHolder.sInstance;
@@ -26,37 +27,37 @@ public class QuitTimer {
     private QuitTimer() {
     }
 
-    public void init(@NonNull PlayService playService, @NonNull Handler handler, @NonNull EventCallback<Long> timerCallback) {
-        mPlayService = playService;
-        mHandler = handler;
-        mTimerCallback = timerCallback;
+    public void init(@NonNull PlayService playService, @NonNull EventCallback<Long> timerCallback) {
+        this.playService = playService;
+        this.timerCallback = timerCallback;
+        this.handler = new Handler(Looper.getMainLooper());
     }
 
     public void start(long milli) {
         stop();
         if (milli > 0) {
-            mTimerRemain = milli + DateUtils.SECOND_IN_MILLIS;
-            mHandler.post(mQuitRunnable);
+            timerRemain = milli + DateUtils.SECOND_IN_MILLIS;
+            handler.post(mQuitRunnable);
         } else {
-            mTimerRemain = 0;
-            mTimerCallback.onEvent(mTimerRemain);
+            timerRemain = 0;
+            timerCallback.onEvent(timerRemain);
         }
     }
 
     public void stop() {
-        mHandler.removeCallbacks(mQuitRunnable);
+        handler.removeCallbacks(mQuitRunnable);
     }
 
     private Runnable mQuitRunnable = new Runnable() {
         @Override
         public void run() {
-            mTimerRemain -= DateUtils.SECOND_IN_MILLIS;
-            if (mTimerRemain > 0) {
-                mTimerCallback.onEvent(mTimerRemain);
-                mHandler.postDelayed(this, DateUtils.SECOND_IN_MILLIS);
+            timerRemain -= DateUtils.SECOND_IN_MILLIS;
+            if (timerRemain > 0) {
+                timerCallback.onEvent(timerRemain);
+                handler.postDelayed(this, DateUtils.SECOND_IN_MILLIS);
             } else {
                 AppCache.get().clearStack();
-                mPlayService.quit();
+                playService.stop();
             }
         }
     };

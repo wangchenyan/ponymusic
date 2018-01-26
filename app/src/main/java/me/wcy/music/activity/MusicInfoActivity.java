@@ -14,12 +14,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hwangjr.rxbus.RxBus;
+
 import java.io.File;
 import java.util.Locale;
 
 import me.wcy.music.R;
 import me.wcy.music.constants.Extras;
 import me.wcy.music.constants.RequestCode;
+import me.wcy.music.constants.RxBusTags;
 import me.wcy.music.model.Music;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.FileUtils;
@@ -63,11 +66,10 @@ public class MusicInfoActivity extends BaseActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_info);
+    }
 
-        if (!checkServiceAlive()) {
-            return;
-        }
-
+    @Override
+    protected void onServiceBound() {
         mMusic = (Music) getIntent().getSerializableExtra(Extras.MUSIC);
         if (mMusic == null || mMusic.getType() != Music.Type.LOCAL) {
             finish();
@@ -174,12 +176,7 @@ public class MusicInfoActivity extends BaseActivity implements View.OnClickListe
         Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(mMusicFile));
         sendBroadcast(intent);
 
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getPlayService().updateMusicList(null);
-            }
-        }, 1000);
+        mHandler.postDelayed(() -> RxBus.get().post(RxBusTags.SCAN_MUSIC, new Object()), 1000);
 
         ToastUtils.show("保存成功");
     }

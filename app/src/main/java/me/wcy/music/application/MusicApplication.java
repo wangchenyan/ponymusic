@@ -1,6 +1,7 @@
 package me.wcy.music.application;
 
 import android.app.Application;
+import android.content.Intent;
 
 import com.tencent.bugly.Bugly;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -9,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import me.wcy.music.BuildConfig;
 import me.wcy.music.http.HttpInterceptor;
+import me.wcy.music.service.PlayService;
 import okhttp3.OkHttpClient;
 
 /**
@@ -25,6 +27,9 @@ public class MusicApplication extends Application {
         ForegroundObserver.init(this);
         initOkHttpUtils();
         initBugly();
+
+        Intent intent = new Intent(this, PlayService.class);
+        startService(intent);
     }
 
     private void initOkHttpUtils() {

@@ -95,6 +95,10 @@
             android:name=".activity.MusicInfoActivity"
             android:label="@string/music_info"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.PlaylistActivity"
+            android:label="@string/activity_playlist"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

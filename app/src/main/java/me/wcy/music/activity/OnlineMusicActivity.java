@@ -1,7 +1,6 @@
 package me.wcy.music.activity;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -36,7 +35,8 @@ import me.wcy.music.http.HttpClient;
 import me.wcy.music.model.Music;
 import me.wcy.music.model.OnlineMusic;
 import me.wcy.music.model.OnlineMusicList;
-import me.wcy.music.model.SongListInfo;
+import me.wcy.music.model.SheetInfo;
+import me.wcy.music.service.AudioPlayer;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.ImageUtils;
 import me.wcy.music.utils.ScreenUtils;
@@ -56,7 +56,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
     @Bind(R.id.ll_load_fail)
     private LinearLayout llLoadFail;
     private View vHeader;
-    private SongListInfo mListInfo;
+    private SheetInfo mListInfo;
     private OnlineMusicList mOnlineMusicList;
     private List<OnlineMusic> mMusicList = new ArrayList<>();
     private OnlineMusicAdapter mAdapter = new OnlineMusicAdapter(mMusicList);
@@ -67,12 +67,11 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online_music);
+    }
 
-        if (!checkServiceAlive()) {
-            return;
-        }
-
-        mListInfo = (SongListInfo) getIntent().getSerializableExtra(Extras.MUSIC_LIST_TYPE);
+    @Override
+    protected void onServiceBound() {
+        mListInfo = (SheetInfo) getIntent().getSerializableExtra(Extras.MUSIC_LIST_TYPE);
         setTitle(mListInfo.getTitle());
 
         init();
@@ -154,31 +153,28 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         String path = FileUtils.getMusicDir() + FileUtils.getMp3FileName(onlineMusic.getArtist_name(), onlineMusic.getTitle());
         File file = new File(path);
         int itemsId = file.exists() ? R.array.online_music_dialog_without_download : R.array.online_music_dialog;
-        dialog.setItems(itemsId, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 0:// 分享
-                        share(onlineMusic);
-                        break;
-                    case 1:// 查看歌手信息
-                        artistInfo(onlineMusic);
-                        break;
-                    case 2:// 下载
-                        download(onlineMusic);
-                        break;
-                }
+        dialog.setItems(itemsId, (dialog1, which) -> {
+            switch (which) {
+                case 0:// 分享
+                    share(onlineMusic);
+                    break;
+                case 1:// 查看歌手信息
+                    artistInfo(onlineMusic);
+                    break;
+                case 2:// 下载
+                    download(onlineMusic);
+                    break;
             }
         });
         dialog.show();
     }
 
     private void initHeader() {
-        final ImageView ivHeaderBg = (ImageView) vHeader.findViewById(R.id.iv_header_bg);
-        final ImageView ivCover = (ImageView) vHeader.findViewById(R.id.iv_cover);
-        TextView tvTitle = (TextView) vHeader.findViewById(R.id.tv_title);
-        TextView tvUpdateDate = (TextView) vHeader.findViewById(R.id.tv_update_date);
-        TextView tvComment = (TextView) vHeader.findViewById(R.id.tv_comment);
+        final ImageView ivHeaderBg = vHeader.findViewById(R.id.iv_header_bg);
+        final ImageView ivCover = vHeader.findViewById(R.id.iv_cover);
+        TextView tvTitle = vHeader.findViewById(R.id.tv_title);
+        TextView tvUpdateDate = vHeader.findViewById(R.id.tv_update_date);
+        TextView tvComment = vHeader.findViewById(R.id.tv_comment);
         tvTitle.setText(mOnlineMusicList.getBillboard().getName());
         tvUpdateDate.setText(getString(R.string.recent_update, mOnlineMusicList.getBillboard().getUpdate_date()));
         tvComment.setText(mOnlineMusicList.getBillboard().getComment());
@@ -207,8 +203,8 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
             @Override
             public void onExecuteSuccess(Music music) {
                 mProgressDialog.cancel();
-                getPlayService().play(music);
-                ToastUtils.show(getString(R.string.now_play, music.getTitle()));
+                AudioPlayer.get().addAndPlay(music);
+                ToastUtils.show("已添加到播放列表");
             }
 
             @Override
