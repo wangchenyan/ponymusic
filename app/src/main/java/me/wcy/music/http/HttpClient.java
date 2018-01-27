@@ -9,6 +9,7 @@ import com.zhy.http.okhttp.callback.BitmapCallback;
 import com.zhy.http.okhttp.callback.FileCallBack;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import me.wcy.music.model.ArtistInfo;
 import me.wcy.music.model.DownloadInfo;
@@ -17,6 +18,7 @@ import me.wcy.music.model.OnlineMusicList;
 import me.wcy.music.model.SearchMusic;
 import me.wcy.music.model.Splash;
 import okhttp3.Call;
+import okhttp3.OkHttpClient;
 
 /**
  * Created by hzwangchenyan on 2017/2/8.
@@ -36,6 +38,16 @@ public class HttpClient {
     private static final String PARAM_SONG_ID = "songid";
     private static final String PARAM_TING_UID = "tinguid";
     private static final String PARAM_QUERY = "query";
+
+    static {
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
+                .addInterceptor(new HttpInterceptor())
+                .build();
+        OkHttpUtils.initClient(okHttpClient);
+    }
 
     public static void getSplash(@NonNull final HttpCallback<Splash> callback) {
         OkHttpUtils.get().url(SPLASH_URL).build()

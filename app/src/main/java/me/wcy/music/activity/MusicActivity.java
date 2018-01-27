@@ -16,11 +16,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import me.wcy.music.executor.ControlPanel;
 import me.wcy.music.R;
 import me.wcy.music.adapter.FragmentAdapter;
 import me.wcy.music.constants.Extras;
 import me.wcy.music.constants.Keys;
+import me.wcy.music.executor.ControlPanel;
 import me.wcy.music.executor.NaviMenuExecutor;
 import me.wcy.music.executor.WeatherExecutor;
 import me.wcy.music.fragment.LocalMusicFragment;
@@ -29,13 +29,14 @@ import me.wcy.music.fragment.SheetListFragment;
 import me.wcy.music.model.Music;
 import me.wcy.music.service.AudioPlayer;
 import me.wcy.music.service.OnPlayerEventListener;
+import me.wcy.music.service.QuitTimer;
 import me.wcy.music.utils.PermissionReq;
 import me.wcy.music.utils.SystemUtils;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.binding.Bind;
 
 public class MusicActivity extends BaseActivity implements View.OnClickListener, OnPlayerEventListener,
-        NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
+        QuitTimer.OnTimerListener, NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
     @Bind(R.id.drawer_layout)
     private DrawerLayout drawerLayout;
     @Bind(R.id.navigation_view)
@@ -57,7 +58,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     private LocalMusicFragment mLocalMusicFragment;
     private SheetListFragment mSheetListFragment;
     private PlayFragment mPlayFragment;
-    private boolean isPlayFragmentShow = false;
+    private boolean isPlayFragmentShow;
     private MenuItem timerItem;
     private ControlPanel controlPanel;
 
@@ -69,13 +70,13 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     protected void onServiceBound() {
-        playService.setOnPlayEventListener(this);
-
+        controlPanel = new ControlPanel(flPlayBar);
         setupView();
         updateWeather();
-        onChangeImpl(AudioPlayer.get().getPlayingMusic());
+        onChange(AudioPlayer.get().getPlayMusic());
         parseIntent();
-        controlPanel = new ControlPanel(flPlayBar);
+        AudioPlayer.get().addOnPlayEventListener(this);
+        QuitTimer.get().setOnTimerListener(this);
     }
 
     @Override
@@ -138,26 +139,17 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onChange(Music music) {
-        onChangeImpl(music);
-        if (mPlayFragment != null && mPlayFragment.isAdded()) {
-            mPlayFragment.onChange(music);
-        }
+        controlPanel.onChange(music);
     }
 
     @Override
     public void onPlayerStart() {
         controlPanel.onPlayerStart();
-        if (mPlayFragment != null && mPlayFragment.isAdded()) {
-            mPlayFragment.onPlayerStart();
-        }
     }
 
     @Override
     public void onPlayerPause() {
         controlPanel.onPlayerPause();
-        if (mPlayFragment != null && mPlayFragment.isAdded()) {
-            mPlayFragment.onPlayerPause();
-        }
     }
 
     /**
@@ -166,16 +158,10 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onPublish(int progress) {
         controlPanel.onPublish(progress);
-        if (mPlayFragment != null && mPlayFragment.isAdded()) {
-            mPlayFragment.onPublish(progress);
-        }
     }
 
     @Override
     public void onBufferingUpdate(int percent) {
-        if (mPlayFragment != null && mPlayFragment.isAdded()) {
-            mPlayFragment.onBufferingUpdate(percent);
-        }
     }
 
     @Override
@@ -232,14 +218,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onPageScrollStateChanged(int state) {
-    }
-
-    private void onChangeImpl(Music music) {
-        if (music == null) {
-            return;
-        }
-
-        controlPanel.onChange(music);
     }
 
     private void showPlayingFragment() {
@@ -303,9 +281,8 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     protected void onDestroy() {
-        if (playService != null) {
-            playService.setOnPlayEventListener(null);
-        }
+        AudioPlayer.get().removeOnPlayEventListener(this);
+        QuitTimer.get().setOnTimerListener(null);
         super.onDestroy();
     }
 }

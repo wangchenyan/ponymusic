@@ -33,9 +33,9 @@ import me.wcy.music.executor.SearchLrc;
 import me.wcy.music.model.Music;
 import me.wcy.music.service.AudioPlayer;
 import me.wcy.music.service.OnPlayerEventListener;
+import me.wcy.music.storage.preference.Preferences;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.FileUtils;
-import me.wcy.music.utils.Preferences;
 import me.wcy.music.utils.ScreenUtils;
 import me.wcy.music.utils.SystemUtils;
 import me.wcy.music.utils.ToastUtils;
@@ -102,7 +102,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         initViewPager();
         ilIndicator.create(mViewPagerContent.size());
         initPlayMode();
-        onChangeImpl(AudioPlayer.get().getPlayingMusic());
+        onChangeImpl(AudioPlayer.get().getPlayMusic());
+        AudioPlayer.get().addOnPlayEventListener(this);
     }
 
     @Override
@@ -197,10 +198,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     @Override
     public void onBufferingUpdate(int percent) {
         sbProgress.setSecondaryProgress(sbProgress.getMax() * 100 / percent);
-    }
-
-    @Override
-    public void onTimer(long remain) {
     }
 
     @Override
@@ -427,6 +424,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     @Override
     public void onDestroy() {
         getContext().unregisterReceiver(mVolumeReceiver);
+        AudioPlayer.get().removeOnPlayEventListener(this);
         super.onDestroy();
     }
 }

@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'bugly'
+apply plugin: 'org.greenrobot.greendao'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -47,11 +47,6 @@ android {
     }
 }
 
-bugly {
-    appId = getLocalValue("BUGLY_APP_ID")
-    appKey = getLocalValue("BUGLY_APP_KEY")
-}
-
 def getLocalValue(String key) {
     return getLocalValue(key, false)
 }
@@ -66,15 +61,21 @@ def getLocalValue(String key, boolean quot) {
     return value
 }
 
+greendao {
+    schemaVersion 1
+    targetGenDir 'src/main/java'
+    daoPackage 'me.wcy.music.storage.db.greendao'
+}
+
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile "com.android.support:appcompat-v7:${rootProject.ext.supportVersion}"
-    compile "com.android.support:design:${rootProject.ext.supportVersion}"
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.zhy:okhttputils:2.6.2'
-    compile 'com.google.code.gson:gson:2.8.2'
-    compile 'com.github.bumptech.glide:glide:3.8.0'
-    compile 'me.wcy:lrcview:2.0.1'
-    compile 'com.tencent.bugly:crashreport_upgrade:1.2.5'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportVersion}"
+    implementation "com.android.support:design:${rootProject.ext.supportVersion}"
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.zhy:okhttputils:2.6.2'
+    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.github.bumptech.glide:glide:3.8.0'
+    implementation 'me.wcy:lrcview:2.0.1'
     implementation 'com.hwangjr.rxbus:rxbus:1.0.6'
+    implementation 'org.greenrobot:greendao:3.2.2'
 }

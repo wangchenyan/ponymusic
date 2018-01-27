@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
-import com.tencent.bugly.beta.Beta;
-
 import me.wcy.music.BuildConfig;
 import me.wcy.music.R;
 
@@ -23,7 +21,6 @@ public class AboutActivity extends BaseActivity {
 
     public static class AboutFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
         private Preference mVersion;
-        private Preference mUpdate;
         private Preference mShare;
         private Preference mStar;
         private Preference mWeibo;
@@ -36,7 +33,6 @@ public class AboutActivity extends BaseActivity {
             addPreferencesFromResource(R.xml.preference_about);
 
             mVersion = findPreference("version");
-            mUpdate = findPreference("update");
             mShare = findPreference("share");
             mStar = findPreference("star");
             mWeibo = findPreference("weibo");
@@ -48,7 +44,6 @@ public class AboutActivity extends BaseActivity {
         }
 
         private void setListener() {
-            mUpdate.setOnPreferenceClickListener(this);
             mShare.setOnPreferenceClickListener(this);
             mStar.setOnPreferenceClickListener(this);
             mWeibo.setOnPreferenceClickListener(this);
@@ -58,10 +53,7 @@ public class AboutActivity extends BaseActivity {
 
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            if (preference == mUpdate) {
-                Beta.checkUpgrade();
-                return true;
-            } else if (preference == mShare) {
+            if (preference == mShare) {
                 share();
                 return true;
             } else if (preference == mStar) {

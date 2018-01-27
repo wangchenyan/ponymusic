@@ -16,7 +16,7 @@ import me.wcy.music.http.HttpCallback;
 import me.wcy.music.http.HttpClient;
 import me.wcy.music.model.Splash;
 import me.wcy.music.utils.FileUtils;
-import me.wcy.music.utils.Preferences;
+import me.wcy.music.storage.preference.Preferences;
 import me.wcy.music.utils.binding.Bind;
 
 public class SplashActivity extends BaseActivity {

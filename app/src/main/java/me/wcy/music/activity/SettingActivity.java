@@ -14,7 +14,7 @@ import me.wcy.music.R;
 import me.wcy.music.constants.RxBusTags;
 import me.wcy.music.service.AudioPlayer;
 import me.wcy.music.utils.MusicUtils;
-import me.wcy.music.utils.Preferences;
+import me.wcy.music.storage.preference.Preferences;
 import me.wcy.music.utils.ToastUtils;
 
 public class SettingActivity extends BaseActivity {

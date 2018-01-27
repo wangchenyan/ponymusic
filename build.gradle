@@ -7,7 +7,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
-        classpath 'com.tencent.bugly:symtabfileuploader:2.0.9'
+        classpath 'org.greenrobot:greendao-gradle-plugin:3.2.2'
     }
 }
 

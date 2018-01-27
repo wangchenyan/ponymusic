@@ -12,11 +12,18 @@ import me.wcy.music.application.AppCache;
  */
 public class QuitTimer {
     private PlayService playService;
-    private EventCallback<Long> timerCallback;
+    private OnTimerListener listener;
     private Handler handler;
     private long timerRemain;
 
-    public static QuitTimer getInstance() {
+    public interface OnTimerListener {
+        /**
+         * 更新定时停止播放时间
+         */
+        void onTimer(long remain);
+    }
+
+    public static QuitTimer get() {
         return SingletonHolder.sInstance;
     }
 
@@ -27,10 +34,13 @@ public class QuitTimer {
     private QuitTimer() {
     }
 
-    public void init(@NonNull PlayService playService, @NonNull EventCallback<Long> timerCallback) {
+    public void init(@NonNull PlayService playService) {
         this.playService = playService;
-        this.timerCallback = timerCallback;
         this.handler = new Handler(Looper.getMainLooper());
+    }
+
+    public void setOnTimerListener(OnTimerListener listener) {
+        this.listener = listener;
     }
 
     public void start(long milli) {
@@ -40,7 +50,9 @@ public class QuitTimer {
             handler.post(mQuitRunnable);
         } else {
             timerRemain = 0;
-            timerCallback.onEvent(timerRemain);
+            if (listener != null) {
+                listener.onTimer(timerRemain);
+            }
         }
     }
 
@@ -53,7 +65,9 @@ public class QuitTimer {
         public void run() {
             timerRemain -= DateUtils.SECOND_IN_MILLIS;
             if (timerRemain > 0) {
-                timerCallback.onEvent(timerRemain);
+                if (listener != null) {
+                    listener.onTimer(timerRemain);
+                }
                 handler.postDelayed(this, DateUtils.SECOND_IN_MILLIS);
             } else {
                 AppCache.get().clearStack();

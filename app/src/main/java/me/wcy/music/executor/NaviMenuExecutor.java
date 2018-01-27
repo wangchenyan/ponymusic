@@ -11,7 +11,7 @@ import me.wcy.music.activity.AboutActivity;
 import me.wcy.music.activity.MusicActivity;
 import me.wcy.music.activity.SettingActivity;
 import me.wcy.music.service.QuitTimer;
-import me.wcy.music.utils.Preferences;
+import me.wcy.music.storage.preference.Preferences;
 import me.wcy.music.utils.ToastUtils;
 
 /**
@@ -32,6 +32,7 @@ public class NaviMenuExecutor {
                 timerDialog(activity);
                 return true;
             case R.id.action_exit:
+                activity.playService.stop();
                 activity.finish();
                 return true;
             case R.id.action_about:
@@ -65,7 +66,7 @@ public class NaviMenuExecutor {
     }
 
     private static void startTimer(Context context, int minute) {
-        QuitTimer.getInstance().start(minute * 60 * 1000);
+        QuitTimer.get().start(minute * 60 * 1000);
         if (minute > 0) {
             ToastUtils.show(context.getString(R.string.timer_set, String.valueOf(minute)));
         } else {

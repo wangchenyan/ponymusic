@@ -16,7 +16,7 @@ import me.wcy.music.executor.DownloadMusicInfo;
 import me.wcy.music.model.Music;
 import me.wcy.music.model.SheetInfo;
 import me.wcy.music.utils.CoverLoader;
-import me.wcy.music.utils.Preferences;
+import me.wcy.music.storage.preference.Preferences;
 import me.wcy.music.utils.ScreenUtils;
 import me.wcy.music.utils.ToastUtils;
 

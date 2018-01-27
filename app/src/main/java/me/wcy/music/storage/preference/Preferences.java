@@ -1,4 +1,4 @@
-package me.wcy.music.utils;
+package me.wcy.music.storage.preference;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,7 +12,7 @@ import me.wcy.music.R;
  * Created by wcy on 2015/11/28.
  */
 public class Preferences {
-    private static final String MUSIC_ID = "music_id";
+    private static final String PLAY_POSITION = "play_position";
     private static final String PLAY_MODE = "play_mode";
     private static final String SPLASH_URL = "splash_url";
     private static final String NIGHT_MODE = "night_mode";
@@ -23,12 +23,12 @@ public class Preferences {
         sContext = context.getApplicationContext();
     }
 
-    public static long getCurrentSongId() {
-        return getLong(MUSIC_ID, -1);
+    public static int getPlayPosition() {
+        return getInt(PLAY_POSITION, 0);
     }
 
-    public static void saveCurrentSongId(long id) {
-        saveLong(MUSIC_ID, id);
+    public static void savePlayPosition(int position) {
+        saveInt(PLAY_POSITION, position);
     }
 
     public static int getPlayMode() {

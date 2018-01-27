@@ -16,8 +16,6 @@ import me.wcy.music.application.Notifier;
 public class PlayService extends Service {
     private static final String TAG = "Service";
 
-    private OnPlayerEventListener listener;
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -25,11 +23,7 @@ public class PlayService extends Service {
         AudioPlayer.get().init(this);
         MediaSessionManager.get().init(this);
         Notifier.get().init(this);
-        QuitTimer.getInstance().init(this, aLong -> {
-            if (listener != null) {
-                listener.onTimer(aLong);
-            }
-        });
+        QuitTimer.get().init(this);
     }
 
     @Nullable
@@ -38,14 +32,9 @@ public class PlayService extends Service {
         return new PlayBinder();
     }
 
-    public void setOnPlayEventListener(OnPlayerEventListener listener) {
-        this.listener = listener;
-        AudioPlayer.get().setOnPlayEventListener(listener);
-    }
-
     public void stop() {
         AudioPlayer.get().stopPlayer();
-        QuitTimer.getInstance().stop();
+        QuitTimer.get().stop();
         Notifier.get().cancelAll();
     }
 

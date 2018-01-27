@@ -1,6 +1,7 @@
 package me.wcy.music.fragment;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -80,6 +81,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
                 .permissions(Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .result(new PermissionReq.Result() {
+                    @SuppressLint("StaticFieldLeak")
                     @Override
                     public void onGranted() {
                         new AsyncTask<Void, Void, List<Music>>() {

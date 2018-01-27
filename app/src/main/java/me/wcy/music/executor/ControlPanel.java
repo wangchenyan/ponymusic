@@ -62,6 +62,9 @@ public class ControlPanel implements View.OnClickListener, OnPlayerEventListener
 
     @Override
     public void onChange(Music music) {
+        if (music == null) {
+            return;
+        }
         Bitmap cover = CoverLoader.getInstance().loadThumbnail(music);
         ivPlayBarCover.setImageBitmap(cover);
         tvPlayBarTitle.setText(music.getTitle());
@@ -88,9 +91,5 @@ public class ControlPanel implements View.OnClickListener, OnPlayerEventListener
 
     @Override
     public void onBufferingUpdate(int percent) {
-    }
-
-    @Override
-    public void onTimer(long remain) {
     }
 }

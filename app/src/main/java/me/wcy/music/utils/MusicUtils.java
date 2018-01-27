@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.wcy.music.model.Music;
+import me.wcy.music.storage.preference.Preferences;
 
 /**
  * 歌曲工具类
@@ -76,7 +77,7 @@ public class MusicUtils {
             long fileSize = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
 
             Music music = new Music();
-            music.setId(id);
+            music.setSongId(id);
             music.setType(Music.Type.LOCAL);
             music.setTitle(title);
             music.setArtist(artist);

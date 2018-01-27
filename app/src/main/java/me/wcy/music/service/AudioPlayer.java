@@ -16,7 +16,9 @@ import me.wcy.music.application.Notifier;
 import me.wcy.music.enums.PlayModeEnum;
 import me.wcy.music.model.Music;
 import me.wcy.music.receiver.NoisyAudioStreamReceiver;
-import me.wcy.music.utils.Preferences;
+import me.wcy.music.storage.db.DBManager;
+import me.wcy.music.storage.preference.Preferences;
+import me.wcy.music.utils.ToastUtils;
 
 /**
  * Created by hzwangchenyan on 2018/1/26.
@@ -37,8 +39,8 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener {
     private MediaPlayer mediaPlayer;
     private Handler handler;
     private List<Music> musicList;
-    private OnPlayerEventListener listener;
-    private int position = 0;
+    private final List<OnPlayerEventListener> listeners = new ArrayList<>();
+    private int position;
     private int state = STATE_IDLE;
 
     public static AudioPlayer get() {
@@ -54,27 +56,29 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener {
 
     public void init(Context context) {
         this.context = context.getApplicationContext();
-        this.musicList = new ArrayList<>();
+        musicList = DBManager.get().getMusicDao().queryBuilder().build().list();
+        position = Preferences.getPlayPosition();
         audioFocusManager = new AudioFocusManager(context);
         mediaPlayer = new MediaPlayer();
         handler = new Handler(Looper.getMainLooper());
         mediaPlayer.setOnCompletionListener(this);
     }
 
-    public void setOnPlayEventListener(OnPlayerEventListener listener) {
-        this.listener = listener;
+    public void addOnPlayEventListener(OnPlayerEventListener listener) {
+        if (!listeners.contains(listener)) {
+            listeners.add(listener);
+        }
     }
 
-    public void play(List<Music> musicList, int position) {
-        this.musicList.clear();
-        this.musicList.addAll(musicList);
-        play(position);
+    public void removeOnPlayEventListener(OnPlayerEventListener listener) {
+        listeners.remove(listener);
     }
 
     public void addAndPlay(Music music) {
         int position = musicList.indexOf(music);
         if (position < 0) {
             musicList.add(music);
+            DBManager.get().getMusicDao().insert(music);
             position = musicList.size() - 1;
         }
         play(position);
@@ -92,8 +96,8 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener {
         }
 
         this.position = position;
+        Preferences.savePlayPosition(this.position);
         Music music = musicList.get(this.position);
-        Preferences.saveCurrentSongId(music.getId());
 
         try {
             mediaPlayer.reset();
@@ -102,7 +106,7 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener {
             state = STATE_PREPARING;
             mediaPlayer.setOnPreparedListener(mPreparedListener);
             mediaPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);
-            if (listener != null) {
+            for (OnPlayerEventListener listener : listeners) {
                 listener.onChange(music);
             }
             Notifier.get().showPlay(music);
@@ -110,7 +114,13 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener {
             MediaSessionManager.get().updatePlaybackState();
         } catch (IOException e) {
             e.printStackTrace();
+            ToastUtils.show("当前歌曲无法播放");
         }
+    }
+
+    public void delete(int position) {
+        Music music = musicList.remove(position);
+        DBManager.get().getMusicDao().delete(music);
     }
 
     private MediaPlayer.OnPreparedListener mPreparedListener = mp -> {
@@ -119,12 +129,9 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener {
         }
     };
 
-    private MediaPlayer.OnBufferingUpdateListener mBufferingUpdateListener = new MediaPlayer.OnBufferingUpdateListener() {
-        @Override
-        public void onBufferingUpdate(MediaPlayer mp, int percent) {
-            if (listener != null) {
-                listener.onBufferingUpdate(percent);
-            }
+    private MediaPlayer.OnBufferingUpdateListener mBufferingUpdateListener = (mp, percent) -> {
+        for (OnPlayerEventListener listener : listeners) {
+            listener.onBufferingUpdate(percent);
         }
     };
 
@@ -153,7 +160,7 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener {
             MediaSessionManager.get().updatePlaybackState();
             context.registerReceiver(mNoisyReceiver, mNoisyFilter);
 
-            if (listener != null) {
+            for (OnPlayerEventListener listener : listeners) {
                 listener.onPlayerStart();
             }
         }
@@ -172,7 +179,7 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener {
         context.unregisterReceiver(mNoisyReceiver);
         audioFocusManager.abandonAudioFocus();
 
-        if (listener != null) {
+        for (OnPlayerEventListener listener : listeners) {
             listener.onPlayerPause();
         }
     }
@@ -238,7 +245,7 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener {
         if (isPlaying() || isPausing()) {
             mediaPlayer.seekTo(msec);
             MediaSessionManager.get().updatePlaybackState();
-            if (listener != null) {
+            for (OnPlayerEventListener listener : listeners) {
                 listener.onPublish(msec);
             }
         }
@@ -252,8 +259,10 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener {
     private Runnable mPublishRunnable = new Runnable() {
         @Override
         public void run() {
-            if (isPlaying() && listener != null) {
-                listener.onPublish(mediaPlayer.getCurrentPosition());
+            if (isPlaying()) {
+                for (OnPlayerEventListener listener : listeners) {
+                    listener.onPublish(mediaPlayer.getCurrentPosition());
+                }
             }
             handler.postDelayed(this, TIME_UPDATE);
         }
@@ -275,7 +284,7 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener {
         return position;
     }
 
-    public Music getPlayingMusic() {
+    public Music getPlayMusic() {
         if (musicList.isEmpty()) {
             return null;
         }

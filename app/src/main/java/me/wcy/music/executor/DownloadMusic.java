@@ -13,7 +13,7 @@ import me.wcy.music.R;
 import me.wcy.music.application.AppCache;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.NetworkUtils;
-import me.wcy.music.utils.Preferences;
+import me.wcy.music.storage.preference.Preferences;
 import me.wcy.music.utils.ToastUtils;
 
 /**

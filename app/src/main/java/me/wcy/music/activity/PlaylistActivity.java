@@ -12,16 +12,17 @@ import me.wcy.music.adapter.OnMoreClickListener;
 import me.wcy.music.adapter.PlaylistAdapter;
 import me.wcy.music.model.Music;
 import me.wcy.music.service.AudioPlayer;
+import me.wcy.music.service.OnPlayerEventListener;
 import me.wcy.music.utils.binding.Bind;
 
 /**
  * 播放列表
  */
-public class PlaylistActivity extends BaseActivity implements AdapterView.OnItemClickListener, OnMoreClickListener {
+public class PlaylistActivity extends BaseActivity implements AdapterView.OnItemClickListener, OnMoreClickListener, OnPlayerEventListener {
     @Bind(R.id.lv_playlist)
     private ListView lvPlaylist;
 
-    private PlaylistAdapter mAdapter;
+    private PlaylistAdapter adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,9 +32,12 @@ public class PlaylistActivity extends BaseActivity implements AdapterView.OnItem
 
     @Override
     protected void onServiceBound() {
-        mAdapter = new PlaylistAdapter(AudioPlayer.get().getMusicList());
-        mAdapter.setOnMoreClickListener(this);
-        lvPlaylist.setAdapter(mAdapter);
+        adapter = new PlaylistAdapter(AudioPlayer.get().getMusicList());
+        adapter.setPosition(AudioPlayer.get().getPlayPosition());
+        adapter.setOnMoreClickListener(this);
+        lvPlaylist.setAdapter(adapter);
+        lvPlaylist.setOnItemClickListener(this);
+        AudioPlayer.get().addOnPlayEventListener(this);
     }
 
     @Override
@@ -51,10 +55,37 @@ public class PlaylistActivity extends BaseActivity implements AdapterView.OnItem
             if (AudioPlayer.get().getPlayPosition() == position) {
                 AudioPlayer.get().stopPlayer();
             }
-            AudioPlayer.get().getMusicList().remove(position);
-            mAdapter.notifyDataSetChanged();
+            AudioPlayer.get().delete(position);
+            adapter.notifyDataSetChanged();
             AudioPlayer.get().next();
         });
         dialog.show();
+    }
+
+    @Override
+    public void onChange(Music music) {
+        adapter.setPosition(AudioPlayer.get().getPlayPosition());
+    }
+
+    @Override
+    public void onPlayerStart() {
+    }
+
+    @Override
+    public void onPlayerPause() {
+    }
+
+    @Override
+    public void onPublish(int progress) {
+    }
+
+    @Override
+    public void onBufferingUpdate(int percent) {
+    }
+
+    @Override
+    protected void onDestroy() {
+        AudioPlayer.get().removeOnPlayEventListener(this);
+        super.onDestroy();
     }
 }

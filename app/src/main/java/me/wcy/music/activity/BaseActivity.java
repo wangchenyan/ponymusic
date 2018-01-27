@@ -25,7 +25,7 @@ import android.view.WindowManager;
 import me.wcy.music.R;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.PermissionReq;
-import me.wcy.music.utils.Preferences;
+import me.wcy.music.storage.preference.Preferences;
 import me.wcy.music.utils.binding.ViewBinder;
 
 /**

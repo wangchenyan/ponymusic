@@ -32,9 +32,4 @@ public interface OnPlayerEventListener {
      * 缓冲百分比
      */
     void onBufferingUpdate(int percent);
-
-    /**
-     * 更新定时停止播放时间
-     */
-    void onTimer(long remain);
 }

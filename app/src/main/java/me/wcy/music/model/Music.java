@@ -2,39 +2,77 @@ package me.wcy.music.model;
 
 import android.text.TextUtils;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.NotNull;
+import org.greenrobot.greendao.annotation.Property;
+
 import java.io.Serializable;
 
 /**
  * 单曲信息
  * Created by wcy on 2015/11/27.
  */
+@Entity(nameInDb = "SystemMessage")
 public class Music implements Serializable {
-    // 歌曲类型:本地/网络
-    private Type type;
-    // [本地歌曲]歌曲id
-    private long id;
-    // 音乐标题
-    private String title;
-    // 艺术家
-    private String artist;
-    // 专辑
-    private String album;
-    // [本地歌曲]专辑ID
-    private long albumId;
-    // [在线歌曲]专辑封面路径
-    private String coverPath;
-    // 持续时间
-    private long duration;
-    // 音乐路径
-    private String path;
-    // 文件名
-    private String fileName;
-    // 文件大小
-    private long fileSize;
+    private static final long serialVersionUID = 536871008;
 
-    public enum Type {
-        LOCAL,
-        ONLINE
+    @Id(autoincrement = true)
+    @Property(nameInDb = "id")
+    private Long id;
+
+    @NotNull
+    @Property(nameInDb = "type")
+    private int type; // 歌曲类型:本地/网络
+    @Property(nameInDb = "songId")
+    private long songId; // [本地]歌曲ID
+    @Property(nameInDb = "title")
+    private String title; // 音乐标题
+    @Property(nameInDb = "artist")
+    private String artist; // 艺术家
+    @Property(nameInDb = "album")
+    private String album; // 专辑
+    @Property(nameInDb = "albumId")
+    private long albumId; // [本地]专辑ID
+    @Property(nameInDb = "coverPath")
+    private String coverPath; // [在线]专辑封面路径
+    @NotNull
+    @Property(nameInDb = "duration")
+    private long duration; // 持续时间
+    @NotNull
+    @Property(nameInDb = "path")
+    private String path; // 播放地址
+    @Property(nameInDb = "fileName")
+    private String fileName; // [本地]文件名
+    @Property(nameInDb = "fileSize")
+    private long fileSize; // [本地]文件大小
+
+    @Generated(hash = 1263212761)
+    public Music() {
+    }
+
+    @Generated(hash = 332465567)
+    public Music(Long id, int type, long songId, String title, String artist,
+                 String album, long albumId, String coverPath, long duration,
+                 @NotNull String path, String fileName, long fileSize) {
+        this.id = id;
+        this.type = type;
+        this.songId = songId;
+        this.title = title;
+        this.artist = artist;
+        this.album = album;
+        this.albumId = albumId;
+        this.coverPath = coverPath;
+        this.duration = duration;
+        this.path = path;
+        this.fileName = fileName;
+        this.fileSize = fileSize;
+    }
+
+    public interface Type {
+        int LOCAL = 0;
+        int ONLINE = 1;
     }
 
     @Override
@@ -43,7 +81,7 @@ public class Music implements Serializable {
             return false;
         }
         Music music = (Music) o;
-        if (music.id == this.id) {
+        if (music.songId == this.songId) {
             return true;
         }
         if (TextUtils.equals(music.title, this.title)
@@ -55,20 +93,28 @@ public class Music implements Serializable {
         return false;
     }
 
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public long getSongId() {
+        return songId;
+    }
+
+    public void setSongId(long songId) {
+        this.songId = songId;
     }
 
     public String getTitle() {

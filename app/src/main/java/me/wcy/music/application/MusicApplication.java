@@ -3,15 +3,8 @@ package me.wcy.music.application;
 import android.app.Application;
 import android.content.Intent;
 
-import com.tencent.bugly.Bugly;
-import com.zhy.http.okhttp.OkHttpUtils;
-
-import java.util.concurrent.TimeUnit;
-
-import me.wcy.music.BuildConfig;
-import me.wcy.music.http.HttpInterceptor;
 import me.wcy.music.service.PlayService;
-import okhttp3.OkHttpClient;
+import me.wcy.music.storage.db.DBManager;
 
 /**
  * 自定义Application
@@ -25,26 +18,9 @@ public class MusicApplication extends Application {
 
         AppCache.get().init(this);
         ForegroundObserver.init(this);
-        initOkHttpUtils();
-        initBugly();
+        DBManager.get().init(this);
 
         Intent intent = new Intent(this, PlayService.class);
         startService(intent);
-    }
-
-    private void initOkHttpUtils() {
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(10, TimeUnit.SECONDS)
-                .writeTimeout(10, TimeUnit.SECONDS)
-                .addInterceptor(new HttpInterceptor())
-                .build();
-        OkHttpUtils.initClient(okHttpClient);
-    }
-
-    private void initBugly() {
-        if (!BuildConfig.DEBUG) {
-            Bugly.init(this, BuildConfig.BUGLY_APP_ID, false);
-        }
     }
 }

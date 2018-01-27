@@ -8,7 +8,7 @@ import android.support.v7.app.AlertDialog;
 import me.wcy.music.R;
 import me.wcy.music.model.Music;
 import me.wcy.music.utils.NetworkUtils;
-import me.wcy.music.utils.Preferences;
+import me.wcy.music.storage.preference.Preferences;
 
 /**
  * Created by hzwangchenyan on 2017/1/20.
