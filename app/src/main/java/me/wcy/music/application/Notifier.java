@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.wcy.music.R;
-import me.wcy.music.activity.SplashActivity;
+import me.wcy.music.activity.MusicActivity;
 import me.wcy.music.constants.Extras;
 import me.wcy.music.model.Music;
 import me.wcy.music.receiver.StatusBarReceiver;
@@ -64,7 +64,7 @@ public class Notifier {
     }
 
     private Notification buildNotification(Context context, Music music, boolean isPlaying) {
-        Intent intent = new Intent(context, SplashActivity.class);
+        Intent intent = new Intent(context, MusicActivity.class);
         intent.putExtra(Extras.EXTRA_NOTIFICATION, true);
         intent.setAction(Intent.ACTION_VIEW);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

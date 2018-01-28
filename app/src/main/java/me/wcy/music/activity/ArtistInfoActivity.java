@@ -54,10 +54,6 @@ public class ArtistInfoActivity extends BaseActivity {
         ViewUtils.changeViewState(svArtistInfo, llLoading, llLoadFail, LoadStateEnum.LOADING);
     }
 
-    @Override
-    protected void setListener() {
-    }
-
     private void getArtistInfo(String tingUid) {
         HttpClient.getArtistInfo(tingUid, new HttpCallback<ArtistInfo>() {
             @Override

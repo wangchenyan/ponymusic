@@ -176,7 +176,7 @@ public class MusicInfoActivity extends BaseActivity implements View.OnClickListe
         Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(mMusicFile));
         sendBroadcast(intent);
 
-        mHandler.postDelayed(() -> RxBus.get().post(RxBusTags.SCAN_MUSIC, new Object()), 1000);
+        handler.postDelayed(() -> RxBus.get().post(RxBusTags.SCAN_MUSIC, new Object()), 1000);
 
         ToastUtils.show("保存成功");
     }

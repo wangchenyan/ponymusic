@@ -4,16 +4,15 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.webkit.MimeTypeMap;
 
 import me.wcy.music.R;
 import me.wcy.music.application.AppCache;
+import me.wcy.music.storage.preference.Preferences;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.NetworkUtils;
-import me.wcy.music.storage.preference.Preferences;
 import me.wcy.music.utils.ToastUtils;
 
 /**
@@ -37,12 +36,7 @@ public abstract class DownloadMusic implements IExecutor<Void> {
             AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
             builder.setTitle(R.string.tips);
             builder.setMessage(R.string.download_tips);
-            builder.setPositiveButton(R.string.download_tips_sure, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    downloadWrapper();
-                }
-            });
+            builder.setPositiveButton(R.string.download_tips_sure, (dialog, which) -> downloadWrapper());
             builder.setNegativeButton(R.string.cancel, null);
             Dialog dialog = builder.create();
             dialog.setCanceledOnTouchOutside(false);

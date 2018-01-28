@@ -343,7 +343,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     private void onBackPressed() {
         getActivity().onBackPressed();
         ivBack.setEnabled(false);
-        mHandler.postDelayed(() -> ivBack.setEnabled(true), 300);
+        handler.postDelayed(() -> ivBack.setEnabled(true), 300);
     }
 
     private void setCoverAndBg(Music music) {

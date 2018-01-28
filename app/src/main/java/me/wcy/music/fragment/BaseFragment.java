@@ -9,8 +9,6 @@ import android.support.v4.app.Fragment;
 
 import com.hwangjr.rxbus.RxBus;
 
-import me.wcy.music.activity.BaseActivity;
-import me.wcy.music.service.PlayService;
 import me.wcy.music.utils.PermissionReq;
 import me.wcy.music.utils.binding.ViewBinder;
 
@@ -19,12 +17,12 @@ import me.wcy.music.utils.binding.ViewBinder;
  * Created by wcy on 2015/11/26.
  */
 public abstract class BaseFragment extends Fragment {
-    protected Handler mHandler;
+    protected Handler handler;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mHandler = new Handler(Looper.getMainLooper());
+        handler = new Handler(Looper.getMainLooper());
         ViewBinder.bind(this, getView());
         RxBus.get().register(this);
     }
@@ -36,11 +34,6 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected void setListener() {
-    }
-
-    protected PlayService getPlayService() {
-        BaseActivity activity = (BaseActivity) getActivity();
-        return activity.playService;
     }
 
     @Override

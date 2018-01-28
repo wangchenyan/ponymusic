@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -26,17 +27,15 @@ import me.wcy.music.executor.WeatherExecutor;
 import me.wcy.music.fragment.LocalMusicFragment;
 import me.wcy.music.fragment.PlayFragment;
 import me.wcy.music.fragment.SheetListFragment;
-import me.wcy.music.model.Music;
 import me.wcy.music.service.AudioPlayer;
-import me.wcy.music.service.OnPlayerEventListener;
 import me.wcy.music.service.QuitTimer;
 import me.wcy.music.utils.PermissionReq;
 import me.wcy.music.utils.SystemUtils;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.binding.Bind;
 
-public class MusicActivity extends BaseActivity implements View.OnClickListener, OnPlayerEventListener,
-        QuitTimer.OnTimerListener, NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
+public class MusicActivity extends BaseActivity implements View.OnClickListener, QuitTimer.OnTimerListener,
+        NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
     @Bind(R.id.drawer_layout)
     private DrawerLayout drawerLayout;
     @Bind(R.id.navigation_view)
@@ -58,9 +57,10 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     private LocalMusicFragment mLocalMusicFragment;
     private SheetListFragment mSheetListFragment;
     private PlayFragment mPlayFragment;
-    private boolean isPlayFragmentShow;
-    private MenuItem timerItem;
     private ControlPanel controlPanel;
+    private NaviMenuExecutor naviMenuExecutor;
+    private MenuItem timerItem;
+    private boolean isPlayFragmentShow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,30 +70,19 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     protected void onServiceBound() {
-        controlPanel = new ControlPanel(flPlayBar);
         setupView();
         updateWeather();
-        onChange(AudioPlayer.get().getPlayMusic());
-        parseIntent();
-        AudioPlayer.get().addOnPlayEventListener(this);
+        controlPanel = new ControlPanel(flPlayBar);
+        naviMenuExecutor = new NaviMenuExecutor(this);
+        AudioPlayer.get().addOnPlayEventListener(controlPanel);
         QuitTimer.get().setOnTimerListener(this);
+        parseIntent();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         setIntent(intent);
         parseIntent();
-    }
-
-    @Override
-    protected void setListener() {
-        ivMenu.setOnClickListener(this);
-        ivSearch.setOnClickListener(this);
-        tvLocalMusic.setOnClickListener(this);
-        tvOnlineMusic.setOnClickListener(this);
-        flPlayBar.setOnClickListener(this);
-        mViewPager.addOnPageChangeListener(this);
-        navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void setupView() {
@@ -109,6 +98,14 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         adapter.addFragment(mSheetListFragment);
         mViewPager.setAdapter(adapter);
         tvLocalMusic.setSelected(true);
+
+        ivMenu.setOnClickListener(this);
+        ivSearch.setOnClickListener(this);
+        tvLocalMusic.setOnClickListener(this);
+        tvOnlineMusic.setOnClickListener(this);
+        flPlayBar.setOnClickListener(this);
+        mViewPager.addOnPageChangeListener(this);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void updateWeather() {
@@ -135,33 +132,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
             showPlayingFragment();
             setIntent(new Intent());
         }
-    }
-
-    @Override
-    public void onChange(Music music) {
-        controlPanel.onChange(music);
-    }
-
-    @Override
-    public void onPlayerStart() {
-        controlPanel.onPlayerStart();
-    }
-
-    @Override
-    public void onPlayerPause() {
-        controlPanel.onPlayerPause();
-    }
-
-    /**
-     * 更新播放进度
-     */
-    @Override
-    public void onPublish(int progress) {
-        controlPanel.onPublish(progress);
-    }
-
-    @Override
-    public void onBufferingUpdate(int percent) {
     }
 
     @Override
@@ -195,10 +165,10 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
-    public boolean onNavigationItemSelected(final MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         drawerLayout.closeDrawers();
-        mHandler.postDelayed(() -> item.setChecked(false), 500);
-        return NaviMenuExecutor.onNavigationItemSelected(item, this);
+        handler.postDelayed(() -> item.setChecked(false), 500);
+        return naviMenuExecutor.onNavigationItemSelected(item);
     }
 
     @Override
@@ -269,19 +239,16 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     protected void onRestoreInstanceState(final Bundle savedInstanceState) {
-        mViewPager.post(new Runnable() {
-            @Override
-            public void run() {
-                mViewPager.setCurrentItem(savedInstanceState.getInt(Keys.VIEW_PAGER_INDEX), false);
-                mLocalMusicFragment.onRestoreInstanceState(savedInstanceState);
-                mSheetListFragment.onRestoreInstanceState(savedInstanceState);
-            }
+        mViewPager.post(() -> {
+            mViewPager.setCurrentItem(savedInstanceState.getInt(Keys.VIEW_PAGER_INDEX), false);
+            mLocalMusicFragment.onRestoreInstanceState(savedInstanceState);
+            mSheetListFragment.onRestoreInstanceState(savedInstanceState);
         });
     }
 
     @Override
     protected void onDestroy() {
-        AudioPlayer.get().removeOnPlayEventListener(this);
+        AudioPlayer.get().removeOnPlayEventListener(controlPanel);
         QuitTimer.get().setOnTimerListener(null);
         super.onDestroy();
     }

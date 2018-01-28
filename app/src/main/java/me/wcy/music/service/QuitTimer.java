@@ -1,17 +1,18 @@
 package me.wcy.music.service;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
 import android.text.format.DateUtils;
 
 import me.wcy.music.application.AppCache;
+import me.wcy.music.constants.Actions;
 
 /**
  * Created by hzwangchenyan on 2017/8/8.
  */
 public class QuitTimer {
-    private PlayService playService;
+    private Context context;
     private OnTimerListener listener;
     private Handler handler;
     private long timerRemain;
@@ -34,8 +35,8 @@ public class QuitTimer {
     private QuitTimer() {
     }
 
-    public void init(@NonNull PlayService playService) {
-        this.playService = playService;
+    public void init(Context context) {
+        this.context = context.getApplicationContext();
         this.handler = new Handler(Looper.getMainLooper());
     }
 
@@ -71,7 +72,7 @@ public class QuitTimer {
                 handler.postDelayed(this, DateUtils.SECOND_IN_MILLIS);
             } else {
                 AppCache.get().clearStack();
-                playService.stop();
+                PlayService.startCommand(context, Actions.ACTION_STOP);
             }
         }
     };

@@ -12,19 +12,19 @@ import okhttp3.Response;
  * Created by wcy on 2015/12/20.
  */
 public abstract class JsonCallback<T> extends Callback<T> {
-    private Class<T> mClass;
-    private Gson mGson;
+    private Class<T> clazz;
+    private Gson gson;
 
     public JsonCallback(Class<T> clazz) {
-        this.mClass = clazz;
-        mGson = new Gson();
+        this.clazz = clazz;
+        gson = new Gson();
     }
 
     @Override
     public T parseNetworkResponse(Response response, int id) throws IOException {
         try {
             String jsonString = response.body().string();
-            return mGson.fromJson(jsonString, mClass);
+            return gson.fromJson(jsonString, clazz);
         } catch (Exception e) {
             e.printStackTrace();
         }

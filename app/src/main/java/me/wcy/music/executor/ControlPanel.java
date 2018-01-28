@@ -41,6 +41,7 @@ public class ControlPanel implements View.OnClickListener, OnPlayerEventListener
         ivPlayBarPlay.setOnClickListener(this);
         ivPlayBarNext.setOnClickListener(this);
         vPlayBarPlaylist.setOnClickListener(this);
+        onChange(AudioPlayer.get().getPlayMusic());
     }
 
     @Override

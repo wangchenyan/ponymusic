@@ -58,18 +58,16 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
         lvSearchMusic.setAdapter(mAdapter);
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.loading));
-        ((TextView) llLoadFail.findViewById(R.id.tv_load_fail_text)).setText(R.string.search_empty);
+        TextView tvLoadFail = llLoadFail.findViewById(R.id.tv_load_fail_text);
+        tvLoadFail.setText(R.string.search_empty);
+
+        lvSearchMusic.setOnItemClickListener(this);
+        mAdapter.setOnMoreClickListener(this);
     }
 
     @Override
     protected int getDarkTheme() {
         return R.style.AppThemeDark_Search;
-    }
-
-    @Override
-    protected void setListener() {
-        lvSearchMusic.setOnItemClickListener(this);
-        mAdapter.setOnMoreClickListener(this);
     }
 
     @Override
@@ -117,12 +115,7 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
                 mSearchMusicList.addAll(response.getSong());
                 mAdapter.notifyDataSetChanged();
                 lvSearchMusic.requestFocus();
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        lvSearchMusic.setSelection(0);
-                    }
-                });
+                handler.post(() -> lvSearchMusic.setSelection(0));
             }
 
             @Override

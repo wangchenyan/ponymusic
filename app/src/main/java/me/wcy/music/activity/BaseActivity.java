@@ -24,8 +24,8 @@ import android.view.WindowManager;
 
 import me.wcy.music.R;
 import me.wcy.music.service.PlayService;
-import me.wcy.music.utils.PermissionReq;
 import me.wcy.music.storage.preference.Preferences;
+import me.wcy.music.utils.PermissionReq;
 import me.wcy.music.utils.binding.ViewBinder;
 
 /**
@@ -34,9 +34,9 @@ import me.wcy.music.utils.binding.ViewBinder;
  * Created by wcy on 2015/11/26.
  */
 public abstract class BaseActivity extends AppCompatActivity {
-    protected Handler mHandler;
-    public PlayService playService;
-    private ServiceConnection mPlayServiceConnection;
+    protected Handler handler;
+    protected PlayService playService;
+    private ServiceConnection serviceConnection;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         setSystemBarTransparent();
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        mHandler = new Handler(Looper.getMainLooper());
+        handler = new Handler(Looper.getMainLooper());
         bindService();
     }
 
@@ -88,20 +88,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        setListener();
-    }
-
-    protected void setListener() {
-    }
-
     private void bindService() {
         Intent intent = new Intent();
         intent.setClass(this, PlayService.class);
-        mPlayServiceConnection = new PlayServiceConnection();
-        bindService(intent, mPlayServiceConnection, Context.BIND_AUTO_CREATE);
+        serviceConnection = new PlayServiceConnection();
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
     private class PlayServiceConnection implements ServiceConnection {
@@ -113,11 +104,11 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Log.e(getClass().getSimpleName(),"service disconnected");
+            Log.e(getClass().getSimpleName(), "service disconnected");
         }
     }
 
-    protected void onServiceBound(){
+    protected void onServiceBound() {
     }
 
     private void setSystemBarTransparent() {
@@ -149,8 +140,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (mPlayServiceConnection != null) {
-            unbindService(mPlayServiceConnection);
+        if (serviceConnection != null) {
+            unbindService(serviceConnection);
         }
         super.onDestroy();
     }

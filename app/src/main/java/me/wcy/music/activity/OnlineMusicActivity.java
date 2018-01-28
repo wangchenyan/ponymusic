@@ -74,11 +74,11 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         mListInfo = (SheetInfo) getIntent().getSerializableExtra(Extras.MUSIC_LIST_TYPE);
         setTitle(mListInfo.getTitle());
 
-        init();
+        initView();
         onLoad();
     }
 
-    private void init() {
+    private void initView() {
         vHeader = LayoutInflater.from(this).inflate(R.layout.activity_online_music_list_header, null);
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dp2px(150));
         vHeader.setLayoutParams(params);
@@ -88,10 +88,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.loading));
         ViewUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOADING);
-    }
 
-    @Override
-    protected void setListener() {
         lvOnlineMusic.setOnItemClickListener(this);
         mAdapter.setOnMoreClickListener(this);
     }
