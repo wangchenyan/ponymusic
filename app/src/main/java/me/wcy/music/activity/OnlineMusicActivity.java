@@ -1,6 +1,5 @@
 package me.wcy.music.activity;
 
-import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -60,7 +59,6 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
     private OnlineMusicList mOnlineMusicList;
     private List<OnlineMusic> mMusicList = new ArrayList<>();
     private OnlineMusicAdapter mAdapter = new OnlineMusicAdapter(mMusicList);
-    private ProgressDialog mProgressDialog;
     private int mOffset = 0;
 
     @Override
@@ -85,8 +83,6 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         lvOnlineMusic.addHeaderView(vHeader, null, false);
         lvOnlineMusic.setAdapter(mAdapter);
         lvOnlineMusic.setOnLoadListener(this);
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage(getString(R.string.loading));
         ViewUtils.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOADING);
 
         lvOnlineMusic.setOnItemClickListener(this);
@@ -194,19 +190,19 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         new PlayOnlineMusic(this, onlineMusic) {
             @Override
             public void onPrepare() {
-                mProgressDialog.show();
+                showProgress();
             }
 
             @Override
             public void onExecuteSuccess(Music music) {
-                mProgressDialog.cancel();
+                cancelProgress();
                 AudioPlayer.get().addAndPlay(music);
                 ToastUtils.show("已添加到播放列表");
             }
 
             @Override
             public void onExecuteFail(Exception e) {
-                mProgressDialog.cancel();
+                cancelProgress();
                 ToastUtils.show(R.string.unable_to_play);
             }
         }.execute();
@@ -216,17 +212,17 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         new ShareOnlineMusic(this, onlineMusic.getTitle(), onlineMusic.getSong_id()) {
             @Override
             public void onPrepare() {
-                mProgressDialog.show();
+                showProgress();
             }
 
             @Override
             public void onExecuteSuccess(Void aVoid) {
-                mProgressDialog.cancel();
+                cancelProgress();
             }
 
             @Override
             public void onExecuteFail(Exception e) {
-                mProgressDialog.cancel();
+                cancelProgress();
             }
         }.execute();
     }
@@ -239,18 +235,18 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         new DownloadOnlineMusic(this, onlineMusic) {
             @Override
             public void onPrepare() {
-                mProgressDialog.show();
+                showProgress();
             }
 
             @Override
             public void onExecuteSuccess(Void aVoid) {
-                mProgressDialog.cancel();
+                cancelProgress();
                 ToastUtils.show(getString(R.string.now_download, onlineMusic.getTitle()));
             }
 
             @Override
             public void onExecuteFail(Exception e) {
-                mProgressDialog.cancel();
+                cancelProgress();
                 ToastUtils.show(R.string.unable_to_download);
             }
         }.execute();

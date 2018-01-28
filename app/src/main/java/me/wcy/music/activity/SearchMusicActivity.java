@@ -1,7 +1,5 @@
 package me.wcy.music.activity;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
@@ -43,9 +41,8 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
     private LinearLayout llLoading;
     @Bind(R.id.ll_load_fail)
     private LinearLayout llLoadFail;
-    private List<SearchMusic.Song> mSearchMusicList = new ArrayList<>();
-    private SearchMusicAdapter mAdapter = new SearchMusicAdapter(mSearchMusicList);
-    private ProgressDialog mProgressDialog;
+    private List<SearchMusic.Song> searchMusicList = new ArrayList<>();
+    private SearchMusicAdapter mAdapter = new SearchMusicAdapter(searchMusicList);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +53,6 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
     @Override
     protected void onServiceBound() {
         lvSearchMusic.setAdapter(mAdapter);
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage(getString(R.string.loading));
         TextView tvLoadFail = llLoadFail.findViewById(R.id.tv_load_fail_text);
         tvLoadFail.setText(R.string.search_empty);
 
@@ -111,8 +106,8 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
                     return;
                 }
                 ViewUtils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
-                mSearchMusicList.clear();
-                mSearchMusicList.addAll(response.getSong());
+                searchMusicList.clear();
+                searchMusicList.addAll(response.getSong());
                 mAdapter.notifyDataSetChanged();
                 lvSearchMusic.requestFocus();
                 handler.post(() -> lvSearchMusic.setSelection(0));
@@ -127,22 +122,22 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        new PlaySearchedMusic(this, mSearchMusicList.get(position)) {
+        new PlaySearchedMusic(this, searchMusicList.get(position)) {
             @Override
             public void onPrepare() {
-                mProgressDialog.show();
+                showProgress();
             }
 
             @Override
             public void onExecuteSuccess(Music music) {
-                mProgressDialog.cancel();
+                cancelProgress();
                 AudioPlayer.get().addAndPlay(music);
                 ToastUtils.show("已添加到播放列表");
             }
 
             @Override
             public void onExecuteFail(Exception e) {
-                mProgressDialog.cancel();
+                cancelProgress();
                 ToastUtils.show(R.string.unable_to_play);
             }
         }.execute();
@@ -150,23 +145,20 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
 
     @Override
     public void onMoreClick(int position) {
-        final SearchMusic.Song song = mSearchMusicList.get(position);
+        final SearchMusic.Song song = searchMusicList.get(position);
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle(song.getSongname());
         String path = FileUtils.getMusicDir() + FileUtils.getMp3FileName(song.getArtistname(), song.getSongname());
         File file = new File(path);
         int itemsId = file.exists() ? R.array.search_music_dialog_no_download : R.array.search_music_dialog;
-        dialog.setItems(itemsId, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 0:// 分享
-                        share(song);
-                        break;
-                    case 1:// 下载
-                        download(song);
-                        break;
-                }
+        dialog.setItems(itemsId, (dialog1, which) -> {
+            switch (which) {
+                case 0:// 分享
+                    share(song);
+                    break;
+                case 1:// 下载
+                    download(song);
+                    break;
             }
         });
         dialog.show();
@@ -176,17 +168,17 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
         new ShareOnlineMusic(this, song.getSongname(), song.getSongid()) {
             @Override
             public void onPrepare() {
-                mProgressDialog.show();
+                showProgress();
             }
 
             @Override
             public void onExecuteSuccess(Void aVoid) {
-                mProgressDialog.cancel();
+                cancelProgress();
             }
 
             @Override
             public void onExecuteFail(Exception e) {
-                mProgressDialog.cancel();
+                cancelProgress();
             }
         }.execute();
     }
@@ -195,18 +187,18 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
         new DownloadSearchedMusic(this, song) {
             @Override
             public void onPrepare() {
-                mProgressDialog.show();
+                showProgress();
             }
 
             @Override
             public void onExecuteSuccess(Void aVoid) {
-                mProgressDialog.cancel();
+                cancelProgress();
                 ToastUtils.show(getString(R.string.now_download, song.getSongname()));
             }
 
             @Override
             public void onExecuteFail(Exception e) {
-                mProgressDialog.cancel();
+                cancelProgress();
                 ToastUtils.show(R.string.unable_to_download);
             }
         }.execute();

@@ -6,6 +6,8 @@
 -dontwarn okhttp3.**
 -dontwarn org.blinkenlights.jid3.**
 
+-keep class android.support.** { *; }
+
 # glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
@@ -22,7 +24,6 @@
     public static java.lang.String TABLENAME;
 }
 -keep class **$Properties
-
 # If you do not use SQLCipher:
 -dontwarn org.greenrobot.greendao.database.**
 # If you do not use Rx:

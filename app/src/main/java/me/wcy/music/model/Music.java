@@ -81,7 +81,7 @@ public class Music implements Serializable {
             return false;
         }
         Music music = (Music) o;
-        if (music.songId == this.songId) {
+        if (music.songId > 0 && music.songId == this.songId) {
             return true;
         }
         if (TextUtils.equals(music.title, this.title)
