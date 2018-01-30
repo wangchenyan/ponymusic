@@ -31,7 +31,6 @@
 # greenDAO end
 
 # RxBus
--keep class rx.** { *; }
 -keep class com.hwangjr.rxbus.** { *; }
 -keepattributes *Annotation*
 -keepclassmembers class ** {

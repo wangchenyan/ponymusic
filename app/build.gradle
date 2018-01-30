@@ -62,7 +62,7 @@ def getLocalValue(String key, boolean quot) {
 greendao {
     schemaVersion 1
     targetGenDir 'src/main/java'
-    daoPackage 'me.wcy.music.storage.db.greendao'
+    daoPackage "${android.defaultConfig.applicationId}.storage.db.greendao"
 }
 
 dependencies {
@@ -74,6 +74,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.github.bumptech.glide:glide:3.8.0'
     implementation 'me.wcy:lrcview:2.0.1'
-    implementation 'com.hwangjr.rxbus:rxbus:1.0.6'
+    implementation 'com.hwangjr.rxbus:rxbus:2.0.0'
     implementation 'org.greenrobot:greendao:3.2.2'
 }
