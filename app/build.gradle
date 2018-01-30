@@ -12,8 +12,6 @@ android {
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
 
-        buildConfigField 'String', 'BUGLY_APP_ID', getLocalValue("BUGLY_APP_ID", true)
-
         manifestPlaceholders = [AMAP_KEY: getLocalValue("AMAP_KEY")]
     }
 
