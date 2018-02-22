@@ -12,6 +12,7 @@ import java.util.List;
 
 import me.wcy.music.R;
 import me.wcy.music.model.Music;
+import me.wcy.music.service.AudioPlayer;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.binding.Bind;
@@ -24,10 +25,14 @@ import me.wcy.music.utils.binding.ViewBinder;
 public class PlaylistAdapter extends BaseAdapter {
     private List<Music> musicList;
     private OnMoreClickListener listener;
-    private int position = -1;
+    private boolean isPlaylist;
 
     public PlaylistAdapter(List<Music> musicList) {
         this.musicList = musicList;
+    }
+
+    public void setIsPlaylist(boolean isPlaylist) {
+        this.isPlaylist = isPlaylist;
     }
 
     public void setOnMoreClickListener(OnMoreClickListener listener) {
@@ -59,7 +64,7 @@ public class PlaylistAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.vPlaying.setVisibility((position == this.position) ? View.VISIBLE : View.INVISIBLE);
+        holder.vPlaying.setVisibility((isPlaylist && position == AudioPlayer.get().getPlayPosition()) ? View.VISIBLE : View.INVISIBLE);
         Music music = musicList.get(position);
         Bitmap cover = CoverLoader.getInstance().loadThumbnail(music);
         holder.ivCover.setImageBitmap(cover);
@@ -77,11 +82,6 @@ public class PlaylistAdapter extends BaseAdapter {
 
     private boolean isShowDivider(int position) {
         return position != musicList.size() - 1;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
-        notifyDataSetChanged();
     }
 
     private static class ViewHolder {

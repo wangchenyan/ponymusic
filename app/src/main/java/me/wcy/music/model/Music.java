@@ -85,9 +85,9 @@ public class Music implements Serializable {
             return true;
         }
         if (TextUtils.equals(music.title, this.title)
-                || TextUtils.equals(music.artist, this.artist)
-                || TextUtils.equals(music.album, this.album)
-                || music.duration == this.duration) {
+                && TextUtils.equals(music.artist, this.artist)
+                && TextUtils.equals(music.album, this.album)
+                && music.duration == this.duration) {
             return true;
         }
         return false;

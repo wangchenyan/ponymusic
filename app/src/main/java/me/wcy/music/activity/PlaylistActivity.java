@@ -33,7 +33,7 @@ public class PlaylistActivity extends BaseActivity implements AdapterView.OnItem
     @Override
     protected void onServiceBound() {
         adapter = new PlaylistAdapter(AudioPlayer.get().getMusicList());
-        adapter.setPosition(AudioPlayer.get().getPlayPosition());
+        adapter.setIsPlaylist(true);
         adapter.setOnMoreClickListener(this);
         lvPlaylist.setAdapter(adapter);
         lvPlaylist.setOnItemClickListener(this);
@@ -52,19 +52,15 @@ public class PlaylistActivity extends BaseActivity implements AdapterView.OnItem
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle(music.getTitle());
         dialog.setItems(items, (dialog1, which) -> {
-            if (AudioPlayer.get().getPlayPosition() == position) {
-                AudioPlayer.get().stopPlayer();
-            }
             AudioPlayer.get().delete(position);
             adapter.notifyDataSetChanged();
-            AudioPlayer.get().next();
         });
         dialog.show();
     }
 
     @Override
     public void onChange(Music music) {
-        adapter.setPosition(AudioPlayer.get().getPlayPosition());
+        adapter.notifyDataSetChanged();
     }
 
     @Override

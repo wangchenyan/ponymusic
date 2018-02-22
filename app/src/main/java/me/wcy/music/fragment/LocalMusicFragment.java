@@ -53,7 +53,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     @Bind(R.id.v_searching)
     private TextView vSearching;
 
-    private PlaylistAdapter mAdapter;
+    private PlaylistAdapter adapter;
 
     @Nullable
     @Override
@@ -65,9 +65,9 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mAdapter = new PlaylistAdapter(AppCache.get().getLocalMusicList());
-        mAdapter.setOnMoreClickListener(this);
-        lvLocalMusic.setAdapter(mAdapter);
+        adapter = new PlaylistAdapter(AppCache.get().getLocalMusicList());
+        adapter.setOnMoreClickListener(this);
+        lvLocalMusic.setAdapter(adapter);
         if (AppCache.get().getLocalMusicList().isEmpty()) {
             scanMusic(null);
         }
@@ -96,7 +96,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
                                 AppCache.get().getLocalMusicList().addAll(musicList);
                                 lvLocalMusic.setVisibility(View.VISIBLE);
                                 vSearching.setVisibility(View.GONE);
-                                mAdapter.notifyDataSetChanged();
+                                adapter.notifyDataSetChanged();
                             }
                         }.execute();
                     }
@@ -207,7 +207,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
             File file = new File(music.getPath());
             if (file.delete()) {
                 AppCache.get().getLocalMusicList().remove(music);
-                mAdapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
                 // 刷新媒体库
                 Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://".concat(music.getPath())));
                 getContext().sendBroadcast(intent);

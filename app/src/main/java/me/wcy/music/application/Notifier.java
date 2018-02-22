@@ -51,10 +51,16 @@ public class Notifier {
     }
 
     public void showPlay(Music music) {
+        if (music == null) {
+            return;
+        }
         playService.startForeground(NOTIFICATION_ID, buildNotification(playService, music, true));
     }
 
     public void showPause(Music music) {
+        if (music == null) {
+            return;
+        }
         playService.stopForeground(false);
         notificationManager.notify(NOTIFICATION_ID, buildNotification(playService, music, false));
     }

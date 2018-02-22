@@ -39,7 +39,6 @@ public class AudioPlayer {
     private IntentFilter noisyFilter;
     private List<Music> musicList;
     private final List<OnPlayerEventListener> listeners = new ArrayList<>();
-    private int position;
     private int state = STATE_IDLE;
 
     public static AudioPlayer get() {
@@ -56,7 +55,6 @@ public class AudioPlayer {
     public void init(Context context) {
         this.context = context.getApplicationContext();
         musicList = DBManager.get().getMusicDao().queryBuilder().build().list();
-        position = Preferences.getPlayPosition();
         audioFocusManager = new AudioFocusManager(context);
         mediaPlayer = new MediaPlayer();
         handler = new Handler(Looper.getMainLooper());
@@ -106,9 +104,8 @@ public class AudioPlayer {
             position = 0;
         }
 
-        this.position = position;
-        Preferences.savePlayPosition(this.position);
-        Music music = musicList.get(this.position);
+        setPlayPosition(position);
+        Music music = getPlayMusic();
 
         try {
             mediaPlayer.reset();
@@ -128,8 +125,22 @@ public class AudioPlayer {
     }
 
     public void delete(int position) {
+        int playPosition = getPlayPosition();
         Music music = musicList.remove(position);
         DBManager.get().getMusicDao().delete(music);
+        if (playPosition > position) {
+            setPlayPosition(playPosition - 1);
+        } else if (playPosition == position) {
+            if (isPlaying() || isPreparing()) {
+                setPlayPosition(playPosition - 1);
+                next();
+            } else {
+                stopPlayer();
+                for (OnPlayerEventListener listener : listeners) {
+                    listener.onChange(getPlayMusic());
+                }
+            }
+        }
     }
 
     public void playPause() {
@@ -140,7 +151,7 @@ public class AudioPlayer {
         } else if (isPausing()) {
             startPlayer();
         } else {
-            play(position);
+            play(getPlayPosition());
         }
     }
 
@@ -153,7 +164,7 @@ public class AudioPlayer {
             mediaPlayer.start();
             state = STATE_PLAYING;
             handler.post(mPublishRunnable);
-            Notifier.get().showPlay(musicList.get(position));
+            Notifier.get().showPlay(getPlayMusic());
             MediaSessionManager.get().updatePlaybackState();
             context.registerReceiver(noisyReceiver, noisyFilter);
 
@@ -175,7 +186,7 @@ public class AudioPlayer {
         mediaPlayer.pause();
         state = STATE_PAUSE;
         handler.removeCallbacks(mPublishRunnable);
-        Notifier.get().showPause(musicList.get(position));
+        Notifier.get().showPause(getPlayMusic());
         MediaSessionManager.get().updatePlaybackState();
         context.unregisterReceiver(noisyReceiver);
         if (abandonAudioFocus) {
@@ -205,15 +216,14 @@ public class AudioPlayer {
         PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode());
         switch (mode) {
             case SHUFFLE:
-                position = new Random().nextInt(musicList.size());
-                play(position);
+                play(new Random().nextInt(musicList.size()));
                 break;
             case SINGLE:
-                play(position);
+                play(getPlayPosition());
                 break;
             case LOOP:
             default:
-                play(position + 1);
+                play(getPlayPosition() + 1);
                 break;
         }
     }
@@ -226,15 +236,14 @@ public class AudioPlayer {
         PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode());
         switch (mode) {
             case SHUFFLE:
-                position = new Random().nextInt(musicList.size());
-                play(position);
+                play(new Random().nextInt(musicList.size()));
                 break;
             case SINGLE:
-                play(position);
+                play(getPlayPosition());
                 break;
             case LOOP:
             default:
-                play(position - 1);
+                play(getPlayPosition() - 1);
                 break;
         }
     }
@@ -278,18 +287,11 @@ public class AudioPlayer {
         }
     }
 
-    public int getPlayPosition() {
-        return position;
-    }
-
     public Music getPlayMusic() {
         if (musicList.isEmpty()) {
             return null;
         }
-        if (position < 0 || position >= musicList.size()) {
-            position = 0;
-        }
-        return musicList.get(position);
+        return musicList.get(getPlayPosition());
     }
 
     public MediaPlayer getMediaPlayer() {
@@ -314,5 +316,18 @@ public class AudioPlayer {
 
     public boolean isIdle() {
         return state == STATE_IDLE;
+    }
+
+    public int getPlayPosition() {
+        int position = Preferences.getPlayPosition();
+        if (position < 0 || position >= musicList.size()) {
+            position = 0;
+            Preferences.savePlayPosition(position);
+        }
+        return position;
+    }
+
+    private void setPlayPosition(int position) {
+        Preferences.savePlayPosition(position);
     }
 }
