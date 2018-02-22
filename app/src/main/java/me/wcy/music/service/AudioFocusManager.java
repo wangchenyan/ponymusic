@@ -30,9 +30,9 @@ public class AudioFocusManager implements AudioManager.OnAudioFocusChangeListene
         switch (focusChange) {
             // 重新获得焦点
             case AudioManager.AUDIOFOCUS_GAIN:
-                if (!willPlay() && isPausedByFocusLossTransient) {
+                if (isPausedByFocusLossTransient) {
                     // 通话结束，恢复播放
-                    AudioPlayer.get().playPause();
+                    AudioPlayer.get().startPlayer();
                 }
 
                 // 恢复音量
@@ -42,36 +42,18 @@ public class AudioFocusManager implements AudioManager.OnAudioFocusChangeListene
                 break;
             // 永久丢失焦点，如被其他播放器抢占
             case AudioManager.AUDIOFOCUS_LOSS:
-                if (willPlay()) {
-                    forceStop();
-                }
+                AudioPlayer.get().pausePlayer();
                 break;
             // 短暂丢失焦点，如来电
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                if (willPlay()) {
-                    forceStop();
-                    isPausedByFocusLossTransient = true;
-                }
+                AudioPlayer.get().pausePlayer(false);
+                isPausedByFocusLossTransient = true;
                 break;
             // 瞬间丢失焦点，如通知
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                 // 音量减小为一半
-                if (willPlay()) {
-                    AudioPlayer.get().getMediaPlayer().setVolume(0.5f, 0.5f);
-                }
+                AudioPlayer.get().getMediaPlayer().setVolume(0.5f, 0.5f);
                 break;
-        }
-    }
-
-    private boolean willPlay() {
-        return AudioPlayer.get().isPreparing() || AudioPlayer.get().isPlaying();
-    }
-
-    private void forceStop() {
-        if (AudioPlayer.get().isPreparing()) {
-            AudioPlayer.get().stopPlayer();
-        } else if (AudioPlayer.get().isPlaying()) {
-            AudioPlayer.get().pausePlayer();
         }
     }
 }

@@ -23,7 +23,7 @@ import me.wcy.music.utils.ToastUtils;
 /**
  * Created by hzwangchenyan on 2018/1/26.
  */
-public class AudioPlayer implements MediaPlayer.OnCompletionListener {
+public class AudioPlayer {
     private static final int STATE_IDLE = 0;
     private static final int STATE_PREPARING = 1;
     private static final int STATE_PLAYING = 2;
@@ -31,13 +31,12 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener {
 
     private static final long TIME_UPDATE = 300L;
 
-    private final NoisyAudioStreamReceiver mNoisyReceiver = new NoisyAudioStreamReceiver();
-    private final IntentFilter mNoisyFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
-
     private Context context;
     private AudioFocusManager audioFocusManager;
     private MediaPlayer mediaPlayer;
     private Handler handler;
+    private NoisyAudioStreamReceiver noisyReceiver;
+    private IntentFilter noisyFilter;
     private List<Music> musicList;
     private final List<OnPlayerEventListener> listeners = new ArrayList<>();
     private int position;
@@ -61,7 +60,19 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener {
         audioFocusManager = new AudioFocusManager(context);
         mediaPlayer = new MediaPlayer();
         handler = new Handler(Looper.getMainLooper());
-        mediaPlayer.setOnCompletionListener(this);
+        noisyReceiver = new NoisyAudioStreamReceiver();
+        noisyFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+        mediaPlayer.setOnCompletionListener(mp -> next());
+        mediaPlayer.setOnPreparedListener(mp -> {
+            if (isPreparing()) {
+                startPlayer();
+            }
+        });
+        mediaPlayer.setOnBufferingUpdateListener((mp, percent) -> {
+            for (OnPlayerEventListener listener : listeners) {
+                listener.onBufferingUpdate(percent);
+            }
+        });
     }
 
     public void addOnPlayEventListener(OnPlayerEventListener listener) {
@@ -104,8 +115,6 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener {
             mediaPlayer.setDataSource(music.getPath());
             mediaPlayer.prepareAsync();
             state = STATE_PREPARING;
-            mediaPlayer.setOnPreparedListener(mPreparedListener);
-            mediaPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);
             for (OnPlayerEventListener listener : listeners) {
                 listener.onChange(music);
             }
@@ -122,18 +131,6 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener {
         Music music = musicList.remove(position);
         DBManager.get().getMusicDao().delete(music);
     }
-
-    private MediaPlayer.OnPreparedListener mPreparedListener = mp -> {
-        if (isPreparing()) {
-            startPlayer();
-        }
-    };
-
-    private MediaPlayer.OnBufferingUpdateListener mBufferingUpdateListener = (mp, percent) -> {
-        for (OnPlayerEventListener listener : listeners) {
-            listener.onBufferingUpdate(percent);
-        }
-    };
 
     public void playPause() {
         if (isPreparing()) {
@@ -158,7 +155,7 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener {
             handler.post(mPublishRunnable);
             Notifier.get().showPlay(musicList.get(position));
             MediaSessionManager.get().updatePlaybackState();
-            context.registerReceiver(mNoisyReceiver, mNoisyFilter);
+            context.registerReceiver(noisyReceiver, noisyFilter);
 
             for (OnPlayerEventListener listener : listeners) {
                 listener.onPlayerStart();
@@ -167,6 +164,10 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener {
     }
 
     public void pausePlayer() {
+        pausePlayer(true);
+    }
+
+    public void pausePlayer(boolean abandonAudioFocus) {
         if (!isPlaying()) {
             return;
         }
@@ -176,8 +177,10 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener {
         handler.removeCallbacks(mPublishRunnable);
         Notifier.get().showPause(musicList.get(position));
         MediaSessionManager.get().updatePlaybackState();
-        context.unregisterReceiver(mNoisyReceiver);
-        audioFocusManager.abandonAudioFocus();
+        context.unregisterReceiver(noisyReceiver);
+        if (abandonAudioFocus) {
+            audioFocusManager.abandonAudioFocus();
+        }
 
         for (OnPlayerEventListener listener : listeners) {
             listener.onPlayerPause();
@@ -249,11 +252,6 @@ public class AudioPlayer implements MediaPlayer.OnCompletionListener {
                 listener.onPublish(msec);
             }
         }
-    }
-
-    @Override
-    public void onCompletion(MediaPlayer mp) {
-        next();
     }
 
     private Runnable mPublishRunnable = new Runnable() {
