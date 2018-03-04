@@ -87,7 +87,7 @@ public class Notifier {
     private RemoteViews getRemoteViews(Context context, Music music, boolean isPlaying) {
         String title = music.getTitle();
         String subtitle = FileUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum());
-        Bitmap cover = CoverLoader.getInstance().loadThumbnail(music);
+        Bitmap cover = CoverLoader.get().loadThumb(music);
 
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification);
         if (cover != null) {

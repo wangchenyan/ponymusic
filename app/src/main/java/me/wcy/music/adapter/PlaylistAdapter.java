@@ -66,7 +66,7 @@ public class PlaylistAdapter extends BaseAdapter {
         }
         holder.vPlaying.setVisibility((isPlaylist && position == AudioPlayer.get().getPlayPosition()) ? View.VISIBLE : View.INVISIBLE);
         Music music = musicList.get(position);
-        Bitmap cover = CoverLoader.getInstance().loadThumbnail(music);
+        Bitmap cover = CoverLoader.get().loadThumb(music);
         holder.ivCover.setImageBitmap(cover);
         holder.tvTitle.setText(music.getTitle());
         String artist = FileUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum());

@@ -11,7 +11,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.WindowManager;
 
 import me.wcy.music.R;
 import me.wcy.music.utils.CoverLoader;
@@ -65,16 +64,20 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
         init();
     }
 
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        if (changed) {
+            initOnLayout();
+        }
+    }
+
     private void init() {
         mTopLine = getResources().getDrawable(R.drawable.play_page_cover_top_line_shape);
         mCoverBorder = getResources().getDrawable(R.drawable.play_page_cover_border_shape);
         mDiscBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.play_page_disc);
-        mDiscBitmap = ImageUtils.resizeImage(mDiscBitmap, (int) (getScreenWidth() * 0.75),
-                (int) (getScreenWidth() * 0.75));
-        mCoverBitmap = CoverLoader.getInstance().loadRound(null);
+        mCoverBitmap = CoverLoader.get().loadRound(null);
         mNeedleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.play_page_needle);
-        mNeedleBitmap = ImageUtils.resizeImage(mNeedleBitmap, (int) (getScreenWidth() * 0.25),
-                (int) (getScreenWidth() * 0.375));
         mTopLineHeight = dp2px(1);
         mCoverBorderWidth = dp2px(1);
 
@@ -86,16 +89,18 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
         mPauseAnimator.addUpdateListener(this);
     }
 
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        initSize();
-    }
+    private void initOnLayout() {
+        if (getWidth() == 0 || getHeight() == 0) {
+            return;
+        }
 
-    /**
-     * 确定图片起始坐标与旋转中心坐标
-     */
-    private void initSize() {
+        int unit = Math.min(getWidth(), getHeight()) / 8;
+        CoverLoader.get().setRoundLength(unit * 4);
+
+        mDiscBitmap = ImageUtils.resizeImage(mDiscBitmap, unit * 6, unit * 6);
+        mCoverBitmap = ImageUtils.resizeImage(mCoverBitmap, unit * 4, unit * 4);
+        mNeedleBitmap = ImageUtils.resizeImage(mNeedleBitmap, unit * 2, unit * 3);
+
         int discOffsetY = mNeedleBitmap.getHeight() / 2;
         mDiscPoint.x = (getWidth() - mDiscBitmap.getWidth()) / 2;
         mDiscPoint.y = discOffsetY;
@@ -118,8 +123,7 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
         mTopLine.draw(canvas);
         // 2.绘制黑胶唱片外侧半透明边框
         mCoverBorder.setBounds(mDiscPoint.x - mCoverBorderWidth, mDiscPoint.y - mCoverBorderWidth,
-                mDiscPoint.x + mDiscBitmap.getWidth() + mCoverBorderWidth, mDiscPoint.y +
-                        mDiscBitmap.getHeight() + mCoverBorderWidth);
+                mDiscPoint.x + mDiscBitmap.getWidth() + mCoverBorderWidth, mDiscPoint.y + mDiscBitmap.getHeight() + mCoverBorderWidth);
         mCoverBorder.draw(canvas);
         // 3.绘制黑胶
         // 设置旋转中心和旋转角度，setRotate和preTranslate顺序很重要
@@ -185,11 +189,6 @@ public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdate
             mHandler.postDelayed(this, TIME_UPDATE);
         }
     };
-
-    private int getScreenWidth() {
-        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-        return wm.getDefaultDisplay().getWidth();
-    }
 
     private int dp2px(float dpValue) {
         float scale = getContext().getResources().getDisplayMetrics().density;

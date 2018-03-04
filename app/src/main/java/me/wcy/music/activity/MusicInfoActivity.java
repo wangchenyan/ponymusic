@@ -75,7 +75,7 @@ public class MusicInfoActivity extends BaseActivity implements View.OnClickListe
             finish();
         }
         mMusicFile = new File(mMusic.getPath());
-        mCoverBitmap = CoverLoader.getInstance().loadThumbnail(mMusic);
+        mCoverBitmap = CoverLoader.get().loadThumb(mMusic);
 
         initView();
     }

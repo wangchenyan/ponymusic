@@ -11,6 +11,8 @@ import android.text.TextUtils;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import me.wcy.music.R;
 import me.wcy.music.model.Music;
@@ -23,23 +25,17 @@ public class CoverLoader {
     public static final int THUMBNAIL_MAX_LENGTH = 500;
     private static final String KEY_NULL = "null";
 
-    // 封面缓存
-    private LruCache<String, Bitmap> mCoverCache;
-    private Context mContext;
+    private Context context;
+    private Map<Type, LruCache<String, Bitmap>> cacheMap;
+    private int roundLength = ScreenUtils.getScreenWidth() / 2;
 
     private enum Type {
-        THUMBNAIL(""),
-        BLUR("#BLUR"),
-        ROUND("#ROUND");
-
-        private String value;
-
-        Type(String value) {
-            this.value = value;
-        }
+        THUMB,
+        ROUND,
+        BLUR
     }
 
-    public static CoverLoader getInstance() {
+    public static CoverLoader get() {
         return SingletonHolder.instance;
     }
 
@@ -48,11 +44,16 @@ public class CoverLoader {
     }
 
     private CoverLoader() {
+    }
+
+    public void init(Context context) {
+        this.context = context.getApplicationContext();
+
         // 获取当前进程的可用内存（单位KB）
         int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
         // 缓存大小为当前进程可用内存的1/8
         int cacheSize = maxMemory / 8;
-        mCoverCache = new LruCache<String, Bitmap>(cacheSize) {
+        LruCache<String, Bitmap> thumbCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected int sizeOf(String key, Bitmap bitmap) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -62,61 +63,72 @@ public class CoverLoader {
                 }
             }
         };
+        LruCache<String, Bitmap> roundCache = new LruCache<>(10);
+        LruCache<String, Bitmap> blurCache = new LruCache<>(10);
+
+        cacheMap = new HashMap<>(3);
+        cacheMap.put(Type.THUMB, thumbCache);
+        cacheMap.put(Type.ROUND, roundCache);
+        cacheMap.put(Type.BLUR, blurCache);
     }
 
-    public void init(Context context) {
-        mContext = context.getApplicationContext();
+    public void setRoundLength(int roundLength) {
+        if (this.roundLength != roundLength) {
+            this.roundLength = roundLength;
+            cacheMap.get(Type.ROUND).evictAll();
+        }
     }
 
-    public Bitmap loadThumbnail(Music music) {
-        return loadCover(music, Type.THUMBNAIL);
-    }
-
-    public Bitmap loadBlur(Music music) {
-        return loadCover(music, Type.BLUR);
+    public Bitmap loadThumb(Music music) {
+        return loadCover(music, Type.THUMB);
     }
 
     public Bitmap loadRound(Music music) {
         return loadCover(music, Type.ROUND);
     }
 
+    public Bitmap loadBlur(Music music) {
+        return loadCover(music, Type.BLUR);
+    }
+
     private Bitmap loadCover(Music music, Type type) {
         Bitmap bitmap;
-        String key = getKey(music, type);
+        String key = getKey(music);
+        LruCache<String, Bitmap> cache = cacheMap.get(type);
         if (TextUtils.isEmpty(key)) {
-            bitmap = mCoverCache.get(KEY_NULL.concat(type.value));
+            bitmap = cache.get(KEY_NULL);
             if (bitmap != null) {
                 return bitmap;
             }
 
             bitmap = getDefaultCover(type);
-            mCoverCache.put(KEY_NULL.concat(type.value), bitmap);
+            cache.put(KEY_NULL, bitmap);
             return bitmap;
         }
 
-        bitmap = mCoverCache.get(key);
+        bitmap = cache.get(key);
         if (bitmap != null) {
             return bitmap;
         }
 
         bitmap = loadCoverByType(music, type);
         if (bitmap != null) {
-            mCoverCache.put(key, bitmap);
+            cache.put(key, bitmap);
             return bitmap;
         }
 
         return loadCover(null, type);
     }
 
-    private String getKey(Music music, Type type) {
+    private String getKey(Music music) {
         if (music == null) {
             return null;
         }
 
         if (music.getType() == Music.Type.LOCAL && music.getAlbumId() > 0) {
-            return String.valueOf(music.getAlbumId()).concat(type.value);
+            return String.valueOf(music.getAlbumId());
         } else if (music.getType() == Music.Type.ONLINE && !TextUtils.isEmpty(music.getCoverPath())) {
-            return music.getCoverPath().concat(type.value);
+            return music.getCoverPath();
         } else {
             return null;
         }
@@ -124,14 +136,14 @@ public class CoverLoader {
 
     private Bitmap getDefaultCover(Type type) {
         switch (type) {
-            case BLUR:
-                return BitmapFactory.decodeResource(mContext.getResources(), R.drawable.play_page_default_bg);
             case ROUND:
-                Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.play_page_default_cover);
-                bitmap = ImageUtils.resizeImage(bitmap, ScreenUtils.getScreenWidth() / 2, ScreenUtils.getScreenWidth() / 2);
+                Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.play_page_default_cover);
+                bitmap = ImageUtils.resizeImage(bitmap, roundLength, roundLength);
                 return bitmap;
+            case BLUR:
+                return BitmapFactory.decodeResource(context.getResources(), R.drawable.play_page_default_bg);
             default:
-                return BitmapFactory.decodeResource(mContext.getResources(), R.drawable.default_cover);
+                return BitmapFactory.decodeResource(context.getResources(), R.drawable.default_cover);
         }
     }
 
@@ -144,11 +156,11 @@ public class CoverLoader {
         }
 
         switch (type) {
+            case ROUND:
+                bitmap = ImageUtils.resizeImage(bitmap, roundLength, roundLength);
+                return ImageUtils.createCircleImage(bitmap);
             case BLUR:
                 return ImageUtils.blur(bitmap);
-            case ROUND:
-                bitmap = ImageUtils.resizeImage(bitmap, ScreenUtils.getScreenWidth() / 2, ScreenUtils.getScreenWidth() / 2);
-                return ImageUtils.createCircleImage(bitmap);
             default:
                 return bitmap;
         }
@@ -159,7 +171,7 @@ public class CoverLoader {
      * 本地音乐
      */
     private Bitmap loadCoverFromMediaStore(long albumId) {
-        ContentResolver resolver = mContext.getContentResolver();
+        ContentResolver resolver = context.getContentResolver();
         Uri uri = MusicUtils.getMediaStoreAlbumCoverUri(albumId);
         InputStream is;
         try {

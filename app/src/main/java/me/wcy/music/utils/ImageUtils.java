@@ -273,6 +273,10 @@ public class ImageUtils {
             return null;
         }
 
+        if (source.getWidth() == dstWidth && source.getHeight() == dstHeight) {
+            return source;
+        }
+
         return Bitmap.createScaledBitmap(source, dstWidth, dstHeight, true);
     }
 

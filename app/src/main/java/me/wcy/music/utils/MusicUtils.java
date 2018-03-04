@@ -89,7 +89,7 @@ public class MusicUtils {
             music.setFileSize(fileSize);
             if (++i <= 20) {
                 // 只加载前20首的缩略图
-                CoverLoader.getInstance().loadThumbnail(music);
+                CoverLoader.get().loadThumb(music);
             }
             musicList.add(music);
         }

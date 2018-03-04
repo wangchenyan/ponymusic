@@ -48,7 +48,7 @@ public class AppCache {
         Preferences.init(mContext);
         ScreenUtils.init(mContext);
         CrashHandler.getInstance().init();
-        CoverLoader.getInstance().init(mContext);
+        CoverLoader.get().init(mContext);
         application.registerActivityLifecycleCallbacks(new ActivityLifecycle());
     }
 

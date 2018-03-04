@@ -347,8 +347,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void setCoverAndBg(Music music) {
-        mAlbumCoverView.setCoverBitmap(CoverLoader.getInstance().loadRound(music));
-        ivPlayingBg.setImageBitmap(CoverLoader.getInstance().loadBlur(music));
+        mAlbumCoverView.setCoverBitmap(CoverLoader.get().loadRound(music));
+        ivPlayingBg.setImageBitmap(CoverLoader.get().loadBlur(music));
     }
 
     private void setLrc(final Music music) {

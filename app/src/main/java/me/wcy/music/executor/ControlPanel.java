@@ -66,7 +66,7 @@ public class ControlPanel implements View.OnClickListener, OnPlayerEventListener
         if (music == null) {
             return;
         }
-        Bitmap cover = CoverLoader.getInstance().loadThumbnail(music);
+        Bitmap cover = CoverLoader.get().loadThumb(music);
         ivPlayBarCover.setImageBitmap(cover);
         tvPlayBarTitle.setText(music.getTitle());
         tvPlayBarArtist.setText(music.getArtist());
