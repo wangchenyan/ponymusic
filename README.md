@@ -1,5 +1,5 @@
 # 波尼音乐
-![](https://raw.githubusercontent.com/wangchenyan/PonyMusic/master/app/src/main/res/drawable-xxhdpi/ic_launcher.png)
+![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/app/src/main/res/drawable-xxhdpi/ic_launcher.png)
 
 ## 系列文章
 - [Android开源在线音乐播放器——波尼音乐](http://www.jianshu.com/p/1c0f5c4f64fa)
@@ -11,7 +11,7 @@
 ## 前言
 毕业设计做的项目，答辩完了，就共享出来。
 
-- 项目地址：https://github.com/wangchenyan/PonyMusic
+- 项目地址：https://github.com/wangchenyan/ponymusic
 - 有问题请提Issues
 - 如果喜欢，欢迎Star！
 
@@ -147,12 +147,12 @@ protected void onDraw(Canvas canvas) {
 ```
 
 ## 截图
-![](https://raw.githubusercontent.com/wangchenyan/PonyMusic/master/art/screenshot_01.jpg)
-![](https://raw.githubusercontent.com/wangchenyan/PonyMusic/master/art/screenshot_02.jpg)
-![](https://raw.githubusercontent.com/wangchenyan/PonyMusic/master/art/screenshot_03.jpg)
-![](https://raw.githubusercontent.com/wangchenyan/PonyMusic/master/art/screenshot_04.jpg)
-![](https://raw.githubusercontent.com/wangchenyan/PonyMusic/master/art/screenshot_05.jpg)
-![](https://raw.githubusercontent.com/wangchenyan/PonyMusic/master/art/screenshot_06.jpg)
+![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/screenshot_01.jpg)
+![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/screenshot_02.jpg)
+![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/screenshot_03.jpg)
+![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/screenshot_04.jpg)
+![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/screenshot_05.jpg)
+![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/screenshot_06.jpg)
 
 ## 关于作者
 简书：http://www.jianshu.com/users/3231579893ac<br>
