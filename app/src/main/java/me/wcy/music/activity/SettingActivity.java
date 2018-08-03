@@ -28,13 +28,11 @@ public class SettingActivity extends BaseActivity {
     @Override
     protected void onServiceBound() {
         SettingFragment settingFragment = new SettingFragment();
-        getFragmentManager()
-                .beginTransaction()
-                .replace(R.id.ll_fragment_container, settingFragment)
-                .commit();
+        getFragmentManager().beginTransaction().replace(R.id.ll_fragment_container, settingFragment).commit();
     }
 
-    public static class SettingFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
+    public static class SettingFragment extends PreferenceFragment
+            implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
         private Preference mSoundEffect;
         private Preference mFilterSize;
         private Preference mFilterTime;
@@ -51,8 +49,10 @@ public class SettingActivity extends BaseActivity {
             mFilterSize.setOnPreferenceChangeListener(this);
             mFilterTime.setOnPreferenceChangeListener(this);
 
-            mFilterSize.setSummary(getSummary(Preferences.getFilterSize(), R.array.filter_size_entries, R.array.filter_size_entry_values));
-            mFilterTime.setSummary(getSummary(Preferences.getFilterTime(), R.array.filter_time_entries, R.array.filter_time_entry_values));
+            mFilterSize.setSummary(getSummary(Preferences.getFilterSize(), R.array.filter_size_entries,
+                    R.array.filter_size_entry_values));
+            mFilterTime.setSummary(getSummary(Preferences.getFilterTime(), R.array.filter_time_entries,
+                    R.array.filter_time_entry_values));
         }
 
         @Override
@@ -88,13 +88,15 @@ public class SettingActivity extends BaseActivity {
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             if (preference == mFilterSize) {
                 Preferences.saveFilterSize((String) newValue);
-                mFilterSize.setSummary(getSummary(Preferences.getFilterSize(), R.array.filter_size_entries, R.array.filter_size_entry_values));
-                RxBus.get().post(RxBusTags.SCAN_MUSIC, new Object());
+                mFilterSize.setSummary(getSummary(Preferences.getFilterSize(), R.array.filter_size_entries,
+                        R.array.filter_size_entry_values));
+                RxBus.get().post(RxBusTags.SCAN_MUSIC, 1);
                 return true;
             } else if (preference == mFilterTime) {
                 Preferences.saveFilterTime((String) newValue);
-                mFilterTime.setSummary(getSummary(Preferences.getFilterTime(), R.array.filter_time_entries, R.array.filter_time_entry_values));
-                RxBus.get().post(RxBusTags.SCAN_MUSIC, new Object());
+                mFilterTime.setSummary(getSummary(Preferences.getFilterTime(), R.array.filter_time_entries,
+                        R.array.filter_time_entry_values));
+                RxBus.get().post(RxBusTags.SCAN_MUSIC, 1);
                 return true;
             }
             return false;

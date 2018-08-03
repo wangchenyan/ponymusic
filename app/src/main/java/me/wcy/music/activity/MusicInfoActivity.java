@@ -14,15 +14,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.hwangjr.rxbus.RxBus;
-
 import java.io.File;
 import java.util.Locale;
 
 import me.wcy.music.R;
 import me.wcy.music.constants.Extras;
 import me.wcy.music.constants.RequestCode;
-import me.wcy.music.constants.RxBusTags;
 import me.wcy.music.model.Music;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.FileUtils;
@@ -121,8 +118,7 @@ public class MusicInfoActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         PermissionReq.with(this)
-                .permissions(Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .permissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .result(new PermissionReq.Result() {
                     @Override
                     public void onGranted() {
@@ -164,8 +160,7 @@ public class MusicInfoActivity extends BaseActivity implements View.OnClickListe
             return;
         }
 
-        ID3Tags id3Tags = new ID3Tags.Builder()
-                .setCoverBitmap(mCoverBitmap)
+        ID3Tags id3Tags = new ID3Tags.Builder().setCoverBitmap(mCoverBitmap)
                 .setTitle(etTitle.getText().toString())
                 .setArtist(etArtist.getText().toString())
                 .setAlbum(etAlbum.getText().toString())
@@ -175,8 +170,6 @@ public class MusicInfoActivity extends BaseActivity implements View.OnClickListe
         // 刷新媒体库
         Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(mMusicFile));
         sendBroadcast(intent);
-
-        handler.postDelayed(() -> RxBus.get().post(RxBusTags.SCAN_MUSIC, new Object()), 1000);
 
         ToastUtils.show("保存成功");
     }

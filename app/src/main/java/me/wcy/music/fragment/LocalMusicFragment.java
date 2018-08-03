@@ -1,14 +1,13 @@
 package me.wcy.music.fragment;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -26,7 +25,6 @@ import com.hwangjr.rxbus.annotation.Subscribe;
 import com.hwangjr.rxbus.annotation.Tag;
 
 import java.io.File;
-import java.util.List;
 
 import me.wcy.music.R;
 import me.wcy.music.activity.MusicInfoActivity;
@@ -36,9 +34,9 @@ import me.wcy.music.application.AppCache;
 import me.wcy.music.constants.Keys;
 import me.wcy.music.constants.RequestCode;
 import me.wcy.music.constants.RxBusTags;
+import me.wcy.music.loader.MusicLoaderCallback;
 import me.wcy.music.model.Music;
 import me.wcy.music.service.AudioPlayer;
-import me.wcy.music.utils.MusicUtils;
 import me.wcy.music.utils.PermissionReq;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.binding.Bind;
@@ -53,11 +51,13 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     @Bind(R.id.v_searching)
     private TextView vSearching;
 
+    private Loader<Cursor> loader;
     private PlaylistAdapter adapter;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_local_music, container, false);
     }
 
@@ -68,37 +68,18 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         adapter = new PlaylistAdapter(AppCache.get().getLocalMusicList());
         adapter.setOnMoreClickListener(this);
         lvLocalMusic.setAdapter(adapter);
-        if (AppCache.get().getLocalMusicList().isEmpty()) {
-            scanMusic(null);
-        }
+        loadMusic();
     }
 
-    @Subscribe(tags = {@Tag(RxBusTags.SCAN_MUSIC)})
-    public void scanMusic(Object object) {
+    private void loadMusic() {
         lvLocalMusic.setVisibility(View.GONE);
         vSearching.setVisibility(View.VISIBLE);
         PermissionReq.with(this)
-                .permissions(Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .permissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .result(new PermissionReq.Result() {
-                    @SuppressLint("StaticFieldLeak")
                     @Override
                     public void onGranted() {
-                        new AsyncTask<Void, Void, List<Music>>() {
-                            @Override
-                            protected List<Music> doInBackground(Void... params) {
-                                return MusicUtils.scanMusic(getContext());
-                            }
-
-                            @Override
-                            protected void onPostExecute(List<Music> musicList) {
-                                AppCache.get().getLocalMusicList().clear();
-                                AppCache.get().getLocalMusicList().addAll(musicList);
-                                lvLocalMusic.setVisibility(View.VISIBLE);
-                                vSearching.setVisibility(View.GONE);
-                                adapter.notifyDataSetChanged();
-                            }
-                        }.execute();
+                        initLoader();
                     }
 
                     @Override
@@ -109,6 +90,23 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
                     }
                 })
                 .request();
+    }
+
+    private void initLoader() {
+        loader = getActivity().getLoaderManager().initLoader(0, null, new MusicLoaderCallback(getContext(), value -> {
+            AppCache.get().getLocalMusicList().clear();
+            AppCache.get().getLocalMusicList().addAll(value);
+            lvLocalMusic.setVisibility(View.VISIBLE);
+            vSearching.setVisibility(View.GONE);
+            adapter.notifyDataSetChanged();
+        }));
+    }
+
+    @Subscribe(tags = { @Tag(RxBusTags.SCAN_MUSIC) })
+    public void scanMusic(Object object) {
+        if (loader != null) {
+            loader.forceLoad();
+        }
     }
 
     @Override
@@ -175,8 +173,8 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     private void setRingtone(Music music) {
         Uri uri = MediaStore.Audio.Media.getContentUriForPath(music.getPath());
         // 查询音乐文件在媒体库是否存在
-        Cursor cursor = getContext().getContentResolver().query(uri, null,
-                MediaStore.MediaColumns.DATA + "=?", new String[]{music.getPath()}, null);
+        Cursor cursor = getContext().getContentResolver()
+                .query(uri, null, MediaStore.MediaColumns.DATA + "=?", new String[] { music.getPath() }, null);
         if (cursor == null) {
             return;
         }
@@ -189,8 +187,8 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
             values.put(MediaStore.Audio.Media.IS_NOTIFICATION, false);
             values.put(MediaStore.Audio.Media.IS_PODCAST, false);
 
-            getContext().getContentResolver().update(uri, values, MediaStore.MediaColumns.DATA + "=?",
-                    new String[]{music.getPath()});
+            getContext().getContentResolver()
+                    .update(uri, values, MediaStore.MediaColumns.DATA + "=?", new String[] { music.getPath() });
             Uri newUri = ContentUris.withAppendedId(uri, Long.valueOf(_id));
             RingtoneManager.setActualDefaultRingtoneUri(getContext(), RingtoneManager.TYPE_RINGTONE, newUri);
             ToastUtils.show(R.string.setting_ringtone_success);
@@ -206,10 +204,9 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
         dialog.setPositiveButton(R.string.delete, (dialog1, which) -> {
             File file = new File(music.getPath());
             if (file.delete()) {
-                AppCache.get().getLocalMusicList().remove(music);
-                adapter.notifyDataSetChanged();
                 // 刷新媒体库
-                Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://".concat(music.getPath())));
+                Intent intent =
+                        new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://".concat(music.getPath())));
                 getContext().sendBroadcast(intent);
             }
         });
