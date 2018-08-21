@@ -55,7 +55,7 @@
 - First Release
 
 ## 下载地址
-蒲公英：https://www.pgyer.com/ponymusic
+fir：https://fir.im/ponymusic
 
 ## TODO
 - [ ] 在线音乐可以免下载加入我的音乐列表
