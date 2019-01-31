@@ -2,11 +2,11 @@
 ![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/app/src/main/res/drawable-xxhdpi/ic_launcher.png)
 
 ## 系列文章
-- [Android开源在线音乐播放器——波尼音乐](http://www.jianshu.com/p/1c0f5c4f64fa)
-- [Android开源音乐播放器之播放器基本功能](http://www.jianshu.com/p/bc2f779a5400)
-- [Android开源音乐播放器之高仿云音乐黑胶唱片](http://www.jianshu.com/p/f1d8eb8bb3e5)
-- [Android开源音乐播放器之自动滚动歌词](http://www.jianshu.com/p/0feb6171b0c5)
-- [Android开源音乐播放器之在线音乐列表自动加载更多](http://www.jianshu.com/p/576564627c96)
+- [Android开源在线音乐播放器——波尼音乐](https://juejin.im/post/5c373a32e51d4551cc6df6db)
+- [Android开源音乐播放器之播放器基本功能](https://juejin.im/post/5c373a32e51d45521315fc50)
+- [Android开源音乐播放器之高仿云音乐黑胶唱片](https://juejin.im/post/5c373a336fb9a04a016488e8)
+- [Android开源音乐播放器之自动滚动歌词](https://juejin.im/post/5c373a336fb9a049f43b85de)
+- [Android开源音乐播放器之在线音乐列表自动加载更多](https://juejin.im/post/5c373a336fb9a049b82aaaaf)
 
 ## 前言
 毕业设计做的项目，答辩完了，就共享出来。
@@ -155,7 +155,7 @@ protected void onDraw(Canvas canvas) {
 ![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/screenshot_06.jpg)
 
 ## 关于作者
-简书：http://www.jianshu.com/users/3231579893ac<br>
+掘金：https://juejin.im/user/58abd9f1da2f607e924e945a<br>
 微博：http://weibo.com/wangchenyan1993
 
 ## License
