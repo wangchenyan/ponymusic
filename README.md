@@ -55,7 +55,9 @@
 - First Release
 
 ## 下载地址
-fir：https://fir.im/ponymusic
+https://raw.githubusercontent.com/wangchenyan/ponymusic/master/release/ponymusic_1.3.1.apk
+
+![二维码](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/release/ponymusic_1.3.1.png)
 
 ## TODO
 - [x] 在线音乐可以免下载加入我的音乐列表
