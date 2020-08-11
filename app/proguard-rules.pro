@@ -1,12 +1,14 @@
+# Android Support
+-keep class android.support.** { *; }
+
+# JID3
+-dontwarn org.blinkenlights.jid3.**
+
 # okhttputils
 -dontwarn com.zhy.http.**
 -keep class com.zhy.http.** { *; }
-
 -dontwarn okio.**
 -dontwarn okhttp3.**
--dontwarn org.blinkenlights.jid3.**
-
--keep class android.support.** { *; }
 
 # glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
