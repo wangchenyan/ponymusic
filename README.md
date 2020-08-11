@@ -57,6 +57,8 @@
 ## 下载地址
 https://raw.githubusercontent.com/wangchenyan/ponymusic/master/release/ponymusic_1.3.1.apk
 
+扫码下载
+
 ![二维码](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/release/ponymusic_1.3.1.png)
 
 ## TODO
