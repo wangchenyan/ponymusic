@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -21,12 +20,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import me.wcy.lrcview.LrcView;
 import me.wcy.music.R;
-import me.wcy.music.adapter.PlayPagerAdapter;
 import me.wcy.music.constants.Actions;
 import me.wcy.music.enums.PlayModeEnum;
 import me.wcy.music.executor.SearchLrc;
@@ -41,15 +37,13 @@ import me.wcy.music.utils.SystemUtils;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.binding.Bind;
 import me.wcy.music.widget.AlbumCoverView;
-import me.wcy.music.widget.IndicatorLayout;
 
 /**
  * 正在播放界面
  * Created by wcy on 2015/11/27.
  */
 public class PlayFragment extends BaseFragment implements View.OnClickListener,
-        ViewPager.OnPageChangeListener, SeekBar.OnSeekBarChangeListener, OnPlayerEventListener,
-        LrcView.OnPlayClickListener {
+        SeekBar.OnSeekBarChangeListener, OnPlayerEventListener, LrcView.OnPlayClickListener {
     @Bind(R.id.ll_content)
     private LinearLayout llContent;
     @Bind(R.id.iv_play_page_bg)
@@ -60,10 +54,14 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     private TextView tvTitle;
     @Bind(R.id.tv_artist)
     private TextView tvArtist;
-    @Bind(R.id.vp_play_page)
-    private ViewPager vpPlay;
-    @Bind(R.id.il_indicator)
-    private IndicatorLayout ilIndicator;
+    @Bind(R.id.album_cover_view)
+    private AlbumCoverView mAlbumCoverView;
+    @Bind(R.id.ll_lrc)
+    private View lrcLayout;
+    @Bind(R.id.sb_volume)
+    private SeekBar sbVolume;
+    @Bind(R.id.lrc_view)
+    private LrcView mLrcView;
     @Bind(R.id.sb_progress)
     private SeekBar sbProgress;
     @Bind(R.id.tv_current_time)
@@ -78,13 +76,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     private ImageView ivNext;
     @Bind(R.id.iv_prev)
     private ImageView ivPrev;
-    private AlbumCoverView mAlbumCoverView;
-    private LrcView mLrcViewSingle;
-    private LrcView mLrcViewFull;
-    private SeekBar sbVolume;
 
     private AudioManager mAudioManager;
-    private List<View> mViewPagerContent;
     private int mLastProgress;
     private boolean isDraggingProgress;
 
@@ -99,8 +92,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         super.onActivityCreated(savedInstanceState);
 
         initSystemBar();
-        initViewPager();
-        ilIndicator.create(mViewPagerContent.size());
+        initCoverLrc();
         initPlayMode();
         onChangeImpl(AudioPlayer.get().getPlayMusic());
         AudioPlayer.get().addOnPlayEventListener(this);
@@ -122,7 +114,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         ivNext.setOnClickListener(this);
         sbProgress.setOnSeekBarChangeListener(this);
         sbVolume.setOnSeekBarChangeListener(this);
-        vpPlay.addOnPageChangeListener(this);
     }
 
     /**
@@ -135,21 +126,13 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         }
     }
 
-    private void initViewPager() {
-        View coverView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_play_page_cover, null);
-        View lrcView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_play_page_lrc, null);
-        mAlbumCoverView = coverView.findViewById(R.id.album_cover_view);
-        mLrcViewSingle = coverView.findViewById(R.id.lrc_view_single);
-        mLrcViewFull = lrcView.findViewById(R.id.lrc_view_full);
-        sbVolume = lrcView.findViewById(R.id.sb_volume);
+    private void initCoverLrc() {
         mAlbumCoverView.initNeedle(AudioPlayer.get().isPlaying());
-        mLrcViewFull.setOnPlayClickListener(this);
+        mAlbumCoverView.setOnClickListener(v -> switchCoverLrc(false));
+        mLrcView.setDraggable(true, this);
+        mLrcView.setOnTapListener((view, x, y) -> switchCoverLrc(true));
         initVolume();
-
-        mViewPagerContent = new ArrayList<>(2);
-        mViewPagerContent.add(coverView);
-        mViewPagerContent.add(lrcView);
-        vpPlay.setAdapter(new PlayPagerAdapter(mViewPagerContent));
+        switchCoverLrc(true);
     }
 
     private void initVolume() {
@@ -161,6 +144,11 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     private void initPlayMode() {
         int mode = Preferences.getPlayMode();
         ivMode.setImageLevel(mode);
+    }
+
+    private void switchCoverLrc(boolean showCover) {
+        mAlbumCoverView.setVisibility(showCover ? View.VISIBLE : View.GONE);
+        lrcLayout.setVisibility(showCover ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -189,9 +177,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
             sbProgress.setProgress(progress);
         }
 
-        if (mLrcViewSingle.hasLrc()) {
-            mLrcViewSingle.updateTime(progress);
-            mLrcViewFull.updateTime(progress);
+        if (mLrcView.hasLrc()) {
+            mLrcView.updateTime(progress);
         }
     }
 
@@ -222,19 +209,6 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        ilIndicator.setCurrent(position);
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-    }
-
-    @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (seekBar == sbProgress) {
             if (Math.abs(progress - mLastProgress) >= DateUtils.SECOND_IN_MILLIS) {
@@ -259,9 +233,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
                 int progress = seekBar.getProgress();
                 AudioPlayer.get().seekTo(progress);
 
-                if (mLrcViewSingle.hasLrc()) {
-                    mLrcViewSingle.updateTime(progress);
-                    mLrcViewFull.updateTime(progress);
+                if (mLrcView.hasLrc()) {
+                    mLrcView.updateTime(progress);
                 }
             } else {
                 seekBar.setProgress(0);
@@ -361,7 +334,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
                     @Override
                     public void onPrepare() {
                         // 设置tag防止歌词下载完成后已切换歌曲
-                        vpPlay.setTag(music);
+                        mLrcView.setTag(music);
 
                         loadLrc("");
                         setLrcLabel("正在搜索歌词");
@@ -369,12 +342,12 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
 
                     @Override
                     public void onExecuteSuccess(@NonNull String lrcPath) {
-                        if (vpPlay.getTag() != music) {
+                        if (mLrcView.getTag() != music) {
                             return;
                         }
 
                         // 清除tag
-                        vpPlay.setTag(null);
+                        mLrcView.setTag(null);
 
                         loadLrc(lrcPath);
                         setLrcLabel("暂无歌词");
@@ -382,12 +355,12 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
 
                     @Override
                     public void onExecuteFail(Exception e) {
-                        if (vpPlay.getTag() != music) {
+                        if (mLrcView.getTag() != music) {
                             return;
                         }
 
                         // 清除tag
-                        vpPlay.setTag(null);
+                        mLrcView.setTag(null);
 
                         setLrcLabel("暂无歌词");
                     }
@@ -401,13 +374,11 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
 
     private void loadLrc(String path) {
         File file = new File(path);
-        mLrcViewSingle.loadLrc(file);
-        mLrcViewFull.loadLrc(file);
+        mLrcView.loadLrc(file);
     }
 
     private void setLrcLabel(String label) {
-        mLrcViewSingle.setLabel(label);
-        mLrcViewFull.setLabel(label);
+        mLrcView.setLabel(label);
     }
 
     private String formatTime(long time) {

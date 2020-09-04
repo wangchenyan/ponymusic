@@ -59,20 +59,46 @@
             </LinearLayout>
         </LinearLayout>
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/vp_play_page"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:overScrollMode="never" />
+            android:layout_weight="1">
 
-        <me.wcy.music.widget.IndicatorLayout
-            android:id="@+id/il_indicator"
-            android:layout_width="wrap_content"
+            <me.wcy.music.widget.AlbumCoverView
+                android:id="@+id/album_cover_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin" />
+
+            <LinearLayout
+                android:id="@+id/ll_lrc"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <include layout="@layout/include_play_page_volume_bar" />
+
+                <me.wcy.lrcview.LrcView xmlns:lrc="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/lrc_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    lrc:lrcAnimationDuration="1000"
+                    lrc:lrcCurrentTextColor="@color/white"
+                    lrc:lrcDividerHeight="24dp"
+                    lrc:lrcNormalTextColor="@color/white_50p"
+                    lrc:lrcPadding="40dp"
+                    lrc:lrcTextSize="@dimen/text_size_common"
+                    lrc:lrcTimelineColor="@color/white_50p"
+                    lrc:lrcTimelineTextColor="#CCFFFFFF" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <include
+            layout="@layout/include_play_page_controller"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="10dp" />
-
-        <include layout="@layout/include_play_page_controller" />
+            android:layout_marginTop="15dp" />
     </LinearLayout>
 </FrameLayout>
