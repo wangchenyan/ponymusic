@@ -273,7 +273,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     }
 
     @Override
-    public boolean onPlayClick(long time) {
+    public boolean onPlayClick(LrcView view, long time) {
         if (AudioPlayer.get().isPlaying() || AudioPlayer.get().isPausing()) {
             AudioPlayer.get().seekTo((int) time);
             if (AudioPlayer.get().isPausing()) {
