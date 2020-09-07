@@ -19,8 +19,8 @@
             android:summary="@string/about_weibo"
             android:title="微博" />
         <Preference
-            android:key="juejin"
-            android:summary="@string/about_juejin"
+            android:key="blog"
+            android:summary="@string/about_blog"
             android:title="掘金" />
         <Preference
             android:key="github"

@@ -24,7 +24,7 @@ public class AboutActivity extends BaseActivity {
         private Preference mShare;
         private Preference mStar;
         private Preference mWeibo;
-        private Preference mJuejin;
+        private Preference mBlog;
         private Preference mGithub;
 
         @Override
@@ -36,7 +36,7 @@ public class AboutActivity extends BaseActivity {
             mShare = findPreference("share");
             mStar = findPreference("star");
             mWeibo = findPreference("weibo");
-            mJuejin = findPreference("juejin");
+            mBlog = findPreference("blog");
             mGithub = findPreference("github");
 
             mVersion.setSummary("v " + BuildConfig.VERSION_NAME);
@@ -47,7 +47,7 @@ public class AboutActivity extends BaseActivity {
             mShare.setOnPreferenceClickListener(this);
             mStar.setOnPreferenceClickListener(this);
             mWeibo.setOnPreferenceClickListener(this);
-            mJuejin.setOnPreferenceClickListener(this);
+            mBlog.setOnPreferenceClickListener(this);
             mGithub.setOnPreferenceClickListener(this);
         }
 
@@ -59,7 +59,7 @@ public class AboutActivity extends BaseActivity {
             } else if (preference == mStar) {
                 openUrl(getString(R.string.about_project_url));
                 return true;
-            } else if (preference == mWeibo || preference == mJuejin || preference == mGithub) {
+            } else if (preference == mWeibo || preference == mBlog || preference == mGithub) {
                 openUrl(preference.getSummary().toString());
                 return true;
             }
@@ -69,7 +69,7 @@ public class AboutActivity extends BaseActivity {
         private void share() {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
-            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app, getString(R.string.app_name)));
+            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app, getString(R.string.app_name), getString(R.string.about_project_url)));
             startActivity(Intent.createChooser(intent, getString(R.string.share)));
         }
 
