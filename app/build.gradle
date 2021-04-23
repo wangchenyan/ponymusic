@@ -70,12 +70,12 @@ dependencies {
     implementation "com.android.support:appcompat-v7:$SUPPORT_VERSION"
     implementation "com.android.support:design:$SUPPORT_VERSION"
     implementation "com.android.support:support-media-compat:$SUPPORT_VERSION"
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation 'com.squareup.okhttp3:okhttp:3.14.2'
+    implementation 'com.android.support.constraint:constraint-layout:2.0.4'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
     implementation 'com.zhy:okhttputils:2.6.2'
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.github.bumptech.glide:glide:3.8.0'
-    implementation 'me.wcy:lrcview:2.2'
+    implementation 'com.github.wangchenyan:lrcview:2.2'
     implementation 'com.hwangjr.rxbus:rxbus:2.0.0'
     implementation 'org.greenrobot:greendao:3.3.0'
 }
