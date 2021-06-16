@@ -1,6 +1,8 @@
 # 波尼音乐
 ![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/app/src/main/res/drawable-xxhdpi/ic_launcher.png)
 
+# 由于百度关闭了在线音乐 API 接口，所以本 APP 的在线音乐功能失效，目前还没找到替代方案，不是 bug，请大家不要诧异。
+
 ## 系列文章
 - [Android开源在线音乐播放器——波尼音乐](https://juejin.im/post/5c373a32e51d4551cc6df6db)
 - [Android开源音乐播放器之播放器基本功能](https://juejin.im/post/5c373a32e51d45521315fc50)
