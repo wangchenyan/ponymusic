@@ -57,8 +57,7 @@
 - First Release
 
 ## 下载地址
-### V1.3.1
-https://github.com/wangchenyan/ponymusic/releases/download/1.3.1/ponymusic-1.3.1.apk
+[点击下载](https://github.com/wangchenyan/ponymusic/releases)
 
 ## TODO
 - [x] 在线音乐可以免下载加入我的音乐列表
