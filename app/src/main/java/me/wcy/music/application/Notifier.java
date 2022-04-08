@@ -32,7 +32,7 @@ import me.wcy.music.utils.FileUtils;
 public class Notifier {
     private static final int NOTIFICATION_ID = 0x111;
     private PlayService playService;
-    private NotificationManager notificationManager;
+    private NotificationManager notificationManager;    // 状态栏通知的管理类
 
     public static Notifier get() {
         return SingletonHolder.instance;
@@ -50,6 +50,8 @@ public class Notifier {
         notificationManager = (NotificationManager) playService.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
+    /* android 的自动回收内存的机制可能杀死服务，通过 startForeground 保护服务 */
+    // 播放时启动前台服务
     public void showPlay(Music music) {
         if (music == null) {
             return;
@@ -57,6 +59,7 @@ public class Notifier {
         playService.startForeground(NOTIFICATION_ID, buildNotification(playService, music, true));
     }
 
+    // 暂停时取消前台服务
     public void showPause(Music music) {
         if (music == null) {
             return;

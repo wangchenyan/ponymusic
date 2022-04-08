@@ -32,6 +32,7 @@ import me.wcy.music.utils.id3.ID3TagUtils;
 import me.wcy.music.utils.id3.ID3Tags;
 
 public class MusicInfoActivity extends BaseActivity implements View.OnClickListener {
+    // 歌曲信息
     @Bind(R.id.iv_music_info_cover)
     private ImageView ivCover;
     @Bind(R.id.et_music_info_title)

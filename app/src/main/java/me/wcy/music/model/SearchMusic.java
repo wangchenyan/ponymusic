@@ -8,6 +8,8 @@ import java.util.List;
  * JavaBean
  * Created by hzwangchenyan on 2016/1/13.
  */
+
+// 搜索到的歌曲列表
 public class SearchMusic {
     @SerializedName("song")
     private List<Song> song;
@@ -20,6 +22,7 @@ public class SearchMusic {
         this.song = song;
     }
 
+    // 歌曲（歌曲名，作者，歌曲编号）
     public static class Song {
         @SerializedName("songname")
         private String songname;

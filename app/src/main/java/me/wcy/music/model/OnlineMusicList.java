@@ -30,6 +30,7 @@ public class OnlineMusicList {
         this.billboard = billboard;
     }
 
+    // 布告牌
     public static class Billboard {
         @SerializedName("update_date")
         private String update_date;

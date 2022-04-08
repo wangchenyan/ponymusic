@@ -20,6 +20,7 @@ public class AboutActivity extends BaseActivity {
     }
 
     public static class AboutFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
+        // 首选项，下次应用调用时仍然有效
         private Preference mVersion;
         private Preference mShare;
         private Preference mStar;
@@ -67,6 +68,7 @@ public class AboutActivity extends BaseActivity {
         }
 
         private void share() {
+            // 使用 intent 启动 activity
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
             intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app, getString(R.string.app_name), getString(R.string.about_project_url)));

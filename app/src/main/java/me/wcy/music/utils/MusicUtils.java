@@ -22,6 +22,7 @@ import me.wcy.music.storage.preference.Preferences;
  * Created by wcy on 2015/11/27.
  */
 public class MusicUtils {
+    // MediaStore: android 系统提供的多媒体数据库，存储多媒体数据（音频、视频、图像）
     private static final String SELECTION = MediaStore.Audio.AudioColumns.SIZE + " >= ? AND " + MediaStore.Audio.AudioColumns.DURATION + " >= ?";
 
     /**
@@ -51,7 +52,7 @@ public class MusicUtils {
                 SELECTION,
                 new String[]{
                         String.valueOf(filterSize),
-                        String.valueOf(filterTime)
+                        String.valueOf(filterTime)  // 根据文件大小、时长进行过滤
                 },
                 MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
         if (cursor == null) {

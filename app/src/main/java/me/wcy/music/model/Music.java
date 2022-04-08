@@ -14,6 +14,8 @@ import java.io.Serializable;
  * 单曲信息
  * Created by wcy on 2015/11/27.
  */
+
+// 一首音乐（模型性质）
 @Entity(nameInDb = "SystemMessage")
 public class Music implements Serializable {
     private static final long serialVersionUID = 536871008;

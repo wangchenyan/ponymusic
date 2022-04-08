@@ -44,6 +44,7 @@ public abstract class PlaySearchedMusic extends PlayMusic {
         HttpClient.getMusicDownloadInfo(mSong.getSongid(), new HttpCallback<DownloadInfo>() {
             @Override
             public void onSuccess(DownloadInfo response) {
+                // 空回应也视为失败
                 if (response == null || response.getBitrate() == null) {
                     onFail(null);
                     return;

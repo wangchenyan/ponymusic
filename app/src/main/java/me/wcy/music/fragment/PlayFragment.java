@@ -1,5 +1,6 @@
 package me.wcy.music.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -44,40 +45,56 @@ import me.wcy.music.widget.AlbumCoverView;
  */
 public class PlayFragment extends BaseFragment implements View.OnClickListener,
         SeekBar.OnSeekBarChangeListener, OnPlayerEventListener, LrcView.OnPlayClickListener {
+    @SuppressLint("NonConstantResourceId")
     @Bind(R.id.ll_content)
     private LinearLayout llContent;
+    @SuppressLint("NonConstantResourceId")
     @Bind(R.id.iv_play_page_bg)
     private ImageView ivPlayingBg;
+    @SuppressLint("NonConstantResourceId")
     @Bind(R.id.iv_back)
     private ImageView ivBack;
+    @SuppressLint("NonConstantResourceId")
     @Bind(R.id.tv_title)
     private TextView tvTitle;
+    @SuppressLint("NonConstantResourceId")
     @Bind(R.id.tv_artist)
     private TextView tvArtist;
+    @SuppressLint("NonConstantResourceId")
     @Bind(R.id.album_cover_view)
     private AlbumCoverView mAlbumCoverView;
+    @SuppressLint("NonConstantResourceId")
     @Bind(R.id.ll_lrc)
     private View lrcLayout;
+    @SuppressLint("NonConstantResourceId")
     @Bind(R.id.sb_volume)
     private SeekBar sbVolume;
+    @SuppressLint("NonConstantResourceId")
     @Bind(R.id.lrc_view)
     private LrcView mLrcView;
+    @SuppressLint("NonConstantResourceId")
     @Bind(R.id.sb_progress)
     private SeekBar sbProgress;
+    @SuppressLint("NonConstantResourceId")
     @Bind(R.id.tv_current_time)
     private TextView tvCurrentTime;
+    @SuppressLint("NonConstantResourceId")
     @Bind(R.id.tv_total_time)
     private TextView tvTotalTime;
+    @SuppressLint("NonConstantResourceId")
     @Bind(R.id.iv_mode)
     private ImageView ivMode;
+    @SuppressLint("NonConstantResourceId")
     @Bind(R.id.iv_play)
     private ImageView ivPlay;
+    @SuppressLint("NonConstantResourceId")
     @Bind(R.id.iv_next)
     private ImageView ivNext;
+    @SuppressLint("NonConstantResourceId")
     @Bind(R.id.iv_prev)
     private ImageView ivPrev;
 
-    private AudioManager mAudioManager;
+    private AudioManager mAudioManager;     // 音频播放控制器
     private int mLastProgress;
     private boolean isDraggingProgress;
 
@@ -105,6 +122,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         getContext().registerReceiver(mVolumeReceiver, filter);
     }
 
+    // 初始化事件监听器
     @Override
     protected void setListener() {
         ivBack.setOnClickListener(this);
@@ -130,7 +148,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         mAlbumCoverView.initNeedle(AudioPlayer.get().isPlaying());
         mAlbumCoverView.setOnClickListener(v -> switchCoverLrc(false));
         mLrcView.setDraggable(true, this);
-        mLrcView.setOnTapListener((view, x, y) -> switchCoverLrc(true));
+        mLrcView.setOnTapListener((view, x, y) -> switchCoverLrc(true));    // to be fixed
         initVolume();
         switchCoverLrc(true);
     }
@@ -146,6 +164,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         ivMode.setImageLevel(mode);
     }
 
+    // 切换： 滚动歌词 <---> 专辑封面
     private void switchCoverLrc(boolean showCover) {
         mAlbumCoverView.setVisibility(showCover ? View.VISIBLE : View.GONE);
         lrcLayout.setVisibility(showCover ? View.GONE : View.VISIBLE);
@@ -187,6 +206,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         sbProgress.setSecondaryProgress(sbProgress.getMax() * 100 / percent);
     }
 
+    // 响应触摸事件
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -257,6 +277,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         return false;
     }
 
+    // 切换歌曲
     private void onChangeImpl(Music music) {
         if (music == null) {
             return;
@@ -281,6 +302,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         }
     }
 
+    // 歌曲播放、下一首、上一首
     private void play() {
         AudioPlayer.get().playPause();
     }
@@ -293,6 +315,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         AudioPlayer.get().prev();
     }
 
+    // 切换播放模式
     private void switchPlayMode() {
         PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode());
         switch (mode) {

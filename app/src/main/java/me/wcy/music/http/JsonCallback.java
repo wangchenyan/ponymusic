@@ -20,6 +20,7 @@ public abstract class JsonCallback<T> extends Callback<T> {
         gson = new Gson();
     }
 
+    // 解析网络相应为 JSON 格式
     @Override
     public T parseNetworkResponse(Response response, int id) throws IOException {
         try {

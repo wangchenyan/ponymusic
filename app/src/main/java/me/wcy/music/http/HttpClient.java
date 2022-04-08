@@ -26,11 +26,13 @@ import okhttp3.OkHttpClient;
 public class HttpClient {
     private static final String SPLASH_URL = "http://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1";
     private static final String BASE_URL = "http://tingapi.ting.baidu.com/v1/restserver/ting";
+
     private static final String METHOD_GET_MUSIC_LIST = "baidu.ting.billboard.billList";
     private static final String METHOD_DOWNLOAD_MUSIC = "baidu.ting.song.play";
     private static final String METHOD_ARTIST_INFO = "baidu.ting.artist.getInfo";
     private static final String METHOD_SEARCH_MUSIC = "baidu.ting.search.catalogSug";
     private static final String METHOD_LRC = "baidu.ting.song.lry";
+
     private static final String PARAM_METHOD = "method";
     private static final String PARAM_TYPE = "type";
     private static final String PARAM_SIZE = "size";
@@ -40,15 +42,17 @@ public class HttpClient {
     private static final String PARAM_QUERY = "query";
 
     static {
+        // 使用内部工厂类 Builder 来设置 OkHttpClient
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(10, TimeUnit.SECONDS)
+                .connectTimeout(10, TimeUnit.SECONDS)   // 设置超时
                 .readTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(10, TimeUnit.SECONDS)
-                .addInterceptor(new HttpInterceptor())
+                .addInterceptor(new HttpInterceptor())          // 添加拦截器
                 .build();
         OkHttpUtils.initClient(okHttpClient);
     }
 
+    // 获取启动界面
     public static void getSplash(@NonNull final HttpCallback<Splash> callback) {
         OkHttpUtils.get().url(SPLASH_URL).build()
                 .execute(new JsonCallback<Splash>(Splash.class) {
@@ -69,6 +73,8 @@ public class HttpClient {
                 });
     }
 
+    // 下载文件
+    // 参数： URL 目录 文件名 回调函数
     public static void downloadFile(String url, String destFileDir, String destFileName, @Nullable final HttpCallback<File> callback) {
         OkHttpUtils.get().url(url).build()
                 .execute(new FileCallBack(destFileDir, destFileName) {
@@ -99,6 +105,7 @@ public class HttpClient {
                 });
     }
 
+    // 获取在线歌曲列表
     public static void getSongListInfo(String type, int size, int offset, @NonNull final HttpCallback<OnlineMusicList> callback) {
         OkHttpUtils.get().url(BASE_URL)
                 .addParams(PARAM_METHOD, METHOD_GET_MUSIC_LIST)
@@ -124,6 +131,7 @@ public class HttpClient {
                 });
     }
 
+    // 获取音乐下载信息
     public static void getMusicDownloadInfo(String songId, @NonNull final HttpCallback<DownloadInfo> callback) {
         OkHttpUtils.get().url(BASE_URL)
                 .addParams(PARAM_METHOD, METHOD_DOWNLOAD_MUSIC)
@@ -167,6 +175,7 @@ public class HttpClient {
                 });
     }
 
+    // 获取 LRC 歌词文件
     public static void getLrc(String songId, @NonNull final HttpCallback<Lrc> callback) {
         OkHttpUtils.get().url(BASE_URL)
                 .addParams(PARAM_METHOD, METHOD_LRC)
