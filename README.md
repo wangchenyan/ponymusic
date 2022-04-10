@@ -56,7 +56,7 @@ Lrc： 歌词模型
 Splash： 启动界面模型
 
 ## service
-AudioPlayer： 音频播放服务
+AudioPlayer： 音频播放服务，对原生 API MediaPlayer 的拓展
 AudioFocusManager： 音频焦点处理服务，通知、来电、其他播放器抢占会造成音频焦点丢失，可能需要重新获取焦点
 
 ## storage
