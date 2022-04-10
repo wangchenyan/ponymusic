@@ -24,7 +24,7 @@ public abstract class BaseFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         handler = new Handler(Looper.getMainLooper());
         ViewBinder.bind(this, getView());
-        RxBus.get().register(this);
+        RxBus.get().register(this);     // 实时数据处理
     }
 
     @Override

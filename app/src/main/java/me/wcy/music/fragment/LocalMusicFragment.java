@@ -67,7 +67,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
 
         adapter = new PlaylistAdapter(AppCache.get().getLocalMusicList());
         adapter.setOnMoreClickListener(this);
-        lvLocalMusic.setAdapter(adapter);
+        lvLocalMusic.setAdapter(adapter);   // 适配器将数据以合适的方式显示至 View 中
         loadMusic();
     }
 
@@ -117,7 +117,7 @@ public class LocalMusicFragment extends BaseFragment implements AdapterView.OnIt
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Music music = AppCache.get().getLocalMusicList().get(position);
-        AudioPlayer.get().addAndPlay(music);
+        AudioPlayer.get().addAndPlay(music);    // 播放
         ToastUtils.show("已添加到播放列表");
     }
 

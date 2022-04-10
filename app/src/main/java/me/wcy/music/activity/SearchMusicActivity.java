@@ -131,7 +131,7 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
             @Override
             public void onExecuteSuccess(Music music) {
                 cancelProgress();
-                AudioPlayer.get().addAndPlay(music);
+                AudioPlayer.get().addAndPlay(music);    // 播放
                 ToastUtils.show("已添加到播放列表");
             }
 
@@ -146,6 +146,7 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
     @Override
     public void onMoreClick(int position) {
         final SearchMusic.Song song = searchMusicList.get(position);
+        // 对话框
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle(song.getSongname());
         String path = FileUtils.getMusicDir() + FileUtils.getMp3FileName(song.getArtistname(), song.getSongname());

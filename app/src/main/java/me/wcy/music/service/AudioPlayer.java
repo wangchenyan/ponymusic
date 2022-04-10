@@ -24,6 +24,7 @@ import me.wcy.music.utils.ToastUtils;
  * Created by hzwangchenyan on 2018/1/26.
  */
 public class AudioPlayer {
+    // 播放状态
     private static final int STATE_IDLE = 0;
     private static final int STATE_PREPARING = 1;
     private static final int STATE_PLAYING = 2;
@@ -37,7 +38,7 @@ public class AudioPlayer {
     private Handler handler;
     private NoisyAudioStreamReceiver noisyReceiver;
     private IntentFilter noisyFilter;
-    private List<Music> musicList;
+    private List<Music> musicList;      // 音乐列表
     private final List<OnPlayerEventListener> listeners = new ArrayList<>();
     private int state = STATE_IDLE;
 
@@ -83,8 +84,10 @@ public class AudioPlayer {
         listeners.remove(listener);
     }
 
+    // 添加并播放
     public void addAndPlay(Music music) {
         int position = musicList.indexOf(music);
+        // 音乐不在播放列表中
         if (position < 0) {
             musicList.add(music);
             DBManager.get().getMusicDao().insert(music);
@@ -108,10 +111,10 @@ public class AudioPlayer {
         Music music = getPlayMusic();
 
         try {
-            mediaPlayer.reset();
-            mediaPlayer.setDataSource(music.getPath());
-            mediaPlayer.prepareAsync();
-            state = STATE_PREPARING;
+            mediaPlayer.reset();                            // 重置
+            mediaPlayer.setDataSource(music.getPath());     // 设置多媒体数据来源
+            mediaPlayer.prepareAsync();                     // 异步准备
+            state = STATE_PREPARING;                        // 状态置为 准备中
             for (OnPlayerEventListener listener : listeners) {
                 listener.onChange(music);
             }
@@ -255,7 +258,7 @@ public class AudioPlayer {
      */
     public void seekTo(int msec) {
         if (isPlaying() || isPausing()) {
-            mediaPlayer.seekTo(msec);
+            mediaPlayer.seekTo(msec);       // 指定播放位置（单位：ms）
             MediaSessionManager.get().updatePlaybackState();
             for (OnPlayerEventListener listener : listeners) {
                 listener.onPublish(msec);

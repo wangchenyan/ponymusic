@@ -25,10 +25,10 @@ import me.wcy.music.utils.ToastUtils;
  */
 public class AppCache {
     private Context mContext;
-    private final List<Music> mLocalMusicList = new ArrayList<>();
-    private final List<SheetInfo> mSheetList = new ArrayList<>();
-    private final List<Activity> mActivityStack = new ArrayList<>();
-    private final LongSparseArray<DownloadMusicInfo> mDownloadList = new LongSparseArray<>();
+    private final List<Music> mLocalMusicList = new ArrayList<>();      // 本地音乐列表
+    private final List<SheetInfo> mSheetList = new ArrayList<>();       // 在线歌单列表
+    private final List<Activity> mActivityStack = new ArrayList<>();    // 活动栈
+    private final LongSparseArray<DownloadMusicInfo> mDownloadList = new LongSparseArray<>(); // 下载音乐信息列表
     private AMapLocalWeatherLive mAMapLocalWeatherLive;
 
     private AppCache() {
@@ -64,6 +64,7 @@ public class AppCache {
         return mSheetList;
     }
 
+    // 清空活动栈
     public void clearStack() {
         List<Activity> activityStack = mActivityStack;
         for (int i = activityStack.size() - 1; i >= 0; i--) {
@@ -87,6 +88,7 @@ public class AppCache {
         mAMapLocalWeatherLive = aMapLocalWeatherLive;
     }
 
+    // 活动生命周期
     private class ActivityLifecycle implements Application.ActivityLifecycleCallbacks {
         private static final String TAG = "Activity";
 

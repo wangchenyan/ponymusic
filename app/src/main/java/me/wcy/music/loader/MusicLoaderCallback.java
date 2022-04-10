@@ -84,8 +84,8 @@ public class MusicLoaderCallback implements LoaderManager.LoaderCallbacks {
             music.setPath(path);
             music.setFileName(fileName);
             music.setFileSize(fileSize);
-            if (++counter <= 20) {
-                // 只加载前20首的缩略图
+            if (++counter <= 30) {
+                // 只加载前20首的缩略图  20 -> 30
                 CoverLoader.get().loadThumb(music);
             }
             musicList.add(music);

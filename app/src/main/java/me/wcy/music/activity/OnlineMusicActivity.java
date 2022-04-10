@@ -1,5 +1,6 @@
 package me.wcy.music.activity;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -48,10 +49,13 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         , OnMoreClickListener, AutoLoadListView.OnLoadListener {
     private static final int MUSIC_LIST_SIZE = 20;
 
+    @SuppressLint("NonConstantResourceId")
     @Bind(R.id.lv_online_music_list)
     private AutoLoadListView lvOnlineMusic;
+    @SuppressLint("NonConstantResourceId")
     @Bind(R.id.ll_loading)
     private LinearLayout llLoading;
+    @SuppressLint("NonConstantResourceId")
     @Bind(R.id.ll_load_fail)
     private LinearLayout llLoadFail;
     private View vHeader;
@@ -186,6 +190,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                 });
     }
 
+    // 播放
     private void play(OnlineMusic onlineMusic) {
         new PlayOnlineMusic(this, onlineMusic) {
             @Override
@@ -196,7 +201,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
             @Override
             public void onExecuteSuccess(Music music) {
                 cancelProgress();
-                AudioPlayer.get().addAndPlay(music);
+                AudioPlayer.get().addAndPlay(music);    // 播放
                 ToastUtils.show("已添加到播放列表");
             }
 

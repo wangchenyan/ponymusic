@@ -24,11 +24,14 @@ public abstract class PlayOnlineMusic extends PlayMusic {
         mOnlineMusic = onlineMusic;
     }
 
+    // 获取音乐播放信息
     @Override
     protected void getPlayInfo() {
         String artist = mOnlineMusic.getArtist_name();
         String title = mOnlineMusic.getTitle();
 
+        // OnlineMusic -> Music
+        // music 为 PlayMusic 中声明的 Music 对象
         music = new Music();
         music.setType(Music.Type.ONLINE);
         music.setTitle(title);
