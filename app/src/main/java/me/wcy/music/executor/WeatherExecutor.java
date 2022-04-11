@@ -1,5 +1,6 @@
 package me.wcy.music.executor;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
@@ -67,14 +68,19 @@ import me.wcy.music.utils.binding.ViewBinder;
 public class WeatherExecutor implements IExecutor, AMapLocalWeatherListener {
     private static final String TAG = "WeatherExecutor";
     private Context mContext;
+    @SuppressLint("NonConstantResourceId")
     @Bind(R.id.ll_weather)
     private LinearLayout llWeather;
+    @SuppressLint("NonConstantResourceId")
     @Bind(R.id.iv_weather_icon)
     private ImageView ivIcon;
+    @SuppressLint("NonConstantResourceId")
     @Bind(R.id.tv_weather_temp)
     private TextView tvTemp;
+    @SuppressLint("NonConstantResourceId")
     @Bind(R.id.tv_weather_city)
     private TextView tvCity;
+    @SuppressLint("NonConstantResourceId")
     @Bind(R.id.tv_weather_wind)
     private TextView tvWind;
 
@@ -86,6 +92,7 @@ public class WeatherExecutor implements IExecutor, AMapLocalWeatherListener {
     @Override
     public void execute() {
         AMapLocalWeatherLive aMapLocalWeatherLive = AppCache.get().getAMapLocalWeatherLive();
+        // 先从 APPCache 中获取
         if (aMapLocalWeatherLive != null) {
             updateView(aMapLocalWeatherLive);
             release();
@@ -101,7 +108,9 @@ public class WeatherExecutor implements IExecutor, AMapLocalWeatherListener {
             AppCache.get().setAMapLocalWeatherLive(aMapLocalWeatherLive);
             updateView(aMapLocalWeatherLive);
         } else {
+            int errorCode = aMapLocalWeatherLive.getAMapException().getErrorCode();
             Log.e(TAG, "获取天气预报失败");
+            Log.e(TAG, "ERROR CODE：" + Integer.toString(errorCode));   // 34: 定位失败无法获取城市信息
         }
 
         release();
@@ -121,6 +130,8 @@ public class WeatherExecutor implements IExecutor, AMapLocalWeatherListener {
     }
 
     private int getWeatherIcon(String weather) {
+        // 通过字符串解析的方式判断 Icon
+        // 结合时间
         if (TextUtils.isEmpty(weather)) {
             return R.drawable.ic_weather_sunny;
         }

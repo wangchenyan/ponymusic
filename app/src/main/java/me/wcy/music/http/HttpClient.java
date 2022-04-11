@@ -25,7 +25,7 @@ import okhttp3.OkHttpClient;
  */
 public class HttpClient {
     private static final String SPLASH_URL = "http://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1";
-//    private static final String BASE_URL = "http://tingapi.ting.baidu.com/v1/restserver/ting";
+
     private static final String BASE_URL = "http://49.234.208.129/";
 
     private static final String METHOD_GET_MUSIC_LIST = "baidu.ting.billboard.billList";

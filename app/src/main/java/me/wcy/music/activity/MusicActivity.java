@@ -108,17 +108,19 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    // 更新天气信息
     private void updateWeather() {
+        // 请求位置权限
         PermissionReq.with(this)
                 .permissions(Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.ACCESS_COARSE_LOCATION)
                 .result(new PermissionReq.Result() {
                     @Override
-                    public void onGranted() {
+                    public void onGranted() {   // 获得权限
                         new WeatherExecutor(MusicActivity.this, vNavigationHeader).execute();
                     }
 
-                    @Override
+                    @Override                   // 拒绝
                     public void onDenied() {
                         ToastUtils.show(R.string.no_permission_location);
                     }

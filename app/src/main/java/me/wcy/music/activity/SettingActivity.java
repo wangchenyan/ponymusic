@@ -33,9 +33,9 @@ public class SettingActivity extends BaseActivity {
 
     public static class SettingFragment extends PreferenceFragment
             implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
-        private Preference mSoundEffect;
-        private Preference mFilterSize;
-        private Preference mFilterTime;
+        private Preference mSoundEffect;    // 音效调节
+        private Preference mFilterSize;     // 按大小过滤
+        private Preference mFilterTime;     // 按时长过滤
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,7 @@ public class SettingActivity extends BaseActivity {
             mSoundEffect = findPreference(getString(R.string.setting_key_sound_effect));
             mFilterSize = findPreference(getString(R.string.setting_key_filter_size));
             mFilterTime = findPreference(getString(R.string.setting_key_filter_time));
-            mSoundEffect.setOnPreferenceClickListener(this);
+            mSoundEffect.setOnPreferenceClickListener(this);    // 设置首选项点击事件监听
             mFilterSize.setOnPreferenceChangeListener(this);
             mFilterTime.setOnPreferenceChangeListener(this);
 

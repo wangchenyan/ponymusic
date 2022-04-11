@@ -29,7 +29,7 @@ public class AppCache {
     private final List<SheetInfo> mSheetList = new ArrayList<>();       // 在线歌单列表
     private final List<Activity> mActivityStack = new ArrayList<>();    // 活动栈
     private final LongSparseArray<DownloadMusicInfo> mDownloadList = new LongSparseArray<>(); // 下载音乐信息列表
-    private AMapLocalWeatherLive mAMapLocalWeatherLive;
+    private AMapLocalWeatherLive mAMapLocalWeatherLive;                 // 天气预报
 
     private AppCache() {
     }
@@ -80,10 +80,12 @@ public class AppCache {
         return mDownloadList;
     }
 
+    // 返回天气预报
     public AMapLocalWeatherLive getAMapLocalWeatherLive() {
         return mAMapLocalWeatherLive;
     }
 
+    // 设置天气预报
     public void setAMapLocalWeatherLive(AMapLocalWeatherLive aMapLocalWeatherLive) {
         mAMapLocalWeatherLive = aMapLocalWeatherLive;
     }
