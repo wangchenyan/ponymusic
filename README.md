@@ -87,14 +87,14 @@
     }
 ```
 2. 切换“夜间模式”后，本地歌曲列表无法加载
-3. 天气 API 无法使用
+3. ~~天气 API 无法使用~~
 解决方法： https://github.com/wangchenyan/ponymusic/issues/27
 获取 SHA1 值：https://blog.csdn.net/qq_29269233/article/details/53725865?spm=1001.2101.3001.6650.2&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-2.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-2.pc_relevant_default&utm_relevant_index=5
 
 ```cmd
 D:
 cd D:\Android S\jre\bin
-keytool.exe -list -v -keystore C:\Users\DELL\.android\debug.keystore
+keytool.exe -list -v -keystore D:\study\oppo\ponymusic\app\debug.keystore
 android
 ```
 4. 无法将音乐批量添加进播放列表
