@@ -37,13 +37,13 @@ import me.wcy.music.utils.binding.Bind;
 public class MusicActivity extends BaseActivity implements View.OnClickListener, QuitTimer.OnTimerListener,
         NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
     @Bind(R.id.drawer_layout)
-    private DrawerLayout drawerLayout;
+    private DrawerLayout drawerLayout;       // 抽屉式布局
     @Bind(R.id.navigation_view)
-    private NavigationView navigationView;
+    private NavigationView navigationView;   // 导航栏
     @Bind(R.id.iv_menu)
-    private ImageView ivMenu;
+    private ImageView ivMenu;                // 菜单选项
     @Bind(R.id.iv_search)
-    private ImageView ivSearch;
+    private ImageView ivSearch;              // 搜索选项
     @Bind(R.id.tv_local_music)
     private TextView tvLocalMusic;
     @Bind(R.id.tv_online_music)
@@ -51,15 +51,18 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Bind(R.id.viewpager)
     private ViewPager mViewPager;
     @Bind(R.id.fl_play_bar)
-    private FrameLayout flPlayBar;
+    private FrameLayout flPlayBar;          // 帧布局
 
     private View vNavigationHeader;
+
     private LocalMusicFragment mLocalMusicFragment;
     private SheetListFragment mSheetListFragment;
     private PlayFragment mPlayFragment;
-    private ControlPanel controlPanel;
-    private NaviMenuExecutor naviMenuExecutor;
+
+    private ControlPanel controlPanel;          // 播放控制面板（界面底部，播放/停止、下一首、播放列表）
+    private NaviMenuExecutor naviMenuExecutor;  // 导航菜单执行器
     private MenuItem timerItem;
+
     private boolean isPlayFragmentShow;
 
     @Override
@@ -75,7 +78,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         controlPanel = new ControlPanel(flPlayBar);
         naviMenuExecutor = new NaviMenuExecutor(this);
         AudioPlayer.get().addOnPlayEventListener(controlPanel);
-        QuitTimer.get().setOnTimerListener(this);
+        QuitTimer.get().setOnTimerListener(this);                   // 定时停止播放
         parseIntent();
     }
 
@@ -182,7 +185,8 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         if (position == 0) {
             tvLocalMusic.setSelected(true);
             tvOnlineMusic.setSelected(false);
-        } else {
+        }
+        else {
             tvLocalMusic.setSelected(false);
             tvOnlineMusic.setSelected(true);
         }
@@ -192,6 +196,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     public void onPageScrollStateChanged(int state) {
     }
 
+    // 展示正在播放界面
     private void showPlayingFragment() {
         if (isPlayFragmentShow) {
             return;
@@ -209,6 +214,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         isPlayFragmentShow = true;
     }
 
+    // 隐藏正在播放界面
     private void hidePlayingFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(0, R.anim.fragment_slide_down);
@@ -219,6 +225,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onBackPressed() {
+        // 若处于正在播放界面
         if (mPlayFragment != null && isPlayFragmentShow) {
             hidePlayingFragment();
             return;
@@ -231,6 +238,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         super.onBackPressed();
     }
 
+    // APP 被销毁时将数据保存至 Bundle
     @SuppressLint("MissingSuperCall")
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -239,6 +247,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         mSheetListFragment.onSaveInstanceState(outState);
     }
 
+    // 从 Bundle 中恢复数据
     @Override
     protected void onRestoreInstanceState(final Bundle savedInstanceState) {
         mViewPager.post(() -> {

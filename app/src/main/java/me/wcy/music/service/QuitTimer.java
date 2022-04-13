@@ -49,7 +49,8 @@ public class QuitTimer {
         if (milli > 0) {
             timerRemain = milli + DateUtils.SECOND_IN_MILLIS;
             handler.post(mQuitRunnable);
-        } else {
+        }
+        else {
             timerRemain = 0;
             if (listener != null) {
                 listener.onTimer(timerRemain);
@@ -71,6 +72,7 @@ public class QuitTimer {
                 }
                 handler.postDelayed(this, DateUtils.SECOND_IN_MILLIS);
             } else {
+                // 停止播放
                 AppCache.get().clearStack();
                 PlayService.startCommand(context, Actions.ACTION_STOP);
             }

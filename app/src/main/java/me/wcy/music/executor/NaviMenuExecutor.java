@@ -28,6 +28,7 @@ public class NaviMenuExecutor {
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_setting:
+                // 开启设置活动
                 startActivity(SettingActivity.class);
                 return true;
             case R.id.action_night:
@@ -58,6 +59,7 @@ public class NaviMenuExecutor {
     }
 
     private void timerDialog() {
+        // 对话框
         new AlertDialog.Builder(activity)
                 .setTitle(R.string.menu_timer)
                 .setItems(activity.getResources().getStringArray(R.array.timer_text), (dialog, which) -> {

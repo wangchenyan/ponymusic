@@ -11,10 +11,11 @@
 
 ## activity
 1. BaseActivity: 基类
-2. AboutActivity： 加载关于 APP 的项目信息
-3. MusicInfoActivity： 加载歌曲信息
-4. OnlineMusicActivity
-5. SettingActivity： 功能设置活动
+2. MusicActivity： 相当于 MainActivity，包括了主界面、菜单栏（DrawerLayout）、导航栏（NavigationView）、翻页工具（ViewPager）等等组件
+3. AboutActivity： 加载关于 APP 的项目信息
+4. MusicInfoActivity： 加载歌曲信息
+5. OnlineMusicActivity
+6. SettingActivity： 功能设置活动
 
 ## adapater
 1. PlaylistAdapter: 本地音乐列表适配器
@@ -29,9 +30,11 @@
 定义枚举类型变量
 
 ## executer
-1. PlayMusic： 播放音乐执行器（基类）
-2. PlayOnlineMusic： 播放在线音乐
-3. WeatherExecutor： 请求天气信息
+1. ControlPanel： 简版音乐播放控制面板（位于主界面底部）
+2. NaviMenuExecutor： 导航菜单执行器
+3. PlayMusic： 播放音乐执行器（基类）
+4. PlayOnlineMusic： 播放在线音乐
+5. WeatherExecutor： 请求天气信息
 
 ## fragment
 1. BaseFragment： 基类，下面的 fragment 均基于此拓展。对工具类 2. ViewBinder，RxBus，PermissionReq 进行初始化
@@ -60,6 +63,7 @@
 ## service
 1. AudioPlayer： 音频播放服务，对原生 API MediaPlayer 的拓展
 2. AudioFocusManager： 音频焦点处理服务，通知、来电、其他播放器抢占会造成音频焦点丢失，可能需要重新获取焦点
+3. QuitTimer： 定时停止播放控制
 
 ## storage
 1. db: 
@@ -87,6 +91,12 @@
     }
 ```
 2. 切换“夜间模式”后，本地歌曲列表无法加载
+```java
+    private void nightMode() {
+        Preferences.saveNightMode(!Preferences.isNightMode());
+        activity.recreate();
+    }
+```
 3. ~~天气 API 无法使用~~
 解决方法： https://github.com/wangchenyan/ponymusic/issues/27
 获取 SHA1 值：https://blog.csdn.net/qq_29269233/article/details/53725865?spm=1001.2101.3001.6650.2&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-2.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-2.pc_relevant_default&utm_relevant_index=5
@@ -97,5 +107,7 @@ cd D:\Android S\jre\bin
 keytool.exe -list -v -keystore D:\study\oppo\ponymusic\app\debug.keystore
 android
 ```
-4. 无法将音乐批量添加进播放列表
+
+## TO BE IMPROVED
+1. 将音乐批量添加进播放列表
 
