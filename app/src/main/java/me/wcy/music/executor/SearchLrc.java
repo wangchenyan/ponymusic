@@ -36,7 +36,7 @@ public abstract class SearchLrc implements IExecutor<String> {
                     return;
                 }
 
-                downloadLrc(response.getSong().get(0).getSongid());
+//                downloadLrc(response.getSong().get(0).getSongid());
             }
 
             @Override
@@ -46,24 +46,24 @@ public abstract class SearchLrc implements IExecutor<String> {
         });
     }
 
-    private void downloadLrc(String songId) {
-        HttpClient.getLrc(songId, new HttpCallback<Lrc>() {
-            @Override
-            public void onSuccess(Lrc response) {
-                if (response == null || TextUtils.isEmpty(response.getLrcContent())) {
-                    onFail(null);
-                    return;
-                }
-
-                String filePath = FileUtils.getLrcDir() + FileUtils.getLrcFileName(artist, title);
-                FileUtils.saveLrcFile(filePath, response.getLrcContent());
-                onExecuteSuccess(filePath);
-            }
-
-            @Override
-            public void onFail(Exception e) {
-                onExecuteFail(e);
-            }
-        });
-    }
+//    private void downloadLrc(String songId) {
+//        HttpClient.getLrc(songId, new HttpCallback<Lrc>() {
+//            @Override
+//            public void onSuccess(Lrc response) {
+//                if (response == null || TextUtils.isEmpty(response.getLrcContent())) {
+//                    onFail(null);
+//                    return;
+//                }
+//
+//                String filePath = FileUtils.getLrcDir() + FileUtils.getLrcFileName(artist, title);
+//                FileUtils.saveLrcFile(filePath, response.getLrcContent());
+//                onExecuteSuccess(filePath);
+//            }
+//
+//            @Override
+//            public void onFail(Exception e) {
+//                onExecuteFail(e);
+//            }
+//        });
+//    }
 }

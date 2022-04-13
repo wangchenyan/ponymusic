@@ -26,21 +26,25 @@ import okhttp3.OkHttpClient;
 public class HttpClient {
     private static final String SPLASH_URL = "http://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1";
 
-    private static final String BASE_URL = "http://49.234.208.129/";
+    private static final String BASE_URL = "http://49.234.208.129";
 
-    private static final String METHOD_GET_MUSIC_LIST = "baidu.ting.billboard.billList";
-    private static final String METHOD_DOWNLOAD_MUSIC = "baidu.ting.song.play";
-    private static final String METHOD_ARTIST_INFO = "baidu.ting.artist.getInfo";
-    private static final String METHOD_SEARCH_MUSIC = "baidu.ting.search.catalogSug";
-    private static final String METHOD_LRC = "baidu.ting.song.lry";
+//    private static final String METHOD_GET_MUSIC_LIST = "baidu.ting.billboard.billList";
+//    private static final String METHOD_DOWNLOAD_MUSIC = "baidu.ting.song.play";
+//    private static final String METHOD_ARTIST_INFO = "baidu.ting.artist.getInfo";
+//    private static final String METHOD_SEARCH_MUSIC = "baidu.ting.search.catalogSug";
+//    private static final String METHOD_LRC = "baidu.ting.song.lry";
 
-    private static final String PARAM_METHOD = "method";
-    private static final String PARAM_TYPE = "type";
+//    private static final String PARAM_METHOD = "method";
+//    private static final String PARAM_TYPE = "type";
     private static final String PARAM_SIZE = "size";
     private static final String PARAM_OFFSET = "offset";
     private static final String PARAM_SONG_ID = "songid";
     private static final String PARAM_TING_UID = "tinguid";
-    private static final String PARAM_QUERY = "query";
+    private static final String PARAM_QUERY = "keyword";// query
+
+    //old project use param to check, while now I use path.
+    private static final String PATH_GET_MUSIC_LIST = "/musics/list";
+    private static final String PATH_SEARCH_MUSIC = "/musics"; // /music/search
 
     static {
         // 使用内部工厂类 Builder 来设置 OkHttpClient
@@ -108,9 +112,10 @@ public class HttpClient {
 
     // 获取在线歌曲列表
     public static void getSongListInfo(String type, int size, int offset, @NonNull final HttpCallback<OnlineMusicList> callback) {
-        OkHttpUtils.get().url(BASE_URL)
-                .addParams(PARAM_METHOD, METHOD_GET_MUSIC_LIST)
-                .addParams(PARAM_TYPE, type)
+//        OkHttpUtils.get().url(BASE_URL)
+        OkHttpUtils.get().url(BASE_URL+PATH_GET_MUSIC_LIST)
+//                .addParams(PARAM_METHOD, METHOD_GET_MUSIC_LIST)
+//                .addParams(PARAM_TYPE, type)
                 .addParams(PARAM_SIZE, String.valueOf(size))
                 .addParams(PARAM_OFFSET, String.valueOf(offset))
                 .build()
@@ -133,10 +138,12 @@ public class HttpClient {
     }
 
     // 获取音乐下载信息
-    public static void getMusicDownloadInfo(String songId, @NonNull final HttpCallback<DownloadInfo> callback) {
-        OkHttpUtils.get().url(BASE_URL)
-                .addParams(PARAM_METHOD, METHOD_DOWNLOAD_MUSIC)
-                .addParams(PARAM_SONG_ID, songId)
+//    public static void getMusicDownloadInfo(String songId, @NonNull final HttpCallback<DownloadInfo> callback) {
+    public static void getMusicDownloadInfo(String audioUrl, @NonNull final HttpCallback<DownloadInfo> callback) {
+//        OkHttpUtils.get().url(BASE_URL)
+        OkHttpUtils.get().url(audioUrl)
+//                .addParams(PARAM_METHOD, METHOD_DOWNLOAD_MUSIC)
+//                .addParams(PARAM_SONG_ID, songId)
                 .build()
                 .execute(new JsonCallback<DownloadInfo>(DownloadInfo.class) {
                     @Override
@@ -177,32 +184,33 @@ public class HttpClient {
     }
 
     // 获取 LRC 歌词文件
-    public static void getLrc(String songId, @NonNull final HttpCallback<Lrc> callback) {
-        OkHttpUtils.get().url(BASE_URL)
-                .addParams(PARAM_METHOD, METHOD_LRC)
-                .addParams(PARAM_SONG_ID, songId)
-                .build()
-                .execute(new JsonCallback<Lrc>(Lrc.class) {
-                    @Override
-                    public void onResponse(Lrc response, int id) {
-                        callback.onSuccess(response);
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        callback.onFail(e);
-                    }
-
-                    @Override
-                    public void onAfter(int id) {
-                        callback.onFinish();
-                    }
-                });
-    }
+//    public static void getLrc(String songId, @NonNull final HttpCallback<Lrc> callback) {
+//        OkHttpUtils.get().url(BASE_URL)
+//                .addParams(PARAM_METHOD, METHOD_LRC)
+//                .addParams(PARAM_SONG_ID, songId)
+//                .build()
+//                .execute(new JsonCallback<Lrc>(Lrc.class) {
+//                    @Override
+//                    public void onResponse(Lrc response, int id) {
+//                        callback.onSuccess(response);
+//                    }
+//
+//                    @Override
+//                    public void onError(Call call, Exception e, int id) {
+//                        callback.onFail(e);
+//                    }
+//
+//                    @Override
+//                    public void onAfter(int id) {
+//                        callback.onFinish();
+//                    }
+//                });
+//    }
 
     public static void searchMusic(String keyword, @NonNull final HttpCallback<SearchMusic> callback) {
-        OkHttpUtils.get().url(BASE_URL)
-                .addParams(PARAM_METHOD, METHOD_SEARCH_MUSIC)
+//        OkHttpUtils.get().url(BASE_URL)
+        OkHttpUtils.get().url(BASE_URL+PATH_SEARCH_MUSIC)
+//                .addParams(PARAM_METHOD, METHOD_SEARCH_MUSIC)
                 .addParams(PARAM_QUERY, keyword)
                 .build()
                 .execute(new JsonCallback<SearchMusic>(SearchMusic.class) {
@@ -223,26 +231,26 @@ public class HttpClient {
                 });
     }
 
-    public static void getArtistInfo(String tingUid, @NonNull final HttpCallback<ArtistInfo> callback) {
-        OkHttpUtils.get().url(BASE_URL)
-                .addParams(PARAM_METHOD, METHOD_ARTIST_INFO)
-                .addParams(PARAM_TING_UID, tingUid)
-                .build()
-                .execute(new JsonCallback<ArtistInfo>(ArtistInfo.class) {
-                    @Override
-                    public void onResponse(ArtistInfo response, int id) {
-                        callback.onSuccess(response);
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        callback.onFail(e);
-                    }
-
-                    @Override
-                    public void onAfter(int id) {
-                        callback.onFinish();
-                    }
-                });
-    }
+//    public static void getArtistInfo(String tingUid, @NonNull final HttpCallback<ArtistInfo> callback) {
+//        OkHttpUtils.get().url(BASE_URL)
+//                .addParams(PARAM_METHOD, METHOD_ARTIST_INFO)
+//                .addParams(PARAM_TING_UID, tingUid)
+//                .build()
+//                .execute(new JsonCallback<ArtistInfo>(ArtistInfo.class) {
+//                    @Override
+//                    public void onResponse(ArtistInfo response, int id) {
+//                        callback.onSuccess(response);
+//                    }
+//
+//                    @Override
+//                    public void onError(Call call, Exception e, int id) {
+//                        callback.onFail(e);
+//                    }
+//
+//                    @Override
+//                    public void onAfter(int id) {
+//                        callback.onFinish();
+//                    }
+//                });
+//    }
 }

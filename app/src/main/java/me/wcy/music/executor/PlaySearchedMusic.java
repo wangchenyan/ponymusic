@@ -30,7 +30,7 @@ public abstract class PlaySearchedMusic extends PlayMusic {
         String lrcFileName = FileUtils.getLrcFileName(mSong.getArtistname(), mSong.getSongname());
         File lrcFile = new File(FileUtils.getLrcDir() + lrcFileName);
         if (!lrcFile.exists()) {
-            downloadLrc(lrcFile.getPath());
+//            downloadLrc(lrcFile.getPath());
         } else {
             mCounter++;
         }
@@ -62,25 +62,25 @@ public abstract class PlaySearchedMusic extends PlayMusic {
         });
     }
 
-    private void downloadLrc(final String filePath) {
-        HttpClient.getLrc(mSong.getSongid(), new HttpCallback<Lrc>() {
-            @Override
-            public void onSuccess(Lrc response) {
-                if (response == null || TextUtils.isEmpty(response.getLrcContent())) {
-                    return;
-                }
-
-                FileUtils.saveLrcFile(filePath, response.getLrcContent());
-            }
-
-            @Override
-            public void onFail(Exception e) {
-            }
-
-            @Override
-            public void onFinish() {
-                checkCounter();
-            }
-        });
-    }
+//    private void downloadLrc(final String filePath) {
+//        HttpClient.getLrc(mSong.getSongid(), new HttpCallback<Lrc>() {
+//            @Override
+//            public void onSuccess(Lrc response) {
+//                if (response == null || TextUtils.isEmpty(response.getLrcContent())) {
+//                    return;
+//                }
+//
+//                FileUtils.saveLrcFile(filePath, response.getLrcContent());
+//            }
+//
+//            @Override
+//            public void onFail(Exception e) {
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//                checkCounter();
+//            }
+//        });
+//    }
 }

@@ -52,25 +52,25 @@ public abstract class DownloadSearchedMusic extends DownloadMusic {
         String lrcFileName = FileUtils.getLrcFileName(artist, title);
         File lrcFile = new File(FileUtils.getLrcDir() + lrcFileName);
         if (!lrcFile.exists()) {
-            downloadLrc(mSong.getSongid(), lrcFileName);
+//            downloadLrc(mSong.getSongid(), lrcFileName);
         }
     }
 
-    private void downloadLrc(String songId, final String fileName) {
-        HttpClient.getLrc(songId, new HttpCallback<Lrc>() {
-            @Override
-            public void onSuccess(Lrc response) {
-                if (response == null || TextUtils.isEmpty(response.getLrcContent())) {
-                    return;
-                }
-
-                String filePath = FileUtils.getLrcDir() + fileName;
-                FileUtils.saveLrcFile(filePath, response.getLrcContent());
-            }
-
-            @Override
-            public void onFail(Exception e) {
-            }
-        });
-    }
+//    private void downloadLrc(String songId, final String fileName) {
+//        HttpClient.getLrc(songId, new HttpCallback<Lrc>() {
+//            @Override
+//            public void onSuccess(Lrc response) {
+//                if (response == null || TextUtils.isEmpty(response.getLrcContent())) {
+//                    return;
+//                }
+//
+//                String filePath = FileUtils.getLrcDir() + fileName;
+//                FileUtils.saveLrcFile(filePath, response.getLrcContent());
+//            }
+//
+//            @Override
+//            public void onFail(Exception e) {
+//            }
+//        });
+//    }
 }

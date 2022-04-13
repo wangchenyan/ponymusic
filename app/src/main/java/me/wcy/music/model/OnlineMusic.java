@@ -7,21 +7,26 @@ import com.google.gson.annotations.SerializedName;
  * Created by wcy on 2015/12/20.
  */
 public class OnlineMusic {
-    @SerializedName("pic_big")
+//    @SerializedName("pic_big")
+    @SerializedName("cover_url")
     private String pic_big;
-    @SerializedName("pic_small")
-    private String pic_small;
+//    @SerializedName("pic_small")
+    private String pic_small=pic_big;
     @SerializedName("lrclink")
     private String lrclink;
-    @SerializedName("song_id")
+//    @SerializedName("song_id")
+    @SerializedName("id")
     private String song_id;
-    @SerializedName("title")
+//    @SerializedName("title")
+    @SerializedName("name")
     private String title;
     @SerializedName("ting_uid")
     private String ting_uid;
-    @SerializedName("album_title")
+//    @SerializedName("album_title")
+    @SerializedName("album")
     private String album_title;
-    @SerializedName("artist_name")
+//    @SerializedName("artist_name")
+    @SerializedName("artist")
     private String artist_name;
 
     public String getPic_big() {

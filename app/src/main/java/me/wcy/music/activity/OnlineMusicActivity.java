@@ -156,7 +156,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
                     share(onlineMusic);
                     break;
                 case 1:// 查看歌手信息
-                    artistInfo(onlineMusic);
+//                    artistInfo(onlineMusic);
                     break;
                 case 2:// 下载
                     download(onlineMusic);
@@ -172,22 +172,22 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         TextView tvTitle = vHeader.findViewById(R.id.tv_title);
         TextView tvUpdateDate = vHeader.findViewById(R.id.tv_update_date);
         TextView tvComment = vHeader.findViewById(R.id.tv_comment);
-        tvTitle.setText(mOnlineMusicList.getBillboard().getName());
-        tvUpdateDate.setText(getString(R.string.recent_update, mOnlineMusicList.getBillboard().getUpdate_date()));
-        tvComment.setText(mOnlineMusicList.getBillboard().getComment());
-        Glide.with(this)
-                .load(mOnlineMusicList.getBillboard().getPic_s640())
-                .asBitmap()
-                .placeholder(R.drawable.default_cover)
-                .error(R.drawable.default_cover)
-                .override(200, 200)
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        ivCover.setImageBitmap(resource);
-                        ivHeaderBg.setImageBitmap(ImageUtils.blur(resource));
-                    }
-                });
+//        tvTitle.setText(mOnlineMusicList.getBillboard().getName());
+//        tvUpdateDate.setText(getString(R.string.recent_update, mOnlineMusicList.getBillboard().getUpdate_date()));
+//        tvComment.setText(mOnlineMusicList.getBillboard().getComment());
+//        Glide.with(this)
+//                .load(mOnlineMusicList.getBillboard().getPic_s640())
+//                .asBitmap()
+//                .placeholder(R.drawable.default_cover)
+//                .error(R.drawable.default_cover)
+//                .override(200, 200)
+//                .into(new SimpleTarget<Bitmap>() {
+//                    @Override
+//                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//                        ivCover.setImageBitmap(resource);
+//                        ivHeaderBg.setImageBitmap(ImageUtils.blur(resource));
+//                    }
+//                });
     }
 
     // 播放
@@ -232,9 +232,9 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         }.execute();
     }
 
-    private void artistInfo(OnlineMusic onlineMusic) {
-        ArtistInfoActivity.start(this, onlineMusic.getTing_uid());
-    }
+//    private void artistInfo(OnlineMusic onlineMusic) {
+//        ArtistInfoActivity.start(this, onlineMusic.getTing_uid());
+//    }
 
     private void download(final OnlineMusic onlineMusic) {
         new DownloadOnlineMusic(this, onlineMusic) {

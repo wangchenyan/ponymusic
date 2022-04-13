@@ -138,7 +138,7 @@ public class SheetAdapter extends BaseAdapter {
 
     private void parse(OnlineMusicList response, SheetInfo sheetInfo) {
         List<OnlineMusic> onlineMusics = response.getSong_list();
-        sheetInfo.setCoverUrl(response.getBillboard().getPic_s260());
+//        sheetInfo.setCoverUrl(response.getBillboard().getPic_s260());
         if (onlineMusics.size() >= 1) {
             sheetInfo.setMusic1(mContext.getString(R.string.song_list_item_title_1,
                     onlineMusics.get(0).getTitle(), onlineMusics.get(0).getArtist_name()));

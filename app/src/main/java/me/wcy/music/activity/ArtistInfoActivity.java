@@ -27,7 +27,7 @@ import me.wcy.music.http.HttpClient;
 import me.wcy.music.model.ArtistInfo;
 import me.wcy.music.utils.ViewUtils;
 import me.wcy.music.utils.binding.Bind;
-
+/*
 public class ArtistInfoActivity extends BaseActivity {
     @Bind(R.id.sv_artist_info)
     private ScrollView svArtistInfo;
@@ -51,6 +51,7 @@ public class ArtistInfoActivity extends BaseActivity {
 
         String tingUid = getIntent().getStringExtra(Extras.TING_UID);
         getArtistInfo(tingUid);
+
         ViewUtils.changeViewState(svArtistInfo, llLoading, llLoadFail, LoadStateEnum.LOADING);
     }
 
@@ -148,3 +149,4 @@ public class ArtistInfoActivity extends BaseActivity {
         }
     }
 }
+*/
