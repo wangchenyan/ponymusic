@@ -6,6 +6,7 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import me.wcy.music.R;
@@ -55,6 +56,7 @@ public abstract class DownloadMusic implements IExecutor<Void> {
 
     protected void downloadMusic(String url, String artist, String title, String coverPath) {
         try {
+            Log.d("TAG", "downloadMusic: "+url);
             String fileName = FileUtils.getMp3FileName(artist, title);
             Uri uri = Uri.parse(url);
             DownloadManager.Request request = new DownloadManager.Request(uri);

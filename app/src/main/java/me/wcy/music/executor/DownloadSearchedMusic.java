@@ -33,12 +33,14 @@ public abstract class DownloadSearchedMusic extends DownloadMusic {
         HttpClient.getMusicDownloadInfo(mSong.getSongid(), new HttpCallback<DownloadInfo>() {
             @Override
             public void onSuccess(DownloadInfo response) {
-                if (response == null || response.getBitrate() == null) {
+//                if (response == null || response.getBitrate() == null) {
+                if (response == null || response.getAudioUrl() == null) {
                     onFail(null);
                     return;
                 }
 
-                downloadMusic(response.getBitrate().getFile_link(), artist, title, null);
+//                downloadMusic(response.getBitrate().getFile_link(), artist, title, null);
+                downloadMusic(response.getAudioUrl(), artist, title, null);
                 onExecuteSuccess(null);
             }
 

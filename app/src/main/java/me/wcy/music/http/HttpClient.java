@@ -3,6 +3,7 @@ package me.wcy.music.http;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.BitmapCallback;
@@ -39,12 +40,13 @@ public class HttpClient {
     private static final String PARAM_SIZE = "size";
     private static final String PARAM_OFFSET = "offset";
     private static final String PARAM_SONG_ID = "songid";
-    private static final String PARAM_TING_UID = "tinguid";
-    private static final String PARAM_QUERY = "keyword";// query
+//    private static final String PARAM_TING_UID = "tinguid";
+    private static final String PARAM_QUERY = "keyword";
 
     //old project use param to check, while now I use path.
-    private static final String PATH_GET_MUSIC_LIST = "/musics/list";
-    private static final String PATH_SEARCH_MUSIC = "/musics"; // /music/search
+    private static final String PATH_GET_MUSIC_LIST = "/music/pagelist";
+    private static final String PATH_SEARCH_MUSIC = "/music/search"; // /music/search
+    private static final String PATH_GET_INFO_MUSIC = "/music/getInfo"; // /music/search
 
     static {
         // 使用内部工厂类 Builder 来设置 OkHttpClient
@@ -81,6 +83,7 @@ public class HttpClient {
     // 下载文件
     // 参数： URL 目录 文件名 回调函数
     public static void downloadFile(String url, String destFileDir, String destFileName, @Nullable final HttpCallback<File> callback) {
+        Log.d("TAG", "downloadFile: "+url+" "+destFileDir+destFileDir);
         OkHttpUtils.get().url(url).build()
                 .execute(new FileCallBack(destFileDir, destFileName) {
                     @Override
@@ -138,12 +141,13 @@ public class HttpClient {
     }
 
     // 获取音乐下载信息
-//    public static void getMusicDownloadInfo(String songId, @NonNull final HttpCallback<DownloadInfo> callback) {
-    public static void getMusicDownloadInfo(String audioUrl, @NonNull final HttpCallback<DownloadInfo> callback) {
-//        OkHttpUtils.get().url(BASE_URL)
-        OkHttpUtils.get().url(audioUrl)
+    public static void getMusicDownloadInfo(String songId, @NonNull final HttpCallback<DownloadInfo> callback) {
+//    public static void getMusicDownloadInfo(String audioUrl, @NonNull final HttpCallback<DownloadInfo> callback) {
+        OkHttpUtils.get().url(BASE_URL+PATH_GET_INFO_MUSIC+"/"+songId)
+//        OkHttpUtils.get().url(audioUrl)
 //                .addParams(PARAM_METHOD, METHOD_DOWNLOAD_MUSIC)
 //                .addParams(PARAM_SONG_ID, songId)
+//                .addParams("id", songId)
                 .build()
                 .execute(new JsonCallback<DownloadInfo>(DownloadInfo.class) {
                     @Override
@@ -209,9 +213,9 @@ public class HttpClient {
 
     public static void searchMusic(String keyword, @NonNull final HttpCallback<SearchMusic> callback) {
 //        OkHttpUtils.get().url(BASE_URL)
-        OkHttpUtils.get().url(BASE_URL+PATH_SEARCH_MUSIC)
+        OkHttpUtils.get().url(BASE_URL+PATH_SEARCH_MUSIC+"/"+keyword)
 //                .addParams(PARAM_METHOD, METHOD_SEARCH_MUSIC)
-                .addParams(PARAM_QUERY, keyword)
+//                .addParams(PARAM_QUERY, keyword)
                 .build()
                 .execute(new JsonCallback<SearchMusic>(SearchMusic.class) {
                     @Override

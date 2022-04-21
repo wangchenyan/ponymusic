@@ -7,8 +7,10 @@ import com.google.gson.annotations.SerializedName;
  * Created by wcy on 2015/12/20.
  */
 public class OnlineMusic {
+    @SerializedName("audio_url")
+    private String audioUrl;
 //    @SerializedName("pic_big")
-    @SerializedName("cover_url")
+    @SerializedName("cover_url")//目前后端没有加入此功能
     private String pic_big;
 //    @SerializedName("pic_small")
     private String pic_small=pic_big;
@@ -52,6 +54,9 @@ public class OnlineMusic {
     public void setLrclink(String lrclink) {
         this.lrclink = lrclink;
     }
+
+    public String getAudioUrl() { return audioUrl;}
+    public void setAudioUrl(String audioUrl) { this.audioUrl=audioUrl; }
 
     public String getSong_id() {
         return song_id;

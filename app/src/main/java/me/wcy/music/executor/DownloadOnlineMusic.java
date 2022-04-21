@@ -2,6 +2,7 @@ package me.wcy.music.executor;
 
 import android.app.Activity;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.File;
 
@@ -36,7 +37,10 @@ public abstract class DownloadOnlineMusic extends DownloadMusic {
         }
 
         // 下载封面
-        String albumFileName = FileUtils.getAlbumFileName(artist, title);
+//        String albumFileName = FileUtils.getAlbumFileName(artist, title);
+        Log.d("TAG", "onSuccess:" + mOnlineMusic.getPic_small());
+        Log.d("TAG", "onSuccess:" + mOnlineMusic.getPic_big());
+        String albumFileName = FileUtils.getFileNameByUrl(artist, title, mOnlineMusic.getPic_big());
         final File albumFile = new File(FileUtils.getAlbumDir(), albumFileName);
         String picUrl = mOnlineMusic.getPic_big();
         if (TextUtils.isEmpty(picUrl)) {
@@ -50,12 +54,19 @@ public abstract class DownloadOnlineMusic extends DownloadMusic {
         HttpClient.getMusicDownloadInfo(mOnlineMusic.getSong_id(), new HttpCallback<DownloadInfo>() {
             @Override
             public void onSuccess(DownloadInfo response) {
-                if (response == null || response.getBitrate() == null) {
-                    onFail(null);
-                    return;
-                }
+                Log.d("TAG", "onSuccess:" + response.getAudioUrl());
 
-                downloadMusic(response.getBitrate().getFile_link(), artist, title, albumFile.getPath());
+//                if (response == null || response.getBitrate() == null) {
+//                if (response == null || response.getAudioUrl() == null) {
+//                    onFail(null);
+//                    return;
+//                }
+                Log.d("TAG1", "onSuccess:" + response.getAudioUrl());
+
+//                downloadMusic(response.getBitrate().getFile_link(), artist, title, albumFile.getPath());
+                downloadMusic(response.getAudioUrl(), artist, title, albumFile.getPath());
+
+                Log.d("TAG2", "onSuccess:" + response.getAudioUrl());
                 onExecuteSuccess(null);
             }
 

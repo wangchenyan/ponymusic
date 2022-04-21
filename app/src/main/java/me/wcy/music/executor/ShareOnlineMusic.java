@@ -44,8 +44,10 @@ public abstract class ShareOnlineMusic implements IExecutor<Void> {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
                 intent.putExtra(Intent.EXTRA_TEXT, mContext.getString(R.string.share_music, mContext.getString(R.string.app_name),
-                        mTitle, response.getBitrate().getFile_link()));
-                mContext.startActivity(Intent.createChooser(intent, mContext.getString(R.string.share)));
+//                        mTitle, response.getBitrate().getFile_link()));
+                        mTitle, response.getAudioUrl()));
+
+                        mContext.startActivity(Intent.createChooser(intent, mContext.getString(R.string.share)));
             }
 
             @Override

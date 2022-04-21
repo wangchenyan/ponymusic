@@ -2,6 +2,7 @@ package me.wcy.music.executor;
 
 import android.app.Activity;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.File;
 
@@ -39,39 +40,47 @@ public abstract class PlayOnlineMusic extends PlayMusic {
         music.setAlbum(mOnlineMusic.getAlbum_title());
 
         // 下载歌词
-        String lrcFileName = FileUtils.getLrcFileName(artist, title);
-        File lrcFile = new File(FileUtils.getLrcDir() + lrcFileName);
-        if (!lrcFile.exists() && !TextUtils.isEmpty(mOnlineMusic.getLrclink())) {
-            downloadLrc(mOnlineMusic.getLrclink(), lrcFileName);
-        } else {
-            mCounter++;
-        }
+//        String lrcFileName = FileUtils.getLrcFileName(artist, title);
+//        File lrcFile = new File(FileUtils.getLrcDir() + lrcFileName);
+//        if (!lrcFile.exists() && !TextUtils.isEmpty(mOnlineMusic.getLrclink())) {
+//            downloadLrc(mOnlineMusic.getLrclink(), lrcFileName);
+//        } else {
+//            mCounter++;
+//        }
 
         // 下载封面
-        String albumFileName = FileUtils.getAlbumFileName(artist, title);
-        File albumFile = new File(FileUtils.getAlbumDir(), albumFileName);
         String picUrl = mOnlineMusic.getPic_big();
+        String albumFileName = FileUtils.getFileNameByUrl(artist, title, picUrl);
+        File albumFile = new File(FileUtils.getAlbumDir(), albumFileName);
+        Log.d("TAG", "getPlayInfo: "+ albumFileName);
+
         if (TextUtils.isEmpty(picUrl)) {
             picUrl = mOnlineMusic.getPic_small();
         }
         if (!albumFile.exists() && !TextUtils.isEmpty(picUrl)) {
+            Log.d("TAG-download", "getPlayInfo: "+picUrl);
             downloadAlbum(picUrl, albumFileName);
         } else {
             mCounter++;
         }
         music.setCoverPath(albumFile.getPath());
 
+//目前就是要
         // 获取歌曲播放链接
         HttpClient.getMusicDownloadInfo(mOnlineMusic.getSong_id(), new HttpCallback<DownloadInfo>() {
-            @Override
+//        HttpClient.getMusicDownloadInfo(mOnlineMusic.getAudioUrl(), new HttpCallback<DownloadInfo>() {
+        @Override
             public void onSuccess(DownloadInfo response) {
-                if (response == null || response.getBitrate() == null) {
-                    onFail(null);
+//                if (response == null || response.getBitrate() == null) {
+            if (response == null || response.getAudioUrl() == null) {
+                onFail(null);
                     return;
                 }
-
-                music.setPath(response.getBitrate().getFile_link());
-                music.setDuration(response.getBitrate().getFile_duration() * 1000);
+            Log.d("TAG-play", "onSuccess: "+response.getAudioUrl());
+//                music.setPath(response.getBitrate().getFile_link());
+//                music.setDuration(response.getBitrate().getFile_duration() * 1000);
+                music.setPath(response.getAudioUrl());
+//                music.setDuration(response.getBitrate().getFile_duration() * 1000);
                 checkCounter();
             }
 

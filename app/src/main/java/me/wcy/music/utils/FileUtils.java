@@ -3,6 +3,7 @@ package me.wcy.music.utils;
 import android.content.Context;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -23,6 +24,8 @@ import me.wcy.music.model.Music;
 public class FileUtils {
     private static final String MP3 = ".mp3";
     private static final String LRC = ".lrc";
+
+
 
     private static String getAppDir() {
         return Environment.getExternalStorageDirectory() + "/PonyMusic";
@@ -95,7 +98,12 @@ public class FileUtils {
         File file = new File(path);
         return file.exists();
     }
-
+    public static String getFileNameByUrl(String artist, String title, String url) {
+        String[] urlArray = url.split("\\.");
+        String extension = urlArray[urlArray.length-1];
+        Log.d("TAG", "getFileNameByUrl: "+extension);
+        return getFileName(artist, title) + "." + extension;
+    }
     public static String getMp3FileName(String artist, String title) {
         return getFileName(artist, title) + MP3;
     }

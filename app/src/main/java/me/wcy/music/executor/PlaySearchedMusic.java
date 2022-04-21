@@ -45,13 +45,16 @@ public abstract class PlaySearchedMusic extends PlayMusic {
             @Override
             public void onSuccess(DownloadInfo response) {
                 // 空回应也视为失败
-                if (response == null || response.getBitrate() == null) {
+//                if (response == null || response.getBitrate() == null) {
+                if (response == null || response.getAudioUrl() == null) {
                     onFail(null);
                     return;
                 }
 
-                music.setPath(response.getBitrate().getFile_link());
-                music.setDuration(response.getBitrate().getFile_duration() * 1000);
+//                music.setPath(response.getBitrate().getFile_link());
+//                music.setDuration(response.getBitrate().getFile_duration() * 1000);
+                music.setPath(response.getAudioUrl());
+//                music.setDuration(response.getBitrate().getFile_duration() * 1000);
                 checkCounter();
             }
 

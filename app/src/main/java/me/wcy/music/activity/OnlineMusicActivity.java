@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import me.wcy.music.executor.PlayOnlineMusic;
 import me.wcy.music.executor.ShareOnlineMusic;
 import me.wcy.music.http.HttpCallback;
 import me.wcy.music.http.HttpClient;
+import me.wcy.music.model.DownloadInfo;
 import me.wcy.music.model.Music;
 import me.wcy.music.model.OnlineMusic;
 import me.wcy.music.model.OnlineMusicList;
@@ -147,7 +149,8 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         final OnlineMusic onlineMusic = mMusicList.get(position);
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle(mMusicList.get(position).getTitle());
-        String path = FileUtils.getMusicDir() + FileUtils.getMp3FileName(onlineMusic.getArtist_name(), onlineMusic.getTitle());
+        String path = FileUtils.getMusicDir() + FileUtils.getFileNameByUrl(onlineMusic.getArtist_name(), onlineMusic.getTitle(), onlineMusic.getAudioUrl());
+        Log.d("TAG", "onMoreClick: "+path);
         File file = new File(path);
         int itemsId = file.exists() ? R.array.online_music_dialog_without_download : R.array.online_music_dialog;
         dialog.setItems(itemsId, (dialog1, which) -> {
@@ -159,6 +162,7 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
 //                    artistInfo(onlineMusic);
                     break;
                 case 2:// 下载
+                    Log.d("TAG", "onMoreClick: download");
                     download(onlineMusic);
                     break;
             }
