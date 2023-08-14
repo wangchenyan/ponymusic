@@ -1,11 +1,12 @@
 package me.wcy.music.activity;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 import me.wcy.music.R;
 import me.wcy.music.adapter.OnMoreClickListener;

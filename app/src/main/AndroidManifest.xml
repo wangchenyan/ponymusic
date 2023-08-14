@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="me.wcy.music"
-    tools:ignore="ProtectedPermissions">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -10,11 +8,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <!-- 高德天气 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name=".application.MusicApplication"
@@ -24,7 +17,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity">
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
@@ -33,23 +26,25 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <meta-data
-            android:name="com.amap.api.v2.apikey"
-            android:value="${AMAP_KEY}" />
-
         <service android:name=".service.PlayService" />
 
-        <receiver android:name=".receiver.DownloadReceiver">
+        <receiver
+            android:name=".receiver.DownloadReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".receiver.RemoteControlReceiver">
+        <receiver
+            android:name=".receiver.RemoteControlReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".receiver.StatusBarReceiver">
+        <receiver
+            android:name=".receiver.StatusBarReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="me.wcy.music.STATUS_BAR_ACTIONS" />
             </intent-filter>
@@ -57,6 +52,7 @@
 
         <activity
             android:name=".activity.MusicActivity"
+            android:exported="true"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>

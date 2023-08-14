@@ -5,8 +5,9 @@ import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
-import android.support.v7.app.AlertDialog;
 import android.webkit.MimeTypeMap;
+
+import androidx.appcompat.app.AlertDialog;
 
 import me.wcy.music.R;
 import me.wcy.music.application.AppCache;

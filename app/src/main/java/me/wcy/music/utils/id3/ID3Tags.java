@@ -3,11 +3,6 @@ package me.wcy.music.utils.id3;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import org.blinkenlights.jid3.ID3Exception;
-import org.blinkenlights.jid3.io.TextEncoding;
-import org.blinkenlights.jid3.v2.APICID3V2Frame;
-import org.blinkenlights.jid3.v2.ID3V2_3_0Tag;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 
@@ -32,38 +27,6 @@ public class ID3Tags {
     private String comment;
     // 封面图片
     private Bitmap coverBitmap;
-
-    public void fillID3Tag(ID3V2_3_0Tag id3V2_3_0Tag) throws ID3Exception {
-        TextEncoding.setDefaultTextEncoding(TextEncoding.UNICODE);
-        if (title != null) {
-            id3V2_3_0Tag.setTitle(title);
-        }
-        if (artist != null) {
-            id3V2_3_0Tag.setArtist(artist);
-        }
-        if (album != null) {
-            id3V2_3_0Tag.setAlbum(album);
-        }
-        if (genre != null) {
-            id3V2_3_0Tag.setGenre(genre);
-        }
-        if (year > 0 && year <= 9999) {
-            id3V2_3_0Tag.setYear(year);
-        }
-        if (comment != null) {
-            id3V2_3_0Tag.setComment(comment);
-        }
-
-        TextEncoding.setDefaultTextEncoding(TextEncoding.ISO_8859_1);
-        if (coverBitmap != null && !coverBitmap.isRecycled()) {
-            byte[] data = bitmapToBytes(coverBitmap);
-            if (data != null) {
-                id3V2_3_0Tag.removeAPICFrame(FRONT_COVER_DESC);
-                APICID3V2Frame apicid3V2Frame = new APICID3V2Frame(MIME_TYPE_JPEG, APICID3V2Frame.PictureType.FrontCover, FRONT_COVER_DESC, data);
-                id3V2_3_0Tag.addAPICFrame(apicid3V2Frame);
-            }
-        }
-    }
 
     public static class Builder {
         private ID3Tags id3Tags;

@@ -3,7 +3,8 @@ package me.wcy.music.storage.preference;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 
 import me.wcy.music.R;
 

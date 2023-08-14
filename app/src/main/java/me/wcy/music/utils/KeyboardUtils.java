@@ -2,9 +2,10 @@ package me.wcy.music.utils;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+
+import androidx.fragment.app.Fragment;
 
 /**
  * Created by hzwangchenyan on 2017/6/2.

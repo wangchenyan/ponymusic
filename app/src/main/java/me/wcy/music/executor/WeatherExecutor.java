@@ -2,21 +2,14 @@ package me.wcy.music.executor;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.amap.api.location.AMapLocalWeatherForecast;
-import com.amap.api.location.AMapLocalWeatherListener;
-import com.amap.api.location.AMapLocalWeatherLive;
-import com.amap.api.location.LocationManagerProxy;
-
 import java.util.Calendar;
 
 import me.wcy.music.R;
-import me.wcy.music.application.AppCache;
 import me.wcy.music.utils.binding.Bind;
 import me.wcy.music.utils.binding.ViewBinder;
 
@@ -64,7 +57,7 @@ import me.wcy.music.utils.binding.ViewBinder;
  * 轻霾
  * 霾
  */
-public class WeatherExecutor implements IExecutor, AMapLocalWeatherListener {
+public class WeatherExecutor implements IExecutor {
     private static final String TAG = "WeatherExecutor";
     private Context mContext;
     @Bind(R.id.ll_weather)
@@ -85,39 +78,6 @@ public class WeatherExecutor implements IExecutor, AMapLocalWeatherListener {
 
     @Override
     public void execute() {
-        AMapLocalWeatherLive aMapLocalWeatherLive = AppCache.get().getAMapLocalWeatherLive();
-        if (aMapLocalWeatherLive != null) {
-            updateView(aMapLocalWeatherLive);
-            release();
-        } else {
-            LocationManagerProxy mLocationManagerProxy = LocationManagerProxy.getInstance(mContext);
-            mLocationManagerProxy.requestWeatherUpdates(LocationManagerProxy.WEATHER_TYPE_LIVE, this);
-        }
-    }
-
-    @Override
-    public void onWeatherLiveSearched(AMapLocalWeatherLive aMapLocalWeatherLive) {
-        if (aMapLocalWeatherLive != null && aMapLocalWeatherLive.getAMapException().getErrorCode() == 0) {
-            AppCache.get().setAMapLocalWeatherLive(aMapLocalWeatherLive);
-            updateView(aMapLocalWeatherLive);
-        } else {
-            Log.e(TAG, "获取天气预报失败");
-        }
-
-        release();
-    }
-
-    @Override
-    public void onWeatherForecaseSearched(AMapLocalWeatherForecast aMapLocalWeatherForecast) {
-    }
-
-    private void updateView(AMapLocalWeatherLive aMapLocalWeatherLive) {
-        llWeather.setVisibility(View.VISIBLE);
-        ivIcon.setImageResource(getWeatherIcon(aMapLocalWeatherLive.getWeather()));
-        tvTemp.setText(mContext.getString(R.string.weather_temp, aMapLocalWeatherLive.getTemperature()));
-        tvCity.setText(aMapLocalWeatherLive.getCity());
-        tvWind.setText(mContext.getString(R.string.weather_wind, aMapLocalWeatherLive.getWindDir(),
-                aMapLocalWeatherLive.getWindPower(), aMapLocalWeatherLive.getHumidity()));
     }
 
     private int getWeatherIcon(String weather) {

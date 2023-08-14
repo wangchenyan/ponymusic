@@ -2,7 +2,6 @@ package me.wcy.music.activity;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +12,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -172,14 +175,14 @@ public class OnlineMusicActivity extends BaseActivity implements OnItemClickList
         tvUpdateDate.setText(getString(R.string.recent_update, mOnlineMusicList.getBillboard().getUpdate_date()));
         tvComment.setText(mOnlineMusicList.getBillboard().getComment());
         Glide.with(this)
-                .load(mOnlineMusicList.getBillboard().getPic_s640())
                 .asBitmap()
+                .load(mOnlineMusicList.getBillboard().getPic_s640())
                 .placeholder(R.drawable.default_cover)
                 .error(R.drawable.default_cover)
                 .override(200, 200)
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         ivCover.setImageBitmap(resource);
                         ivHeaderBg.setImageBitmap(ImageUtils.blur(resource));
                     }

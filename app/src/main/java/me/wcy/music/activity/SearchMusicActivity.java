@@ -1,8 +1,6 @@
 package me.wcy.music.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -10,6 +8,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SearchView;
 
 import java.io.File;
 import java.lang.reflect.Field;

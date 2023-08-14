@@ -14,13 +14,13 @@
         android:layout_height="match_parent"
         android:background="?android:attr/windowBackground">
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
             android:paddingLeft="16dp"
+            android:paddingTop="10dp"
             android:paddingRight="16dp"
-            android:paddingTop="10dp">
+            android:paddingBottom="10dp">
 
             <ImageView
                 android:id="@+id/iv_music_info_cover"
@@ -44,7 +44,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/iv_music_info_cover"
                 app:layout_constraintRight_toRightOf="@+id/iv_music_info_cover" />
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layout_music_info_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -61,9 +61,9 @@
                     android:imeOptions="actionNext"
                     android:singleLine="true"
                     android:textSize="16sp" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/label_music_info_artist"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -79,9 +79,9 @@
                     android:imeOptions="actionNext"
                     android:singleLine="true"
                     android:textSize="16sp" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/label_music_info_album"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -97,9 +97,9 @@
                     android:imeOptions="actionDone"
                     android:singleLine="true"
                     android:textSize="16sp" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/label_music_info_duration"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -114,9 +114,9 @@
                     android:editable="false"
                     android:hint="播放时长"
                     android:textSize="16sp" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/label_music_info_file_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -131,9 +131,9 @@
                     android:editable="false"
                     android:hint="文件名称"
                     android:textSize="16sp" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/label_music_info_file_size"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -148,9 +148,9 @@
                     android:editable="false"
                     android:hint="文件大小"
                     android:textSize="16sp" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/label_music_info_file_path"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -165,7 +165,7 @@
                     android:editable="false"
                     android:hint="文件路径"
                     android:textSize="16sp" />
-            </android.support.design.widget.TextInputLayout>
-        </android.support.constraint.ConstraintLayout>
+            </com.google.android.material.textfield.TextInputLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </LinearLayout>

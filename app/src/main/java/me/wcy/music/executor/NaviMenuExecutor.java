@@ -1,8 +1,9 @@
 package me.wcy.music.executor;
 
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
+
+import androidx.appcompat.app.AlertDialog;
 
 import me.wcy.music.R;
 import me.wcy.music.activity.AboutActivity;
