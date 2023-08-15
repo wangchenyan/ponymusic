@@ -68,7 +68,6 @@
     <string name="about_blog">https://juejin.im/user/2313028193754168</string>
     <string name="about_github">https://github.com/wangchenyan</string>
     <string name="music_info">歌曲信息</string>
-    <string name="no_permission_location">没有位置信息权限，无法更新天气！</string>
     <string name="no_permission_storage">没有存储空间权限，无法扫描本地歌曲！</string>
     <string name="no_permission_setting">没有权限，无法设置铃声，请授予权限</string>
     <string name="grant_permission_setting">授权成功，请在再次操作以设置铃声</string>

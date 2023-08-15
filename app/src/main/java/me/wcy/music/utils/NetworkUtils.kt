@@ -1,49 +1,51 @@
-package me.wcy.music.utils;
+package me.wcy.music.utils
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 
 /**
  * 网络工具类
  * Created by wcy on 2016/1/16.
  */
-public class NetworkUtils {
-
-    public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+object NetworkUtils {
+    fun isNetworkAvailable(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         if (connectivityManager != null) {
-            NetworkInfo[] allNetworkInfo = connectivityManager.getAllNetworkInfo();
+            val allNetworkInfo = connectivityManager.allNetworkInfo
             if (allNetworkInfo != null) {
-                for (NetworkInfo networkInfo : allNetworkInfo) {
-                    if (networkInfo.getState() == NetworkInfo.State.CONNECTED) {
-                        return true;
+                for (networkInfo in allNetworkInfo) {
+                    if (networkInfo.state == NetworkInfo.State.CONNECTED) {
+                        return true
                     }
                 }
             }
         }
-        return false;
+        return false
     }
 
-    public static boolean isActiveNetworkMobile(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    fun isActiveNetworkMobile(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         if (connectivityManager != null) {
-            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-            if (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
-                return true;
+            val networkInfo = connectivityManager.activeNetworkInfo
+            if (networkInfo != null && networkInfo.type == ConnectivityManager.TYPE_MOBILE) {
+                return true
             }
         }
-        return false;
+        return false
     }
 
-    public static boolean isActiveNetworkWifi(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    fun isActiveNetworkWifi(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         if (connectivityManager != null) {
-            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-            if (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
-                return true;
+            val networkInfo = connectivityManager.activeNetworkInfo
+            if (networkInfo != null && networkInfo.type == ConnectivityManager.TYPE_WIFI) {
+                return true
             }
         }
-        return false;
+        return false
     }
 }

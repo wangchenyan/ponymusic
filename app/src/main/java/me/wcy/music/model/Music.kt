@@ -1,191 +1,70 @@
-package me.wcy.music.model;
+package me.wcy.music.model
 
-import android.text.TextUtils;
-
-import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Generated;
-import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.NotNull;
-import org.greenrobot.greendao.annotation.Property;
-
-import java.io.Serializable;
+import android.text.TextUtils
+import java.io.Serializable
 
 /**
  * 单曲信息
  * Created by wcy on 2015/11/27.
  */
-@Entity(nameInDb = "SystemMessage")
-public class Music implements Serializable {
-    private static final long serialVersionUID = 536871008;
+class Music : Serializable {
+    @JvmField
+    var id: Long? = null
 
-    @Id(autoincrement = true)
-    @Property(nameInDb = "id")
-    private Long id;
+    @JvmField
+    var type = 0 // 歌曲类型:本地/网络
 
-    @NotNull
-    @Property(nameInDb = "type")
-    private int type; // 歌曲类型:本地/网络
-    @Property(nameInDb = "songId")
-    private long songId; // [本地]歌曲ID
-    @Property(nameInDb = "title")
-    private String title; // 音乐标题
-    @Property(nameInDb = "artist")
-    private String artist; // 艺术家
-    @Property(nameInDb = "album")
-    private String album; // 专辑
-    @Property(nameInDb = "albumId")
-    private long albumId; // [本地]专辑ID
-    @Property(nameInDb = "coverPath")
-    private String coverPath; // [在线]专辑封面路径
-    @NotNull
-    @Property(nameInDb = "duration")
-    private long duration; // 持续时间
-    @NotNull
-    @Property(nameInDb = "path")
-    private String path; // 播放地址
-    @Property(nameInDb = "fileName")
-    private String fileName; // [本地]文件名
-    @Property(nameInDb = "fileSize")
-    private long fileSize; // [本地]文件大小
+    @JvmField
+    var songId: Long = 0 // [本地]歌曲ID
 
-    @Generated(hash = 1263212761)
-    public Music() {
-    }
+    @JvmField
+    var title: String? = null // 音乐标题
 
-    @Generated(hash = 332465567)
-    public Music(Long id, int type, long songId, String title, String artist,
-                 String album, long albumId, String coverPath, long duration,
-                 @NotNull String path, String fileName, long fileSize) {
-        this.id = id;
-        this.type = type;
-        this.songId = songId;
-        this.title = title;
-        this.artist = artist;
-        this.album = album;
-        this.albumId = albumId;
-        this.coverPath = coverPath;
-        this.duration = duration;
-        this.path = path;
-        this.fileName = fileName;
-        this.fileSize = fileSize;
-    }
+    @JvmField
+    var artist: String? = null // 艺术家
 
-    public interface Type {
-        int LOCAL = 0;
-        int ONLINE = 1;
-    }
+    @JvmField
+    var album: String? = null // 专辑
 
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof Music)) {
-            return false;
+    @JvmField
+    var albumId: Long = 0 // [本地]专辑ID
+
+    @JvmField
+    var coverPath: String? = null // [在线]专辑封面路径
+
+    @JvmField
+    var duration: Long = 0 // 持续时间
+
+    @JvmField
+    var path: String = "" // 播放地址
+
+    @JvmField
+    var fileName: String? = null // [本地]文件名
+
+    @JvmField
+    var fileSize: Long = 0 // [本地]文件大小
+
+    interface Type {
+        companion object {
+            const val LOCAL = 0
+            const val ONLINE = 1
         }
-        Music music = (Music) o;
-        if (music.songId > 0 && music.songId == this.songId) {
-            return true;
+    }
+
+    override fun equals(o: Any?): Boolean {
+        if (o !is Music) {
+            return false
         }
-        if (TextUtils.equals(music.title, this.title)
-                && TextUtils.equals(music.artist, this.artist)
-                && TextUtils.equals(music.album, this.album)
-                && music.duration == this.duration) {
-            return true;
+        val music = o
+        if (music.songId > 0 && music.songId == songId) {
+            return true
         }
-        return false;
+        return (TextUtils.equals(music.title, title)
+                && TextUtils.equals(music.artist, artist)
+                && TextUtils.equals(music.album, album) && music.duration == duration)
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public long getSongId() {
-        return songId;
-    }
-
-    public void setSongId(long songId) {
-        this.songId = songId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getArtist() {
-        return artist;
-    }
-
-    public void setArtist(String artist) {
-        this.artist = artist;
-    }
-
-    public String getAlbum() {
-        return album;
-    }
-
-    public void setAlbum(String album) {
-        this.album = album;
-    }
-
-    public long getAlbumId() {
-        return albumId;
-    }
-
-    public void setAlbumId(long albumId) {
-        this.albumId = albumId;
-    }
-
-    public String getCoverPath() {
-        return coverPath;
-    }
-
-    public void setCoverPath(String coverPath) {
-        this.coverPath = coverPath;
-    }
-
-    public long getDuration() {
-        return duration;
-    }
-
-    public void setDuration(long duration) {
-        this.duration = duration;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public long getFileSize() {
-        return fileSize;
-    }
-
-    public void setFileSize(long fileSize) {
-        this.fileSize = fileSize;
+    companion object {
+        private const val serialVersionUID: Long = 536871008
     }
 }

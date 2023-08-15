@@ -6,8 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".application.MusicApplication"
@@ -42,13 +41,6 @@
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
-        <receiver
-            android:name=".receiver.StatusBarReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="me.wcy.music.STATUS_BAR_ACTIONS" />
-            </intent-filter>
-        </receiver>
 
         <activity
             android:name=".activity.MusicActivity"
@@ -61,17 +53,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.OnlineMusicActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.ArtistInfoActivity"
-            android:label="@string/artist_info"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.SearchMusicActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Search" />
         <activity
             android:name=".activity.SettingActivity"
             android:label="@string/menu_setting"

@@ -1,35 +1,34 @@
-package me.wcy.music.service;
+package me.wcy.music.service
 
-import me.wcy.music.model.Music;
+import me.wcy.music.model.Music
 
 /**
  * 播放进度监听器
  * Created by hzwangchenyan on 2015/12/17.
  */
-public interface OnPlayerEventListener {
-
+interface OnPlayerEventListener {
     /**
      * 切换歌曲
      */
-    void onChange(Music music);
+    fun onChange(music: Music?)
 
     /**
      * 继续播放
      */
-    void onPlayerStart();
+    fun onPlayerStart()
 
     /**
      * 暂停播放
      */
-    void onPlayerPause();
+    fun onPlayerPause()
 
     /**
      * 更新进度
      */
-    void onPublish(int progress);
+    fun onPublish(progress: Int)
 
     /**
      * 缓冲百分比
      */
-    void onBufferingUpdate(int percent);
+    fun onBufferingUpdate(percent: Int)
 }

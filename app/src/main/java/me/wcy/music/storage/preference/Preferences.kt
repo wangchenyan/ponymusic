@@ -1,122 +1,111 @@
-package me.wcy.music.storage.preference;
+package me.wcy.music.storage.preference
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
-import androidx.annotation.Nullable;
-
-import me.wcy.music.R;
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
+import me.wcy.music.R
 
 /**
  * SharedPreferences工具类
  * Created by wcy on 2015/11/28.
  */
-public class Preferences {
-    private static final String PLAY_POSITION = "play_position";
-    private static final String PLAY_MODE = "play_mode";
-    private static final String SPLASH_URL = "splash_url";
-    private static final String NIGHT_MODE = "night_mode";
-
-    private static Context sContext;
-
-    public static void init(Context context) {
-        sContext = context.getApplicationContext();
+@SuppressLint("StaticFieldLeak")
+object Preferences {
+    private const val PLAY_POSITION = "play_position"
+    private const val PLAY_MODE = "play_mode"
+    private const val SPLASH_URL = "splash_url"
+    private const val NIGHT_MODE = "night_mode"
+    private var sContext: Context? = null
+    fun init(context: Context?) {
+        sContext = context!!.applicationContext
     }
 
-    public static int getPlayPosition() {
-        return getInt(PLAY_POSITION, 0);
+    val playPosition: Int
+        get() = getInt(PLAY_POSITION, 0)
+
+    fun savePlayPosition(position: Int) {
+        saveInt(PLAY_POSITION, position)
     }
 
-    public static void savePlayPosition(int position) {
-        saveInt(PLAY_POSITION, position);
+    val playMode: Int
+        get() = getInt(PLAY_MODE, 0)
+
+    fun savePlayMode(mode: Int) {
+        saveInt(PLAY_MODE, mode)
     }
 
-    public static int getPlayMode() {
-        return getInt(PLAY_MODE, 0);
+    val splashUrl: String?
+        get() = getString(SPLASH_URL, "")
+
+    fun saveSplashUrl(url: String?) {
+        saveString(SPLASH_URL, url)
     }
 
-    public static void savePlayMode(int mode) {
-        saveInt(PLAY_MODE, mode);
+    fun enableMobileNetworkPlay(): Boolean {
+        return getBoolean(sContext!!.getString(R.string.setting_key_mobile_network_play), false)
     }
 
-    public static String getSplashUrl() {
-        return getString(SPLASH_URL, "");
+    fun saveMobileNetworkPlay(enable: Boolean) {
+        saveBoolean(sContext!!.getString(R.string.setting_key_mobile_network_play), enable)
     }
 
-    public static void saveSplashUrl(String url) {
-        saveString(SPLASH_URL, url);
+    fun enableMobileNetworkDownload(): Boolean {
+        return getBoolean(sContext!!.getString(R.string.setting_key_mobile_network_download), false)
     }
 
-    public static boolean enableMobileNetworkPlay() {
-        return getBoolean(sContext.getString(R.string.setting_key_mobile_network_play), false);
+    fun isNightMode(): Boolean = getBoolean(NIGHT_MODE, false)
+
+    fun saveNightMode(on: Boolean) {
+        saveBoolean(NIGHT_MODE, on)
     }
 
-    public static void saveMobileNetworkPlay(boolean enable) {
-        saveBoolean(sContext.getString(R.string.setting_key_mobile_network_play), enable);
+    val filterSize: String?
+        get() = getString(sContext!!.getString(R.string.setting_key_filter_size), "0")
+
+    fun saveFilterSize(value: String?) {
+        saveString(sContext!!.getString(R.string.setting_key_filter_size), value)
     }
 
-    public static boolean enableMobileNetworkDownload() {
-        return getBoolean(sContext.getString(R.string.setting_key_mobile_network_download), false);
+    val filterTime: String?
+        get() = getString(sContext!!.getString(R.string.setting_key_filter_time), "0")
+
+    fun saveFilterTime(value: String?) {
+        saveString(sContext!!.getString(R.string.setting_key_filter_time), value)
     }
 
-    public static boolean isNightMode() {
-        return getBoolean(NIGHT_MODE, false);
+    private fun getBoolean(key: String, defValue: Boolean): Boolean {
+        return preferences.getBoolean(key, defValue)
     }
 
-    public static void saveNightMode(boolean on) {
-        saveBoolean(NIGHT_MODE, on);
+    private fun saveBoolean(key: String, value: Boolean) {
+        preferences.edit().putBoolean(key, value).apply()
     }
 
-    public static String getFilterSize() {
-        return getString(sContext.getString(R.string.setting_key_filter_size), "0");
+    private fun getInt(key: String, defValue: Int): Int {
+        return preferences.getInt(key, defValue)
     }
 
-    public static void saveFilterSize(String value) {
-        saveString(sContext.getString(R.string.setting_key_filter_size), value);
+    private fun saveInt(key: String, value: Int) {
+        preferences.edit().putInt(key, value).apply()
     }
 
-    public static String getFilterTime() {
-        return getString(sContext.getString(R.string.setting_key_filter_time), "0");
+    private fun getLong(key: String, defValue: Long): Long {
+        return preferences.getLong(key, defValue)
     }
 
-    public static void saveFilterTime(String value) {
-        saveString(sContext.getString(R.string.setting_key_filter_time), value);
+    private fun saveLong(key: String, value: Long) {
+        preferences.edit().putLong(key, value).apply()
     }
 
-    private static boolean getBoolean(String key, boolean defValue) {
-        return getPreferences().getBoolean(key, defValue);
+    private fun getString(key: String, defValue: String?): String? {
+        return preferences.getString(key, defValue)
     }
 
-    private static void saveBoolean(String key, boolean value) {
-        getPreferences().edit().putBoolean(key, value).apply();
+    private fun saveString(key: String, value: String?) {
+        preferences.edit().putString(key, value).apply()
     }
 
-    private static int getInt(String key, int defValue) {
-        return getPreferences().getInt(key, defValue);
-    }
-
-    private static void saveInt(String key, int value) {
-        getPreferences().edit().putInt(key, value).apply();
-    }
-
-    private static long getLong(String key, long defValue) {
-        return getPreferences().getLong(key, defValue);
-    }
-
-    private static void saveLong(String key, long value) {
-        getPreferences().edit().putLong(key, value).apply();
-    }
-
-    private static String getString(String key, @Nullable String defValue) {
-        return getPreferences().getString(key, defValue);
-    }
-
-    private static void saveString(String key, @Nullable String value) {
-        getPreferences().edit().putString(key, value).apply();
-    }
-
-    private static SharedPreferences getPreferences() {
-        return PreferenceManager.getDefaultSharedPreferences(sContext);
-    }
+    private val preferences: SharedPreferences
+        private get() = PreferenceManager.getDefaultSharedPreferences(sContext)
 }

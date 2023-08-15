@@ -1,198 +1,183 @@
-package me.wcy.music.utils;
+package me.wcy.music.utils
 
-import android.content.ContentResolver;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Build;
-import android.text.TextUtils;
-
-import androidx.collection.LruCache;
-
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-
-import me.wcy.music.R;
-import me.wcy.music.model.Music;
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.text.TextUtils
+import androidx.collection.LruCache
+import me.wcy.music.R
+import me.wcy.music.model.Music
+import java.io.FileNotFoundException
+import java.io.InputStream
 
 /**
  * 专辑封面图片加载器
  * Created by wcy on 2015/11/27.
  */
-public class CoverLoader {
-    public static final int THUMBNAIL_MAX_LENGTH = 500;
-    private static final String KEY_NULL = "null";
+open class CoverLoader private constructor() {
+    private var context: Context? = null
+    private val cacheMap: MutableMap<Type, LruCache<String, Bitmap>> = HashMap(3)
+    private var roundLength = ScreenUtils.screenWidth / 2
 
-    private Context context;
-    private Map<Type, LruCache<String, Bitmap>> cacheMap;
-    private int roundLength = ScreenUtils.getScreenWidth() / 2;
-
-    private enum Type {
-        THUMB,
-        ROUND,
-        BLUR
+    private enum class Type {
+        THUMB, ROUND, BLUR
     }
 
-    public static CoverLoader get() {
-        return SingletonHolder.instance;
+    private object SingletonHolder {
+        val instance = CoverLoader()
     }
 
-    private static class SingletonHolder {
-        private static CoverLoader instance = new CoverLoader();
-    }
-
-    private CoverLoader() {
-    }
-
-    public void init(Context context) {
-        this.context = context.getApplicationContext();
+    fun init(context: Context?) {
+        this.context = context!!.applicationContext
 
         // 获取当前进程的可用内存（单位KB）
-        int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+        val maxMemory = (Runtime.getRuntime().maxMemory() / 1024).toInt()
         // 缓存大小为当前进程可用内存的1/8
-        int cacheSize = maxMemory / 8;
-        LruCache<String, Bitmap> thumbCache = new LruCache<String, Bitmap>(cacheSize) {
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    return bitmap.getAllocationByteCount() / 1024;
-                } else {
-                    return bitmap.getByteCount() / 1024;
-                }
+        val cacheSize = maxMemory / 8
+        val thumbCache: LruCache<String, Bitmap> = object : LruCache<String, Bitmap>(cacheSize) {
+            override fun sizeOf(key: String, bitmap: Bitmap): Int {
+                return bitmap.allocationByteCount / 1024
             }
-        };
-        LruCache<String, Bitmap> roundCache = new LruCache<>(10);
-        LruCache<String, Bitmap> blurCache = new LruCache<>(10);
-
-        cacheMap = new HashMap<>(3);
-        cacheMap.put(Type.THUMB, thumbCache);
-        cacheMap.put(Type.ROUND, roundCache);
-        cacheMap.put(Type.BLUR, blurCache);
+        }
+        val roundCache = LruCache<String, Bitmap>(10)
+        val blurCache = LruCache<String, Bitmap>(10)
+        cacheMap[Type.THUMB] = thumbCache
+        cacheMap[Type.ROUND] = roundCache
+        cacheMap[Type.BLUR] = blurCache
     }
 
-    public void setRoundLength(int roundLength) {
+    fun setRoundLength(roundLength: Int) {
         if (this.roundLength != roundLength) {
-            this.roundLength = roundLength;
-            cacheMap.get(Type.ROUND).evictAll();
+            this.roundLength = roundLength
+            cacheMap[Type.ROUND]!!.evictAll()
         }
     }
 
-    public Bitmap loadThumb(Music music) {
-        return loadCover(music, Type.THUMB);
+    fun loadThumb(music: Music?): Bitmap? {
+        return loadCover(music, Type.THUMB)
     }
 
-    public Bitmap loadRound(Music music) {
-        return loadCover(music, Type.ROUND);
+    fun loadRound(music: Music?): Bitmap? {
+        return loadCover(music, Type.ROUND)
     }
 
-    public Bitmap loadBlur(Music music) {
-        return loadCover(music, Type.BLUR);
+    fun loadBlur(music: Music?): Bitmap? {
+        return loadCover(music, Type.BLUR)
     }
 
-    private Bitmap loadCover(Music music, Type type) {
-        Bitmap bitmap;
-        String key = getKey(music);
-        LruCache<String, Bitmap> cache = cacheMap.get(type);
+    private fun loadCover(music: Music?, type: Type): Bitmap? {
+        var bitmap: Bitmap?
+        val key = getKey(music)
+        val cache = cacheMap!![type]!!
         if (TextUtils.isEmpty(key)) {
-            bitmap = cache.get(KEY_NULL);
+            bitmap = cache[KEY_NULL]
             if (bitmap != null) {
-                return bitmap;
+                return bitmap
+            }
+            bitmap = getDefaultCover(type)
+            cache.put(KEY_NULL, bitmap!!)
+            return bitmap
+        }
+        bitmap = cache[key!!]
+        if (bitmap != null) {
+            return bitmap
+        }
+        bitmap = loadCoverByType(music, type)
+        if (bitmap != null) {
+            cache.put(key, bitmap)
+            return bitmap
+        }
+        return loadCover(null, type)
+    }
+
+    private fun getKey(music: Music?): String? {
+        if (music == null) {
+            return null
+        }
+        return if (music.type == Music.Type.LOCAL && music.albumId > 0) {
+            music.albumId.toString()
+        } else if (music.type == Music.Type.ONLINE && !TextUtils.isEmpty(
+                music.coverPath
+            )
+        ) {
+            music.coverPath
+        } else {
+            null
+        }
+    }
+
+    private fun getDefaultCover(type: Type): Bitmap? {
+        return when (type) {
+            Type.ROUND -> {
+                var bitmap = BitmapFactory.decodeResource(
+                    context!!.resources,
+                    R.drawable.play_page_default_cover
+                )
+                bitmap = ImageUtils.resizeImage(bitmap, roundLength, roundLength)
+                bitmap
             }
 
-            bitmap = getDefaultCover(type);
-            cache.put(KEY_NULL, bitmap);
-            return bitmap;
-        }
+            Type.BLUR -> BitmapFactory.decodeResource(
+                context!!.resources,
+                R.drawable.play_page_default_bg
+            )
 
-        bitmap = cache.get(key);
-        if (bitmap != null) {
-            return bitmap;
+            else -> BitmapFactory.decodeResource(context!!.resources, R.drawable.default_cover)
         }
-
-        bitmap = loadCoverByType(music, type);
-        if (bitmap != null) {
-            cache.put(key, bitmap);
-            return bitmap;
-        }
-
-        return loadCover(null, type);
     }
 
-    private String getKey(Music music) {
-        if (music == null) {
-            return null;
-        }
-
-        if (music.getType() == Music.Type.LOCAL && music.getAlbumId() > 0) {
-            return String.valueOf(music.getAlbumId());
-        } else if (music.getType() == Music.Type.ONLINE && !TextUtils.isEmpty(music.getCoverPath())) {
-            return music.getCoverPath();
+    private fun loadCoverByType(music: Music?, type: Type): Bitmap? {
+        music ?: return null
+        var bitmap: Bitmap?
+        bitmap = if (music.type == Music.Type.LOCAL) {
+            loadCoverFromMediaStore(music.albumId)
         } else {
-            return null;
+            loadCoverFromFile(music.coverPath)
         }
-    }
+        return when (type) {
+            Type.ROUND -> {
+                bitmap = ImageUtils.resizeImage(bitmap, roundLength, roundLength)
+                ImageUtils.createCircleImage(bitmap)
+            }
 
-    private Bitmap getDefaultCover(Type type) {
-        switch (type) {
-            case ROUND:
-                Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.play_page_default_cover);
-                bitmap = ImageUtils.resizeImage(bitmap, roundLength, roundLength);
-                return bitmap;
-            case BLUR:
-                return BitmapFactory.decodeResource(context.getResources(), R.drawable.play_page_default_bg);
-            default:
-                return BitmapFactory.decodeResource(context.getResources(), R.drawable.default_cover);
-        }
-    }
-
-    private Bitmap loadCoverByType(Music music, Type type) {
-        Bitmap bitmap;
-        if (music.getType() == Music.Type.LOCAL) {
-            bitmap = loadCoverFromMediaStore(music.getAlbumId());
-        } else {
-            bitmap = loadCoverFromFile(music.getCoverPath());
-        }
-
-        switch (type) {
-            case ROUND:
-                bitmap = ImageUtils.resizeImage(bitmap, roundLength, roundLength);
-                return ImageUtils.createCircleImage(bitmap);
-            case BLUR:
-                return ImageUtils.blur(bitmap);
-            default:
-                return bitmap;
+            Type.BLUR -> ImageUtils.blur(bitmap)
+            else -> bitmap
         }
     }
 
     /**
-     * 从媒体库加载封面<br>
+     * 从媒体库加载封面<br></br>
      * 本地音乐
      */
-    private Bitmap loadCoverFromMediaStore(long albumId) {
-        ContentResolver resolver = context.getContentResolver();
-        Uri uri = MusicUtils.getMediaStoreAlbumCoverUri(albumId);
-        InputStream is;
-        try {
-            is = resolver.openInputStream(uri);
-        } catch (FileNotFoundException ignored) {
-            return null;
+    private fun loadCoverFromMediaStore(albumId: Long): Bitmap? {
+        val resolver = context!!.contentResolver
+        val uri = MusicUtils.getMediaStoreAlbumCoverUri(albumId)
+        val `is`: InputStream?
+        `is` = try {
+            resolver.openInputStream(uri!!)
+        } catch (ignored: FileNotFoundException) {
+            return null
         }
-
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.RGB_565;
-        return BitmapFactory.decodeStream(is, null, options);
+        val options = BitmapFactory.Options()
+        options.inPreferredConfig = Bitmap.Config.RGB_565
+        return BitmapFactory.decodeStream(`is`, null, options)
     }
 
     /**
-     * 从下载的图片加载封面<br>
+     * 从下载的图片加载封面<br></br>
      * 网络音乐
      */
-    private Bitmap loadCoverFromFile(String path) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.RGB_565;
-        return BitmapFactory.decodeFile(path, options);
+    private fun loadCoverFromFile(path: String?): Bitmap {
+        val options = BitmapFactory.Options()
+        options.inPreferredConfig = Bitmap.Config.RGB_565
+        return BitmapFactory.decodeFile(path, options)
+    }
+
+    companion object {
+        const val THUMBNAIL_MAX_LENGTH = 500
+        private const val KEY_NULL = "null"
+        fun get(): CoverLoader {
+            return SingletonHolder.instance
+        }
     }
 }

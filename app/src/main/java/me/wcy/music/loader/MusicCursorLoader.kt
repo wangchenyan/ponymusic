@@ -1,19 +1,28 @@
-package me.wcy.music.loader;
+package me.wcy.music.loader
 
-import android.content.Context;
-import android.content.CursorLoader;
-import android.provider.MediaStore;
+import android.content.Context
+import android.provider.MediaStore
+import androidx.loader.content.CursorLoader
 
-public class MusicCursorLoader extends CursorLoader {
-    private final String[] proj;
+class MusicCursorLoader(context: Context) : CursorLoader(context) {
+    private val proj = arrayOf(
+        MediaStore.Audio.Media._ID,
+        MediaStore.Audio.Media.IS_MUSIC,
+        MediaStore.Audio.Media.TITLE,
+        MediaStore.Audio.Media.ARTIST,
+        MediaStore.Audio.Media.ALBUM,
+        MediaStore.Audio.Media.ALBUM_ID,
+        MediaStore.Audio.Media.DATA,
+        MediaStore.Audio.Media.DISPLAY_NAME,
+        MediaStore.Audio.Media.SIZE,
+        MediaStore.Audio.Media.DURATION,
+    )
 
-    public MusicCursorLoader(Context context) {
-        super(context);
-        this.proj = new String[]{"_id", "is_music", "title", "artist", "album", "album_id", "_data", "_display_name", "_size", "duration"};
-        this.setProjection(this.proj);
-        this.setUri(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
-        this.setSortOrder("date_modified desc");
-        this.setSelection("mime_type= ?");
-        this.setSelectionArgs(new String[]{"audio/mpeg"});
+    init {
+        this.projection = proj
+        this.uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+        this.sortOrder = "${MediaStore.Audio.Media.DATE_MODIFIED} DESC"
+        this.selection = "${MediaStore.Audio.Media.MIME_TYPE} = ?"
+        this.selectionArgs = arrayOf("audio/mpeg")
     }
 }

@@ -1,41 +1,28 @@
-package me.wcy.music.adapter;
+package me.wcy.music.adapter
 
-import android.view.View;
-import android.view.ViewGroup;
-
-import androidx.viewpager.widget.PagerAdapter;
-
-import java.util.List;
+import android.view.View
+import android.view.ViewGroup
+import androidx.viewpager.widget.PagerAdapter
 
 /**
  * 正在播放ViewPager适配器，包含歌词和封面
  * Created by wcy on 2015/11/30.
  */
-public class PlayPagerAdapter extends PagerAdapter {
-    private List<View> mViews;
-
-    public PlayPagerAdapter(List<View> views) {
-        mViews = views;
+class PlayPagerAdapter(private val mViews: List<View>) : PagerAdapter() {
+    override fun getCount(): Int {
+        return mViews.size
     }
 
-    @Override
-    public int getCount() {
-        return mViews.size();
+    override fun isViewFromObject(view: View, `object`: Any): Boolean {
+        return view === `object`
     }
 
-    @Override
-    public boolean isViewFromObject(View view, Object object) {
-        return view == object;
+    override fun instantiateItem(container: ViewGroup, position: Int): Any {
+        container.addView(mViews[position])
+        return mViews[position]
     }
 
-    @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        container.addView(mViews.get(position));
-        return mViews.get(position);
-    }
-
-    @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView(mViews.get(position));
+    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+        container.removeView(mViews[position])
     }
 }

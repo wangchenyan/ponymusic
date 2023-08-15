@@ -1,79 +1,77 @@
-package me.wcy.music.executor;
+package me.wcy.music.executor
 
-import android.content.Intent;
-import android.view.MenuItem;
-
-import androidx.appcompat.app.AlertDialog;
-
-import me.wcy.music.R;
-import me.wcy.music.activity.AboutActivity;
-import me.wcy.music.activity.MusicActivity;
-import me.wcy.music.activity.SettingActivity;
-import me.wcy.music.constants.Actions;
-import me.wcy.music.service.PlayService;
-import me.wcy.music.service.QuitTimer;
-import me.wcy.music.storage.preference.Preferences;
-import me.wcy.music.utils.ToastUtils;
+import android.content.DialogInterface
+import android.content.Intent
+import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
+import me.wcy.music.R
+import me.wcy.music.activity.AboutActivity
+import me.wcy.music.activity.MusicActivity
+import me.wcy.music.activity.SettingActivity
+import me.wcy.music.constants.Actions
+import me.wcy.music.service.PlayService
+import me.wcy.music.service.QuitTimer
+import me.wcy.music.storage.preference.Preferences
+import me.wcy.music.utils.ToastUtils
 
 /**
  * 导航菜单执行器
  * Created by hzwangchenyan on 2016/1/14.
  */
-public class NaviMenuExecutor {
-    private MusicActivity activity;
+class NaviMenuExecutor(private val activity: MusicActivity) {
+    fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_setting -> {
+                startActivity(SettingActivity::class.java)
+                return true
+            }
 
-    public NaviMenuExecutor(MusicActivity activity) {
-        this.activity = activity;
-    }
+            R.id.action_night -> nightMode()
+            R.id.action_timer -> {
+                timerDialog()
+                return true
+            }
 
-    public boolean onNavigationItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_setting:
-                startActivity(SettingActivity.class);
-                return true;
-            case R.id.action_night:
-                nightMode();
-                break;
-            case R.id.action_timer:
-                timerDialog();
-                return true;
-            case R.id.action_exit:
-                activity.finish();
-                PlayService.startCommand(activity, Actions.ACTION_STOP);
-                return true;
-            case R.id.action_about:
-                startActivity(AboutActivity.class);
-                return true;
+            R.id.action_exit -> {
+                activity.finish()
+                PlayService.startCommand(activity, Actions.ACTION_STOP)
+                return true
+            }
+
+            R.id.action_about -> {
+                startActivity(AboutActivity::class.java)
+                return true
+            }
         }
-        return false;
+        return false
     }
 
-    private void startActivity(Class<?> cls) {
-        Intent intent = new Intent(activity, cls);
-        activity.startActivity(intent);
+    private fun startActivity(cls: Class<*>) {
+        val intent = Intent(activity, cls)
+        activity.startActivity(intent)
     }
 
-    private void nightMode() {
-        Preferences.saveNightMode(!Preferences.isNightMode());
-        activity.recreate();
+    private fun nightMode() {
+        Preferences.saveNightMode(!Preferences.isNightMode())
+        activity.recreate()
     }
 
-    private void timerDialog() {
-        new AlertDialog.Builder(activity)
-                .setTitle(R.string.menu_timer)
-                .setItems(activity.getResources().getStringArray(R.array.timer_text), (dialog, which) -> {
-                    int[] times = activity.getResources().getIntArray(R.array.timer_int);
-                    startTimer(times[which]);
-                })
-                .show();
+    private fun timerDialog() {
+        AlertDialog.Builder(activity)
+            .setTitle(R.string.menu_timer)
+            .setItems(activity.resources.getStringArray(R.array.timer_text)) { dialog: DialogInterface?, which: Int ->
+                val times = activity.resources.getIntArray(R.array.timer_int)
+                startTimer(times[which])
+            }
+            .show()
     }
 
-    private void startTimer(int minute) {
-        QuitTimer.get().start(minute * 60 * 1000);
+    private fun startTimer(minute: Int) {
+        QuitTimer.get().start((minute * 60 * 1000).toLong())
         if (minute > 0) {
-            ToastUtils.show(activity.getString(R.string.timer_set, String.valueOf(minute)));
+            ToastUtils.show(activity.getString(R.string.timer_set, minute.toString()))
         } else {
-            ToastUtils.show(R.string.timer_cancel);
+            ToastUtils.show(R.string.timer_cancel)
         }
     }
 }

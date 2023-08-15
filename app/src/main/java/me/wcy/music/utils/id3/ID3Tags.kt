@@ -1,90 +1,97 @@
-package me.wcy.music.utils.id3;
+package me.wcy.music.utils.id3
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import java.io.ByteArrayOutputStream
+import java.io.File
 
 /**
  * Created by hzwangchenyan on 2017/8/11.
  */
-public class ID3Tags {
-    private static final String FRONT_COVER_DESC = "front_cover";
-    private static final String MIME_TYPE_JPEG = "image/jpeg";
-
+class ID3Tags {
     // 标题
-    private String title;
+    private var title: String? = null
+
     // 艺术家
-    private String artist;
+    private var artist: String? = null
+
     // 专辑
-    private String album;
+    private var album: String? = null
+
     // 流派
-    private String genre;
+    private var genre: String? = null
+
     // 年份
-    private int year;
+    private var year = 0
+
     // 注释
-    private String comment;
+    private var comment: String? = null
+
     // 封面图片
-    private Bitmap coverBitmap;
+    private var coverBitmap: Bitmap? = null
 
-    public static class Builder {
-        private ID3Tags id3Tags;
+    class Builder {
+        private val id3Tags: ID3Tags
 
-        public Builder() {
-            id3Tags = new ID3Tags();
+        init {
+            id3Tags = ID3Tags()
         }
 
-        public ID3Tags build() {
-            return id3Tags;
+        fun build(): ID3Tags {
+            return id3Tags
         }
 
-        public Builder setTitle(String title) {
-            id3Tags.title = title;
-            return this;
+        fun setTitle(title: String?): Builder {
+            id3Tags.title = title
+            return this
         }
 
-        public Builder setArtist(String artist) {
-            id3Tags.artist = artist;
-            return this;
+        fun setArtist(artist: String?): Builder {
+            id3Tags.artist = artist
+            return this
         }
 
-        public Builder setAlbum(String album) {
-            id3Tags.album = album;
-            return this;
+        fun setAlbum(album: String?): Builder {
+            id3Tags.album = album
+            return this
         }
 
-        public Builder setGenre(String genre) {
-            id3Tags.genre = genre;
-            return this;
+        fun setGenre(genre: String?): Builder {
+            id3Tags.genre = genre
+            return this
         }
 
-        public Builder setYear(int year) {
-            id3Tags.year = year;
-            return this;
+        fun setYear(year: Int): Builder {
+            id3Tags.year = year
+            return this
         }
 
-        public Builder setComment(String comment) {
-            id3Tags.comment = comment;
-            return this;
+        fun setComment(comment: String?): Builder {
+            id3Tags.comment = comment
+            return this
         }
 
-        public Builder setCoverFile(File coverFile) {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.RGB_565;
-            Bitmap coverBitmap = BitmapFactory.decodeFile(coverFile.getPath(), options);
-            return setCoverBitmap(coverBitmap);
+        fun setCoverFile(coverFile: File): Builder {
+            val options = BitmapFactory.Options()
+            options.inPreferredConfig = Bitmap.Config.RGB_565
+            val coverBitmap = BitmapFactory.decodeFile(coverFile.path, options)
+            return setCoverBitmap(coverBitmap)
         }
 
-        public Builder setCoverBitmap(Bitmap coverBitmap) {
-            id3Tags.coverBitmap = coverBitmap;
-            return this;
+        fun setCoverBitmap(coverBitmap: Bitmap?): Builder {
+            id3Tags.coverBitmap = coverBitmap
+            return this
         }
     }
 
-    private byte[] bitmapToBytes(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        return baos.toByteArray();
+    private fun bitmapToBytes(bitmap: Bitmap): ByteArray {
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        return baos.toByteArray()
+    }
+
+    companion object {
+        private const val FRONT_COVER_DESC = "front_cover"
+        private const val MIME_TYPE_JPEG = "image/jpeg"
     }
 }

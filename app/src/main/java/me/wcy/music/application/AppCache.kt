@@ -1,114 +1,84 @@
-package me.wcy.music.application;
+package me.wcy.music.application
 
-import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
-import android.os.Bundle;
-import android.util.Log;
-import android.util.LongSparseArray;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import me.wcy.music.executor.DownloadMusicInfo;
-import me.wcy.music.model.Music;
-import me.wcy.music.model.SheetInfo;
-import me.wcy.music.storage.preference.Preferences;
-import me.wcy.music.utils.CoverLoader;
-import me.wcy.music.utils.ScreenUtils;
-import me.wcy.music.utils.ToastUtils;
+import android.app.Activity
+import android.app.Application
+import android.content.Context
+import android.os.Bundle
+import android.util.Log
+import android.util.LongSparseArray
+import me.wcy.music.executor.DownloadMusicInfo
+import me.wcy.music.model.Music
+import me.wcy.music.storage.preference.Preferences
+import me.wcy.music.utils.CoverLoader
+import me.wcy.music.utils.ScreenUtils
+import me.wcy.music.utils.ToastUtils
 
 /**
  * Created by hzwangchenyan on 2016/11/23.
  */
-public class AppCache {
-    private Context mContext;
-    private final List<Music> mLocalMusicList = new ArrayList<>();
-    private final List<SheetInfo> mSheetList = new ArrayList<>();
-    private final List<Activity> mActivityStack = new ArrayList<>();
-    private final LongSparseArray<DownloadMusicInfo> mDownloadList = new LongSparseArray<>();
+class AppCache private constructor() {
+    private var mContext: Context? = null
+    private val mLocalMusicList: MutableList<Music> = ArrayList()
+    private val mActivityStack: MutableList<Activity> = ArrayList()
+    private val mDownloadList = LongSparseArray<DownloadMusicInfo>()
 
-    private AppCache() {
+    private object SingletonHolder {
+        val instance = AppCache()
     }
 
-    private static class SingletonHolder {
-        private static AppCache instance = new AppCache();
+    fun init(application: Application) {
+        mContext = application.applicationContext
+        ToastUtils.init(mContext)
+        Preferences.init(mContext)
+        ScreenUtils.init(mContext)
+        CrashHandler.getInstance().init()
+        CoverLoader.get().init(mContext)
+        application.registerActivityLifecycleCallbacks(ActivityLifecycle())
     }
 
-    public static AppCache get() {
-        return SingletonHolder.instance;
+    fun getContext(): Context? {
+        return mContext
     }
 
-    public void init(Application application) {
-        mContext = application.getApplicationContext();
-        ToastUtils.init(mContext);
-        Preferences.init(mContext);
-        ScreenUtils.init(mContext);
-        CrashHandler.getInstance().init();
-        CoverLoader.get().init(mContext);
-        application.registerActivityLifecycleCallbacks(new ActivityLifecycle());
+    fun getLocalMusicList(): MutableList<Music> {
+        return mLocalMusicList
     }
 
-    public Context getContext() {
-        return mContext;
-    }
-
-    public List<Music> getLocalMusicList() {
-        return mLocalMusicList;
-    }
-
-    public List<SheetInfo> getSheetList() {
-        return mSheetList;
-    }
-
-    public void clearStack() {
-        List<Activity> activityStack = mActivityStack;
-        for (int i = activityStack.size() - 1; i >= 0; i--) {
-            Activity activity = activityStack.get(i);
-            if (!activity.isFinishing()) {
-                activity.finish();
+    fun clearStack() {
+        val activityStack = mActivityStack
+        for (i in activityStack.indices.reversed()) {
+            val activity = activityStack[i]
+            if (!activity.isFinishing) {
+                activity.finish()
             }
         }
-        activityStack.clear();
+        activityStack.clear()
     }
 
-    public LongSparseArray<DownloadMusicInfo> getDownloadList() {
-        return mDownloadList;
+    fun getDownloadList(): LongSparseArray<DownloadMusicInfo> {
+        return mDownloadList
     }
 
-    private class ActivityLifecycle implements Application.ActivityLifecycleCallbacks {
-        private static final String TAG = "Activity";
-
-        @Override
-        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-            Log.i(TAG, "onCreate: " + activity.getClass().getSimpleName());
-            mActivityStack.add(activity);
+    private inner class ActivityLifecycle : Application.ActivityLifecycleCallbacks {
+        override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+            Log.i("Activity", "onCreate: " + activity.javaClass.simpleName)
+            mActivityStack.add(activity)
         }
 
-        @Override
-        public void onActivityStarted(Activity activity) {
+        override fun onActivityStarted(activity: Activity) {}
+        override fun onActivityResumed(activity: Activity) {}
+        override fun onActivityPaused(activity: Activity) {}
+        override fun onActivityStopped(activity: Activity) {}
+        override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+        override fun onActivityDestroyed(activity: Activity) {
+            Log.i("Activity", "onDestroy: " + activity.javaClass.simpleName)
+            mActivityStack.remove(activity)
         }
+    }
 
-        @Override
-        public void onActivityResumed(Activity activity) {
-        }
-
-        @Override
-        public void onActivityPaused(Activity activity) {
-        }
-
-        @Override
-        public void onActivityStopped(Activity activity) {
-        }
-
-        @Override
-        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-        }
-
-        @Override
-        public void onActivityDestroyed(Activity activity) {
-            Log.i(TAG, "onDestroy: " + activity.getClass().getSimpleName());
-            mActivityStack.remove(activity);
+    companion object {
+        fun get(): AppCache {
+            return SingletonHolder.instance
         }
     }
 }

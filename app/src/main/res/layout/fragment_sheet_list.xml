@@ -2,12 +2,4 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <ListView
-        android:id="@+id/lv_sheet"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:divider="@null"
-        android:paddingBottom="@dimen/play_bar_height" />
 </FrameLayout>

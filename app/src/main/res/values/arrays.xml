@@ -7,17 +7,6 @@
         <item>删除</item>
     </string-array>
 
-    <string-array name="online_music_dialog">
-        <item>分享</item>
-        <item>查看歌手信息</item>
-        <item>下载</item>
-    </string-array>
-
-    <string-array name="online_music_dialog_without_download">
-        <item>分享</item>
-        <item>查看歌手信息</item>
-    </string-array>
-
     <string-array name="search_music_dialog">
         <item>分享</item>
         <item>下载</item>
@@ -46,44 +35,6 @@
         <item>60</item>
         <item>90</item>
     </integer-array>
-
-    <string-array name="online_music_list_title">
-        <item>主打榜单</item>
-        <item>百度热歌榜</item>
-        <item>百度新歌榜</item>
-        <item>分类榜单</item>
-        <item>华语金曲榜</item>
-        <item>欧美金曲榜</item>
-        <item>影视金曲榜</item>
-        <item>情歌对唱榜</item>
-        <item>网络歌曲榜</item>
-        <item>经典老歌榜</item>
-        <item>摇滚榜</item>
-        <item>媒体榜单</item>
-        <item>KTV热歌榜</item>
-        <item>Billboard</item>
-        <item>Hito中文榜</item>
-        <item>叱咤歌曲榜</item>
-    </string-array>
-
-    <string-array name="online_music_list_type">
-        <item>#</item>
-        <item>2</item>
-        <item>1</item>
-        <item>#</item>
-        <item>20</item>
-        <item>21</item>
-        <item>24</item>
-        <item>23</item>
-        <item>25</item>
-        <item>22</item>
-        <item>11</item>
-        <item>#</item>
-        <item>6</item>
-        <item>8</item>
-        <item>18</item>
-        <item>7</item>
-    </string-array>
 
     <string-array name="filter_size_entries">
         <item>不过滤</item>

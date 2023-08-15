@@ -1,96 +1,87 @@
-package me.wcy.music.loader;
+package me.wcy.music.loader
 
-import android.app.LoaderManager;
-import android.content.Context;
-import android.content.Loader;
-import android.database.Cursor;
-import android.os.Bundle;
-import android.provider.BaseColumns;
-import android.provider.MediaStore;
-import android.webkit.ValueCallback;
+import android.content.Context
+import android.database.Cursor
+import android.os.Bundle
+import android.provider.BaseColumns
+import android.provider.MediaStore
+import android.webkit.ValueCallback
+import androidx.loader.app.LoaderManager
+import androidx.loader.content.Loader
+import me.wcy.music.model.Music
+import me.wcy.music.storage.preference.Preferences
+import me.wcy.music.utils.CoverLoader
+import me.wcy.music.utils.ParseUtils
+import me.wcy.music.utils.SystemUtils
 
-import java.util.ArrayList;
-import java.util.List;
+class MusicLoaderCallback(
+    private val context: Context,
+    private val callback: ValueCallback<List<Music>>
+) : LoaderManager.LoaderCallbacks<Cursor> {
+    private val musicList: MutableList<Music>
 
-import me.wcy.music.model.Music;
-import me.wcy.music.storage.preference.Preferences;
-import me.wcy.music.utils.CoverLoader;
-import me.wcy.music.utils.ParseUtils;
-import me.wcy.music.utils.SystemUtils;
-
-public class MusicLoaderCallback implements LoaderManager.LoaderCallbacks {
-    private final List<Music> musicList;
-    private final Context context;
-    private final ValueCallback<List<Music>> callback;
-
-    public MusicLoaderCallback(Context context, ValueCallback<List<Music>> callback) {
-        this.context = context;
-        this.callback = callback;
-        this.musicList = new ArrayList<>();
+    init {
+        musicList = ArrayList()
     }
 
-    public Loader onCreateLoader(int id, Bundle args) {
-        return new MusicCursorLoader(context);
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
+        return MusicCursorLoader(context)
     }
 
-    public void onLoadFinished(Loader var1, Object var2) {
-        this.onLoadFinished(var1, (Cursor) var2);
+    override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor?) {
+        this.onLoadFinished(data)
     }
 
-    public void onLoaderReset(Loader loader) {
+    override fun onLoaderReset(loader: Loader<Cursor>) {
     }
 
-    public void onLoadFinished(Loader loader, Cursor data) {
+    private fun onLoadFinished(data: Cursor?) {
         if (data == null) {
-            return;
+            return
         }
-
-        long filterTime = ParseUtils.parseLong(Preferences.getFilterTime()) * 1000;
-        long filterSize = ParseUtils.parseLong(Preferences.getFilterSize()) * 1024;
-
-        int counter = 0;
-        musicList.clear();
+        val filterTime = ParseUtils.parseLong(Preferences.filterTime) * 1000
+        val filterSize = ParseUtils.parseLong(Preferences.filterSize) * 1024
+        var counter = 0
+        musicList.clear()
         while (data.moveToNext()) {
             // 是否为音乐，魅族手机上始终为0
-            int isMusic = data.getInt(data.getColumnIndex(MediaStore.Audio.AudioColumns.IS_MUSIC));
-            if (!SystemUtils.isFlyme() && isMusic == 0) {
-                continue;
+            val isMusic = data.getInt(data.getColumnIndexOrThrow(MediaStore.Audio.Media.IS_MUSIC))
+            if (!SystemUtils.isFlyme && isMusic == 0) {
+                continue
             }
-            long duration = data.getLong(data.getColumnIndex(MediaStore.Audio.Media.DURATION));
+            val duration = data.getLong(data.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION))
             if (duration < filterTime) {
-                continue;
+                continue
             }
-            long fileSize = data.getLong(data.getColumnIndex(MediaStore.Audio.Media.SIZE));
+            val fileSize = data.getLong(data.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE))
             if (fileSize < filterSize) {
-                continue;
+                continue
             }
-
-            long id = data.getLong(data.getColumnIndex(BaseColumns._ID));
-            String title = data.getString(data.getColumnIndex(MediaStore.Audio.AudioColumns.TITLE));
-            String artist = data.getString(data.getColumnIndex(MediaStore.Audio.AudioColumns.ARTIST));
-            String album = data.getString(data.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM));
-            long albumId = data.getLong(data.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM_ID));
-            String path = data.getString(data.getColumnIndex(MediaStore.Audio.AudioColumns.DATA));
-            String fileName = data.getString(data.getColumnIndex(MediaStore.Audio.AudioColumns.DISPLAY_NAME));
-
-            Music music = new Music();
-            music.setSongId(id);
-            music.setType(Music.Type.LOCAL);
-            music.setTitle(title);
-            music.setArtist(artist);
-            music.setAlbum(album);
-            music.setAlbumId(albumId);
-            music.setDuration(duration);
-            music.setPath(path);
-            music.setFileName(fileName);
-            music.setFileSize(fileSize);
+            val id = data.getLong(data.getColumnIndexOrThrow(BaseColumns._ID))
+            val title = data.getString(data.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE))
+            val artist = data.getString(data.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST))
+            val album = data.getString(data.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM))
+            val albumId = data.getLong(data.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID))
+            val path = data.getString(data.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA))
+            val fileName =
+                data.getString(data.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME))
+            val music = Music()
+            music.songId = id
+            music.type = Music.Type.LOCAL
+            music.title = title
+            music.artist = artist
+            music.album = album
+            music.albumId = albumId
+            music.duration = duration
+            music.path = path
+            music.fileName = fileName
+            music.fileSize = fileSize
             if (++counter <= 20) {
                 // 只加载前20首的缩略图
-                CoverLoader.get().loadThumb(music);
+                CoverLoader.get().loadThumb(music)
             }
-            musicList.add(music);
+            musicList.add(music)
         }
-
-        callback.onReceiveValue(musicList);
+        callback.onReceiveValue(musicList)
     }
 }

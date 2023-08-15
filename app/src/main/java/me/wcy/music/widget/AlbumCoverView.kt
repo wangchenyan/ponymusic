@@ -1,197 +1,203 @@
-package me.wcy.music.widget;
+package me.wcy.music.widget
 
-import android.animation.ValueAnimator;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Point;
-import android.graphics.drawable.Drawable;
-import android.os.Handler;
-import android.util.AttributeSet;
-import android.view.View;
-
-import me.wcy.music.R;
-import me.wcy.music.utils.CoverLoader;
-import me.wcy.music.utils.ImageUtils;
+import android.animation.ValueAnimator
+import android.animation.ValueAnimator.AnimatorUpdateListener
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Matrix
+import android.graphics.Point
+import android.graphics.drawable.Drawable
+import android.os.Handler
+import android.util.AttributeSet
+import android.view.View
+import me.wcy.music.R
+import me.wcy.music.utils.CoverLoader
+import me.wcy.music.utils.ImageUtils
 
 /**
  * 专辑封面
  * Created by wcy on 2015/11/30.
  */
-public class AlbumCoverView extends View implements ValueAnimator.AnimatorUpdateListener {
-    private static final long TIME_UPDATE = 50L;
-    private static final float DISC_ROTATION_INCREASE = 0.5f;
-    private static final float NEEDLE_ROTATION_PLAY = 0.0f;
-    private static final float NEEDLE_ROTATION_PAUSE = -25.0f;
-    private Handler mHandler = new Handler();
-    private Bitmap mDiscBitmap;
-    private Bitmap mCoverBitmap;
-    private Bitmap mNeedleBitmap;
-    private Drawable mTopLine;
-    private Drawable mCoverBorder;
-    private int mTopLineHeight;
-    private int mCoverBorderWidth;
-    private Matrix mDiscMatrix = new Matrix();
-    private Matrix mCoverMatrix = new Matrix();
-    private Matrix mNeedleMatrix = new Matrix();
-    private ValueAnimator mPlayAnimator;
-    private ValueAnimator mPauseAnimator;
-    private float mDiscRotation = 0.0f;
-    private float mNeedleRotation = NEEDLE_ROTATION_PLAY;
-    private boolean isPlaying = false;
+class AlbumCoverView @JvmOverloads constructor(
+    context: Context?,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : View(context, attrs, defStyleAttr), AnimatorUpdateListener {
+    private val mHandler = Handler()
+    private var mDiscBitmap: Bitmap? = null
+    private var mCoverBitmap: Bitmap? = null
+    private var mNeedleBitmap: Bitmap? = null
+    private var mTopLine: Drawable? = null
+    private var mCoverBorder: Drawable? = null
+    private var mTopLineHeight = 0
+    private var mCoverBorderWidth = 0
+    private val mDiscMatrix = Matrix()
+    private val mCoverMatrix = Matrix()
+    private val mNeedleMatrix = Matrix()
+    private lateinit var mPlayAnimator: ValueAnimator
+    private lateinit var mPauseAnimator: ValueAnimator
+    private var mDiscRotation = 0.0f
+    private var mNeedleRotation = NEEDLE_ROTATION_PLAY
+    private var isPlaying = false
 
     // 图片起始坐标
-    private Point mDiscPoint = new Point();
-    private Point mCoverPoint = new Point();
-    private Point mNeedlePoint = new Point();
+    private val mDiscPoint = Point()
+    private val mCoverPoint = Point()
+    private val mNeedlePoint = Point()
+
     // 旋转中心坐标
-    private Point mDiscCenterPoint = new Point();
-    private Point mCoverCenterPoint = new Point();
-    private Point mNeedleCenterPoint = new Point();
-
-    public AlbumCoverView(Context context) {
-        this(context, null);
-    }
-
-    public AlbumCoverView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public AlbumCoverView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
+    private val mDiscCenterPoint = Point()
+    private val mCoverCenterPoint = Point()
+    private val mNeedleCenterPoint = Point()
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
         if (changed) {
-            initOnLayout();
+            initOnLayout()
         }
     }
 
-    private void init() {
-        mTopLine = getResources().getDrawable(R.drawable.play_page_cover_top_line_shape);
-        mCoverBorder = getResources().getDrawable(R.drawable.play_page_cover_border_shape);
-        mDiscBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.play_page_disc);
-        mCoverBitmap = CoverLoader.get().loadRound(null);
-        mNeedleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.play_page_needle);
-        mTopLineHeight = dp2px(1);
-        mCoverBorderWidth = dp2px(1);
-
-        mPlayAnimator = ValueAnimator.ofFloat(NEEDLE_ROTATION_PAUSE, NEEDLE_ROTATION_PLAY);
-        mPlayAnimator.setDuration(300);
-        mPlayAnimator.addUpdateListener(this);
-        mPauseAnimator = ValueAnimator.ofFloat(NEEDLE_ROTATION_PLAY, NEEDLE_ROTATION_PAUSE);
-        mPauseAnimator.setDuration(300);
-        mPauseAnimator.addUpdateListener(this);
+    private fun init() {
+        mTopLine = resources.getDrawable(R.drawable.play_page_cover_top_line_shape)
+        mCoverBorder = resources.getDrawable(R.drawable.play_page_cover_border_shape)
+        mDiscBitmap = BitmapFactory.decodeResource(resources, R.drawable.play_page_disc)
+        mCoverBitmap = CoverLoader.get().loadRound(null)
+        mNeedleBitmap = BitmapFactory.decodeResource(resources, R.drawable.play_page_needle)
+        mTopLineHeight = dp2px(1f)
+        mCoverBorderWidth = dp2px(1f)
+        mPlayAnimator = ValueAnimator.ofFloat(NEEDLE_ROTATION_PAUSE, NEEDLE_ROTATION_PLAY)
+        mPlayAnimator.setDuration(300)
+        mPlayAnimator.addUpdateListener(this)
+        mPauseAnimator = ValueAnimator.ofFloat(NEEDLE_ROTATION_PLAY, NEEDLE_ROTATION_PAUSE)
+        mPauseAnimator.setDuration(300)
+        mPauseAnimator.addUpdateListener(this)
     }
 
-    private void initOnLayout() {
-        if (getWidth() == 0 || getHeight() == 0) {
-            return;
+    private fun initOnLayout() {
+        if (width == 0 || height == 0) {
+            return
         }
-
-        int unit = Math.min(getWidth(), getHeight()) / 8;
-        CoverLoader.get().setRoundLength(unit * 4);
-
-        mDiscBitmap = ImageUtils.resizeImage(mDiscBitmap, unit * 6, unit * 6);
-        mCoverBitmap = ImageUtils.resizeImage(mCoverBitmap, unit * 4, unit * 4);
-        mNeedleBitmap = ImageUtils.resizeImage(mNeedleBitmap, unit * 2, unit * 3);
-
-        int discOffsetY = mNeedleBitmap.getHeight() / 2;
-        mDiscPoint.x = (getWidth() - mDiscBitmap.getWidth()) / 2;
-        mDiscPoint.y = discOffsetY;
-        mCoverPoint.x = (getWidth() - mCoverBitmap.getWidth()) / 2;
-        mCoverPoint.y = discOffsetY + (mDiscBitmap.getHeight() - mCoverBitmap.getHeight()) / 2;
-        mNeedlePoint.x = getWidth() / 2 - mNeedleBitmap.getWidth() / 6;
-        mNeedlePoint.y = -mNeedleBitmap.getWidth() / 6;
-        mDiscCenterPoint.x = getWidth() / 2;
-        mDiscCenterPoint.y = mDiscBitmap.getHeight() / 2 + discOffsetY;
-        mCoverCenterPoint.x = mDiscCenterPoint.x;
-        mCoverCenterPoint.y = mDiscCenterPoint.y;
-        mNeedleCenterPoint.x = mDiscCenterPoint.x;
-        mNeedleCenterPoint.y = 0;
+        val unit = Math.min(width, height) / 8
+        CoverLoader.get().setRoundLength(unit * 4)
+        mDiscBitmap = ImageUtils.resizeImage(mDiscBitmap, unit * 6, unit * 6)
+        mCoverBitmap = ImageUtils.resizeImage(mCoverBitmap, unit * 4, unit * 4)
+        mNeedleBitmap = ImageUtils.resizeImage(mNeedleBitmap, unit * 2, unit * 3)
+        val discOffsetY = mNeedleBitmap!!.height / 2
+        mDiscPoint.x = (width - mDiscBitmap!!.width) / 2
+        mDiscPoint.y = discOffsetY
+        mCoverPoint.x = (width - mCoverBitmap!!.width) / 2
+        mCoverPoint.y = discOffsetY + (mDiscBitmap!!.height - mCoverBitmap!!.height) / 2
+        mNeedlePoint.x = width / 2 - mNeedleBitmap!!.width / 6
+        mNeedlePoint.y = -mNeedleBitmap!!.width / 6
+        mDiscCenterPoint.x = width / 2
+        mDiscCenterPoint.y = mDiscBitmap!!.height / 2 + discOffsetY
+        mCoverCenterPoint.x = mDiscCenterPoint.x
+        mCoverCenterPoint.y = mDiscCenterPoint.y
+        mNeedleCenterPoint.x = mDiscCenterPoint.x
+        mNeedleCenterPoint.y = 0
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
+    override fun onDraw(canvas: Canvas) {
         // 1.绘制顶部虚线
-        mTopLine.setBounds(0, 0, getWidth(), mTopLineHeight);
-        mTopLine.draw(canvas);
+        mTopLine!!.setBounds(0, 0, width, mTopLineHeight)
+        mTopLine!!.draw(canvas)
         // 2.绘制黑胶唱片外侧半透明边框
-        mCoverBorder.setBounds(mDiscPoint.x - mCoverBorderWidth, mDiscPoint.y - mCoverBorderWidth,
-                mDiscPoint.x + mDiscBitmap.getWidth() + mCoverBorderWidth, mDiscPoint.y + mDiscBitmap.getHeight() + mCoverBorderWidth);
-        mCoverBorder.draw(canvas);
+        mCoverBorder!!.setBounds(
+            mDiscPoint.x - mCoverBorderWidth,
+            mDiscPoint.y - mCoverBorderWidth,
+            mDiscPoint.x + mDiscBitmap!!.width + mCoverBorderWidth,
+            mDiscPoint.y + mDiscBitmap!!.height + mCoverBorderWidth
+        )
+        mCoverBorder!!.draw(canvas)
         // 3.绘制黑胶
         // 设置旋转中心和旋转角度，setRotate和preTranslate顺序很重要
-        mDiscMatrix.setRotate(mDiscRotation, mDiscCenterPoint.x, mDiscCenterPoint.y);
+        mDiscMatrix.setRotate(
+            mDiscRotation,
+            mDiscCenterPoint.x.toFloat(),
+            mDiscCenterPoint.y.toFloat()
+        )
         // 设置图片起始坐标
-        mDiscMatrix.preTranslate(mDiscPoint.x, mDiscPoint.y);
-        canvas.drawBitmap(mDiscBitmap, mDiscMatrix, null);
+        mDiscMatrix.preTranslate(mDiscPoint.x.toFloat(), mDiscPoint.y.toFloat())
+        canvas.drawBitmap(mDiscBitmap!!, mDiscMatrix, null)
         // 4.绘制封面
-        mCoverMatrix.setRotate(mDiscRotation, mCoverCenterPoint.x, mCoverCenterPoint.y);
-        mCoverMatrix.preTranslate(mCoverPoint.x, mCoverPoint.y);
-        canvas.drawBitmap(mCoverBitmap, mCoverMatrix, null);
+        mCoverMatrix.setRotate(
+            mDiscRotation,
+            mCoverCenterPoint.x.toFloat(),
+            mCoverCenterPoint.y.toFloat()
+        )
+        mCoverMatrix.preTranslate(mCoverPoint.x.toFloat(), mCoverPoint.y.toFloat())
+        canvas.drawBitmap(mCoverBitmap!!, mCoverMatrix, null)
         // 5.绘制指针
-        mNeedleMatrix.setRotate(mNeedleRotation, mNeedleCenterPoint.x, mNeedleCenterPoint.y);
-        mNeedleMatrix.preTranslate(mNeedlePoint.x, mNeedlePoint.y);
-        canvas.drawBitmap(mNeedleBitmap, mNeedleMatrix, null);
+        mNeedleMatrix.setRotate(
+            mNeedleRotation,
+            mNeedleCenterPoint.x.toFloat(),
+            mNeedleCenterPoint.y.toFloat()
+        )
+        mNeedleMatrix.preTranslate(mNeedlePoint.x.toFloat(), mNeedlePoint.y.toFloat())
+        canvas.drawBitmap(mNeedleBitmap!!, mNeedleMatrix, null)
     }
 
-    public void initNeedle(boolean isPlaying) {
-        mNeedleRotation = isPlaying ? NEEDLE_ROTATION_PLAY : NEEDLE_ROTATION_PAUSE;
-        invalidate();
+    fun initNeedle(isPlaying: Boolean) {
+        mNeedleRotation = if (isPlaying) NEEDLE_ROTATION_PLAY else NEEDLE_ROTATION_PAUSE
+        invalidate()
     }
 
-    public void setCoverBitmap(Bitmap bitmap) {
-        mCoverBitmap = bitmap;
-        mDiscRotation = 0.0f;
-        invalidate();
+    fun setCoverBitmap(bitmap: Bitmap?) {
+        mCoverBitmap = bitmap
+        mDiscRotation = 0.0f
+        invalidate()
     }
 
-    public void start() {
+    fun start() {
         if (isPlaying) {
-            return;
+            return
         }
-        isPlaying = true;
-        mHandler.post(mRotationRunnable);
-        mPlayAnimator.start();
+        isPlaying = true
+        mHandler.post(mRotationRunnable)
+        mPlayAnimator!!.start()
     }
 
-    public void pause() {
+    fun pause() {
         if (!isPlaying) {
-            return;
+            return
         }
-        isPlaying = false;
-        mHandler.removeCallbacks(mRotationRunnable);
-        mPauseAnimator.start();
+        isPlaying = false
+        mHandler.removeCallbacks(mRotationRunnable)
+        mPauseAnimator!!.start()
     }
 
-    @Override
-    public void onAnimationUpdate(ValueAnimator animation) {
-        mNeedleRotation = (float) animation.getAnimatedValue();
-        invalidate();
+    override fun onAnimationUpdate(animation: ValueAnimator) {
+        mNeedleRotation = animation.animatedValue as Float
+        invalidate()
     }
 
-    private Runnable mRotationRunnable = new Runnable() {
-        @Override
-        public void run() {
+    private val mRotationRunnable: Runnable = object : Runnable {
+        override fun run() {
             if (isPlaying) {
-                mDiscRotation += DISC_ROTATION_INCREASE;
+                mDiscRotation += DISC_ROTATION_INCREASE
                 if (mDiscRotation >= 360) {
-                    mDiscRotation = 0;
+                    mDiscRotation = 0f
                 }
-                invalidate();
+                invalidate()
             }
-            mHandler.postDelayed(this, TIME_UPDATE);
+            mHandler.postDelayed(this, TIME_UPDATE)
         }
-    };
+    }
 
-    private int dp2px(float dpValue) {
-        float scale = getContext().getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
+    init {
+        init()
+    }
+
+    private fun dp2px(dpValue: Float): Int {
+        val scale = context.resources.displayMetrics.density
+        return (dpValue * scale + 0.5f).toInt()
+    }
+
+    companion object {
+        private const val TIME_UPDATE = 50L
+        private const val DISC_ROTATION_INCREASE = 0.5f
+        private const val NEEDLE_ROTATION_PLAY = 0.0f
+        private const val NEEDLE_ROTATION_PAUSE = -25.0f
     }
 }

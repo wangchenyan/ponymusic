@@ -1,71 +1,69 @@
-package me.wcy.music.application;
+package me.wcy.music.application
 
-import android.os.Build;
-import android.util.Log;
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-import me.wcy.music.BuildConfig;
-import me.wcy.music.utils.FileUtils;
+import android.os.Build
+import android.util.Log
+import me.wcy.music.BuildConfig
+import me.wcy.music.utils.FileUtils
+import java.io.BufferedWriter
+import java.io.FileWriter
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 /**
  * 异常捕获
  * Created by hzwangchenyan on 2016/1/25.
  */
-public class CrashHandler implements Thread.UncaughtExceptionHandler {
-    private static SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("MM-dd HH:mm:ss.SSS", Locale.getDefault());
+class CrashHandler : Thread.UncaughtExceptionHandler {
+    private var mDefaultHandler: Thread.UncaughtExceptionHandler? = null
 
-    private Thread.UncaughtExceptionHandler mDefaultHandler;
-
-    public static CrashHandler getInstance() {
-        return SingletonHolder.instance;
+    private object SingletonHolder {
+        val instance = CrashHandler()
     }
 
-    private static class SingletonHolder {
-        private static CrashHandler instance = new CrashHandler();
+    fun init() {
+        mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler()
+        Thread.setDefaultUncaughtExceptionHandler(this)
     }
 
-    public void init() {
-        mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
-        Thread.setDefaultUncaughtExceptionHandler(this);
+    override fun uncaughtException(thread: Thread, ex: Throwable) {
+        saveCrashInfo(ex)
+        mDefaultHandler!!.uncaughtException(thread, ex)
     }
 
-    @Override
-    public void uncaughtException(Thread thread, Throwable ex) {
-        saveCrashInfo(ex);
-        mDefaultHandler.uncaughtException(thread, ex);
-    }
-
-    private void saveCrashInfo(Throwable ex) {
-        String stackTrace = Log.getStackTraceString(ex);
-        String filePath = FileUtils.getLogDir() + "crash.log";
+    private fun saveCrashInfo(ex: Throwable) {
+        val stackTrace = Log.getStackTraceString(ex)
+        val filePath = FileUtils.logDir + "crash.log"
         try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true));
-            bw.write("*** crash ***\n");
-            bw.write(getInfo());
-            bw.write(stackTrace);
-            bw.newLine();
-            bw.newLine();
-            bw.flush();
-            bw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+            val bw = BufferedWriter(FileWriter(filePath, true))
+            bw.write("*** crash ***\n")
+            bw.write(getInfo())
+            bw.write(stackTrace)
+            bw.newLine()
+            bw.newLine()
+            bw.flush()
+            bw.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 
-    private String getInfo() {
-        String time = TIME_FORMAT.format(new Date());
-        String version = BuildConfig.VERSION_NAME + "/" + BuildConfig.VERSION_CODE;
-        String device = Build.MANUFACTURER + "/" + Build.MODEL + "/" + Build.VERSION.RELEASE;
-        StringBuilder sb = new StringBuilder();
-        sb.append("*** time: ").append(time).append(" ***").append("\n");
-        sb.append("*** version: ").append(version).append(" ***").append("\n");
-        sb.append("*** device: ").append(device).append(" ***").append("\n");
-        return sb.toString();
+    private fun getInfo(): String {
+        val time = TIME_FORMAT.format(Date())
+        val version = BuildConfig.VERSION_NAME + "/" + BuildConfig.VERSION_CODE
+        val device = Build.MANUFACTURER + "/" + Build.MODEL + "/" + Build.VERSION.RELEASE
+        val sb = StringBuilder()
+        sb.append("*** time: ").append(time).append(" ***").append("\n")
+        sb.append("*** version: ").append(version).append(" ***").append("\n")
+        sb.append("*** device: ").append(device).append(" ***").append("\n")
+        return sb.toString()
+    }
+
+    companion object {
+        private val TIME_FORMAT = SimpleDateFormat("MM-dd HH:mm:ss.SSS", Locale.getDefault())
+        fun getInstance(): CrashHandler {
+            return SingletonHolder.instance
+        }
     }
 }

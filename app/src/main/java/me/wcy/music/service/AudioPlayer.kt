@@ -1,250 +1,211 @@
-package me.wcy.music.service;
+package me.wcy.music.service
 
-import android.content.Context;
-import android.content.IntentFilter;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.os.Handler;
-import android.os.Looper;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import me.wcy.music.application.Notifier;
-import me.wcy.music.enums.PlayModeEnum;
-import me.wcy.music.model.Music;
-import me.wcy.music.receiver.NoisyAudioStreamReceiver;
-import me.wcy.music.storage.db.DBManager;
-import me.wcy.music.storage.preference.Preferences;
-import me.wcy.music.utils.ToastUtils;
+import android.content.IntentFilter
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.os.Handler
+import android.os.Looper
+import me.wcy.common.CommonApp
+import me.wcy.music.application.Notifier
+import me.wcy.music.enums.PlayModeEnum
+import me.wcy.music.model.Music
+import me.wcy.music.receiver.NoisyAudioStreamReceiver
+import me.wcy.music.storage.preference.Preferences
+import me.wcy.music.utils.ToastUtils
+import java.io.IOException
+import java.util.Random
 
 /**
  * Created by hzwangchenyan on 2018/1/26.
  */
-public class AudioPlayer {
-    private static final int STATE_IDLE = 0;
-    private static final int STATE_PREPARING = 1;
-    private static final int STATE_PLAYING = 2;
-    private static final int STATE_PAUSE = 3;
+class AudioPlayer private constructor() {
+    val mediaPlayer: MediaPlayer = MediaPlayer()
+    private val audioFocusManager: AudioFocusManager by lazy {
+        AudioFocusManager(CommonApp.app)
+    }
+    private val handler: Handler by lazy {
+        Handler(Looper.getMainLooper())
+    }
+    private val noisyReceiver: NoisyAudioStreamReceiver by lazy {
+        NoisyAudioStreamReceiver()
+    }
+    private val noisyFilter: IntentFilter by lazy {
+        IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
+    }
+    private val musicList: MutableList<Music> = mutableListOf()
+    private val listeners: MutableList<OnPlayerEventListener> = ArrayList()
+    private var state = STATE_IDLE
 
-    private static final long TIME_UPDATE = 300L;
-
-    private Context context;
-    private AudioFocusManager audioFocusManager;
-    private MediaPlayer mediaPlayer;
-    private Handler handler;
-    private NoisyAudioStreamReceiver noisyReceiver;
-    private IntentFilter noisyFilter;
-    private List<Music> musicList;
-    private final List<OnPlayerEventListener> listeners = new ArrayList<>();
-    private int state = STATE_IDLE;
-
-    public static AudioPlayer get() {
-        return SingletonHolder.instance;
+    private object SingletonHolder {
+        val instance = AudioPlayer()
     }
 
-    private static class SingletonHolder {
-        private static AudioPlayer instance = new AudioPlayer();
-    }
-
-    private AudioPlayer() {
-    }
-
-    public void init(Context context) {
-        this.context = context.getApplicationContext();
-        musicList = DBManager.get().getMusicDao().queryBuilder().build().list();
-        audioFocusManager = new AudioFocusManager(context);
-        mediaPlayer = new MediaPlayer();
-        handler = new Handler(Looper.getMainLooper());
-        noisyReceiver = new NoisyAudioStreamReceiver();
-        noisyFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
-        mediaPlayer.setOnCompletionListener(mp -> next());
-        mediaPlayer.setOnPreparedListener(mp -> {
-            if (isPreparing()) {
-                startPlayer();
+    init {
+        // TODO
+        // DBManager.get().musicDao.queryBuilder().build().list().filterNotNull().toMutableList()
+        mediaPlayer.setOnCompletionListener { mp: MediaPlayer? -> next() }
+        mediaPlayer.setOnPreparedListener { mp: MediaPlayer? ->
+            if (isPreparing) {
+                startPlayer()
             }
-        });
-        mediaPlayer.setOnBufferingUpdateListener((mp, percent) -> {
-            for (OnPlayerEventListener listener : listeners) {
-                listener.onBufferingUpdate(percent);
+        }
+        mediaPlayer.setOnBufferingUpdateListener { mp: MediaPlayer?, percent: Int ->
+            for (listener in listeners) {
+                listener.onBufferingUpdate(percent)
             }
-        });
+        }
     }
 
-    public void addOnPlayEventListener(OnPlayerEventListener listener) {
+    fun addOnPlayEventListener(listener: OnPlayerEventListener) {
         if (!listeners.contains(listener)) {
-            listeners.add(listener);
+            listeners.add(listener)
         }
     }
 
-    public void removeOnPlayEventListener(OnPlayerEventListener listener) {
-        listeners.remove(listener);
+    fun removeOnPlayEventListener(listener: OnPlayerEventListener?) {
+        listeners.remove(listener)
     }
 
-    public void addAndPlay(Music music) {
-        int position = musicList.indexOf(music);
+    fun addAndPlay(music: Music) {
+        var position = musicList.indexOf(music)
         if (position < 0) {
-            musicList.add(music);
-            DBManager.get().getMusicDao().insert(music);
-            position = musicList.size() - 1;
+            musicList.add(music)
+            // TODO
+            // DBManager.get().musicDao.insert(music)
+            position = musicList.size - 1
         }
-        play(position);
+        play(position)
     }
 
-    public void play(int position) {
+    fun play(position: Int) {
+        var pos = position
         if (musicList.isEmpty()) {
-            return;
+            return
         }
-
-        if (position < 0) {
-            position = musicList.size() - 1;
-        } else if (position >= musicList.size()) {
-            position = 0;
+        if (pos < 0) {
+            pos = musicList.size - 1
+        } else if (pos >= musicList.size) {
+            pos = 0
         }
-
-        setPlayPosition(position);
-        Music music = getPlayMusic();
-
+        playPosition = pos
+        val music = playMusic!!
         try {
-            mediaPlayer.reset();
-            mediaPlayer.setDataSource(music.getPath());
-            mediaPlayer.prepareAsync();
-            state = STATE_PREPARING;
-            for (OnPlayerEventListener listener : listeners) {
-                listener.onChange(music);
+            mediaPlayer.reset()
+            mediaPlayer.setDataSource(music.path)
+            mediaPlayer.prepareAsync()
+            state = STATE_PREPARING
+            for (listener in listeners) {
+                listener!!.onChange(music)
             }
-            Notifier.get().showPlay(music);
-            MediaSessionManager.get().updateMetaData(music);
-            MediaSessionManager.get().updatePlaybackState();
-        } catch (IOException e) {
-            e.printStackTrace();
-            ToastUtils.show("当前歌曲无法播放");
+            Notifier.get().showPlay(music)
+            MediaSessionManager.get().updateMetaData(music)
+            MediaSessionManager.get().updatePlaybackState()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            ToastUtils.show("当前歌曲无法播放")
         }
     }
 
-    public void delete(int position) {
-        int playPosition = getPlayPosition();
-        Music music = musicList.remove(position);
-        DBManager.get().getMusicDao().delete(music);
+    fun delete(position: Int) {
+        val playPosition = playPosition
+        val music = musicList.removeAt(position)
+        // TODO
+        // DBManager.get().musicDao.delete(music)
         if (playPosition > position) {
-            setPlayPosition(playPosition - 1);
+            this.playPosition = playPosition - 1
         } else if (playPosition == position) {
-            if (isPlaying() || isPreparing()) {
-                setPlayPosition(playPosition - 1);
-                next();
+            if (isPlaying || isPreparing) {
+                this.playPosition = playPosition - 1
+                next()
             } else {
-                stopPlayer();
-                for (OnPlayerEventListener listener : listeners) {
-                    listener.onChange(getPlayMusic());
+                stopPlayer()
+                for (listener in listeners) {
+                    listener!!.onChange(playMusic)
                 }
             }
         }
     }
 
-    public void playPause() {
-        if (isPreparing()) {
-            stopPlayer();
-        } else if (isPlaying()) {
-            pausePlayer();
-        } else if (isPausing()) {
-            startPlayer();
+    fun playPause() {
+        if (isPreparing) {
+            stopPlayer()
+        } else if (isPlaying) {
+            pausePlayer()
+        } else if (isPausing) {
+            startPlayer()
         } else {
-            play(getPlayPosition());
+            play(playPosition)
         }
     }
 
-    public void startPlayer() {
-        if (!isPreparing() && !isPausing()) {
-            return;
+    fun startPlayer() {
+        if (!isPreparing && !isPausing) {
+            return
         }
-
-        if (audioFocusManager.requestAudioFocus()) {
-            mediaPlayer.start();
-            state = STATE_PLAYING;
-            handler.post(mPublishRunnable);
-            Notifier.get().showPlay(getPlayMusic());
-            MediaSessionManager.get().updatePlaybackState();
-            context.registerReceiver(noisyReceiver, noisyFilter);
-
-            for (OnPlayerEventListener listener : listeners) {
-                listener.onPlayerStart();
+        if (audioFocusManager!!.requestAudioFocus()) {
+            mediaPlayer!!.start()
+            state = STATE_PLAYING
+            handler!!.post(mPublishRunnable)
+            Notifier.get().showPlay(playMusic)
+            MediaSessionManager.get().updatePlaybackState()
+            CommonApp.app.registerReceiver(noisyReceiver, noisyFilter)
+            for (listener in listeners) {
+                listener.onPlayerStart()
             }
         }
     }
 
-    public void pausePlayer() {
-        pausePlayer(true);
-    }
-
-    public void pausePlayer(boolean abandonAudioFocus) {
-        if (!isPlaying()) {
-            return;
+    @JvmOverloads
+    fun pausePlayer(abandonAudioFocus: Boolean = true) {
+        if (!isPlaying) {
+            return
         }
-
-        mediaPlayer.pause();
-        state = STATE_PAUSE;
-        handler.removeCallbacks(mPublishRunnable);
-        Notifier.get().showPause(getPlayMusic());
-        MediaSessionManager.get().updatePlaybackState();
-        context.unregisterReceiver(noisyReceiver);
+        mediaPlayer!!.pause()
+        state = STATE_PAUSE
+        handler!!.removeCallbacks(mPublishRunnable)
+        Notifier.get().showPause(playMusic)
+        MediaSessionManager.get().updatePlaybackState()
+        CommonApp.app.unregisterReceiver(noisyReceiver)
         if (abandonAudioFocus) {
-            audioFocusManager.abandonAudioFocus();
+            audioFocusManager!!.abandonAudioFocus()
         }
-
-        for (OnPlayerEventListener listener : listeners) {
-            listener.onPlayerPause();
-        }
-    }
-
-    public void stopPlayer() {
-        if (isIdle()) {
-            return;
-        }
-
-        pausePlayer();
-        mediaPlayer.reset();
-        state = STATE_IDLE;
-    }
-
-    public void next() {
-        if (musicList.isEmpty()) {
-            return;
-        }
-
-        PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode());
-        switch (mode) {
-            case SHUFFLE:
-                play(new Random().nextInt(musicList.size()));
-                break;
-            case SINGLE:
-                play(getPlayPosition());
-                break;
-            case LOOP:
-            default:
-                play(getPlayPosition() + 1);
-                break;
+        for (listener in listeners) {
+            listener!!.onPlayerPause()
         }
     }
 
-    public void prev() {
-        if (musicList.isEmpty()) {
-            return;
+    fun stopPlayer() {
+        if (isIdle) {
+            return
         }
+        pausePlayer()
+        mediaPlayer!!.reset()
+        state = STATE_IDLE
+    }
 
-        PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode());
-        switch (mode) {
-            case SHUFFLE:
-                play(new Random().nextInt(musicList.size()));
-                break;
-            case SINGLE:
-                play(getPlayPosition());
-                break;
-            case LOOP:
-            default:
-                play(getPlayPosition() - 1);
-                break;
+    operator fun next() {
+        if (musicList!!.isEmpty()) {
+            return
+        }
+        val mode: PlayModeEnum = PlayModeEnum.valueOf(Preferences.playMode)
+        when (mode) {
+            PlayModeEnum.SHUFFLE -> play(Random().nextInt(musicList!!.size))
+            PlayModeEnum.SINGLE -> play(playPosition)
+            PlayModeEnum.LOOP -> play(playPosition + 1)
+            else -> play(playPosition + 1)
+        }
+    }
+
+    fun prev() {
+        if (musicList!!.isEmpty()) {
+            return
+        }
+        val mode: PlayModeEnum = PlayModeEnum.valueOf(Preferences.playMode)
+        when (mode) {
+            PlayModeEnum.SHUFFLE -> play(Random().nextInt(musicList!!.size))
+            PlayModeEnum.SINGLE -> play(playPosition)
+            PlayModeEnum.LOOP -> play(playPosition - 1)
+            else -> play(playPosition - 1)
         }
     }
 
@@ -253,81 +214,72 @@ public class AudioPlayer {
      *
      * @param msec 时间
      */
-    public void seekTo(int msec) {
-        if (isPlaying() || isPausing()) {
-            mediaPlayer.seekTo(msec);
-            MediaSessionManager.get().updatePlaybackState();
-            for (OnPlayerEventListener listener : listeners) {
-                listener.onPublish(msec);
+    fun seekTo(msec: Int) {
+        if (isPlaying || isPausing) {
+            mediaPlayer!!.seekTo(msec)
+            MediaSessionManager.get().updatePlaybackState()
+            for (listener in listeners) {
+                listener!!.onPublish(msec)
             }
         }
     }
 
-    private Runnable mPublishRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (isPlaying()) {
-                for (OnPlayerEventListener listener : listeners) {
-                    listener.onPublish(mediaPlayer.getCurrentPosition());
+    private val mPublishRunnable: Runnable = object : Runnable {
+        override fun run() {
+            if (isPlaying) {
+                for (listener in listeners) {
+                    listener!!.onPublish(mediaPlayer!!.currentPosition)
                 }
             }
-            handler.postDelayed(this, TIME_UPDATE);
+            handler!!.postDelayed(this, TIME_UPDATE)
         }
-    };
-
-    public int getAudioSessionId() {
-        return mediaPlayer.getAudioSessionId();
     }
-
-    public long getAudioPosition() {
-        if (isPlaying() || isPausing()) {
-            return mediaPlayer.getCurrentPosition();
+    val audioSessionId: Int
+        get() = mediaPlayer!!.audioSessionId
+    val audioPosition: Long
+        get() = if (isPlaying || isPausing) {
+            mediaPlayer!!.currentPosition.toLong()
         } else {
-            return 0;
+            0
         }
+    val playMusic: Music?
+        get() = if (musicList!!.isEmpty()) {
+            null
+        } else musicList!![playPosition]
+
+    fun getMusicList(): List<Music>? {
+        return musicList
     }
 
-    public Music getPlayMusic() {
-        if (musicList.isEmpty()) {
-            return null;
+    val isPlaying: Boolean
+        get() = state == STATE_PLAYING
+    val isPausing: Boolean
+        get() = state == STATE_PAUSE
+    val isPreparing: Boolean
+        get() = state == STATE_PREPARING
+    val isIdle: Boolean
+        get() = state == STATE_IDLE
+    var playPosition: Int
+        get() {
+            var position = Preferences.playPosition
+            if (position < 0 || position >= musicList!!.size) {
+                position = 0
+                Preferences.savePlayPosition(position)
+            }
+            return position
         }
-        return musicList.get(getPlayPosition());
-    }
-
-    public MediaPlayer getMediaPlayer() {
-        return mediaPlayer;
-    }
-
-    public List<Music> getMusicList() {
-        return musicList;
-    }
-
-    public boolean isPlaying() {
-        return state == STATE_PLAYING;
-    }
-
-    public boolean isPausing() {
-        return state == STATE_PAUSE;
-    }
-
-    public boolean isPreparing() {
-        return state == STATE_PREPARING;
-    }
-
-    public boolean isIdle() {
-        return state == STATE_IDLE;
-    }
-
-    public int getPlayPosition() {
-        int position = Preferences.getPlayPosition();
-        if (position < 0 || position >= musicList.size()) {
-            position = 0;
-            Preferences.savePlayPosition(position);
+        private set(position) {
+            Preferences.savePlayPosition(position)
         }
-        return position;
-    }
 
-    private void setPlayPosition(int position) {
-        Preferences.savePlayPosition(position);
+    companion object {
+        private const val STATE_IDLE = 0
+        private const val STATE_PREPARING = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSE = 3
+        private const val TIME_UPDATE = 300L
+        fun get(): AudioPlayer {
+            return SingletonHolder.instance
+        }
     }
 }

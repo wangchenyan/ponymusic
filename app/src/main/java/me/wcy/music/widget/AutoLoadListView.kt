@@ -1,89 +1,94 @@
-package me.wcy.music.widget;
+package me.wcy.music.widget
 
-import android.content.Context;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.AbsListView;
-import android.widget.ListView;
-
-import me.wcy.music.R;
+import android.content.Context
+import android.util.AttributeSet
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.AbsListView
+import android.widget.ListView
+import me.wcy.music.R
+import me.wcy.music.widget.AutoLoadListView
 
 /**
  * 自动加载更多ListView
  * Created by hzwangchenyan on 2016/1/7.
  */
-public class AutoLoadListView extends ListView implements AbsListView.OnScrollListener {
-    private static final String TAG = AutoLoadListView.class.getSimpleName();
-    private View vFooter;
-    private OnLoadListener mListener;
-    private int mFirstVisibleItem = 0;
-    private boolean mEnableLoad = true;
-    private boolean mIsLoading = false;
+class AutoLoadListView : ListView, AbsListView.OnScrollListener {
+    private var vFooter: View? = null
+    private var mListener: OnLoadListener? = null
+    private var mFirstVisibleItem = 0
+    private var mEnableLoad = true
+    private var mIsLoading = false
 
-    public AutoLoadListView(Context context) {
-        super(context);
-        init();
+    constructor(context: Context?) : super(context) {
+        init()
     }
 
-    public AutoLoadListView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
+    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
+        init()
     }
 
-    public AutoLoadListView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
+        init()
     }
 
-    private void init() {
-        vFooter = LayoutInflater.from(getContext()).inflate(R.layout.auto_load_list_view_footer, null);
-        addFooterView(vFooter, null, false);
-        setOnScrollListener(this);
-        onLoadComplete();
+    private fun init() {
+        vFooter = LayoutInflater.from(context).inflate(R.layout.auto_load_list_view_footer, null)
+        addFooterView(vFooter, null, false)
+        setOnScrollListener(this)
+        onLoadComplete()
     }
 
-    public void setOnLoadListener(OnLoadListener listener) {
-        mListener = listener;
+    fun setOnLoadListener(listener: OnLoadListener?) {
+        mListener = listener
     }
 
-    public void onLoadComplete() {
-        Log.d(TAG, "onLoadComplete");
-        mIsLoading = false;
-        removeFooterView(vFooter);
+    fun onLoadComplete() {
+        Log.d(TAG, "onLoadComplete")
+        mIsLoading = false
+        removeFooterView(vFooter)
     }
 
-    public void setEnable(boolean enable) {
-        mEnableLoad = enable;
+    fun setEnable(enable: Boolean) {
+        mEnableLoad = enable
     }
 
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        boolean isPullDown = firstVisibleItem > mFirstVisibleItem;
+    override fun onScroll(
+        view: AbsListView,
+        firstVisibleItem: Int,
+        visibleItemCount: Int,
+        totalItemCount: Int
+    ) {
+        val isPullDown = firstVisibleItem > mFirstVisibleItem
         if (mEnableLoad && !mIsLoading && isPullDown) {
-            int lastVisibleItem = firstVisibleItem + visibleItemCount;
+            val lastVisibleItem = firstVisibleItem + visibleItemCount
             if (lastVisibleItem >= totalItemCount - 1) {
-                onLoad();
+                onLoad()
             }
         }
-        mFirstVisibleItem = firstVisibleItem;
+        mFirstVisibleItem = firstVisibleItem
     }
 
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-    }
-
-    private void onLoad() {
-        Log.d(TAG, "onLoad");
-        mIsLoading = true;
-        addFooterView(vFooter, null, false);
+    override fun onScrollStateChanged(view: AbsListView, scrollState: Int) {}
+    private fun onLoad() {
+        Log.d(TAG, "onLoad")
+        mIsLoading = true
+        addFooterView(vFooter, null, false)
         if (mListener != null) {
-            mListener.onLoad();
+            mListener!!.onLoad()
         }
     }
 
-    public interface OnLoadListener {
-        void onLoad();
+    interface OnLoadListener {
+        fun onLoad()
+    }
+
+    companion object {
+        private val TAG = AutoLoadListView::class.java.simpleName
     }
 }

@@ -1,79 +1,74 @@
-package me.wcy.music.service;
+package me.wcy.music.service
 
-import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
-import android.text.format.DateUtils;
-
-import me.wcy.music.application.AppCache;
-import me.wcy.music.constants.Actions;
+import android.os.Handler
+import android.os.Looper
+import android.text.format.DateUtils
+import me.wcy.common.CommonApp
+import me.wcy.music.application.AppCache
+import me.wcy.music.constants.Actions
 
 /**
  * Created by hzwangchenyan on 2017/8/8.
  */
-public class QuitTimer {
-    private Context context;
-    private OnTimerListener listener;
-    private Handler handler;
-    private long timerRemain;
+class QuitTimer private constructor() {
+    private var listener: OnTimerListener? = null
+    private var handler: Handler? = null
+    private var timerRemain: Long = 0
 
-    public interface OnTimerListener {
+    interface OnTimerListener {
         /**
          * 更新定时停止播放时间
          */
-        void onTimer(long remain);
+        fun onTimer(remain: Long)
     }
 
-    public static QuitTimer get() {
-        return SingletonHolder.sInstance;
+    private object SingletonHolder {
+        val sInstance = QuitTimer()
     }
 
-    private static class SingletonHolder {
-        private static final QuitTimer sInstance = new QuitTimer();
+    fun init() {
+        handler = Handler(Looper.getMainLooper())
     }
 
-    private QuitTimer() {
+    fun setOnTimerListener(listener: OnTimerListener?) {
+        this.listener = listener
     }
 
-    public void init(Context context) {
-        this.context = context.getApplicationContext();
-        this.handler = new Handler(Looper.getMainLooper());
-    }
-
-    public void setOnTimerListener(OnTimerListener listener) {
-        this.listener = listener;
-    }
-
-    public void start(long milli) {
-        stop();
+    fun start(milli: Long) {
+        stop()
         if (milli > 0) {
-            timerRemain = milli + DateUtils.SECOND_IN_MILLIS;
-            handler.post(mQuitRunnable);
+            timerRemain = milli + DateUtils.SECOND_IN_MILLIS
+            handler!!.post(mQuitRunnable)
         } else {
-            timerRemain = 0;
+            timerRemain = 0
             if (listener != null) {
-                listener.onTimer(timerRemain);
+                listener!!.onTimer(timerRemain)
             }
         }
     }
 
-    public void stop() {
-        handler.removeCallbacks(mQuitRunnable);
+    fun stop() {
+        handler!!.removeCallbacks(mQuitRunnable)
     }
 
-    private Runnable mQuitRunnable = new Runnable() {
-        @Override
-        public void run() {
-            timerRemain -= DateUtils.SECOND_IN_MILLIS;
+    private val mQuitRunnable: Runnable = object : Runnable {
+        override fun run() {
+            timerRemain -= DateUtils.SECOND_IN_MILLIS
             if (timerRemain > 0) {
                 if (listener != null) {
-                    listener.onTimer(timerRemain);
+                    listener!!.onTimer(timerRemain)
                 }
-                handler.postDelayed(this, DateUtils.SECOND_IN_MILLIS);
+                handler!!.postDelayed(this, DateUtils.SECOND_IN_MILLIS)
             } else {
-                AppCache.get().clearStack();
-                PlayService.startCommand(context, Actions.ACTION_STOP);
+                AppCache.get().clearStack()
+                PlayService.startCommand(CommonApp.app, Actions.ACTION_STOP)
             }
         }
-    };
+    }
+
+    companion object {
+        fun get(): QuitTimer {
+            return SingletonHolder.sInstance
+        }
+    }
 }

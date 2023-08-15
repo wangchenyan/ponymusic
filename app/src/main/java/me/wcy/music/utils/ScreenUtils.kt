@@ -1,48 +1,49 @@
-package me.wcy.music.utils;
+package me.wcy.music.utils
 
-import android.content.Context;
-import android.view.WindowManager;
+import android.content.Context
+import android.view.WindowManager
 
 /**
  * 工具类
  * Created by hzwangchenyan on 2016/1/6.
  */
-public class ScreenUtils {
-    private static Context sContext;
-
-    public static void init(Context context) {
-        sContext = context.getApplicationContext();
+object ScreenUtils {
+    private var sContext: Context? = null
+    fun init(context: Context?) {
+        sContext = context!!.applicationContext
     }
 
-    public static int getScreenWidth() {
-        WindowManager wm = (WindowManager) sContext.getSystemService(Context.WINDOW_SERVICE);
-        return wm.getDefaultDisplay().getWidth();
-    }
-
-    /**
-     * 获取状态栏高度
-     */
-    public static int getStatusBarHeight() {
-        int result = 0;
-        int resourceId = sContext.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = sContext.getResources().getDimensionPixelSize(resourceId);
+    val screenWidth: Int
+        get() {
+            val wm = sContext!!.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            return wm.defaultDisplay.width
         }
-        return result;
+    val statusBarHeight: Int
+        /**
+         * 获取状态栏高度
+         */
+        get() {
+            var result = 0
+            val resourceId =
+                sContext!!.resources.getIdentifier("status_bar_height", "dimen", "android")
+            if (resourceId > 0) {
+                result = sContext!!.resources.getDimensionPixelSize(resourceId)
+            }
+            return result
+        }
+
+    fun dp2px(dpValue: Float): Int {
+        val scale = sContext!!.resources.displayMetrics.density
+        return (dpValue * scale + 0.5f).toInt()
     }
 
-    public static int dp2px(float dpValue) {
-        final float scale = sContext.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
+    fun px2dp(pxValue: Float): Int {
+        val scale = sContext!!.resources.displayMetrics.density
+        return (pxValue / scale + 0.5f).toInt()
     }
 
-    public static int px2dp(float pxValue) {
-        final float scale = sContext.getResources().getDisplayMetrics().density;
-        return (int) (pxValue / scale + 0.5f);
-    }
-
-    public static int sp2px(float spValue) {
-        final float fontScale = sContext.getResources().getDisplayMetrics().scaledDensity;
-        return (int) (spValue * fontScale + 0.5f);
+    fun sp2px(spValue: Float): Int {
+        val fontScale = sContext!!.resources.displayMetrics.scaledDensity
+        return (spValue * fontScale + 0.5f).toInt()
     }
 }

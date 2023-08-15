@@ -1,7 +1,9 @@
-package me.wcy.music.constants;
+package me.wcy.music.constants
 
-public interface RequestCode {
-    int REQUEST_WRITE_SETTINGS = 0;
-    int REQUEST_ALBUM = 1;
-    int REQUEST_CORP = 2;
+interface RequestCode {
+    companion object {
+        const val REQUEST_WRITE_SETTINGS = 0
+        const val REQUEST_ALBUM = 1
+        const val REQUEST_CORP = 2
+    }
 }

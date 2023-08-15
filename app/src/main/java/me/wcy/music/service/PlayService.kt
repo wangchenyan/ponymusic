@@ -1,67 +1,58 @@
-package me.wcy.music.service;
+package me.wcy.music.service
 
-import android.app.Service;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Binder;
-import android.os.IBinder;
-import android.util.Log;
-
-import androidx.annotation.Nullable;
-
-import me.wcy.music.application.Notifier;
-import me.wcy.music.constants.Actions;
+import android.app.Service
+import android.content.Context
+import android.content.Intent
+import android.os.Binder
+import android.os.IBinder
+import android.util.Log
+import me.wcy.music.application.Notifier
+import me.wcy.music.constants.Actions
 
 /**
  * 音乐播放后台服务
  * Created by wcy on 2015/11/27.
  */
-public class PlayService extends Service {
-    private static final String TAG = "Service";
-
-    public class PlayBinder extends Binder {
-        public PlayService getService() {
-            return PlayService.this;
-        }
+class PlayService : Service() {
+    inner class PlayBinder : Binder() {
+        val service: PlayService
+            get() = this@PlayService
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Log.i(TAG, "onCreate: " + getClass().getSimpleName());
-        AudioPlayer.get().init(this);
-        MediaSessionManager.get().init(this);
-        Notifier.get().init(this);
-        QuitTimer.get().init(this);
+    override fun onCreate() {
+        super.onCreate()
+        Log.i(TAG, "onCreate: " + javaClass.simpleName)
+        AudioPlayer.get()
+        MediaSessionManager.get().init(this)
+        Notifier.get().init(this)
+        QuitTimer.get().init()
     }
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return new PlayBinder();
+    override fun onBind(intent: Intent?): IBinder? {
+        return PlayBinder()
     }
 
-    public static void startCommand(Context context, String action) {
-        Intent intent = new Intent(context, PlayService.class);
-        intent.setAction(action);
-        context.startService(intent);
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent != null && intent.getAction() != null) {
-            switch (intent.getAction()) {
-                case Actions.ACTION_STOP:
-                    stop();
-                    break;
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (intent?.action != null) {
+            when (intent.action) {
+                Actions.ACTION_STOP -> stop()
             }
         }
-        return START_NOT_STICKY;
+        return START_NOT_STICKY
     }
 
-    private void stop() {
-        AudioPlayer.get().stopPlayer();
-        QuitTimer.get().stop();
-        Notifier.get().cancelAll();
+    private fun stop() {
+        AudioPlayer.get().stopPlayer()
+        QuitTimer.get().stop()
+        Notifier.get().destroy()
+    }
+
+    companion object {
+        private const val TAG = "Service"
+        fun startCommand(context: Context, action: String) {
+            val intent = Intent(context, PlayService::class.java)
+            intent.action = action
+            context.startService(intent)
+        }
     }
 }

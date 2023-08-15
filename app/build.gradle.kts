@@ -10,7 +10,6 @@ plugins {
     id("kotlin-kapt")
     id("kotlin-parcelize")
     id("auto-register")
-    id("org.greenrobot.greendao")
 }
 
 android {
@@ -85,12 +84,6 @@ kapt {
     correctErrorTypes = true
 }
 
-//greendao {
-//    schemaVersion = 1
-//    targetGenDir = File("src/main/java")
-//    daoPackage = "${android.defaultConfig.applicationId}.storage.db.greendao"
-//}
-
 autoregister {
     registerInfo = listOf(
         // crouter 注解收集
@@ -110,10 +103,8 @@ dependencies {
     implementation(libs.material)
     implementation(libs.media)
     implementation(libs.common)
-    implementation("com.zhy:okhttputils:2.6.2")
     implementation("com.github.wangchenyan:lrcview:2.2")
     implementation("com.hwangjr.rxbus:rxbus:2.0.0")
-    implementation("org.greenrobot:greendao:3.3.0")
 
     kapt(libs.hilt.compiler)
     implementation(libs.hilt)

@@ -1,177 +1,165 @@
-package me.wcy.music.activity;
+package me.wcy.music.activity
 
-import android.Manifest;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
+import me.wcy.music.R
+import me.wcy.music.constants.Extras
+import me.wcy.music.constants.RequestCode
+import me.wcy.music.model.Music
+import me.wcy.music.utils.CoverLoader
+import me.wcy.music.utils.FileUtils
+import me.wcy.music.utils.ImageUtils
+import me.wcy.music.utils.SystemUtils
+import me.wcy.music.utils.ToastUtils
+import me.wcy.music.utils.binding.Bind
+import me.wcy.music.utils.id3.ID3TagUtils
+import me.wcy.music.utils.id3.ID3Tags
+import java.io.File
+import java.util.Locale
 
-import java.io.File;
-import java.util.Locale;
-
-import me.wcy.music.R;
-import me.wcy.music.constants.Extras;
-import me.wcy.music.constants.RequestCode;
-import me.wcy.music.model.Music;
-import me.wcy.music.utils.CoverLoader;
-import me.wcy.music.utils.FileUtils;
-import me.wcy.music.utils.ImageUtils;
-import me.wcy.music.utils.PermissionReq;
-import me.wcy.music.utils.SystemUtils;
-import me.wcy.music.utils.ToastUtils;
-import me.wcy.music.utils.binding.Bind;
-import me.wcy.music.utils.id3.ID3TagUtils;
-import me.wcy.music.utils.id3.ID3Tags;
-
-public class MusicInfoActivity extends BaseActivity implements View.OnClickListener {
+class MusicInfoActivity : BaseActivity(), View.OnClickListener {
     @Bind(R.id.iv_music_info_cover)
-    private ImageView ivCover;
+    private val ivCover: ImageView? = null
+
     @Bind(R.id.et_music_info_title)
-    private EditText etTitle;
+    private val etTitle: EditText? = null
+
     @Bind(R.id.et_music_info_artist)
-    private EditText etArtist;
+    private val etArtist: EditText? = null
+
     @Bind(R.id.et_music_info_album)
-    private EditText etAlbum;
+    private val etAlbum: EditText? = null
+
     @Bind(R.id.tv_music_info_duration)
-    private TextView tvDuration;
+    private val tvDuration: TextView? = null
+
     @Bind(R.id.tv_music_info_file_name)
-    private TextView tvFileName;
+    private val tvFileName: TextView? = null
+
     @Bind(R.id.tv_music_info_file_size)
-    private TextView tvFileSize;
+    private val tvFileSize: TextView? = null
+
     @Bind(R.id.tv_music_info_file_path)
-    private TextView tvFilePath;
-
-    private Music mMusic;
-    private File mMusicFile;
-    private Bitmap mCoverBitmap;
-
-    public static void start(Context context, Music music) {
-        Intent intent = new Intent(context, MusicInfoActivity.class);
-        intent.putExtra(Extras.MUSIC, music);
-        context.startActivity(intent);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_music_info);
-    }
-
-    @Override
-    protected void onServiceBound() {
-        mMusic = (Music) getIntent().getSerializableExtra(Extras.MUSIC);
-        if (mMusic == null || mMusic.getType() != Music.Type.LOCAL) {
-            finish();
+    private val tvFilePath: TextView? = null
+    private var mMusic: Music? = null
+    private var mMusicFile: File? = null
+    private var mCoverBitmap: Bitmap? = null
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_music_info)
+        mMusic = intent.getSerializableExtra(Extras.MUSIC) as Music?
+        if (mMusic == null || mMusic?.type != Music.Type.LOCAL) {
+            finish()
+            return
         }
-        mMusicFile = new File(mMusic.getPath());
-        mCoverBitmap = CoverLoader.get().loadThumb(mMusic);
-
-        initView();
+        mMusicFile = File(mMusic!!.path)
+        mCoverBitmap = CoverLoader.get().loadThumb(mMusic)
+        initView()
     }
 
-    private void initView() {
-        ivCover.setImageBitmap(mCoverBitmap);
-        ivCover.setOnClickListener(this);
-
-        etTitle.setText(mMusic.getTitle());
-        etTitle.setSelection(etTitle.length());
-
-        etArtist.setText(mMusic.getArtist());
-        etArtist.setSelection(etArtist.length());
-
-        etAlbum.setText(mMusic.getAlbum());
-        etAlbum.setSelection(etAlbum.length());
-
-        tvDuration.setText(SystemUtils.formatTime("mm:ss", mMusic.getDuration()));
-
-        tvFileName.setText(mMusic.getFileName());
-
-        tvFileSize.setText(String.format(Locale.getDefault(), "%.2fMB", FileUtils.b2mb((int) mMusic.getFileSize())));
-
-        tvFilePath.setText(mMusicFile.getParent());
+    private fun initView() {
+        ivCover!!.setImageBitmap(mCoverBitmap)
+        ivCover.setOnClickListener(this)
+        etTitle!!.setText(mMusic!!.title)
+        etTitle!!.setSelection(etTitle.length())
+        etArtist!!.setText(mMusic!!.artist)
+        etArtist!!.setSelection(etArtist.length())
+        etAlbum!!.setText(mMusic!!.album)
+        etAlbum!!.setSelection(etAlbum.length())
+        tvDuration!!.text = SystemUtils.formatTime("mm:ss", mMusic!!.duration)
+        tvFileName!!.setText(mMusic!!.fileName)
+        tvFileSize!!.text = String.format(
+            Locale.getDefault(),
+            "%.2fMB",
+            FileUtils.b2mb(mMusic!!.fileSize.toInt())
+        )
+        tvFilePath!!.text = mMusicFile!!.parent
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_music_info, menu);
-        return true;
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_music_info, menu)
+        return true
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_save) {
-            save();
-            finish();
-            return true;
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_save) {
+            save()
+            finish()
+            return true
         }
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item)
     }
 
-    @Override
-    public void onClick(View v) {
-        PermissionReq.with(this)
-                .permissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .result(new PermissionReq.Result() {
-                    @Override
-                    public void onGranted() {
-                        ImageUtils.startAlbum(MusicInfoActivity.this);
-                    }
-
-                    @Override
-                    public void onDenied() {
-                        ToastUtils.show(R.string.no_permission_select_image);
-                    }
-                })
-                .request();
+    override fun onClick(v: View) {
+//        PermissionReq.with(this)
+//            .permissions(
+//                Manifest.permission.READ_EXTERNAL_STORAGE,
+//                Manifest.permission.WRITE_EXTERNAL_STORAGE
+//            )
+//            .result(object : PermissionReq.Result {
+//                override fun onGranted() {
+//                    ImageUtils.startAlbum(this@MusicInfoActivity)
+//                }
+//
+//                override fun onDenied() {
+//                    ToastUtils.show(R.string.no_permission_select_image)
+//                }
+//            })
+//            .request()
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (resultCode != RESULT_OK) {
-            return;
+            return
         }
-
         if (requestCode == RequestCode.REQUEST_ALBUM && data != null) {
-            ImageUtils.startCorp(this, data.getData());
+            ImageUtils.startCorp(this, data.data)
         } else if (requestCode == RequestCode.REQUEST_CORP) {
-            File corpFile = new File(FileUtils.getCorpImagePath(this));
+            val corpFile = File(FileUtils.getCorpImagePath(this))
             if (!corpFile.exists()) {
-                ToastUtils.show("图片保存失败");
-                return;
+                ToastUtils.show("图片保存失败")
+                return
             }
-
-            mCoverBitmap = BitmapFactory.decodeFile(corpFile.getPath());
-            ivCover.setImageBitmap(mCoverBitmap);
-            corpFile.delete();
+            mCoverBitmap = BitmapFactory.decodeFile(corpFile.path)
+            ivCover!!.setImageBitmap(mCoverBitmap)
+            corpFile.delete()
         }
     }
 
-    private void save() {
-        if (!mMusicFile.exists()) {
-            ToastUtils.show("歌曲文件不存在");
-            return;
+    private fun save() {
+        if (!mMusicFile!!.exists()) {
+            ToastUtils.show("歌曲文件不存在")
+            return
         }
-
-        ID3Tags id3Tags = new ID3Tags.Builder().setCoverBitmap(mCoverBitmap)
-                .setTitle(etTitle.getText().toString())
-                .setArtist(etArtist.getText().toString())
-                .setAlbum(etAlbum.getText().toString())
-                .build();
-        ID3TagUtils.setID3Tags(mMusicFile, id3Tags, false);
+        val id3Tags = ID3Tags.Builder().setCoverBitmap(mCoverBitmap)
+            .setTitle(etTitle!!.text.toString())
+            .setArtist(etArtist!!.text.toString())
+            .setAlbum(etAlbum!!.text.toString())
+            .build()
+        ID3TagUtils.setID3Tags(mMusicFile, id3Tags, false)
 
         // 刷新媒体库
-        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(mMusicFile));
-        sendBroadcast(intent);
+        val intent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(mMusicFile))
+        sendBroadcast(intent)
+        ToastUtils.show("保存成功")
+    }
 
-        ToastUtils.show("保存成功");
+    companion object {
+        fun start(context: Context?, music: Music?) {
+            val intent = Intent(context, MusicInfoActivity::class.java)
+            intent.putExtra(Extras.MUSIC, music)
+            context!!.startActivity(intent)
+        }
     }
 }

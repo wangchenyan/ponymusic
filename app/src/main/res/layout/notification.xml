@@ -1,66 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/iv_icon"
-        android:layout_width="@android:dimen/notification_large_icon_width"
-        android:layout_height="@android:dimen/notification_large_icon_height"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_gravity="center_vertical"
         android:contentDescription="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_launcher" />
 
     <LinearLayout
-        android:layout_width="0.0dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_weight="1.0"
-        android:orientation="vertical"
-        android:paddingBottom="2.0dp"
-        android:paddingLeft="13.0dp"
-        android:paddingTop="2.0dp">
+        android:layout_marginStart="12dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tv_title"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:fadingEdge="horizontal"
             android:maxLines="1"
-            android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent.Title" />
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Title.Media"
+            tools:text="发如雪" />
 
         <TextView
             android:id="@+id/tv_subtitle"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:fadingEdge="horizontal"
             android:maxLines="1"
-            android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent" />
+            android:text="周杰伦"
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Info.Media" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:paddingLeft="10.0dp">
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp">
 
         <ImageView
             android:id="@+id/iv_play_pause"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:contentDescription="@null"
             android:scaleType="center"
-            android:src="@drawable/ic_status_bar_pause_dark" />
+            android:src="@drawable/ic_status_bar_pause" />
 
         <ImageView
             android:id="@+id/iv_next"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:contentDescription="@null"
             android:scaleType="center"
-            android:src="@drawable/ic_status_bar_next_dark" />
+            android:src="@drawable/ic_status_bar_next" />
     </LinearLayout>
 </LinearLayout>

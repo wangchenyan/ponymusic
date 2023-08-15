@@ -1,112 +1,110 @@
-package me.wcy.music.service;
+package me.wcy.music.service
 
-import android.os.Build;
-import android.support.v4.media.MediaMetadataCompat;
-import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
-
-import me.wcy.music.application.AppCache;
-import me.wcy.music.model.Music;
-import me.wcy.music.utils.CoverLoader;
+import android.os.Build
+import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.PlaybackStateCompat
+import me.wcy.music.application.AppCache
+import me.wcy.music.model.Music
+import me.wcy.music.utils.CoverLoader
 
 /**
  * Created by hzwangchenyan on 2017/8/8.
  */
-public class MediaSessionManager {
-    private static final String TAG = "MediaSessionManager";
-    private static final long MEDIA_SESSION_ACTIONS = PlaybackStateCompat.ACTION_PLAY
-            | PlaybackStateCompat.ACTION_PAUSE
-            | PlaybackStateCompat.ACTION_PLAY_PAUSE
-            | PlaybackStateCompat.ACTION_SKIP_TO_NEXT
-            | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
-            | PlaybackStateCompat.ACTION_STOP
-            | PlaybackStateCompat.ACTION_SEEK_TO;
+class MediaSessionManager private constructor() {
+    private var playService: PlayService? = null
+    private var mediaSession: MediaSessionCompat? = null
 
-    private PlayService playService;
-    private MediaSessionCompat mediaSession;
-
-    public static MediaSessionManager get() {
-        return SingletonHolder.instance;
+    private object SingletonHolder {
+        val instance = MediaSessionManager()
     }
 
-    private static class SingletonHolder {
-        private static MediaSessionManager instance = new MediaSessionManager();
+    fun init(playService: PlayService?) {
+        this.playService = playService
+        setupMediaSession()
     }
 
-    private MediaSessionManager() {
+    private fun setupMediaSession() {
+        mediaSession = MediaSessionCompat(playService!!, TAG)
+        mediaSession!!.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS or MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS)
+        mediaSession!!.setCallback(callback)
+        mediaSession!!.isActive = true
     }
 
-    public void init(PlayService playService) {
-        this.playService = playService;
-        setupMediaSession();
+    fun updatePlaybackState() {
+        val state = if (AudioPlayer.get().isPlaying || AudioPlayer.get()
+                .isPreparing
+        ) PlaybackStateCompat.STATE_PLAYING else PlaybackStateCompat.STATE_PAUSED
+        mediaSession!!.setPlaybackState(
+            PlaybackStateCompat.Builder()
+                .setActions(MEDIA_SESSION_ACTIONS)
+                .setState(state, AudioPlayer.get().audioPosition, 1f)
+                .build()
+        )
     }
 
-    private void setupMediaSession() {
-        mediaSession = new MediaSessionCompat(playService, TAG);
-        mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS | MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
-        mediaSession.setCallback(callback);
-        mediaSession.setActive(true);
-    }
-
-    public void updatePlaybackState() {
-        int state = (AudioPlayer.get().isPlaying() || AudioPlayer.get().isPreparing()) ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED;
-        mediaSession.setPlaybackState(
-                new PlaybackStateCompat.Builder()
-                        .setActions(MEDIA_SESSION_ACTIONS)
-                        .setState(state, AudioPlayer.get().getAudioPosition(), 1)
-                        .build());
-    }
-
-    public void updateMetaData(Music music) {
+    fun updateMetaData(music: Music?) {
         if (music == null) {
-            mediaSession.setMetadata(null);
-            return;
+            mediaSession!!.setMetadata(null)
+            return
         }
-
-        MediaMetadataCompat.Builder metaData = new MediaMetadataCompat.Builder()
-                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, music.getTitle())
-                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, music.getArtist())
-                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, music.getAlbum())
-                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, music.getArtist())
-                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, music.getDuration())
-                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, CoverLoader.get().loadThumb(music));
-
+        val metaData = MediaMetadataCompat.Builder()
+            .putString(MediaMetadataCompat.METADATA_KEY_TITLE, music.title)
+            .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, music.artist)
+            .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, music.album)
+            .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, music.artist)
+            .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, music.duration)
+            .putBitmap(
+                MediaMetadataCompat.METADATA_KEY_ALBUM_ART,
+                CoverLoader.get().loadThumb(music)
+            )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            metaData.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, AppCache.get().getLocalMusicList().size());
+            metaData.putLong(
+                MediaMetadataCompat.METADATA_KEY_NUM_TRACKS,
+                AppCache.get().getLocalMusicList().size.toLong()
+            )
         }
-
-        mediaSession.setMetadata(metaData.build());
+        mediaSession!!.setMetadata(metaData.build())
     }
 
-    private MediaSessionCompat.Callback callback = new MediaSessionCompat.Callback() {
-        @Override
-        public void onPlay() {
-            AudioPlayer.get().playPause();
+    private val callback: MediaSessionCompat.Callback = object : MediaSessionCompat.Callback() {
+        override fun onPlay() {
+            AudioPlayer.get().playPause()
         }
 
-        @Override
-        public void onPause() {
-            AudioPlayer.get().playPause();
+        override fun onPause() {
+            AudioPlayer.get().playPause()
         }
 
-        @Override
-        public void onSkipToNext() {
-            AudioPlayer.get().next();
+        override fun onSkipToNext() {
+            AudioPlayer.get().next()
         }
 
-        @Override
-        public void onSkipToPrevious() {
-            AudioPlayer.get().prev();
+        override fun onSkipToPrevious() {
+            AudioPlayer.get().prev()
         }
 
-        @Override
-        public void onStop() {
-            AudioPlayer.get().stopPlayer();
+        override fun onStop() {
+            AudioPlayer.get().stopPlayer()
         }
 
-        @Override
-        public void onSeekTo(long pos) {
-            AudioPlayer.get().seekTo((int) pos);
+        override fun onSeekTo(pos: Long) {
+            AudioPlayer.get().seekTo(pos.toInt())
         }
-    };
+    }
+
+    companion object {
+        private const val TAG = "MediaSessionManager"
+        private const val MEDIA_SESSION_ACTIONS = (PlaybackStateCompat.ACTION_PLAY
+                or PlaybackStateCompat.ACTION_PAUSE
+                or PlaybackStateCompat.ACTION_PLAY_PAUSE
+                or PlaybackStateCompat.ACTION_SKIP_TO_NEXT
+                or PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
+                or PlaybackStateCompat.ACTION_STOP
+                or PlaybackStateCompat.ACTION_SEEK_TO)
+
+        fun get(): MediaSessionManager {
+            return SingletonHolder.instance
+        }
+    }
 }

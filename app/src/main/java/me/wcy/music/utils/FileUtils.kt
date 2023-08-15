@@ -1,163 +1,160 @@
-package me.wcy.music.utils;
+package me.wcy.music.utils
 
-import android.content.Context;
-import android.os.Environment;
-import android.text.TextUtils;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import me.wcy.music.R;
-import me.wcy.music.application.AppCache;
-import me.wcy.music.model.Music;
+import android.content.Context
+import android.os.Environment
+import android.text.TextUtils
+import me.wcy.music.R
+import me.wcy.music.application.AppCache
+import me.wcy.music.model.Music
+import java.io.BufferedWriter
+import java.io.File
+import java.io.FileWriter
+import java.io.IOException
+import java.util.Locale
+import java.util.regex.Pattern
 
 /**
  * 文件工具类
  * Created by wcy on 2016/1/3.
  */
-public class FileUtils {
-    private static final String MP3 = ".mp3";
-    private static final String LRC = ".lrc";
+object FileUtils {
+    private const val MP3 = ".mp3"
+    private const val LRC = ".lrc"
+    private val appDir: String
+        private get() = Environment.getExternalStorageDirectory().toString() + "/PonyMusic"
+    val musicDir: String
+        get() {
+            val dir = appDir + "/Music/"
+            return mkdirs(dir)
+        }
+    val lrcDir: String
+        get() {
+            val dir = appDir + "/Lyric/"
+            return mkdirs(dir)
+        }
+    val albumDir: String
+        get() {
+            val dir = appDir + "/Album/"
+            return mkdirs(dir)
+        }
+    val logDir: String
+        get() {
+            val dir = appDir + "/Log/"
+            return mkdirs(dir)
+        }
 
-    private static String getAppDir() {
-        return Environment.getExternalStorageDirectory() + "/PonyMusic";
+    fun getSplashDir(context: Context): String {
+        val dir = context.filesDir.toString() + "/splash/"
+        return mkdirs(dir)
     }
 
-    public static String getMusicDir() {
-        String dir = getAppDir() + "/Music/";
-        return mkdirs(dir);
-    }
+    val relativeMusicDir: String
+        get() {
+            val dir = "PonyMusic/Music/"
+            return mkdirs(dir)
+        }
 
-    public static String getLrcDir() {
-        String dir = getAppDir() + "/Lyric/";
-        return mkdirs(dir);
-    }
-
-    public static String getAlbumDir() {
-        String dir = getAppDir() + "/Album/";
-        return mkdirs(dir);
-    }
-
-    public static String getLogDir() {
-        String dir = getAppDir() + "/Log/";
-        return mkdirs(dir);
-    }
-
-    public static String getSplashDir(Context context) {
-        String dir = context.getFilesDir() + "/splash/";
-        return mkdirs(dir);
-    }
-
-    public static String getRelativeMusicDir() {
-        String dir = "PonyMusic/Music/";
-        return mkdirs(dir);
-    }
-
-    public static String getCorpImagePath(Context context) {
-        return context.getExternalCacheDir() + "/corp.jpg";
+    fun getCorpImagePath(context: Context): String {
+        return context.externalCacheDir.toString() + "/corp.jpg"
     }
 
     /**
-     * 获取歌词路径<br>
+     * 获取歌词路径<br></br>
      * 先从已下载文件夹中查找，如果不存在，则从歌曲文件所在文件夹查找。
      *
      * @return 如果存在返回路径，否则返回null
      */
-    public static String getLrcFilePath(Music music) {
+    fun getLrcFilePath(music: Music?): String? {
         if (music == null) {
-            return null;
+            return null
         }
-
-        String lrcFilePath = getLrcDir() + getLrcFileName(music.getArtist(), music.getTitle());
+        var lrcFilePath: String? = lrcDir + getLrcFileName(music.artist, music.title)
         if (!exists(lrcFilePath)) {
-            lrcFilePath = music.getPath().replace(MP3, LRC);
+            lrcFilePath = music.path.replace(MP3, LRC)
             if (!exists(lrcFilePath)) {
-                lrcFilePath = null;
+                lrcFilePath = null
             }
         }
-        return lrcFilePath;
+        return lrcFilePath
     }
 
-    private static String mkdirs(String dir) {
-        File file = new File(dir);
+    private fun mkdirs(dir: String): String {
+        val file = File(dir)
         if (!file.exists()) {
-            file.mkdirs();
+            file.mkdirs()
         }
-        return dir;
+        return dir
     }
 
-    private static boolean exists(String path) {
-        File file = new File(path);
-        return file.exists();
+    private fun exists(path: String?): Boolean {
+        val file = File(path)
+        return file.exists()
     }
 
-    public static String getMp3FileName(String artist, String title) {
-        return getFileName(artist, title) + MP3;
+    fun getMp3FileName(artist: String?, title: String?): String {
+        return getFileName(artist, title) + MP3
     }
 
-    public static String getLrcFileName(String artist, String title) {
-        return getFileName(artist, title) + LRC;
+    fun getLrcFileName(artist: String?, title: String?): String {
+        return getFileName(artist, title) + LRC
     }
 
-    public static String getAlbumFileName(String artist, String title) {
-        return getFileName(artist, title);
+    fun getAlbumFileName(artist: String?, title: String?): String {
+        return getFileName(artist, title)
     }
 
-    public static String getFileName(String artist, String title) {
-        artist = stringFilter(artist);
-        title = stringFilter(title);
+    fun getFileName(artist: String?, title: String?): String {
+        var artist = artist
+        var title = title
+        artist = stringFilter(artist)
+        title = stringFilter(title)
         if (TextUtils.isEmpty(artist)) {
-            artist = AppCache.get().getContext().getString(R.string.unknown);
+            artist = AppCache.get().getContext()!!.getString(R.string.unknown)
         }
         if (TextUtils.isEmpty(title)) {
-            title = AppCache.get().getContext().getString(R.string.unknown);
+            title = AppCache.get().getContext()!!.getString(R.string.unknown)
         }
-        return artist + " - " + title;
+        return "$artist - $title"
     }
 
-    public static String getArtistAndAlbum(String artist, String album) {
-        if (TextUtils.isEmpty(artist) && TextUtils.isEmpty(album)) {
-            return "";
+    fun getArtistAndAlbum(artist: String?, album: String?): String? {
+        return if (TextUtils.isEmpty(artist) && TextUtils.isEmpty(album)) {
+            ""
         } else if (!TextUtils.isEmpty(artist) && TextUtils.isEmpty(album)) {
-            return artist;
+            artist
         } else if (TextUtils.isEmpty(artist) && !TextUtils.isEmpty(album)) {
-            return album;
+            album
         } else {
-            return artist + " - " + album;
+            "$artist - $album"
         }
     }
 
     /**
      * 过滤特殊字符(\/:*?"<>|)
      */
-    private static String stringFilter(String str) {
+    private fun stringFilter(str: String?): String? {
         if (str == null) {
-            return null;
+            return null
         }
-        String regEx = "[\\/:*?\"<>|]";
-        Pattern p = Pattern.compile(regEx);
-        Matcher m = p.matcher(str);
-        return m.replaceAll("").trim();
+        val regEx = "[\\/:*?\"<>|]"
+        val p = Pattern.compile(regEx)
+        val m = p.matcher(str)
+        return m.replaceAll("").trim { it <= ' ' }
     }
 
-    public static float b2mb(int b) {
-        String mb = String.format(Locale.getDefault(), "%.2f", (float) b / 1024 / 1024);
-        return Float.valueOf(mb);
+    fun b2mb(b: Int): Float {
+        val mb = String.format(Locale.getDefault(), "%.2f", b.toFloat() / 1024 / 1024)
+        return java.lang.Float.valueOf(mb)
     }
 
-    public static void saveLrcFile(String path, String content) {
+    fun saveLrcFile(path: String?, content: String?) {
         try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(path));
-            bw.write(content);
-            bw.flush();
-            bw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+            val bw = BufferedWriter(FileWriter(path))
+            bw.write(content)
+            bw.flush()
+            bw.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 }

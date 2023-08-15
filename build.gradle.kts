@@ -10,7 +10,6 @@ plugins {
 
 buildscript {
     dependencies {
-        classpath("org.greenrobot:greendao-gradle-plugin:3.3.0")
         classpath(libs.autoRegister)
     }
 }

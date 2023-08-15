@@ -1,57 +1,52 @@
-package me.wcy.music.utils;
+package me.wcy.music.utils
 
-import android.app.Activity;
-import android.content.Context;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-
-import androidx.fragment.app.Fragment;
+import android.app.Activity
+import android.content.Context
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import androidx.fragment.app.Fragment
 
 /**
  * Created by hzwangchenyan on 2017/6/2.
  */
-public class KeyboardUtils {
-
-    public static void showKeyboard(final View view) {
+object KeyboardUtils {
+    fun showKeyboard(view: View?) {
         if (view == null) {
-            return;
+            return
         }
-
-        view.setFocusable(true);
-        view.setFocusableInTouchMode(true);
-        view.requestFocus();
-        view.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(view, 0);
-            }
-        }, 200L);
+        view.isFocusable = true
+        view.isFocusableInTouchMode = true
+        view.requestFocus()
+        view.postDelayed(Runnable {
+            val imm =
+                view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(view, 0)
+        }, 200L)
     }
 
-    public static void hideKeyboard(Fragment fragment) {
+    fun hideKeyboard(fragment: Fragment?) {
         if (fragment == null) {
-            return;
+            return
         }
-
-        hideKeyboard(fragment.getActivity());
+        hideKeyboard(fragment.activity)
     }
 
-    public static void hideKeyboard(Activity activity) {
-        if (activity == null || activity.getCurrentFocus() == null) {
-            return;
+    fun hideKeyboard(activity: Activity?) {
+        if (activity == null || activity.currentFocus == null) {
+            return
         }
-
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(
+            activity.currentFocus!!.windowToken,
+            InputMethodManager.HIDE_NOT_ALWAYS
+        )
     }
 
-    public static void hideKeyboard(View view) {
+    fun hideKeyboard(view: View?) {
         if (view == null) {
-            return;
+            return
         }
-
-        InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
     }
 }
