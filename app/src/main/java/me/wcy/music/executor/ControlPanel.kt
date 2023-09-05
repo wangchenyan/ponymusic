@@ -7,9 +7,8 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import me.wcy.music.R
-import me.wcy.music.activity.PlaylistActivity
 import me.wcy.music.model.Music
-import me.wcy.music.service.AudioPlayer
+import me.wcy.music.playing.PlaylistActivity
 import me.wcy.music.service.OnPlayerEventListener
 import me.wcy.music.utils.CoverLoader
 import me.wcy.music.utils.binding.Bind
@@ -45,13 +44,13 @@ class ControlPanel(view: View?) : View.OnClickListener, OnPlayerEventListener {
         ivPlayBarPlay!!.setOnClickListener(this)
         ivPlayBarNext!!.setOnClickListener(this)
         vPlayBarPlaylist!!.setOnClickListener(this)
-        onChange(AudioPlayer.get().playMusic)
+        // onChange(AudioPlayer.get().playMusic)
     }
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.iv_play_bar_play -> AudioPlayer.get().playPause()
-            R.id.iv_play_bar_next -> AudioPlayer.get().next()
+            R.id.iv_play_bar_play -> {}//AudioPlayer.get().playPause()
+            R.id.iv_play_bar_next -> {}//AudioPlayer.get().next()
             R.id.v_play_bar_playlist -> {
                 val context = vPlayBarPlaylist!!.context
                 val intent = Intent(context, PlaylistActivity::class.java)
@@ -68,10 +67,10 @@ class ControlPanel(view: View?) : View.OnClickListener, OnPlayerEventListener {
         ivPlayBarCover.setImageBitmap(cover)
         tvPlayBarTitle.setText(music.title)
         tvPlayBarArtist.setText(music.artist)
-        ivPlayBarPlay.isSelected =
-            AudioPlayer.get().isPlaying || AudioPlayer.get().isPreparing
+//        ivPlayBarPlay.isSelected =
+//            AudioPlayer.get().isPlaying || AudioPlayer.get().isPreparing
         mProgressBar.max = music.duration.toInt()
-        mProgressBar.progress = AudioPlayer.get().audioPosition.toInt()
+//        mProgressBar.progress = AudioPlayer.get().audioPosition.toInt()
     }
 
     override fun onPlayerStart() {

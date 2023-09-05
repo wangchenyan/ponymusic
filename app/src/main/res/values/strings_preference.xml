@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="setting_key_dark_mode">dark_mode</string>
     <string name="setting_key_mobile_network_play">mobile_network_play</string>
     <string name="setting_key_mobile_network_download">mobile_network_download</string>
     <string name="setting_key_sound_effect">sound_effect</string>

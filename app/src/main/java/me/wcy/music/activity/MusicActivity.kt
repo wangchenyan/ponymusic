@@ -17,18 +17,17 @@ import com.google.android.material.navigation.NavigationView
 import me.wcy.common.permission.Permissioner
 import me.wcy.music.R
 import me.wcy.music.adapter.FragmentAdapter
-import me.wcy.music.constants.Extras
-import me.wcy.music.constants.Keys
+import me.wcy.music.const.Extras
+import me.wcy.music.const.Keys
 import me.wcy.music.executor.ControlPanel
 import me.wcy.music.executor.NaviMenuExecutor
 import me.wcy.music.fragment.LocalMusicFragment
 import me.wcy.music.fragment.PlayFragment
 import me.wcy.music.fragment.SheetListFragment
-import me.wcy.music.service.AudioPlayer
 import me.wcy.music.service.PlayService
 import me.wcy.music.service.QuitTimer
 import me.wcy.music.service.QuitTimer.OnTimerListener
-import me.wcy.music.utils.SystemUtils
+import me.wcy.music.utils.TimeUtils
 import me.wcy.music.utils.binding.Bind
 
 class MusicActivity : BaseActivity(), View.OnClickListener, OnTimerListener,
@@ -78,8 +77,8 @@ class MusicActivity : BaseActivity(), View.OnClickListener, OnTimerListener,
 
         setupView()
         naviMenuExecutor = NaviMenuExecutor(this)
-        AudioPlayer.get().addOnPlayEventListener(controlPanel)
-        QuitTimer.get().setOnTimerListener(this)
+        //AudioPlayer.get().addOnPlayEventListener(controlPanel)
+        QuitTimer.setOnTimerListener(this)
         parseIntent()
     }
 
@@ -125,7 +124,7 @@ class MusicActivity : BaseActivity(), View.OnClickListener, OnTimerListener,
             timerItem = navigationView!!.menu.findItem(R.id.action_timer)
         }
         val title = getString(R.string.menu_timer)
-        timerItem!!.title = if (remain == 0L) title else SystemUtils.formatTime(
+        timerItem!!.title = if (remain == 0L) title else TimeUtils.formatTime(
             "$title(mm:ss)",
             remain
         )
@@ -164,7 +163,7 @@ class MusicActivity : BaseActivity(), View.OnClickListener, OnTimerListener,
             return
         }
         val ft = supportFragmentManager.beginTransaction()
-        ft.setCustomAnimations(R.anim.fragment_slide_up, 0)
+        ft.setCustomAnimations(R.anim.anim_slide_up, 0)
         if (mPlayFragment == null) {
             mPlayFragment = PlayFragment()
             ft.replace(android.R.id.content, mPlayFragment!!)
@@ -177,7 +176,7 @@ class MusicActivity : BaseActivity(), View.OnClickListener, OnTimerListener,
 
     private fun hidePlayingFragment() {
         val ft = supportFragmentManager.beginTransaction()
-        ft.setCustomAnimations(0, R.anim.fragment_slide_down)
+        ft.setCustomAnimations(0, R.anim.anim_slide_down)
         ft.hide(mPlayFragment!!)
         ft.commitAllowingStateLoss()
         isPlayFragmentShow = false
@@ -214,8 +213,8 @@ class MusicActivity : BaseActivity(), View.OnClickListener, OnTimerListener,
     }
 
     override fun onDestroy() {
-        AudioPlayer.get().removeOnPlayEventListener(controlPanel)
-        QuitTimer.get().setOnTimerListener(null)
+        //AudioPlayer.get().removeOnPlayEventListener(controlPanel)
+        QuitTimer.setOnTimerListener(null)
         super.onDestroy()
     }
 }

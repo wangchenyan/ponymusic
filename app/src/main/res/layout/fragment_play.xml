@@ -15,7 +15,7 @@
         android:id="@+id/ll_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black_50p"
+        android:background="@color/translucent_black_p50"
         android:orientation="vertical">
 
         <LinearLayout
@@ -87,10 +87,10 @@
                     lrc:lrcAnimationDuration="1000"
                     lrc:lrcCurrentTextColor="@color/white"
                     lrc:lrcDividerHeight="24dp"
-                    lrc:lrcNormalTextColor="@color/white_50p"
+                    lrc:lrcNormalTextColor="@color/translucent_white_p50"
                     lrc:lrcPadding="40dp"
                     lrc:lrcTextSize="@dimen/text_size_common"
-                    lrc:lrcTimelineColor="@color/white_50p"
+                    lrc:lrcTimelineColor="@color/translucent_white_p50"
                     lrc:lrcTimelineTextColor="#CCFFFFFF" />
             </LinearLayout>
         </FrameLayout>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/ivPlayingBg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/play_page_default_bg" />
+
+    <LinearLayout
+        android:id="@+id/ll_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/translucent_black_p50"
+        android:orientation="vertical">
+
+        <me.wcy.common.widget.TitleLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tlJustShowStatusBar="true" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="?attr/actionBarSize"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@drawable/btn_action_bg_selector"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_arrow_down" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="无音乐"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_common" />
+
+                <TextView
+                    android:id="@+id/tv_artist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textColor="@color/grey"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <me.wcy.music.widget.AlbumCoverView
+                android:id="@+id/album_cover_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin" />
+
+            <LinearLayout
+                android:id="@+id/lrcLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_volume" />
+
+                    <SeekBar
+                        android:id="@+id/sb_volume"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxHeight="2dp"
+                        android:minHeight="2dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:progressDrawable="@drawable/seek_bar_volume_style"
+                        android:thumb="@drawable/ic_seek_bar_volume_btn" />
+                </LinearLayout>
+
+                <me.wcy.lrcview.LrcView
+                    android:id="@+id/lrc_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    app:lrcAnimationDuration="1000"
+                    app:lrcCurrentTextColor="@color/white"
+                    app:lrcDividerHeight="24dp"
+                    app:lrcNormalTextColor="@color/translucent_white_p50"
+                    app:lrcPadding="40dp"
+                    app:lrcTextSize="@dimen/text_size_common"
+                    app:lrcTimelineColor="@color/translucent_white_p50"
+                    app:lrcTimelineTextColor="#CCFFFFFF" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical"
+            android:paddingBottom="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin">
+
+                <TextView
+                    android:id="@+id/tv_current_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/play_time_start"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
+
+                <SeekBar
+                    android:id="@+id/sb_progress"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:maxHeight="2dp"
+                    android:minHeight="2dp"
+                    android:progressDrawable="@drawable/seek_bar_progress_style"
+                    android:thumb="@drawable/ic_seek_bar_progress_btn" />
+
+                <TextView
+                    android:id="@+id/tv_total_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/play_time_start"
+                    android:textColor="@color/translucent_white_p50"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_mode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/play_mode_level_list" />
+
+                <ImageView
+                    android:id="@+id/iv_prev"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/iv_play"
+                    android:src="@drawable/play_btn_prev_selector" />
+
+                <ImageView
+                    android:id="@+id/iv_play"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/play_btn_play_pause_selector" />
+
+                <ImageView
+                    android:id="@+id/iv_next"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/iv_play"
+                    android:src="@drawable/play_btn_next_selector" />
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

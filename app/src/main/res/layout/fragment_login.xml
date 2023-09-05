@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <me.wcy.common.widget.TitleLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tlTitleCenter="false"
+        app:tlTitleText="登录" />
+
+    <LinearLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="60dp">
+
+            <ImageView
+                android:id="@+id/ivQrCode"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:src="@drawable/ic_launcher" />
+
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/translucent_black_p50"
+                android:gravity="center"
+                android:text="加载中…"
+                android:textColor="@color/white" />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="使用「网易云音乐APP」扫码登录"
+            android:textColor="@color/common_text_h2_color"
+            android:textSize="12dp" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/menuDrawer"
+        android:layout_width="@dimen/common_title_bar_size"
+        android:layout_height="@dimen/common_title_bar_size"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_menu"
+        app:tint="@color/common_text_h1_color" />
+
+    <ImageView
+        android:id="@+id/menuSearch"
+        android:layout_width="@dimen/common_title_bar_size"
+        android:layout_height="@dimen/common_title_bar_size"
+        android:layout_gravity="end"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_menu_search"
+        app:tint="@color/common_text_h1_color" />
+</FrameLayout>

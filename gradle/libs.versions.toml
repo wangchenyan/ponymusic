@@ -15,7 +15,7 @@ hilt = "2.44"
 lifecycle = "2.6.1"
 media = "1.6.0"
 room = "2.5.2"
-common = "1.0.0-beta06"
+common = "1.0.0-beta08"
 init = "1.1.0"
 crouter = "2.4.0-beta01"
 
@@ -62,6 +62,8 @@ crouter-compiler = { group = "com.github.wangchenyan.crouter", name = "crouter-c
 crouter-api = { group = "com.github.wangchenyan.crouter", name = "crouter-api", version.ref = "crouter" }
 # open source
 loggingInterceptor = { group = "com.github.ihsanbal", name = "LoggingInterceptor", version = "3.1.0" }
+persistentCookieJar = { group = "com.github.franmontiel", name = "PersistentCookieJar", version = "v1.0.1" }
 circleimageview = { group = "de.hdodenhof", name = "circleimageview", version = "2.1.0" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version = "4.13.2" }
 zbar = { group = "cn.bertsir.zbarLibary", name = "zbarlibary", version = "1.4.2" }
+blurry = { group = "jp.wasabeef", name = "blurry", version = "4.0.1" }

@@ -4,8 +4,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin)
     alias(libs.plugins.ksp)
-    //alias(libs.plugins.gms)
-    //alias(libs.plugins.crashlytics)
     alias(libs.plugins.hilt)
     id("kotlin-kapt")
     id("kotlin-parcelize")
@@ -84,6 +82,15 @@ kapt {
     correctErrorTypes = true
 }
 
+ksp {
+    arg("moduleName", project.name)
+    // crouter 默认 scheme
+    arg("defaultScheme", "app")
+    // crouter 默认 host
+    arg("defaultHost", "music")
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
+
 autoregister {
     registerInfo = listOf(
         // crouter 注解收集
@@ -102,10 +109,21 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.material)
     implementation(libs.media)
-    implementation(libs.common)
+    implementation("androidx.preference:preference-ktx:1.2.0")
     implementation("com.github.wangchenyan:lrcview:2.2")
     implementation("com.hwangjr.rxbus:rxbus:2.0.0")
 
+    ksp(libs.room.compiler)
+    implementation(libs.room)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt)
+
+    implementation(libs.common)
+    ksp(libs.crouter.compiler)
+    implementation(libs.crouter.api)
+
+    implementation(libs.loggingInterceptor)
+    implementation(libs.persistentCookieJar)
+    implementation(libs.zbar)
+    implementation(libs.blurry)
 }

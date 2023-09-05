@@ -9,7 +9,7 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.net.Uri
 import android.provider.MediaStore
-import me.wcy.music.constants.RequestCode
+import me.wcy.music.const.RequestCode
 import java.io.File
 
 /**
@@ -18,6 +18,7 @@ import java.io.File
  */
 object ImageUtils {
     private const val BLUR_RADIUS = 50
+
     fun blur(source: Bitmap?): Bitmap? {
         return if (source == null) {
             null
@@ -272,10 +273,7 @@ object ImageUtils {
     /**
      * 将图片放大或缩小到指定尺寸
      */
-    fun resizeImage(source: Bitmap?, dstWidth: Int, dstHeight: Int): Bitmap? {
-        if (source == null) {
-            return null
-        }
+    fun resizeImage(source: Bitmap, dstWidth: Int, dstHeight: Int): Bitmap {
         return if (source.width == dstWidth && source.height == dstHeight) {
             source
         } else Bitmap.createScaledBitmap(source, dstWidth, dstHeight, true)
@@ -302,12 +300,6 @@ object ImageUtils {
         paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
         canvas.drawBitmap(source, 0f, 0f, paint)
         return target
-    }
-
-    fun startAlbum(activity: Activity) {
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = "image/*"
-        activity.startActivityForResult(intent, RequestCode.REQUEST_ALBUM)
     }
 
     fun startCorp(activity: Activity, uri: Uri?) {

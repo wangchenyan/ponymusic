@@ -10,10 +10,12 @@ import android.graphics.Matrix
 import android.graphics.Point
 import android.graphics.drawable.Drawable
 import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.content.res.ResourcesCompat
+import com.blankj.utilcode.util.SizeUtils
 import me.wcy.music.R
-import me.wcy.music.utils.CoverLoader
 import me.wcy.music.utils.ImageUtils
 
 /**
@@ -24,128 +26,140 @@ class AlbumCoverView @JvmOverloads constructor(
     context: Context?,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr), AnimatorUpdateListener {
-    private val mHandler = Handler()
-    private var mDiscBitmap: Bitmap? = null
-    private var mCoverBitmap: Bitmap? = null
-    private var mNeedleBitmap: Bitmap? = null
-    private var mTopLine: Drawable? = null
-    private var mCoverBorder: Drawable? = null
-    private var mTopLineHeight = 0
-    private var mCoverBorderWidth = 0
-    private val mDiscMatrix = Matrix()
-    private val mCoverMatrix = Matrix()
-    private val mNeedleMatrix = Matrix()
-    private lateinit var mPlayAnimator: ValueAnimator
-    private lateinit var mPauseAnimator: ValueAnimator
-    private var mDiscRotation = 0.0f
-    private var mNeedleRotation = NEEDLE_ROTATION_PLAY
+) : View(context, attrs, defStyleAttr) {
+    private val mainHandler by lazy {
+        Handler(Looper.getMainLooper())
+    }
+
+    private val topLine: Drawable by lazy {
+        ResourcesCompat.getDrawable(resources, R.drawable.play_page_cover_top_line_shape, null)!!
+    }
+    private val coverBorder: Drawable by lazy {
+        ResourcesCompat.getDrawable(resources, R.drawable.play_page_cover_border_shape, null)!!
+    }
+
+    private var discBitmap = BitmapFactory.decodeResource(resources, R.drawable.play_page_disc)
+    private val discMatrix by lazy { Matrix() }
+    private val discStartPoint by lazy { Point() } // 图片起始坐标
+    private val discCenterPoint by lazy { Point() } // 旋转中心坐标
+    private var discRotation = 0.0f
+
+    private var needleBitmap = BitmapFactory.decodeResource(resources, R.drawable.play_page_needle)
+    private val needleMatrix by lazy { Matrix() }
+    private val needleStartPoint by lazy { Point() }
+    private val needleCenterPoint by lazy { Point() }
+    private var needleRotation = NEEDLE_ROTATION_PLAY
+
+    private var coverBitmap: Bitmap? = null
+    private val coverMatrix by lazy { Matrix() }
+    private val coverStartPoint by lazy { Point() }
+    private val coverCenterPoint by lazy { Point() }
+    private var coverSize = 0
+
+    private val playAnimator by lazy {
+        ValueAnimator.ofFloat(NEEDLE_ROTATION_PAUSE, NEEDLE_ROTATION_PLAY).apply {
+            duration = 300
+            addUpdateListener(animationUpdateListener)
+        }
+    }
+    private val pauseAnimator by lazy {
+        ValueAnimator.ofFloat(NEEDLE_ROTATION_PLAY, NEEDLE_ROTATION_PAUSE).apply {
+            duration = 300
+            addUpdateListener(animationUpdateListener)
+        }
+    }
+
     private var isPlaying = false
 
-    // 图片起始坐标
-    private val mDiscPoint = Point()
-    private val mCoverPoint = Point()
-    private val mNeedlePoint = Point()
-
-    // 旋转中心坐标
-    private val mDiscCenterPoint = Point()
-    private val mCoverCenterPoint = Point()
-    private val mNeedleCenterPoint = Point()
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        super.onLayout(changed, left, top, right, bottom)
-        if (changed) {
-            initOnLayout()
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        if (w > 0 && h > 0) {
+            initSize()
         }
     }
 
-    private fun init() {
-        mTopLine = resources.getDrawable(R.drawable.play_page_cover_top_line_shape)
-        mCoverBorder = resources.getDrawable(R.drawable.play_page_cover_border_shape)
-        mDiscBitmap = BitmapFactory.decodeResource(resources, R.drawable.play_page_disc)
-        mCoverBitmap = CoverLoader.get().loadRound(null)
-        mNeedleBitmap = BitmapFactory.decodeResource(resources, R.drawable.play_page_needle)
-        mTopLineHeight = dp2px(1f)
-        mCoverBorderWidth = dp2px(1f)
-        mPlayAnimator = ValueAnimator.ofFloat(NEEDLE_ROTATION_PAUSE, NEEDLE_ROTATION_PLAY)
-        mPlayAnimator.setDuration(300)
-        mPlayAnimator.addUpdateListener(this)
-        mPauseAnimator = ValueAnimator.ofFloat(NEEDLE_ROTATION_PLAY, NEEDLE_ROTATION_PAUSE)
-        mPauseAnimator.setDuration(300)
-        mPauseAnimator.addUpdateListener(this)
-    }
-
-    private fun initOnLayout() {
-        if (width == 0 || height == 0) {
-            return
-        }
+    private fun initSize() {
         val unit = Math.min(width, height) / 8
-        CoverLoader.get().setRoundLength(unit * 4)
-        mDiscBitmap = ImageUtils.resizeImage(mDiscBitmap, unit * 6, unit * 6)
-        mCoverBitmap = ImageUtils.resizeImage(mCoverBitmap, unit * 4, unit * 4)
-        mNeedleBitmap = ImageUtils.resizeImage(mNeedleBitmap, unit * 2, unit * 3)
-        val discOffsetY = mNeedleBitmap!!.height / 2
-        mDiscPoint.x = (width - mDiscBitmap!!.width) / 2
-        mDiscPoint.y = discOffsetY
-        mCoverPoint.x = (width - mCoverBitmap!!.width) / 2
-        mCoverPoint.y = discOffsetY + (mDiscBitmap!!.height - mCoverBitmap!!.height) / 2
-        mNeedlePoint.x = width / 2 - mNeedleBitmap!!.width / 6
-        mNeedlePoint.y = -mNeedleBitmap!!.width / 6
-        mDiscCenterPoint.x = width / 2
-        mDiscCenterPoint.y = mDiscBitmap!!.height / 2 + discOffsetY
-        mCoverCenterPoint.x = mDiscCenterPoint.x
-        mCoverCenterPoint.y = mDiscCenterPoint.y
-        mNeedleCenterPoint.x = mDiscCenterPoint.x
-        mNeedleCenterPoint.y = 0
+
+        discBitmap = ImageUtils.resizeImage(discBitmap, unit * 6, unit * 6)
+        val discOffsetY = needleBitmap.height / 2
+        discStartPoint.x = (width - discBitmap!!.width) / 2
+        discStartPoint.y = discOffsetY
+        discCenterPoint.x = width / 2
+        discCenterPoint.y = discBitmap.height / 2 + discOffsetY
+
+        needleBitmap = ImageUtils.resizeImage(needleBitmap, unit * 2, unit * 3)
+        needleStartPoint.x = width / 2 - needleBitmap.width / 6
+        needleStartPoint.y = -needleBitmap.width / 6
+        needleCenterPoint.x = discCenterPoint.x
+        needleCenterPoint.y = 0
+
+        coverSize = unit * 4
+        coverStartPoint.x = (width - coverSize) / 2
+        coverStartPoint.y = discOffsetY + (discBitmap.height - coverSize) / 2
+        coverCenterPoint.x = discCenterPoint.x
+        coverCenterPoint.y = discCenterPoint.y
     }
 
     override fun onDraw(canvas: Canvas) {
         // 1.绘制顶部虚线
-        mTopLine!!.setBounds(0, 0, width, mTopLineHeight)
-        mTopLine!!.draw(canvas)
-        // 2.绘制黑胶唱片外侧半透明边框
-        mCoverBorder!!.setBounds(
-            mDiscPoint.x - mCoverBorderWidth,
-            mDiscPoint.y - mCoverBorderWidth,
-            mDiscPoint.x + mDiscBitmap!!.width + mCoverBorderWidth,
-            mDiscPoint.y + mDiscBitmap!!.height + mCoverBorderWidth
+        topLine.setBounds(0, 0, width, TOP_LINE_HEIGHT)
+        topLine.draw(canvas)
+
+        // 2.绘制封面
+        val cover = coverBitmap
+        if (cover != null) {
+            coverMatrix.setRotate(
+                discRotation,
+                coverCenterPoint.x.toFloat(),
+                coverCenterPoint.y.toFloat()
+            )
+            coverMatrix.preTranslate(coverStartPoint.x.toFloat(), coverStartPoint.y.toFloat())
+            coverMatrix.preScale(
+                coverSize.toFloat() / cover.width,
+                coverSize.toFloat() / cover.height,
+            )
+            canvas.drawBitmap(cover, coverMatrix, null)
+        }
+
+        // 3.绘制黑胶唱片外侧半透明边框
+        coverBorder.setBounds(
+            discStartPoint.x - COVER_BORDER_WIDTH,
+            discStartPoint.y - COVER_BORDER_WIDTH,
+            discStartPoint.x + discBitmap!!.width + COVER_BORDER_WIDTH,
+            discStartPoint.y + discBitmap!!.height + COVER_BORDER_WIDTH
         )
-        mCoverBorder!!.draw(canvas)
-        // 3.绘制黑胶
+        coverBorder.draw(canvas)
+
+        // 4.绘制黑胶
         // 设置旋转中心和旋转角度，setRotate和preTranslate顺序很重要
-        mDiscMatrix.setRotate(
-            mDiscRotation,
-            mDiscCenterPoint.x.toFloat(),
-            mDiscCenterPoint.y.toFloat()
+        discMatrix.setRotate(
+            discRotation,
+            discCenterPoint.x.toFloat(),
+            discCenterPoint.y.toFloat()
         )
         // 设置图片起始坐标
-        mDiscMatrix.preTranslate(mDiscPoint.x.toFloat(), mDiscPoint.y.toFloat())
-        canvas.drawBitmap(mDiscBitmap!!, mDiscMatrix, null)
-        // 4.绘制封面
-        mCoverMatrix.setRotate(
-            mDiscRotation,
-            mCoverCenterPoint.x.toFloat(),
-            mCoverCenterPoint.y.toFloat()
-        )
-        mCoverMatrix.preTranslate(mCoverPoint.x.toFloat(), mCoverPoint.y.toFloat())
-        canvas.drawBitmap(mCoverBitmap!!, mCoverMatrix, null)
+        discMatrix.preTranslate(discStartPoint.x.toFloat(), discStartPoint.y.toFloat())
+        canvas.drawBitmap(discBitmap!!, discMatrix, null)
+
         // 5.绘制指针
-        mNeedleMatrix.setRotate(
-            mNeedleRotation,
-            mNeedleCenterPoint.x.toFloat(),
-            mNeedleCenterPoint.y.toFloat()
+        needleMatrix.setRotate(
+            needleRotation,
+            needleCenterPoint.x.toFloat(),
+            needleCenterPoint.y.toFloat()
         )
-        mNeedleMatrix.preTranslate(mNeedlePoint.x.toFloat(), mNeedlePoint.y.toFloat())
-        canvas.drawBitmap(mNeedleBitmap!!, mNeedleMatrix, null)
+        needleMatrix.preTranslate(needleStartPoint.x.toFloat(), needleStartPoint.y.toFloat())
+        canvas.drawBitmap(needleBitmap, needleMatrix, null)
     }
 
     fun initNeedle(isPlaying: Boolean) {
-        mNeedleRotation = if (isPlaying) NEEDLE_ROTATION_PLAY else NEEDLE_ROTATION_PAUSE
+        needleRotation = if (isPlaying) NEEDLE_ROTATION_PLAY else NEEDLE_ROTATION_PAUSE
         invalidate()
     }
 
-    fun setCoverBitmap(bitmap: Bitmap?) {
-        mCoverBitmap = bitmap
-        mDiscRotation = 0.0f
+    fun setCoverBitmap(bitmap: Bitmap) {
+        coverBitmap = bitmap
+        discRotation = 0.0f
         invalidate()
     }
 
@@ -154,8 +168,8 @@ class AlbumCoverView @JvmOverloads constructor(
             return
         }
         isPlaying = true
-        mHandler.post(mRotationRunnable)
-        mPlayAnimator!!.start()
+        mainHandler.post(rotationRunnable)
+        playAnimator.start()
     }
 
     fun pause() {
@@ -163,35 +177,26 @@ class AlbumCoverView @JvmOverloads constructor(
             return
         }
         isPlaying = false
-        mHandler.removeCallbacks(mRotationRunnable)
-        mPauseAnimator!!.start()
+        mainHandler.removeCallbacks(rotationRunnable)
+        pauseAnimator.start()
     }
 
-    override fun onAnimationUpdate(animation: ValueAnimator) {
-        mNeedleRotation = animation.animatedValue as Float
+    private val animationUpdateListener = AnimatorUpdateListener { animation ->
+        needleRotation = animation.animatedValue as Float
         invalidate()
     }
 
-    private val mRotationRunnable: Runnable = object : Runnable {
+    private val rotationRunnable = object : Runnable {
         override fun run() {
             if (isPlaying) {
-                mDiscRotation += DISC_ROTATION_INCREASE
-                if (mDiscRotation >= 360) {
-                    mDiscRotation = 0f
+                discRotation += DISC_ROTATION_INCREASE
+                if (discRotation >= 360) {
+                    discRotation = 0f
                 }
                 invalidate()
             }
-            mHandler.postDelayed(this, TIME_UPDATE)
+            mainHandler.postDelayed(this, TIME_UPDATE)
         }
-    }
-
-    init {
-        init()
-    }
-
-    private fun dp2px(dpValue: Float): Int {
-        val scale = context.resources.displayMetrics.density
-        return (dpValue * scale + 0.5f).toInt()
     }
 
     companion object {
@@ -199,5 +204,8 @@ class AlbumCoverView @JvmOverloads constructor(
         private const val DISC_ROTATION_INCREASE = 0.5f
         private const val NEEDLE_ROTATION_PLAY = 0.0f
         private const val NEEDLE_ROTATION_PAUSE = -25.0f
+
+        private val TOP_LINE_HEIGHT = SizeUtils.dp2px(1f)
+        private val COVER_BORDER_WIDTH = SizeUtils.dp2px(1f)
     }
 }

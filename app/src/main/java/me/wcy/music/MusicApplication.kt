@@ -1,0 +1,61 @@
+package me.wcy.music
+
+import android.app.Application
+import android.content.Intent
+import com.blankj.utilcode.util.ActivityUtils
+import dagger.hilt.android.HiltAndroidApp
+import me.wcy.common.CommonApp
+import me.wcy.music.common.AppCache
+import me.wcy.music.common.DarkModeService
+import me.wcy.music.common.MusicFragmentContainerActivity
+import me.wcy.music.service.AudioPlayer2
+import me.wcy.router.CRouter
+import me.wcy.router.RouterClient
+import javax.inject.Inject
+
+/**
+ * 自定义Application
+ * Created by wcy on 2015/11/27.
+ */
+@HiltAndroidApp
+class MusicApplication : Application() {
+    @Inject
+    lateinit var audioPlayer: AudioPlayer2
+
+    @Inject
+    lateinit var darkModeService: DarkModeService
+
+    override fun onCreate() {
+        super.onCreate()
+        AppCache.get().init(this)
+
+        CommonApp.init {
+            test = BuildConfig.DEBUG
+            isDarkMode = { darkModeService.isDarkMode() }
+            titleLayoutConfig {
+                isStatusBarDarkFontWhenAuto = { darkModeService.isDarkMode().not() }
+                textColorAuto = { R.color.common_text_h1_color }
+                textColorBlack = { R.color.common_text_h1_color }
+            }
+        }
+        initCRouter()
+        darkModeService.init()
+    }
+
+    private fun initCRouter() {
+        CRouter.setRouterClient(
+            RouterClient.Builder()
+                .baseUrl("app://music")
+                .loginProvider { context, callback ->
+                    val activity = ActivityUtils.getTopActivity()
+                    activity?.let {
+
+                    }
+                }
+                .fragmentContainerIntentProvider {
+                    Intent(it, MusicFragmentContainerActivity::class.java)
+                }
+                .build()
+        )
+    }
+}

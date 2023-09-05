@@ -6,9 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.text.TextUtils
 import me.wcy.music.R
-import me.wcy.music.application.AppCache
+import me.wcy.music.common.AppCache
 import me.wcy.music.executor.DownloadMusicInfo
-import me.wcy.music.utils.ToastUtils
+import me.wcy.common.ext.toast
 import me.wcy.music.utils.id3.ID3TagUtils
 import me.wcy.music.utils.id3.ID3Tags
 import java.io.File
@@ -23,7 +23,7 @@ class DownloadReceiver : BroadcastReceiver() {
         val downloadMusicInfo: DownloadMusicInfo =
             AppCache.get().getDownloadList().get(id)
         if (downloadMusicInfo != null) {
-            ToastUtils.show(context.getString(R.string.download_success, downloadMusicInfo.title))
+            toast(context.getString(R.string.download_success, downloadMusicInfo.title))
             val musicPath = downloadMusicInfo.musicPath
             val coverPath = downloadMusicInfo.coverPath
             if (!TextUtils.isEmpty(musicPath) && !TextUtils.isEmpty(coverPath)) {

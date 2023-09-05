@@ -3,7 +3,7 @@
     android:id="@+id/fl_play_bar"
     android:layout_width="match_parent"
     android:layout_height="@dimen/play_bar_height"
-    android:background="?attr/playBarBackground">
+    android:background="@drawable/play_bar_bg_selector">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,12 +32,12 @@
 
             <TextView
                 android:id="@+id/tv_play_bar_title"
-                style="@style/AppTheme.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="无音乐"
+                android:textColor="@color/common_text_h1_color"
                 android:textSize="@dimen/text_size_common" />
 
             <TextView

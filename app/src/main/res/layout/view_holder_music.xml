@@ -10,7 +10,7 @@
         android:layout_width="3dp"
         android:layout_height="50dp"
         android:layout_marginRight="3dp"
-        android:background="@color/red"
+        android:background="@color/red_500"
         android:contentDescription="@null"
         android:visibility="invisible" />
 
@@ -41,12 +41,12 @@
 
                 <TextView
                     android:id="@+id/tv_title"
-                    style="@style/AppTheme.Text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:text="歌曲"
+                    android:textColor="@color/common_text_h1_color"
                     android:textSize="@dimen/text_size_common" />
 
                 <TextView

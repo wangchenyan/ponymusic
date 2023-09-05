@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <color name="common_theme_color" tools:override="true">@color/red_700</color>
+    <color name="common_background_color" tools:override="true">#303030</color>
+    <color name="common_dialog_background_color" tools:override="true">@color/black</color>
+    <color name="common_text_h1_color" tools:override="true">@color/white</color>
+    <color name="common_text_h2_color" tools:override="true">#9E9E9E</color>
+    <color name="common_divider" tools:override="true">@color/grey_800</color>
+
+    <color name="tab_bg">@color/black</color>
+    <color name="card_bg">@color/grey_800</color>
+    <color name="play_bar_bg">@color/grey_900_p96</color>
+</resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:layout_height="54dp"
+    tools:layout_width="match_parent">
+
+    <ImageView
+        android:id="@+id/ivIcon"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:layout_marginTop="6dp"
+        app:tint="@color/color_main_tab_text_selector"
+        tools:src="@drawable/ic_tab_discover" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_main_tab_text_selector"
+        android:textSize="10dp"
+        tools:text="发现" />
+</LinearLayout>

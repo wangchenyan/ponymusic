@@ -4,7 +4,7 @@ import android.os.Build
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import me.wcy.music.application.AppCache
+import me.wcy.music.common.AppCache
 import me.wcy.music.model.Music
 import me.wcy.music.utils.CoverLoader
 

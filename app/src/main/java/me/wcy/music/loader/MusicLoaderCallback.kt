@@ -9,10 +9,8 @@ import android.webkit.ValueCallback
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import me.wcy.music.model.Music
-import me.wcy.music.storage.preference.Preferences
+import me.wcy.music.storage.preference.MusicPreferences
 import me.wcy.music.utils.CoverLoader
-import me.wcy.music.utils.ParseUtils
-import me.wcy.music.utils.SystemUtils
 
 class MusicLoaderCallback(
     private val context: Context,
@@ -39,14 +37,14 @@ class MusicLoaderCallback(
         if (data == null) {
             return
         }
-        val filterTime = ParseUtils.parseLong(Preferences.filterTime) * 1000
-        val filterSize = ParseUtils.parseLong(Preferences.filterSize) * 1024
+        val filterTime = MusicPreferences.filterTime.toLong() * 1000
+        val filterSize = MusicPreferences.filterSize.toLong() * 1024
         var counter = 0
         musicList.clear()
         while (data.moveToNext()) {
             // 是否为音乐，魅族手机上始终为0
             val isMusic = data.getInt(data.getColumnIndexOrThrow(MediaStore.Audio.Media.IS_MUSIC))
-            if (!SystemUtils.isFlyme && isMusic == 0) {
+            if (isMusic == 0) {
                 continue
             }
             val duration = data.getLong(data.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION))

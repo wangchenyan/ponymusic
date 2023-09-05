@@ -16,21 +16,21 @@ import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
+import me.wcy.common.ext.toast
+import me.wcy.common.utils.StatusBarUtils
 import me.wcy.lrcview.LrcView
 import me.wcy.lrcview.LrcView.OnPlayClickListener
 import me.wcy.music.R
-import me.wcy.music.constants.Actions
+import me.wcy.music.const.Actions
 import me.wcy.music.enums.PlayModeEnum
 import me.wcy.music.executor.SearchLrc
 import me.wcy.music.model.Music
 import me.wcy.music.service.AudioPlayer
 import me.wcy.music.service.OnPlayerEventListener
-import me.wcy.music.storage.preference.Preferences
+import me.wcy.music.storage.preference.MusicPreferences
 import me.wcy.music.utils.CoverLoader
 import me.wcy.music.utils.FileUtils
-import me.wcy.music.utils.ScreenUtils
-import me.wcy.music.utils.SystemUtils
-import me.wcy.music.utils.ToastUtils
+import me.wcy.music.utils.TimeUtils
 import me.wcy.music.utils.binding.Bind
 import me.wcy.music.widget.AlbumCoverView
 import java.io.File
@@ -88,7 +88,7 @@ class PlayFragment : BaseFragment(), View.OnClickListener, OnSeekBarChangeListen
 
     @Bind(R.id.iv_prev)
     lateinit var ivPrev: ImageView
-    
+
     private var mAudioManager: AudioManager? = null
     private var mLastProgress = 0
     private var isDraggingProgress = false
@@ -129,8 +129,9 @@ class PlayFragment : BaseFragment(), View.OnClickListener, OnSeekBarChangeListen
      * 沉浸式状态栏
      */
     private fun initSystemBar() {
-        val top = ScreenUtils.statusBarHeight
-        llContent.setPadding(0, top, 0, 0)
+        StatusBarUtils.getStatusBarHeight(requireActivity()) {
+            llContent.setPadding(0, it, 0, 0)
+        }
     }
 
     private fun initCoverLrc() {
@@ -149,7 +150,7 @@ class PlayFragment : BaseFragment(), View.OnClickListener, OnSeekBarChangeListen
     }
 
     private fun initPlayMode() {
-        val mode = Preferences.playMode
+        val mode = MusicPreferences.playMode
         ivMode.setImageLevel(mode)
     }
 
@@ -186,7 +187,7 @@ class PlayFragment : BaseFragment(), View.OnClickListener, OnSeekBarChangeListen
     }
 
     override fun onBufferingUpdate(percent: Int) {
-        sbProgress!!.secondaryProgress = sbProgress.max * 100 / percent
+        sbProgress!!.secondaryProgress = sbProgress.max * percent / 100
     }
 
     override fun onClick(v: View) {
@@ -283,24 +284,24 @@ class PlayFragment : BaseFragment(), View.OnClickListener, OnSeekBarChangeListen
     }
 
     private fun switchPlayMode() {
-        var mode: PlayModeEnum = PlayModeEnum.valueOf(Preferences.playMode)
+        var mode: PlayModeEnum = PlayModeEnum.valueOf(MusicPreferences.playMode)
         when (mode) {
             PlayModeEnum.LOOP -> {
                 mode = PlayModeEnum.SHUFFLE
-                ToastUtils.show(R.string.mode_shuffle)
+                toast(R.string.mode_shuffle)
             }
 
             PlayModeEnum.SHUFFLE -> {
                 mode = PlayModeEnum.SINGLE
-                ToastUtils.show(R.string.mode_one)
+                toast(R.string.mode_one)
             }
 
             PlayModeEnum.SINGLE -> {
                 mode = PlayModeEnum.LOOP
-                ToastUtils.show(R.string.mode_loop)
+                toast(R.string.mode_loop)
             }
         }
-        Preferences.savePlayMode(mode.value())
+        MusicPreferences.playMode = mode.value()
         initPlayMode()
     }
 
@@ -353,7 +354,7 @@ class PlayFragment : BaseFragment(), View.OnClickListener, OnSeekBarChangeListen
             }
         } else {
             val lrcPath =
-                FileUtils.lrcDir + FileUtils.getLrcFileName(music.artist, music.title)
+                FileUtils.getLrcDir() + "/" + FileUtils.getLrcFileName(music.artist, music.title)
             loadLrc(lrcPath)
         }
     }
@@ -368,7 +369,7 @@ class PlayFragment : BaseFragment(), View.OnClickListener, OnSeekBarChangeListen
     }
 
     private fun formatTime(time: Long): String? {
-        return SystemUtils.formatTime("mm:ss", time)
+        return TimeUtils.formatTime("mm:ss", time)
     }
 
     private val mVolumeReceiver: BroadcastReceiver = object : BroadcastReceiver() {

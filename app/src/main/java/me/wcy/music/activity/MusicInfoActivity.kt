@@ -12,15 +12,15 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import me.wcy.common.ext.toast
 import me.wcy.music.R
-import me.wcy.music.constants.Extras
-import me.wcy.music.constants.RequestCode
+import me.wcy.music.const.Extras
+import me.wcy.music.const.RequestCode
 import me.wcy.music.model.Music
 import me.wcy.music.utils.CoverLoader
 import me.wcy.music.utils.FileUtils
 import me.wcy.music.utils.ImageUtils
-import me.wcy.music.utils.SystemUtils
-import me.wcy.music.utils.ToastUtils
+import me.wcy.music.utils.TimeUtils
 import me.wcy.music.utils.binding.Bind
 import me.wcy.music.utils.id3.ID3TagUtils
 import me.wcy.music.utils.id3.ID3Tags
@@ -76,7 +76,7 @@ class MusicInfoActivity : BaseActivity(), View.OnClickListener {
         etArtist!!.setSelection(etArtist.length())
         etAlbum!!.setText(mMusic!!.album)
         etAlbum!!.setSelection(etAlbum.length())
-        tvDuration!!.text = SystemUtils.formatTime("mm:ss", mMusic!!.duration)
+        tvDuration!!.text = TimeUtils.formatTime("mm:ss", mMusic!!.duration)
         tvFileName!!.setText(mMusic!!.fileName)
         tvFileSize!!.text = String.format(
             Locale.getDefault(),
@@ -112,7 +112,7 @@ class MusicInfoActivity : BaseActivity(), View.OnClickListener {
 //                }
 //
 //                override fun onDenied() {
-//                    ToastUtils.show(R.string.no_permission_select_image)
+//                    toast(R.string.no_permission_select_image)
 //                }
 //            })
 //            .request()
@@ -128,7 +128,7 @@ class MusicInfoActivity : BaseActivity(), View.OnClickListener {
         } else if (requestCode == RequestCode.REQUEST_CORP) {
             val corpFile = File(FileUtils.getCorpImagePath(this))
             if (!corpFile.exists()) {
-                ToastUtils.show("图片保存失败")
+                toast("图片保存失败")
                 return
             }
             mCoverBitmap = BitmapFactory.decodeFile(corpFile.path)
@@ -139,7 +139,7 @@ class MusicInfoActivity : BaseActivity(), View.OnClickListener {
 
     private fun save() {
         if (!mMusicFile!!.exists()) {
-            ToastUtils.show("歌曲文件不存在")
+            toast("歌曲文件不存在")
             return
         }
         val id3Tags = ID3Tags.Builder().setCoverBitmap(mCoverBitmap)
@@ -152,7 +152,7 @@ class MusicInfoActivity : BaseActivity(), View.OnClickListener {
         // 刷新媒体库
         val intent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(mMusicFile))
         sendBroadcast(intent)
-        ToastUtils.show("保存成功")
+        toast("保存成功")
     }
 
     companion object {

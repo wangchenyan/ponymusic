@@ -5,19 +5,20 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.text.TextUtils
 import androidx.collection.LruCache
+import com.blankj.utilcode.util.ScreenUtils
+import me.wcy.common.CommonApp
 import me.wcy.music.R
 import me.wcy.music.model.Music
 import java.io.FileNotFoundException
-import java.io.InputStream
 
 /**
  * 专辑封面图片加载器
  * Created by wcy on 2015/11/27.
  */
-open class CoverLoader private constructor() {
-    private var context: Context? = null
+class CoverLoader private constructor() {
+    private var context: Context = CommonApp.app
     private val cacheMap: MutableMap<Type, LruCache<String, Bitmap>> = HashMap(3)
-    private var roundLength = ScreenUtils.screenWidth / 2
+    private var roundLength = ScreenUtils.getScreenWidth() / 2
 
     private enum class Type {
         THUMB, ROUND, BLUR
@@ -27,9 +28,7 @@ open class CoverLoader private constructor() {
         val instance = CoverLoader()
     }
 
-    fun init(context: Context?) {
-        this.context = context!!.applicationContext
-
+    init {
         // 获取当前进程的可用内存（单位KB）
         val maxMemory = (Runtime.getRuntime().maxMemory() / 1024).toInt()
         // 缓存大小为当前进程可用内存的1/8
@@ -53,32 +52,32 @@ open class CoverLoader private constructor() {
         }
     }
 
-    fun loadThumb(music: Music?): Bitmap? {
+    fun loadThumb(music: Music?): Bitmap {
         return loadCover(music, Type.THUMB)
     }
 
-    fun loadRound(music: Music?): Bitmap? {
+    fun loadRound(music: Music?): Bitmap {
         return loadCover(music, Type.ROUND)
     }
 
-    fun loadBlur(music: Music?): Bitmap? {
+    fun loadBlur(music: Music?): Bitmap {
         return loadCover(music, Type.BLUR)
     }
 
-    private fun loadCover(music: Music?, type: Type): Bitmap? {
+    private fun loadCover(music: Music?, type: Type): Bitmap {
         var bitmap: Bitmap?
         val key = getKey(music)
-        val cache = cacheMap!![type]!!
-        if (TextUtils.isEmpty(key)) {
+        val cache = cacheMap[type]!!
+        if (key.isNullOrEmpty()) {
             bitmap = cache[KEY_NULL]
             if (bitmap != null) {
                 return bitmap
             }
             bitmap = getDefaultCover(type)
-            cache.put(KEY_NULL, bitmap!!)
+            cache.put(KEY_NULL, bitmap)
             return bitmap
         }
-        bitmap = cache[key!!]
+        bitmap = cache[key]
         if (bitmap != null) {
             return bitmap
         }
@@ -106,23 +105,27 @@ open class CoverLoader private constructor() {
         }
     }
 
-    private fun getDefaultCover(type: Type): Bitmap? {
+    private fun getDefaultCover(type: Type): Bitmap {
         return when (type) {
             Type.ROUND -> {
                 var bitmap = BitmapFactory.decodeResource(
-                    context!!.resources,
+                    context.resources,
                     R.drawable.play_page_default_cover
                 )
                 bitmap = ImageUtils.resizeImage(bitmap, roundLength, roundLength)
                 bitmap
             }
 
-            Type.BLUR -> BitmapFactory.decodeResource(
-                context!!.resources,
-                R.drawable.play_page_default_bg
-            )
+            Type.BLUR -> {
+                BitmapFactory.decodeResource(
+                    context.resources,
+                    R.drawable.play_page_default_bg
+                )
+            }
 
-            else -> BitmapFactory.decodeResource(context!!.resources, R.drawable.default_cover)
+            else -> {
+                BitmapFactory.decodeResource(context.resources, R.drawable.default_cover)
+            }
         }
     }
 
@@ -134,6 +137,7 @@ open class CoverLoader private constructor() {
         } else {
             loadCoverFromFile(music.coverPath)
         }
+        bitmap ?: return null
         return when (type) {
             Type.ROUND -> {
                 bitmap = ImageUtils.resizeImage(bitmap, roundLength, roundLength)
@@ -150,11 +154,10 @@ open class CoverLoader private constructor() {
      * 本地音乐
      */
     private fun loadCoverFromMediaStore(albumId: Long): Bitmap? {
-        val resolver = context!!.contentResolver
+        val resolver = context.contentResolver
         val uri = MusicUtils.getMediaStoreAlbumCoverUri(albumId)
-        val `is`: InputStream?
-        `is` = try {
-            resolver.openInputStream(uri!!)
+        val `is` = try {
+            resolver.openInputStream(uri)
         } catch (ignored: FileNotFoundException) {
             return null
         }

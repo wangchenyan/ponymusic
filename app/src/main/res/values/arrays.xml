@@ -36,6 +36,18 @@
         <item>90</item>
     </integer-array>
 
+    <string-array name="dark_mode_entries">
+        <item>跟随系统</item>
+        <item>浅色</item>
+        <item>深色</item>
+    </string-array>
+
+    <string-array name="dark_mode_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
     <string-array name="filter_size_entries">
         <item>不过滤</item>
         <item>100KB</item>

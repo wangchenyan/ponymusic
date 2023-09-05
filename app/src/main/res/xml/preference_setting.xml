@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <PreferenceCategory android:title="通用">
+        <ListPreference
+            android:defaultValue="0"
+            android:dialogTitle="最小大小"
+            android:entries="@array/dark_mode_entries"
+            android:entryValues="@array/dark_mode_values"
+            android:key="@string/setting_key_dark_mode"
+            android:summary="跟随系统"
+            android:title="外观" />
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/network">
 
         <SwitchPreference

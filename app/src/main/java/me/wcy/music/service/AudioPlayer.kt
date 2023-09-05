@@ -6,12 +6,12 @@ import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
 import me.wcy.common.CommonApp
+import me.wcy.common.ext.toast
 import me.wcy.music.application.Notifier
 import me.wcy.music.enums.PlayModeEnum
 import me.wcy.music.model.Music
 import me.wcy.music.receiver.NoisyAudioStreamReceiver
 import me.wcy.music.storage.preference.Preferences
-import me.wcy.music.utils.ToastUtils
 import java.io.IOException
 import java.util.Random
 
@@ -102,7 +102,7 @@ class AudioPlayer private constructor() {
             MediaSessionManager.get().updatePlaybackState()
         } catch (e: IOException) {
             e.printStackTrace()
-            ToastUtils.show("当前歌曲无法播放")
+            toast("当前歌曲无法播放")
         }
     }
 

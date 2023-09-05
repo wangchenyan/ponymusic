@@ -12,11 +12,9 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import androidx.annotation.StyleRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import me.wcy.music.R
-import me.wcy.music.storage.preference.Preferences
 import me.wcy.music.utils.binding.ViewBinder
 
 /**
@@ -30,18 +28,11 @@ abstract class BaseActivity : AppCompatActivity() {
     private var progressDialog: ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (Preferences.isNightMode()) {
-            setTheme(darkTheme)
-        }
         super.onCreate(savedInstanceState)
         setSystemBarTransparent()
         volumeControlStream = AudioManager.STREAM_MUSIC
         handler = Handler(Looper.getMainLooper())
     }
-
-    @get:StyleRes
-    protected open val darkTheme: Int
-        protected get() = R.style.AppThemeDark
 
     override fun setContentView(layoutResID: Int) {
         super.setContentView(layoutResID)

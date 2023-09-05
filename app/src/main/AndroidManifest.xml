@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -9,12 +8,12 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
-        android:name=".application.MusicApplication"
+        android:name=".MusicApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        tools:ignore="LockedOrientationActivity">
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:theme="@style/AppTheme">
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"
@@ -43,9 +42,10 @@
         </receiver>
 
         <activity
-            android:name=".activity.MusicActivity"
+            android:name=".main.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -53,6 +53,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".common.MusicFragmentContainerActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.SettingActivity"
             android:label="@string/menu_setting"
@@ -66,9 +69,16 @@
             android:label="@string/music_info"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.PlaylistActivity"
+            android:name=".playing.PlaylistActivity"
             android:label="@string/activity_playlist"
-            android:screenOrientation="portrait" />
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Popup" />
+        <activity
+            android:name=".playing.PlayingActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Popup" />
     </application>
 
 </manifest>

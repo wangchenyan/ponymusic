@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/play_time_start"
-            android:textColor="@color/white_50p"
+            android:textColor="@color/translucent_white_p50"
             android:textSize="10sp" />
     </LinearLayout>
 

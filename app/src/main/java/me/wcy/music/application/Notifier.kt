@@ -16,7 +16,7 @@ import me.wcy.common.CommonApp
 import me.wcy.common.permission.Permissioner
 import me.wcy.music.R
 import me.wcy.music.activity.MusicActivity
-import me.wcy.music.constants.Extras
+import me.wcy.music.const.Extras
 import me.wcy.music.model.Music
 import me.wcy.music.receiver.StatusBarReceiver
 import me.wcy.music.service.PlayService

@@ -5,8 +5,8 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.widget.ImageView
 import android.widget.LinearLayout
+import com.blankj.utilcode.util.SizeUtils
 import me.wcy.music.R
-import me.wcy.music.utils.ScreenUtils
 
 /**
  * 播放页Indicator
@@ -33,7 +33,7 @@ class IndicatorLayout @JvmOverloads constructor(
                 LayoutParams.WRAP_CONTENT,
                 LayoutParams.WRAP_CONTENT
             )
-            val padding = ScreenUtils.dp2px(3f)
+            val padding = SizeUtils.dp2px(3f)
             imageView.setPadding(padding, 0, padding, 0)
             imageView.setImageResource(if (i == 0) R.drawable.ic_play_page_indicator_selected else R.drawable.ic_play_page_indicator_unselected)
             addView(imageView)

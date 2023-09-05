@@ -1,32 +1,23 @@
 <resources>
 
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/red</item>
-        <item name="colorPrimaryDark">@color/red</item>
-        <item name="colorAccent">@color/red</item>
-        <item name="playBarBackground">@drawable/play_bar_bg_selector</item>
+    <style name="AppBaseTheme" parent="Theme.AppCompat.DayNight.NoActionBar" />
+
+    <style name="AppTheme" parent="AppBaseTheme">
+        <item name="colorPrimary">@color/common_theme_color</item>
+        <item name="colorPrimaryDark">@color/common_theme_color</item>
+        <item name="colorAccent">@color/common_theme_color</item>
     </style>
 
-    <style name="AppBaseThemeDark" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimary">@color/grey_900</item>
-        <item name="colorPrimaryDark">@color/grey_900</item>
-        <item name="colorAccent">@color/grey_900</item>
-        <item name="playBarBackground">@drawable/play_bar_bg_selector_dark</item>
+    <style name="AppTheme.Popup" parent="AppTheme">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@style/AnimationPopup</item>
     </style>
 
-    <attr name="playBarBackground" format="reference" />
-
-    <style name="AppTheme" parent="AppBaseTheme" />
-
-    <style name="AppThemeDark" parent="AppBaseThemeDark" />
-
-    <style name="AppTheme.Search" parent="AppBaseTheme">
-        <item name="colorAccent">@color/white</item>
+    <style name="AnimationPopup" mce_bogus="1" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/anim_slide_up</item>
+        <item name="android:activityOpenExitAnimation">@anim/anim_slide_down</item>
+        <item name="android:activityCloseEnterAnimation">@anim/anim_slide_up</item>
+        <item name="android:activityCloseExitAnimation">@anim/anim_slide_down</item>
     </style>
-
-    <style name="AppThemeDark.Search" parent="AppBaseThemeDark">
-        <item name="colorAccent">@color/white</item>
-    </style>
-
-    <style name="AppTheme.Text" parent="TextAppearance.AppCompat" />
 </resources>

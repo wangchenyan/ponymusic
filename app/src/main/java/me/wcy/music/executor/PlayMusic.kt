@@ -2,12 +2,10 @@ package me.wcy.music.executor
 
 import android.app.Activity
 import android.app.Dialog
-import android.content.DialogInterface
 import androidx.appcompat.app.AlertDialog
 import me.wcy.music.R
 import me.wcy.music.model.Music
-import me.wcy.music.storage.preference.Preferences
-import me.wcy.music.utils.NetworkUtils
+import me.wcy.music.storage.preference.MusicPreferences
 
 /**
  * Created by hzwangchenyan on 2017/1/20.
@@ -21,19 +19,15 @@ abstract class PlayMusic(private val mActivity: Activity, private val mTotalStep
     }
 
     private fun checkNetwork() {
-        val mobileNetworkPlay = Preferences.enableMobileNetworkPlay()
-        if (NetworkUtils.isActiveNetworkMobile(mActivity) && !mobileNetworkPlay) {
+        val mobileNetworkPlay = MusicPreferences.enableMobileNetworkPlay
+        if (com.blankj.utilcode.util.NetworkUtils.isMobileData() && !mobileNetworkPlay) {
             val builder = AlertDialog.Builder(mActivity)
             builder.setTitle(R.string.tips)
             builder.setMessage(R.string.play_tips)
-            builder.setPositiveButton(
-                R.string.play_tips_sure,
-                object : DialogInterface.OnClickListener {
-                    override fun onClick(dialog: DialogInterface, which: Int) {
-                        Preferences.saveMobileNetworkPlay(true)
-                        playInfoWrapper
-                    }
-                })
+            builder.setPositiveButton(R.string.play_tips_sure) { dialog, which ->
+                MusicPreferences.enableMobileNetworkPlay = true
+                playInfoWrapper
+            }
             builder.setNegativeButton(R.string.cancel, null)
             val dialog: Dialog = builder.create()
             dialog.setCanceledOnTouchOutside(false)

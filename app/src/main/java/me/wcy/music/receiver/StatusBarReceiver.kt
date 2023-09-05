@@ -3,22 +3,24 @@ package me.wcy.music.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.text.TextUtils
-import me.wcy.music.service.AudioPlayer
+import dagger.hilt.android.AndroidEntryPoint
+import me.wcy.music.service.AudioPlayer2
+import javax.inject.Inject
 
 /**
  * Created by wcy on 2017/4/18.
  */
+@AndroidEntryPoint
 class StatusBarReceiver : BroadcastReceiver() {
+    @Inject
+    lateinit var audioPlayer: AudioPlayer2
+
     override fun onReceive(context: Context, intent: Intent?) {
-        if (intent == null || TextUtils.isEmpty(intent.action)) {
-            return
-        }
-        val extra = intent.getStringExtra(EXTRA)
-        if (TextUtils.equals(extra, EXTRA_NEXT)) {
-            AudioPlayer.get().next()
-        } else if (TextUtils.equals(extra, EXTRA_PLAY_PAUSE)) {
-            AudioPlayer.get().playPause()
+        val extra = intent?.getStringExtra(EXTRA)
+        if (extra == EXTRA_NEXT) {
+            audioPlayer.next()
+        } else if (extra == EXTRA_PLAY_PAUSE) {
+            audioPlayer.playPause()
         }
     }
 

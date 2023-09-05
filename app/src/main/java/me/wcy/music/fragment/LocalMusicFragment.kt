@@ -11,9 +11,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ListView
@@ -23,21 +21,23 @@ import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import com.hwangjr.rxbus.annotation.Subscribe
 import com.hwangjr.rxbus.annotation.Tag
+import me.wcy.common.ext.toast
+import me.wcy.common.ext.viewBindings
 import me.wcy.common.permission.PermissionCallback
 import me.wcy.common.permission.Permissioner
+import me.wcy.common.ui.fragment.BaseFragment
 import me.wcy.music.R
 import me.wcy.music.activity.MusicInfoActivity
 import me.wcy.music.adapter.OnMoreClickListener
 import me.wcy.music.adapter.PlaylistAdapter
-import me.wcy.music.application.AppCache
-import me.wcy.music.constants.Keys
-import me.wcy.music.constants.RequestCode
-import me.wcy.music.constants.RxBusTags
+import me.wcy.music.common.AppCache
+import me.wcy.music.const.Keys
+import me.wcy.music.const.RequestCode
+import me.wcy.music.const.RxBusTags
+import me.wcy.music.databinding.FragmentLocalMusicBinding
 import me.wcy.music.loader.MusicLoaderCallback
 import me.wcy.music.model.Music
 import me.wcy.music.service.AudioPlayer
-import me.wcy.music.utils.ToastUtils
-import me.wcy.music.utils.binding.Bind
 import java.io.File
 
 /**
@@ -45,21 +45,18 @@ import java.io.File
  * Created by wcy on 2015/11/26.
  */
 class LocalMusicFragment : BaseFragment(), OnItemClickListener, OnMoreClickListener {
-    @Bind(R.id.lv_local_music)
+    private val viewBinding by viewBindings<FragmentLocalMusicBinding>()
+
     private val lvLocalMusic: ListView? = null
 
-    @Bind(R.id.v_searching)
     private val vSearching: TextView? = null
     private var loader: Loader<Cursor>? = null
     private var adapter: PlaylistAdapter? = null
 
     private var hasPermission = false
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_local_music, container, false)
+    override fun getRootView(): View {
+        return viewBinding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -84,7 +81,7 @@ class LocalMusicFragment : BaseFragment(), OnItemClickListener, OnMoreClickListe
                     hasPermission = true
                     initLoader()
                 } else {
-                    ToastUtils.show(R.string.no_permission_storage)
+                    toast(R.string.no_permission_storage)
                     lvLocalMusic.visibility = View.VISIBLE
                     vSearching.visibility = View.GONE
                 }
@@ -108,14 +105,10 @@ class LocalMusicFragment : BaseFragment(), OnItemClickListener, OnMoreClickListe
         loader?.forceLoad()
     }
 
-    override fun setListener() {
-        lvLocalMusic!!.onItemClickListener = this
-    }
-
     override fun onItemClick(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
         val music: Music = AppCache.get().getLocalMusicList().get(position)
         AudioPlayer.get().addAndPlay(music)
-        ToastUtils.show("已添加到播放列表")
+        toast("已添加到播放列表")
     }
 
     override fun onMoreClick(position: Int) {
@@ -151,7 +144,7 @@ class LocalMusicFragment : BaseFragment(), OnItemClickListener, OnMoreClickListe
                 context
             )
         ) {
-            ToastUtils.show(R.string.no_permission_setting)
+            toast(R.string.no_permission_setting)
             val intent = Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS)
             intent.data = Uri.parse("package:" + requireContext().packageName)
             startActivityForResult(intent, RequestCode.REQUEST_WRITE_SETTINGS)
@@ -191,7 +184,7 @@ class LocalMusicFragment : BaseFragment(), OnItemClickListener, OnMoreClickListe
                 RingtoneManager.TYPE_RINGTONE,
                 newUri
             )
-            ToastUtils.show(R.string.setting_ringtone_success)
+            toast(R.string.setting_ringtone_success)
         }
         cursor.close()
     }
@@ -223,7 +216,7 @@ class LocalMusicFragment : BaseFragment(), OnItemClickListener, OnMoreClickListe
                     context
                 )
             ) {
-                ToastUtils.show(R.string.grant_permission_setting)
+                toast(R.string.grant_permission_setting)
             }
         }
     }
@@ -243,8 +236,8 @@ class LocalMusicFragment : BaseFragment(), OnItemClickListener, OnMoreClickListe
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onLazyDestroy() {
+        super.onLazyDestroy()
         loader?.let {
             LoaderManager.getInstance(requireActivity()).destroyLoader(LOADER_ID)
             loader = null

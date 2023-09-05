@@ -1,0 +1,46 @@
+package me.wcy.music.storage.preference
+
+import com.blankj.utilcode.util.StringUtils
+import me.wcy.common.CommonApp
+import me.wcy.common.storage.IPreferencesFile
+import me.wcy.common.storage.PreferencesFile
+import me.wcy.music.R
+import me.wcy.music.common.DarkModeService
+import me.wcy.music.const.Keys
+
+/**
+ * SharedPreferences工具类
+ * Created by wcy on 2015/11/28.
+ */
+object MusicPreferences :
+    IPreferencesFile by PreferencesFile(CommonApp.app, Keys.PREFERENCE_NAME, false) {
+
+    var enableMobileNetworkPlay by IPreferencesFile.BooleanProperty(
+        StringUtils.getString(R.string.setting_key_mobile_network_play),
+        false
+    )
+
+    var enableMobileNetworkDownload by IPreferencesFile.BooleanProperty(
+        StringUtils.getString(R.string.setting_key_mobile_network_download),
+        false
+    )
+
+    var filterSize by IPreferencesFile.StringProperty(
+        StringUtils.getString(R.string.setting_key_filter_size),
+        "0"
+    )
+
+    var filterTime by IPreferencesFile.StringProperty(
+        StringUtils.getString(R.string.setting_key_filter_time),
+        "0"
+    )
+
+    var darkMode by IPreferencesFile.StringProperty(
+        "dark_mode",
+        DarkModeService.DarkMode.Auto.value
+    )
+
+    var playMode: Int by IPreferencesFile.IntProperty("play_mode", 0)
+
+    var currentSongId: String by IPreferencesFile.StringProperty("current_song_id", "")
+}

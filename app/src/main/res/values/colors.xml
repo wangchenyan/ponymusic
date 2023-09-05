@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="white">@android:color/white</color>
-    <color name="white_8p">#14FFFFFF</color>
-    <color name="white_16p">#29FFFFFF</color>
-    <color name="white_24p">#3DFFFFFF</color>
-    <color name="white_50p">#80FFFFFF</color>
-    <color name="white_96p">#F5FFFFFF</color>
-    <color name="black">@android:color/black</color>
-    <color name="black_50p">#80000000</color>
-    <color name="red">#F44336</color>
-    <color name="red_30p">#4CF44336</color>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <color name="red_500">#F44336</color>
+    <color name="red_700">#D32F2F</color>
+    <color name="red_500_p30">#4CF44336</color>
+    <color name="white_p96">#F5FFFFFF</color>
     <color name="blue">#2196F3</color>
     <color name="grey">#9E9E9E</color>
-    <color name="grey_50p">#809E9E9E</color>
+    <color name="grey_p50">#809E9E9E</color>
+    <color name="grey_100">#E5E5E5</color>
     <color name="grey_300">#E0E0E0</color>
-    <color name="grey_700_96p">#F5616161</color>
-    <color name="grey_300_96p">#F5E0E0E0</color>
+    <color name="grey_700_p96">#F5616161</color>
+    <color name="grey_300_p96">#F5E0E0E0</color>
+    <color name="grey_800">#424242</color>
     <color name="grey_900">#212121</color>
-    <color name="grey_900_96p">#F5212121</color>
+    <color name="grey_900_p96">#F5212121</color>
+
+    <color name="common_theme_color" tools:override="true">@color/red_500</color>
+    <color name="common_background_color" tools:override="true">#FAFAFA</color>
+    <color name="common_title_bar_color" tools:override="true">@color/common_theme_color</color>
+    <color name="common_dialog_background_color" tools:override="true">@color/white</color>
+    <color name="common_text_h1_color" tools:override="true">#202020</color>
+    <color name="common_text_h2_color" tools:override="true">#9E9E9E</color>
+    <color name="common_divider" tools:override="true">@color/grey_100</color>
+
+    <color name="tab_bg">@color/white</color>
+    <color name="card_bg">@color/white</color>
+    <color name="play_bar_bg">@color/white_p96</color>
 </resources>

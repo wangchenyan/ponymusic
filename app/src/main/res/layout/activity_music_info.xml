@@ -37,7 +37,7 @@
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:background="@color/black_50p"
+                android:background="@color/translucent_black_p50"
                 android:contentDescription="@null"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_edit"
