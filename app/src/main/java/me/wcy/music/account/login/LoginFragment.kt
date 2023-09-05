@@ -11,6 +11,7 @@ import me.wcy.common.ext.viewBindings
 import me.wcy.common.ui.fragment.BaseFragment
 import me.wcy.music.account.bean.CheckLoginStatusData
 import me.wcy.music.account.service.UserService
+import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.databinding.FragmentLoginBinding
 import me.wcy.router.annotation.Route
 import javax.inject.Inject
@@ -20,7 +21,7 @@ import javax.inject.Inject
  */
 @Route("/login")
 @AndroidEntryPoint
-class LoginFragment : BaseFragment() {
+class LoginFragment : BaseMusicFragment() {
     private val viewBinding by viewBindings<FragmentLoginBinding>()
     private val viewModel by viewModels<LoginViewModel>()
 

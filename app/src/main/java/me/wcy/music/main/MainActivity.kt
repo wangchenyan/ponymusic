@@ -22,15 +22,14 @@ import me.wcy.common.permission.Permissioner
 import me.wcy.common.widget.pager.CustomTabPager
 import me.wcy.music.R
 import me.wcy.music.account.service.UserService
-import me.wcy.music.activity.AboutActivity
 import me.wcy.music.common.BaseMusicActivity
 import me.wcy.music.common.DarkModeService
 import me.wcy.music.databinding.ActivityMainBinding
 import me.wcy.music.databinding.NavigationHeaderBinding
 import me.wcy.music.databinding.TabItemBinding
-import me.wcy.music.service.AudioPlayer2
+import me.wcy.music.service.AudioPlayer
 import me.wcy.music.service.PlayService
-import me.wcy.music.utils.QuitTimer2
+import me.wcy.music.utils.QuitTimer
 import me.wcy.music.utils.TimeUtils
 import me.wcy.router.CRouter
 import javax.inject.Inject
@@ -42,7 +41,7 @@ import javax.inject.Inject
 class MainActivity : BaseMusicActivity() {
     private val viewBinding by viewBindings<ActivityMainBinding>()
     private val quitTimer by lazy {
-        QuitTimer2(onTimerListener)
+        QuitTimer(onTimerListener)
     }
     private var timerItem: MenuItem? = null
 
@@ -50,7 +49,7 @@ class MainActivity : BaseMusicActivity() {
     lateinit var userService: UserService
 
     @Inject
-    lateinit var audioPlayer: AudioPlayer2
+    lateinit var audioPlayer: AudioPlayer
 
     @Inject
     lateinit var darkModeService: DarkModeService
@@ -156,7 +155,7 @@ class MainActivity : BaseMusicActivity() {
         }
     }
 
-    private val onTimerListener = object : QuitTimer2.OnTimerListener {
+    private val onTimerListener = object : QuitTimer.OnTimerListener {
         override fun onTimer(remain: Long) {
             if (timerItem == null) {
                 timerItem = viewBinding.navigationView.menu.findItem(R.id.action_timer)

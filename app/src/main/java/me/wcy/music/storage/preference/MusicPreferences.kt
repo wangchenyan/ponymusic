@@ -6,14 +6,14 @@ import me.wcy.common.storage.IPreferencesFile
 import me.wcy.common.storage.PreferencesFile
 import me.wcy.music.R
 import me.wcy.music.common.DarkModeService
-import me.wcy.music.const.Keys
+import me.wcy.music.const.PreferenceName
 
 /**
  * SharedPreferences工具类
  * Created by wcy on 2015/11/28.
  */
 object MusicPreferences :
-    IPreferencesFile by PreferencesFile(CommonApp.app, Keys.PREFERENCE_NAME, false) {
+    IPreferencesFile by PreferencesFile(CommonApp.app, PreferenceName.CONFIG, false) {
 
     var enableMobileNetworkPlay by IPreferencesFile.BooleanProperty(
         StringUtils.getString(R.string.setting_key_mobile_network_play),

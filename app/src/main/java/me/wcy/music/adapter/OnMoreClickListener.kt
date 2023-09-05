@@ -1,9 +1,0 @@
-package me.wcy.music.adapter
-
-/**
- * 音乐列表“更多”按钮监听器
- * Created by hzwangchenyan on 2015/12/17.
- */
-interface OnMoreClickListener {
-    fun onMoreClick(position: Int)
-}

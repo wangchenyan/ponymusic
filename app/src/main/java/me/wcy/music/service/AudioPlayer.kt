@@ -1,211 +1,305 @@
 package me.wcy.music.service
 
+import android.app.Application
 import android.content.IntentFilter
 import android.media.AudioManager
 import android.media.MediaPlayer
-import android.os.Handler
-import android.os.Looper
+import androidx.lifecycle.MutableLiveData
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import me.wcy.common.CommonApp
+import me.wcy.common.ext.toUnMutable
 import me.wcy.common.ext.toast
-import me.wcy.music.application.Notifier
-import me.wcy.music.enums.PlayModeEnum
-import me.wcy.music.model.Music
-import me.wcy.music.receiver.NoisyAudioStreamReceiver
-import me.wcy.music.storage.preference.Preferences
+import me.wcy.music.ext.accessEntryPoint
+import me.wcy.music.ext.registerReceiverCompat
+import me.wcy.music.storage.db.MusicDatabase
+import me.wcy.music.storage.db.entity.SongEntity
+import me.wcy.music.storage.preference.MusicPreferences
 import java.io.IOException
 import java.util.Random
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Created by hzwangchenyan on 2018/1/26.
  */
-class AudioPlayer private constructor() {
-    val mediaPlayer: MediaPlayer = MediaPlayer()
-    private val audioFocusManager: AudioFocusManager by lazy {
-        AudioFocusManager(CommonApp.app)
+@Singleton
+class AudioPlayer @Inject constructor(
+    private val db: MusicDatabase,
+) : CoroutineScope by MainScope() {
+    private val context by lazy {
+        CommonApp.app
     }
-    private val handler: Handler by lazy {
-        Handler(Looper.getMainLooper())
+    private val mediaPlayer by lazy {
+        MediaPlayer()
     }
-    private val noisyReceiver: NoisyAudioStreamReceiver by lazy {
+    private val mediaSessionManager by lazy {
+        MediaSessionManager(context, this)
+    }
+    private val audioFocusManager by lazy {
+        AudioFocusManager(context, this)
+    }
+    private val noisyReceiver by lazy {
         NoisyAudioStreamReceiver()
     }
     private val noisyFilter: IntentFilter by lazy {
         IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
     }
-    private val musicList: MutableList<Music> = mutableListOf()
-    private val listeners: MutableList<OnPlayerEventListener> = ArrayList()
-    private var state = STATE_IDLE
 
-    private object SingletonHolder {
-        val instance = AudioPlayer()
-    }
+    private val _playlist = MutableLiveData(emptyList<SongEntity>())
+    val playlist = _playlist.toUnMutable()
+
+    private val _currentSong = MutableLiveData<SongEntity?>(null)
+    val currentSong = _currentSong.toUnMutable()
+
+    private val _playState = MutableStateFlow<PlayState>(PlayState.Idle)
+    val playState = _playState.toUnMutable()
+
+    private val _playProgress = MutableStateFlow<Long>(0)
+    val playProgress = _playProgress.toUnMutable()
+
+    private val _bufferingPercent = MutableStateFlow(0)
+    val bufferingPercent = _bufferingPercent.toUnMutable()
+
+    private var updateProgressJob: Job? = null
 
     init {
-        // TODO
-        // DBManager.get().musicDao.queryBuilder().build().list().filterNotNull().toMutableList()
         mediaPlayer.setOnCompletionListener { mp: MediaPlayer? -> next() }
         mediaPlayer.setOnPreparedListener { mp: MediaPlayer? ->
-            if (isPreparing) {
+            if (_playState.value.isPreparing) {
                 startPlayer()
             }
         }
         mediaPlayer.setOnBufferingUpdateListener { mp: MediaPlayer?, percent: Int ->
-            for (listener in listeners) {
-                listener.onBufferingUpdate(percent)
+            _bufferingPercent.value = percent
+        }
+
+        launch {
+            withContext(Dispatchers.IO) {
+                val playlist = db.playlistDao().queryAll()
+                _playlist.postValue(playlist)
+                val currentSongId = MusicPreferences.currentSongId
+                if (currentSongId.isNotEmpty()) {
+                    val song =
+                        db.playlistDao().queryByUniqueId(currentSongId) ?: playlist.firstOrNull()
+                    _currentSong.postValue(song)
+                }
+            }
+
+            _currentSong.observeForever {
+                MusicPreferences.currentSongId = it?.uniqueId ?: ""
             }
         }
     }
 
-    fun addOnPlayEventListener(listener: OnPlayerEventListener) {
-        if (!listeners.contains(listener)) {
-            listeners.add(listener)
+    fun addAndPlay(song: SongEntity) {
+        launch {
+            val newPlaylist = _playlist.value!!.toMutableList()
+            val index = newPlaylist.indexOf(song)
+            if (index >= 0) {
+                newPlaylist[index] = song
+            } else {
+                newPlaylist.add(song)
+            }
+            withContext(Dispatchers.IO) {
+                db.playlistDao().clear()
+                db.playlistDao().insertAll(newPlaylist)
+            }
+            _playlist.value = newPlaylist
+            play(song)
         }
     }
 
-    fun removeOnPlayEventListener(listener: OnPlayerEventListener?) {
-        listeners.remove(listener)
-    }
-
-    fun addAndPlay(music: Music) {
-        var position = musicList.indexOf(music)
-        if (position < 0) {
-            musicList.add(music)
-            // TODO
-            // DBManager.get().musicDao.insert(music)
-            position = musicList.size - 1
+    fun replaceAll(songList: List<SongEntity>, song: SongEntity) {
+        launch {
+            withContext(Dispatchers.IO) {
+                db.playlistDao().clear()
+                db.playlistDao().insertAll(songList)
+            }
+            _playlist.value = songList
+            _currentSong.value = song
+            play(song)
         }
-        play(position)
     }
 
-    fun play(position: Int) {
-        var pos = position
-        if (musicList.isEmpty()) {
+    fun play(song: SongEntity?) {
+        val playlist = _playlist.value!!
+        if (playlist.isEmpty()) {
             return
         }
-        if (pos < 0) {
-            pos = musicList.size - 1
-        } else if (pos >= musicList.size) {
-            pos = 0
+        if (song != null && song !in playlist) {
+            return
         }
-        playPosition = pos
-        val music = playMusic!!
+        var playSong = song
+        if (playSong == null) {
+            playSong = playlist.first()
+        }
         try {
             mediaPlayer.reset()
-            mediaPlayer.setDataSource(music.path)
+            mediaPlayer.setDataSource(playSong.path)
             mediaPlayer.prepareAsync()
-            state = STATE_PREPARING
-            for (listener in listeners) {
-                listener!!.onChange(music)
-            }
-            Notifier.get().showPlay(music)
-            MediaSessionManager.get().updateMetaData(music)
-            MediaSessionManager.get().updatePlaybackState()
+            _playState.value = PlayState.Preparing
+            _currentSong.value = playSong
+            PlayService.showNotification(context, true, playSong)
+            mediaSessionManager.updateMetaData(playSong)
+            mediaSessionManager.updatePlaybackState()
         } catch (e: IOException) {
             e.printStackTrace()
             toast("当前歌曲无法播放")
         }
     }
 
-    fun delete(position: Int) {
-        val playPosition = playPosition
-        val music = musicList.removeAt(position)
-        // TODO
-        // DBManager.get().musicDao.delete(music)
-        if (playPosition > position) {
-            this.playPosition = playPosition - 1
-        } else if (playPosition == position) {
-            if (isPlaying || isPreparing) {
-                this.playPosition = playPosition - 1
-                next()
-            } else {
-                stopPlayer()
-                for (listener in listeners) {
-                    listener!!.onChange(playMusic)
+    fun delete(song: SongEntity) {
+        launch {
+            val playlist = _playlist.value!!.toMutableList()
+            val index = playlist.indexOf(song)
+            if (index < 0) return@launch
+            playlist.removeAt(index)
+            _playlist.value = playlist
+            withContext(Dispatchers.IO) {
+                db.playlistDao().delete(song)
+            }
+            if (song == _currentSong.value) {
+                _currentSong.value = playlist.getOrNull((index - 1).coerceAtLeast(0))
+                if ((_playState.value.isPlaying || _playState.value.isPreparing)
+                    && playlist.isNotEmpty()
+                ) {
+                    next()
+                } else {
+                    stopPlayer()
                 }
             }
         }
     }
 
     fun playPause() {
-        if (isPreparing) {
-            stopPlayer()
-        } else if (isPlaying) {
-            pausePlayer()
-        } else if (isPausing) {
-            startPlayer()
-        } else {
-            play(playPosition)
-        }
-    }
+        when (_playState.value) {
+            PlayState.Preparing -> {
+                stopPlayer()
+            }
 
-    fun startPlayer() {
-        if (!isPreparing && !isPausing) {
-            return
-        }
-        if (audioFocusManager!!.requestAudioFocus()) {
-            mediaPlayer!!.start()
-            state = STATE_PLAYING
-            handler!!.post(mPublishRunnable)
-            Notifier.get().showPlay(playMusic)
-            MediaSessionManager.get().updatePlaybackState()
-            CommonApp.app.registerReceiver(noisyReceiver, noisyFilter)
-            for (listener in listeners) {
-                listener.onPlayerStart()
+            PlayState.Playing -> {
+                pausePlayer()
+            }
+
+            PlayState.Pause -> {
+                startPlayer()
+            }
+
+            else -> {
+                play(_currentSong.value)
             }
         }
     }
 
-    @JvmOverloads
-    fun pausePlayer(abandonAudioFocus: Boolean = true) {
-        if (!isPlaying) {
+    fun startPlayer() {
+        if (_playState.value.isPreparing.not()
+            && _playState.value.isPausing.not()
+        ) {
             return
         }
-        mediaPlayer!!.pause()
-        state = STATE_PAUSE
-        handler!!.removeCallbacks(mPublishRunnable)
-        Notifier.get().showPause(playMusic)
-        MediaSessionManager.get().updatePlaybackState()
-        CommonApp.app.unregisterReceiver(noisyReceiver)
-        if (abandonAudioFocus) {
-            audioFocusManager!!.abandonAudioFocus()
+        if (audioFocusManager.requestAudioFocus()) {
+            mediaPlayer.start()
+            _playState.value = PlayState.Playing
+
+            updateProgressJob = launch {
+                while (true) {
+                    if (_playState.value.isPlaying) {
+                        _playProgress.value = mediaPlayer.currentPosition.toLong()
+                    }
+                    delay(TIME_UPDATE)
+                }
+            }
+            PlayService.showNotification(context, true, _currentSong.value!!)
+            mediaSessionManager.updatePlaybackState()
+            context.registerReceiverCompat(noisyReceiver, noisyFilter)
         }
-        for (listener in listeners) {
-            listener!!.onPlayerPause()
+    }
+
+    fun pausePlayer(abandonAudioFocus: Boolean = true) {
+        if (_playState.value.isPlaying.not()) {
+            return
+        }
+        mediaPlayer.pause()
+        _playState.value = PlayState.Pause
+        updateProgressJob?.cancel()
+        _currentSong.value?.also {
+            PlayService.showNotification(context, false, it)
+        } ?: {
+            PlayService.cancelNotification(context)
+        }
+        mediaSessionManager.updatePlaybackState()
+        context.unregisterReceiver(noisyReceiver)
+        if (abandonAudioFocus) {
+            audioFocusManager.abandonAudioFocus()
         }
     }
 
     fun stopPlayer() {
-        if (isIdle) {
+        if (_playState.value.isIdle) {
             return
         }
         pausePlayer()
-        mediaPlayer!!.reset()
-        state = STATE_IDLE
+        mediaPlayer.reset()
+        _playState.value = PlayState.Idle
     }
 
-    operator fun next() {
-        if (musicList!!.isEmpty()) {
+    fun next() {
+        val playlist = _playlist.value
+        if (playlist.isNullOrEmpty()) {
             return
         }
-        val mode: PlayModeEnum = PlayModeEnum.valueOf(Preferences.playMode)
+        val mode = PlayModeEnum.valueOf(MusicPreferences.playMode)
         when (mode) {
-            PlayModeEnum.SHUFFLE -> play(Random().nextInt(musicList!!.size))
-            PlayModeEnum.SINGLE -> play(playPosition)
-            PlayModeEnum.LOOP -> play(playPosition + 1)
-            else -> play(playPosition + 1)
+            PlayModeEnum.SHUFFLE -> {
+                play(playlist[Random().nextInt(playlist.size)])
+            }
+
+            PlayModeEnum.SINGLE -> {
+                play(_currentSong.value)
+            }
+
+            PlayModeEnum.LOOP -> {
+                var position = playlist.indexOf(_currentSong.value) + 1
+                if (position >= playlist.size) {
+                    position = 0
+                }
+                play(playlist[position])
+            }
         }
     }
 
     fun prev() {
-        if (musicList!!.isEmpty()) {
+        val playlist = _playlist.value
+        if (playlist.isNullOrEmpty()) {
             return
         }
-        val mode: PlayModeEnum = PlayModeEnum.valueOf(Preferences.playMode)
+        val mode = PlayModeEnum.valueOf(MusicPreferences.playMode)
         when (mode) {
-            PlayModeEnum.SHUFFLE -> play(Random().nextInt(musicList!!.size))
-            PlayModeEnum.SINGLE -> play(playPosition)
-            PlayModeEnum.LOOP -> play(playPosition - 1)
-            else -> play(playPosition - 1)
+            PlayModeEnum.SHUFFLE -> {
+                play(playlist[Random().nextInt(playlist.size)])
+            }
+
+            PlayModeEnum.SINGLE -> {
+                play(_currentSong.value)
+            }
+
+            PlayModeEnum.LOOP -> {
+                var position = playlist.indexOf(_currentSong.value) - 1
+                if (position < 0) {
+                    position = playlist.size - 1
+                }
+                play(playlist[position])
+            }
         }
     }
 
@@ -215,71 +309,54 @@ class AudioPlayer private constructor() {
      * @param msec 时间
      */
     fun seekTo(msec: Int) {
-        if (isPlaying || isPausing) {
-            mediaPlayer!!.seekTo(msec)
-            MediaSessionManager.get().updatePlaybackState()
-            for (listener in listeners) {
-                listener!!.onPublish(msec)
-            }
+        if (_playState.value.isPlaying || _playState.value.isPausing) {
+            mediaPlayer.seekTo(msec)
+            mediaSessionManager.updatePlaybackState()
+            _playProgress.value = msec.toLong()
         }
     }
 
-    private val mPublishRunnable: Runnable = object : Runnable {
-        override fun run() {
-            if (isPlaying) {
-                for (listener in listeners) {
-                    listener!!.onPublish(mediaPlayer!!.currentPosition)
-                }
-            }
-            handler!!.postDelayed(this, TIME_UPDATE)
-        }
+    fun setVolume(leftVolume: Float, rightVolume: Float) {
+        mediaPlayer.setVolume(leftVolume, rightVolume)
     }
-    val audioSessionId: Int
-        get() = mediaPlayer!!.audioSessionId
-    val audioPosition: Long
-        get() = if (isPlaying || isPausing) {
-            mediaPlayer!!.currentPosition.toLong()
+
+    fun getAudioPosition(): Long {
+        return if (_playState.value.isPlaying || _playState.value.isPausing) {
+            mediaPlayer.currentPosition.toLong()
         } else {
             0
         }
-    val playMusic: Music?
-        get() = if (musicList!!.isEmpty()) {
-            null
-        } else musicList!![playPosition]
-
-    fun getMusicList(): List<Music>? {
-        return musicList
     }
 
-    val isPlaying: Boolean
-        get() = state == STATE_PLAYING
-    val isPausing: Boolean
-        get() = state == STATE_PAUSE
-    val isPreparing: Boolean
-        get() = state == STATE_PREPARING
-    val isIdle: Boolean
-        get() = state == STATE_IDLE
-    var playPosition: Int
-        get() {
-            var position = Preferences.playPosition
-            if (position < 0 || position >= musicList!!.size) {
-                position = 0
-                Preferences.savePlayPosition(position)
-            }
-            return position
-        }
-        private set(position) {
-            Preferences.savePlayPosition(position)
-        }
+    fun getAudioSessionId() = mediaPlayer.audioSessionId
 
     companion object {
-        private const val STATE_IDLE = 0
-        private const val STATE_PREPARING = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSE = 3
         private const val TIME_UPDATE = 300L
-        fun get(): AudioPlayer {
-            return SingletonHolder.instance
+
+        fun Application.audioPlayer(): AudioPlayer {
+            return accessEntryPoint<AudioPlayerEntryPoint>().audioPlayer()
         }
+    }
+
+    sealed class PlayState {
+        object Idle : PlayState()
+        object Preparing : PlayState()
+        object Playing : PlayState()
+        object Pause : PlayState()
+
+        val isIdle: Boolean
+            get() = this is Idle
+        val isPreparing: Boolean
+            get() = this is Preparing
+        val isPlaying: Boolean
+            get() = this is Playing
+        val isPausing: Boolean
+            get() = this is Pause
+    }
+
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface AudioPlayerEntryPoint {
+        fun audioPlayer(): AudioPlayer
     }
 }

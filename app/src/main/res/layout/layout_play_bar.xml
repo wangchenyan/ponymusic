@@ -19,7 +19,7 @@
             android:layout_height="36dp"
             android:contentDescription="@null"
             android:scaleType="fitXY"
-            android:src="@drawable/default_cover" />
+            android:src="@drawable/ic_default_cover" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -45,21 +45,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@null"
-            android:src="@drawable/play_bar_btn_play_pause_selector" />
+            android:src="@drawable/ic_play_bar_play_pause_selector" />
 
         <ImageView
             android:id="@+id/ivNext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@null"
-            android:src="@drawable/ic_play_bar_btn_next" />
+            android:src="@drawable/ic_play_bar_next" />
 
         <ImageView
             android:id="@+id/ivPlaylist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@null"
-            android:src="@drawable/ic_play_bar_btn_playlist" />
+            android:src="@drawable/ic_play_bar_playlist" />
     </LinearLayout>
 
     <ProgressBar
@@ -68,5 +68,5 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_gravity="bottom"
-        android:progressDrawable="@drawable/progress_bar_style" />
+        android:progressDrawable="@drawable/bg_play_bar_progress" />
 </FrameLayout>

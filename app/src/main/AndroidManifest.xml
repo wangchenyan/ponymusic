@@ -14,27 +14,18 @@
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/AppTheme">
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.fileProvider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
-        </provider>
 
         <service android:name=".service.PlayService" />
 
         <receiver
-            android:name=".receiver.DownloadReceiver"
+            android:name=".download.DownloadReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".receiver.RemoteControlReceiver"
+            android:name=".service.RemoteControlReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
@@ -57,25 +48,20 @@
             android:name=".common.MusicFragmentContainerActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.SettingActivity"
+            android:name=".main.SettingsActivity"
             android:label="@string/menu_setting"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.AboutActivity"
+            android:name=".main.AboutActivity"
             android:label="@string/menu_about"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.MusicInfoActivity"
-            android:label="@string/music_info"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".playing.PlaylistActivity"
-            android:label="@string/activity_playlist"
+            android:name="me.wcy.music.main.playlist.PlaylistActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Popup" />
         <activity
-            android:name=".playing.PlayingActivity"
+            android:name="me.wcy.music.main.playing.PlayingActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Popup" />

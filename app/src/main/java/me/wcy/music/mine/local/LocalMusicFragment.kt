@@ -8,10 +8,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.wcy.common.ext.viewBindings
 import me.wcy.common.permission.Permissioner
-import me.wcy.common.ui.fragment.BaseFragment
 import me.wcy.music.R
+import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.databinding.FragmentLocalMusicBinding
-import me.wcy.music.service.AudioPlayer2
+import me.wcy.music.service.AudioPlayer
 import me.wcy.music.storage.db.entity.SongEntity
 import me.wcy.radapter3.RAdapter
 import me.wcy.router.annotation.Route
@@ -22,7 +22,7 @@ import javax.inject.Inject
  */
 @Route("/local_music")
 @AndroidEntryPoint
-class LocalMusicFragment : BaseFragment() {
+class LocalMusicFragment : BaseMusicFragment() {
     private val viewBinding by viewBindings<FragmentLocalMusicBinding>()
     private val localMusicLoader by lazy {
         LocalMusicLoader()
@@ -32,7 +32,7 @@ class LocalMusicFragment : BaseFragment() {
     }
 
     @Inject
-    lateinit var audioPlayer: AudioPlayer2
+    lateinit var audioPlayer: AudioPlayer
 
     override fun getRootView(): View {
         return viewBinding.root
@@ -54,7 +54,7 @@ class LocalMusicFragment : BaseFragment() {
     override fun onLazyCreate() {
         super.onLazyCreate()
 
-        adapter.register(LocalMusicItemBinder {
+        adapter.register(LocalSongItemBinder {
             audioPlayer.replaceAll(adapter.getDataList(), it)
         })
         viewBinding.recyclerView.adapter = adapter
@@ -78,7 +78,7 @@ class LocalMusicFragment : BaseFragment() {
                         showLoadSirSuccess()
                         adapter.refresh(songList)
                     } else {
-                        showLoadSirEmpty()
+                        showLoadSirEmpty(getString(R.string.no_local_music))
                     }
                 }
             } else {

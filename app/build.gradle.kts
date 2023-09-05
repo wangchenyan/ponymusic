@@ -109,9 +109,7 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.material)
     implementation(libs.media)
-    implementation("androidx.preference:preference-ktx:1.2.0")
-    implementation("com.github.wangchenyan:lrcview:2.2")
-    implementation("com.hwangjr.rxbus:rxbus:2.0.0")
+    implementation(libs.preference)
 
     ksp(libs.room.compiler)
     implementation(libs.room)
@@ -121,6 +119,7 @@ dependencies {
     implementation(libs.common)
     ksp(libs.crouter.compiler)
     implementation(libs.crouter.api)
+    implementation(libs.lrcview)
 
     implementation(libs.loggingInterceptor)
     implementation(libs.persistentCookieJar)

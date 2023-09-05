@@ -32,19 +32,19 @@ class AlbumCoverView @JvmOverloads constructor(
     }
 
     private val topLine: Drawable by lazy {
-        ResourcesCompat.getDrawable(resources, R.drawable.play_page_cover_top_line_shape, null)!!
+        ResourcesCompat.getDrawable(resources, R.drawable.bg_playing_cover_top_line, null)!!
     }
     private val coverBorder: Drawable by lazy {
-        ResourcesCompat.getDrawable(resources, R.drawable.play_page_cover_border_shape, null)!!
+        ResourcesCompat.getDrawable(resources, R.drawable.bg_playing_cover_border, null)!!
     }
 
-    private var discBitmap = BitmapFactory.decodeResource(resources, R.drawable.play_page_disc)
+    private var discBitmap = BitmapFactory.decodeResource(resources, R.drawable.bg_playing_disc)
     private val discMatrix by lazy { Matrix() }
     private val discStartPoint by lazy { Point() } // 图片起始坐标
     private val discCenterPoint by lazy { Point() } // 旋转中心坐标
     private var discRotation = 0.0f
 
-    private var needleBitmap = BitmapFactory.decodeResource(resources, R.drawable.play_page_needle)
+    private var needleBitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_playing_needle)
     private val needleMatrix by lazy { Matrix() }
     private val needleStartPoint by lazy { Point() }
     private val needleCenterPoint by lazy { Point() }

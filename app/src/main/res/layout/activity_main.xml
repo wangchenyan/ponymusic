@@ -23,7 +23,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_height"
+            android:layout_height="@dimen/common_divider_size"
             android:background="@color/common_divider" />
 
         <LinearLayout

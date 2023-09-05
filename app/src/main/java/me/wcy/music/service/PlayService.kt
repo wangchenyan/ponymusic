@@ -20,7 +20,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import me.wcy.common.permission.Permissioner
 import me.wcy.music.R
 import me.wcy.music.ext.registerReceiverCompat
-import me.wcy.music.receiver.StatusBarReceiver
 import me.wcy.music.storage.db.entity.SongEntity
 import me.wcy.music.utils.FileUtils
 
@@ -189,9 +188,9 @@ class PlayService : Service() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
         )
         val playIconRes = if (isPlaying) {
-            R.drawable.ic_status_bar_pause
+            R.drawable.ic_notification_pause
         } else {
-            R.drawable.ic_status_bar_play
+            R.drawable.ic_notification_play
         }
         remoteViews.setImageViewResource(R.id.iv_play_pause, playIconRes)
         remoteViews.setOnClickPendingIntent(R.id.iv_play_pause, playPendingIntent)
@@ -203,7 +202,7 @@ class PlayService : Service() {
             nextIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
         )
-        remoteViews.setImageViewResource(R.id.iv_next, R.drawable.ic_status_bar_next)
+        remoteViews.setImageViewResource(R.id.iv_next, R.drawable.ic_notification_next)
         remoteViews.setOnClickPendingIntent(R.id.iv_next, nextPendingIntent)
         return remoteViews
     }

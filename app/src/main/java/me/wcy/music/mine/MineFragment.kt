@@ -11,6 +11,7 @@ import me.wcy.common.ext.viewBindings
 import me.wcy.common.ui.fragment.BaseFragment
 import me.wcy.music.R
 import me.wcy.music.account.service.UserService
+import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.databinding.FragmentMineBinding
 import me.wcy.music.main.MainActivity
 import me.wcy.router.CRouter
@@ -20,7 +21,7 @@ import javax.inject.Inject
  * Created by wangchenyan.top on 2023/8/21.
  */
 @AndroidEntryPoint
-class MineFragment : BaseFragment() {
+class MineFragment : BaseMusicFragment() {
     private val viewBinding by viewBindings<FragmentMineBinding>()
 
     @Inject

@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/play_page_default_bg" />
+        android:src="@drawable/bg_playing_default" />
 
     <LinearLayout
         android:id="@+id/ll_content"
@@ -33,7 +33,6 @@
                 android:id="@+id/iv_back"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@drawable/btn_action_bg_selector"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_arrow_down" />
 
@@ -51,7 +50,7 @@
                     android:singleLine="true"
                     android:text="无音乐"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_common" />
+                    android:textSize="16dp" />
 
                 <TextView
                     android:id="@+id/tv_artist"
@@ -73,8 +72,8 @@
                 android:id="@+id/album_cover_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin" />
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp" />
 
             <LinearLayout
                 android:id="@+id/lrcLayout"
@@ -87,8 +86,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:paddingRight="@dimen/activity_horizontal_margin">
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -104,8 +103,8 @@
                         android:minHeight="2dp"
                         android:paddingTop="4dp"
                         android:paddingBottom="4dp"
-                        android:progressDrawable="@drawable/seek_bar_volume_style"
-                        android:thumb="@drawable/ic_seek_bar_volume_btn" />
+                        android:progressDrawable="@drawable/bg_playing_volume_progress"
+                        android:thumb="@drawable/ic_playing_volume_progress_thumb" />
                 </LinearLayout>
 
                 <me.wcy.lrcview.LrcView
@@ -118,7 +117,7 @@
                     app:lrcDividerHeight="24dp"
                     app:lrcNormalTextColor="@color/translucent_white_p50"
                     app:lrcPadding="40dp"
-                    app:lrcTextSize="@dimen/text_size_common"
+                    app:lrcTextSize="16dp"
                     app:lrcTimelineColor="@color/translucent_white_p50"
                     app:lrcTimelineTextColor="#CCFFFFFF" />
             </LinearLayout>
@@ -136,8 +135,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin">
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
 
                 <TextView
                     android:id="@+id/tv_current_time"
@@ -154,8 +153,8 @@
                     android:layout_weight="1"
                     android:maxHeight="2dp"
                     android:minHeight="2dp"
-                    android:progressDrawable="@drawable/seek_bar_progress_style"
-                    android:thumb="@drawable/ic_seek_bar_progress_btn" />
+                    android:progressDrawable="@drawable/bg_playing_playback_progress"
+                    android:thumb="@drawable/ic_playing_playback_progress_thumb" />
 
                 <TextView
                     android:id="@+id/tv_total_time"
@@ -175,7 +174,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/play_mode_level_list" />
+                    android:src="@drawable/ic_play_mode_level_list" />
 
                 <ImageView
                     android:id="@+id/iv_prev"
@@ -183,14 +182,14 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/iv_play"
-                    android:src="@drawable/play_btn_prev_selector" />
+                    android:src="@drawable/ic_playing_prev" />
 
                 <ImageView
                     android:id="@+id/iv_play"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:src="@drawable/play_btn_play_pause_selector" />
+                    android:src="@drawable/ic_playing_play_pause_selector" />
 
                 <ImageView
                     android:id="@+id/iv_next"
@@ -198,7 +197,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/iv_play"
-                    android:src="@drawable/play_btn_next_selector" />
+                    android:src="@drawable/ic_playing_next" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
