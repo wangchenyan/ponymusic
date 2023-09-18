@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="16dp">
+
+    <com.hjq.shape.view.ShapeEditText
+        android:id="@+id/etInput"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:layout_marginTop="8dp"
+        android:gravity="start|center_vertical"
+        android:hint="请输入云音乐API域名 https://a.b.c/"
+        android:inputType="textUri"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="0dp"
+        android:singleLine="true"
+        android:textColor="@color/common_text_h1_color"
+        android:textColorHint="@color/common_text_h2_color"
+        android:textSize="14dp"
+        app:shape_radius="4dp"
+        app:shape_strokeColor="@color/common_divider"
+        app:shape_strokeWidth="1dp" />
+
+    <TextView
+        android:id="@+id/tvDoc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
+        android:text="点击查看云音乐API文档"
+        android:textColor="@color/common_text_h2_color" />
+</LinearLayout>

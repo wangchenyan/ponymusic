@@ -9,9 +9,8 @@ import me.wcy.music.account.bean.LoginStatusData
 import me.wcy.music.account.bean.QrCodeData
 import me.wcy.music.account.bean.QrCodeKeyData
 import me.wcy.music.net.HttpClient
-import okhttp3.RequestBody
+import me.wcy.music.storage.preference.MusicPreferences
 import retrofit2.Retrofit
-import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -41,14 +40,13 @@ interface AccountApi {
 
     @POST("login/status")
     suspend fun getLoginStatus(
-        @Query("timestamp") timestamp: Long = ServerTime.currentTimeMillis(),
-        @Body body: RequestBody
+        @Query("timestamp") timestamp: Long = ServerTime.currentTimeMillis()
     ): LoginStatusData
 
     companion object {
         private val api: AccountApi by lazy {
             val retrofit = Retrofit.Builder()
-                .baseUrl("http://10.68.177.98:3000/")
+                .baseUrl(MusicPreferences.apiDomain)
                 .addConverterFactory(GsonConverterFactory.create(GsonUtils.gson, true))
                 .client(HttpClient.okHttpClient)
                 .build()

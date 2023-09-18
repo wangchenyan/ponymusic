@@ -22,6 +22,7 @@ import me.wcy.common.permission.Permissioner
 import me.wcy.common.widget.pager.CustomTabPager
 import me.wcy.music.R
 import me.wcy.music.account.service.UserService
+import me.wcy.music.common.ApiDomainDialog
 import me.wcy.music.common.BaseMusicActivity
 import me.wcy.music.common.DarkModeService
 import me.wcy.music.databinding.ActivityMainBinding
@@ -126,6 +127,11 @@ class MainActivity : BaseMusicActivity() {
                 item.isChecked = false
             }
             when (item.itemId) {
+                R.id.action_domain_setting -> {
+                    ApiDomainDialog(this@MainActivity).show()
+                    return true
+                }
+
                 R.id.action_setting -> {
                     CRouter.with(this@MainActivity).url("/settings").start()
                     return true

@@ -1,7 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <me.wcy.common.widget.TitleLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tlShowBack="false"
+        app:tlTitleCenter="false"
+        app:tlTitleContentLayout="@layout/title_discover"
+        app:tlTitleText="" />
+
+    <LinearLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/btnRecommendSong"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_recommend"
+                android:drawablePadding="2dp"
+                android:drawableTint="@color/common_theme_color"
+                android:gravity="center_horizontal"
+                android:text="每日推荐"
+                android:textColor="@color/common_text_h1_color"
+                android:textSize="10dp" />
+
+            <TextView
+                android:id="@+id/btnPrivateFm"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_radio"
+                android:drawablePadding="2dp"
+                android:drawableTint="@color/common_theme_color"
+                android:gravity="center_horizontal"
+                android:text="私人漫游"
+                android:textColor="@color/common_text_h1_color"
+                android:textSize="10dp" />
+
+            <TextView
+                android:id="@+id/btnRecommendPlaylist"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_discovery_playlist"
+                android:drawablePadding="2dp"
+                android:drawableTint="@color/common_theme_color"
+                android:gravity="center_horizontal"
+                android:text="歌单"
+                android:textColor="@color/common_text_h1_color"
+                android:textSize="10dp" />
+
+            <TextView
+                android:id="@+id/btnRank"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_discovery_rank"
+                android:drawablePadding="2dp"
+                android:drawableTint="@color/common_theme_color"
+                android:gravity="center_horizontal"
+                android:text="排行榜"
+                android:textColor="@color/common_text_h1_color"
+                android:textSize="10dp" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

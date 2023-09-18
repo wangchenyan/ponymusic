@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.IntentFilter
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.util.Log
+import androidx.annotation.MainThread
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -19,12 +21,13 @@ import kotlinx.coroutines.withContext
 import me.wcy.common.CommonApp
 import me.wcy.common.ext.toUnMutable
 import me.wcy.common.ext.toast
+import me.wcy.common.net.apiCall
+import me.wcy.music.discover.OnlineMusicApi
 import me.wcy.music.ext.accessEntryPoint
 import me.wcy.music.ext.registerReceiverCompat
 import me.wcy.music.storage.db.MusicDatabase
 import me.wcy.music.storage.db.entity.SongEntity
 import me.wcy.music.storage.preference.MusicPreferences
-import java.io.IOException
 import java.util.Random
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -71,6 +74,7 @@ class AudioPlayer @Inject constructor(
     val bufferingPercent = _bufferingPercent.toUnMutable()
 
     private var updateProgressJob: Job? = null
+    private var getSongUrlJob: Job? = null
 
     init {
         mediaPlayer.setOnCompletionListener { mp: MediaPlayer? -> next() }
@@ -82,8 +86,12 @@ class AudioPlayer @Inject constructor(
         mediaPlayer.setOnBufferingUpdateListener { mp: MediaPlayer?, percent: Int ->
             _bufferingPercent.value = percent
         }
+        mediaPlayer.setOnErrorListener { mp, what, extra ->
+            onPlayError()
+            true
+        }
 
-        launch {
+        launch(Dispatchers.Main.immediate) {
             withContext(Dispatchers.IO) {
                 val playlist = db.playlistDao().queryAll()
                 _playlist.postValue(playlist)
@@ -101,8 +109,9 @@ class AudioPlayer @Inject constructor(
         }
     }
 
+    @MainThread
     fun addAndPlay(song: SongEntity) {
-        launch {
+        launch(Dispatchers.Main.immediate) {
             val newPlaylist = _playlist.value!!.toMutableList()
             val index = newPlaylist.indexOf(song)
             if (index >= 0) {
@@ -119,8 +128,9 @@ class AudioPlayer @Inject constructor(
         }
     }
 
+    @MainThread
     fun replaceAll(songList: List<SongEntity>, song: SongEntity) {
-        launch {
+        launch(Dispatchers.Main.immediate) {
             withContext(Dispatchers.IO) {
                 db.playlistDao().clear()
                 db.playlistDao().insertAll(songList)
@@ -131,6 +141,7 @@ class AudioPlayer @Inject constructor(
         }
     }
 
+    @MainThread
     fun play(song: SongEntity?) {
         val playlist = _playlist.value!!
         if (playlist.isEmpty()) {
@@ -143,23 +154,45 @@ class AudioPlayer @Inject constructor(
         if (playSong == null) {
             playSong = playlist.first()
         }
-        try {
-            mediaPlayer.reset()
-            mediaPlayer.setDataSource(playSong.path)
-            mediaPlayer.prepareAsync()
-            _playState.value = PlayState.Preparing
+        val realPlay = {
             _currentSong.value = playSong
+            _playState.value = PlayState.Preparing
             PlayService.showNotification(context, true, playSong)
             mediaSessionManager.updateMetaData(playSong)
             mediaSessionManager.updatePlaybackState()
-        } catch (e: IOException) {
-            e.printStackTrace()
-            toast("当前歌曲无法播放")
+            kotlin.runCatching {
+                mediaPlayer.reset()
+                mediaPlayer.setDataSource(playSong.path)
+                mediaPlayer.prepareAsync()
+            }.onFailure {
+                Log.e(TAG, "play error", it)
+                onPlayError()
+            }
+        }
+
+        getSongUrlJob?.cancel()
+        getSongUrlJob = null
+        if (playSong.isLocal() || playSong.path.isNotEmpty()) {
+            realPlay()
+        } else {
+            getSongUrlJob = launch(Dispatchers.Main.immediate) {
+                val res = apiCall { OnlineMusicApi.get().getSongUrl(playSong.songId) }
+                if (res.isSuccessWithData() && res.getDataOrThrow().isNotEmpty()) {
+                    playSong.path = res.getDataOrThrow().first().url
+                    withContext(Dispatchers.IO) {
+                        db.playlistDao().insert(playSong)
+                    }
+                    realPlay()
+                } else {
+                    onPlayError()
+                }
+            }
         }
     }
 
+    @MainThread
     fun delete(song: SongEntity) {
-        launch {
+        launch(Dispatchers.Main.immediate) {
             val playlist = _playlist.value!!.toMutableList()
             val index = playlist.indexOf(song)
             if (index < 0) return@launch
@@ -181,6 +214,7 @@ class AudioPlayer @Inject constructor(
         }
     }
 
+    @MainThread
     fun playPause() {
         when (_playState.value) {
             PlayState.Preparing -> {
@@ -201,6 +235,7 @@ class AudioPlayer @Inject constructor(
         }
     }
 
+    @MainThread
     fun startPlayer() {
         if (_playState.value.isPreparing.not()
             && _playState.value.isPausing.not()
@@ -211,7 +246,7 @@ class AudioPlayer @Inject constructor(
             mediaPlayer.start()
             _playState.value = PlayState.Playing
 
-            updateProgressJob = launch {
+            updateProgressJob = launch(Dispatchers.Main.immediate) {
                 while (true) {
                     if (_playState.value.isPlaying) {
                         _playProgress.value = mediaPlayer.currentPosition.toLong()
@@ -225,6 +260,7 @@ class AudioPlayer @Inject constructor(
         }
     }
 
+    @MainThread
     fun pausePlayer(abandonAudioFocus: Boolean = true) {
         if (_playState.value.isPlaying.not()) {
             return
@@ -232,6 +268,7 @@ class AudioPlayer @Inject constructor(
         mediaPlayer.pause()
         _playState.value = PlayState.Pause
         updateProgressJob?.cancel()
+        updateProgressJob = null
         _currentSong.value?.also {
             PlayService.showNotification(context, false, it)
         } ?: {
@@ -244,15 +281,19 @@ class AudioPlayer @Inject constructor(
         }
     }
 
+    @MainThread
     fun stopPlayer() {
         if (_playState.value.isIdle) {
             return
         }
+        getSongUrlJob?.cancel()
+        getSongUrlJob = null
         pausePlayer()
         mediaPlayer.reset()
         _playState.value = PlayState.Idle
     }
 
+    @MainThread
     fun next() {
         val playlist = _playlist.value
         if (playlist.isNullOrEmpty()) {
@@ -278,6 +319,7 @@ class AudioPlayer @Inject constructor(
         }
     }
 
+    @MainThread
     fun prev() {
         val playlist = _playlist.value
         if (playlist.isNullOrEmpty()) {
@@ -308,6 +350,7 @@ class AudioPlayer @Inject constructor(
      *
      * @param msec 时间
      */
+    @MainThread
     fun seekTo(msec: Int) {
         if (_playState.value.isPlaying || _playState.value.isPausing) {
             mediaPlayer.seekTo(msec)
@@ -316,10 +359,12 @@ class AudioPlayer @Inject constructor(
         }
     }
 
+    @MainThread
     fun setVolume(leftVolume: Float, rightVolume: Float) {
         mediaPlayer.setVolume(leftVolume, rightVolume)
     }
 
+    @MainThread
     fun getAudioPosition(): Long {
         return if (_playState.value.isPlaying || _playState.value.isPausing) {
             mediaPlayer.currentPosition.toLong()
@@ -328,9 +373,16 @@ class AudioPlayer @Inject constructor(
         }
     }
 
+    @MainThread
     fun getAudioSessionId() = mediaPlayer.audioSessionId
 
+    private fun onPlayError() {
+        stopPlayer()
+        toast("播放失败")
+    }
+
     companion object {
+        private const val TAG = "AudioPlayer"
         private const val TIME_UPDATE = 300L
 
         fun Application.audioPlayer(): AudioPlayer {

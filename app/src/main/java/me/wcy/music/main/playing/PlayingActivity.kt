@@ -291,6 +291,10 @@ class PlayingActivity : BaseMusicActivity() {
         updatePlayMode()
     }
 
+    override fun getNavigationBarColor(): Int {
+        return R.color.black
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(volumeReceiver)

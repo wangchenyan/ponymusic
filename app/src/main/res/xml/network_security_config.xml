@@ -8,9 +8,12 @@
         </trust-anchors>
     </debug-overrides>
 
-    <!--允许明文请求-->
-    <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">10.68.177.98</domain>
-        <domain includeSubdomains="true">music.126.net</domain>
-    </domain-config>
+    <!--允许所有明文请求-->
+    <base-config cleartextTrafficPermitted="true" />
+
+    <!--允许特定域名明文请求-->
+    <!--    <domain-config cleartextTrafficPermitted="true">-->
+    <!--        <domain includeSubdomains="true">10.89.193.230</domain>-->
+    <!--        <domain includeSubdomains="true">music.126.net</domain>-->
+    <!--    </domain-config>-->
 </network-security-config>

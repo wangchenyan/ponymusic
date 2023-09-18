@@ -1,5 +1,6 @@
 package me.wcy.music.account.service
 
+import android.app.Activity
 import android.app.Application
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -7,13 +8,14 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
+import me.wcy.common.ext.showConfirmDialog
 import me.wcy.common.ext.toUnMutable
 import me.wcy.common.model.CommonResult
 import me.wcy.music.account.AccountApi
 import me.wcy.music.account.AccountPreference
 import me.wcy.music.account.bean.ProfileData
 import me.wcy.music.ext.accessEntryPoint
-import me.wcy.music.net.NetUtils.toJsonBody
+import me.wcy.router.CRouter
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,7 +38,7 @@ class UserService @Inject constructor() {
     suspend fun login(cookie: String): CommonResult<ProfileData> {
         AccountPreference.cookie = cookie
         val res = kotlin.runCatching {
-            AccountApi.get().getLoginStatus(body = emptyMap<String, String>().toJsonBody())
+            AccountApi.get().getLoginStatus()
         }
         return if (res.isSuccess) {
             val loginStatusData = res.getOrThrow()
@@ -63,6 +65,39 @@ class UserService @Inject constructor() {
             AccountPreference.clear()
         }
         _profile.value = null
+    }
+
+    fun checkLogin(
+        activity: Activity,
+        showDialog: Boolean = true,
+        onCancel: (() -> Unit)? = null,
+        onLogin: (() -> Unit)? = null
+    ) {
+        if (isLogin()) {
+            onLogin?.invoke()
+            return
+        }
+        val startLogin = {
+            CRouter.with(activity).url("/login").startForResult {
+                if (it.isSuccess()) {
+                    onLogin?.invoke()
+                }
+            }
+        }
+        if (showDialog.not()) {
+            startLogin()
+            return
+        }
+        activity.showConfirmDialog(
+            title = "未登录",
+            message = "请先登录",
+            confirmButton = "去登录",
+            onCancelClick = {
+                onCancel?.invoke()
+            }
+        ) {
+            startLogin()
+        }
     }
 
     companion object {

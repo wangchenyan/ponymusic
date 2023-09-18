@@ -43,4 +43,6 @@ object MusicPreferences :
     var playMode: Int by IPreferencesFile.IntProperty("play_mode", 0)
 
     var currentSongId: String by IPreferencesFile.StringProperty("current_song_id", "")
+
+    var apiDomain: String by IPreferencesFile.StringProperty("api_domain", "")
 }

@@ -1,5 +1,6 @@
 package me.wcy.music.ext
 
+import android.app.Activity
 import android.app.Application
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -22,6 +23,22 @@ fun Context.registerReceiverCompat(receiver: BroadcastReceiver, filter: IntentFi
         registerReceiver(receiver, filter, Context.RECEIVER_EXPORTED)
     } else {
         registerReceiver(receiver, filter)
+    }
+}
+
+fun Context.findActivity(): Activity? {
+    return when (this) {
+        is Activity -> {
+            this
+        }
+
+        is ContextWrapper -> {
+            this.baseContext?.findActivity()
+        }
+
+        else -> {
+            null
+        }
     }
 }
 

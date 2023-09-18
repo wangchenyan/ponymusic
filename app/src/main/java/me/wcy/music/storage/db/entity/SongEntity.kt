@@ -51,7 +51,7 @@ data class SongEntity(
 
     // 播放地址
     @ColumnInfo("path")
-    val path: String = "",
+    var path: String = "",
 
     // [本地]文件名
     @ColumnInfo("file_name")
@@ -73,6 +73,8 @@ data class SongEntity(
         return other is SongEntity
                 && other.uniqueId == this.uniqueId
     }
+
+    fun isLocal() = type == LOCAL
 
     companion object {
         const val LOCAL = 0

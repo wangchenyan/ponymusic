@@ -5,6 +5,7 @@ import com.blankj.utilcode.util.GsonUtils
 import com.google.gson.JsonObject
 import me.wcy.common.CommonApp
 import me.wcy.music.account.service.UserService.Companion.userService
+import me.wcy.music.net.NetUtils.toJsonBody
 import okhttp3.Interceptor
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -21,9 +22,8 @@ class HeaderInterceptor : Interceptor {
         val cookie = CommonApp.app.userService().getCookie()
         if (cookie.isNotEmpty() && request.method == "POST") {
             val body = request.body
-            if (body == null) {
-                val bodyString = GsonUtils.toJson(mapOf("cookie" to cookie))
-                val newBody = bodyString.toRequestBody(NetUtils.CONTENT_TYPE_JSON)
+            if (body == null || body.contentLength() <= 0) {
+                val newBody = mapOf("cookie" to cookie).toJsonBody()
                 val newRequest = request.newBuilder()
                     .post(newBody)
                     .build()

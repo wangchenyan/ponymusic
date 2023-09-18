@@ -8,9 +8,9 @@ import kotlinx.coroutines.launch
 import me.wcy.common.ext.loadAvatar
 import me.wcy.common.ext.toast
 import me.wcy.common.ext.viewBindings
-import me.wcy.common.ui.fragment.BaseFragment
 import me.wcy.music.R
 import me.wcy.music.account.service.UserService
+import me.wcy.music.common.ApiDomainDialog
 import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.databinding.FragmentMineBinding
 import me.wcy.music.main.MainActivity
@@ -56,7 +56,9 @@ class MineFragment : BaseMusicFragment() {
                 isDayNight = true,
                 isLeft = false
             ).setOnClickListener {
-                toast("搜索")
+                if (ApiDomainDialog.checkApiDomain(requireContext())) {
+                    toast("搜索")
+                }
             }
         }
     }
@@ -67,10 +69,12 @@ class MineFragment : BaseMusicFragment() {
                 viewBinding.ivAvatar.loadAvatar(profile?.avatarUrl)
                 viewBinding.tvNickName.text = profile?.nickname
                 viewBinding.flProfile.setOnClickListener {
-                    if (userService.isLogin().not()) {
-                        CRouter.with(requireActivity())
-                            .url("/login")
-                            .start()
+                    if (ApiDomainDialog.checkApiDomain(requireActivity())) {
+                        if (userService.isLogin().not()) {
+                            CRouter.with(requireActivity())
+                                .url("/login")
+                                .start()
+                        }
                     }
                 }
             }

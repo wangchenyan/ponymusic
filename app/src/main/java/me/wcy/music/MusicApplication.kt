@@ -5,8 +5,10 @@ import android.content.Intent
 import com.blankj.utilcode.util.ActivityUtils
 import dagger.hilt.android.HiltAndroidApp
 import me.wcy.common.CommonApp
+import me.wcy.music.account.service.UserService
 import me.wcy.music.common.DarkModeService
 import me.wcy.music.common.MusicFragmentContainerActivity
+import me.wcy.music.ext.findActivity
 import me.wcy.music.service.AudioPlayer
 import me.wcy.router.CRouter
 import me.wcy.router.RouterClient
@@ -18,6 +20,9 @@ import javax.inject.Inject
  */
 @HiltAndroidApp
 class MusicApplication : Application() {
+    @Inject
+    lateinit var userService: UserService
+
     @Inject
     lateinit var audioPlayer: AudioPlayer
 
@@ -45,9 +50,14 @@ class MusicApplication : Application() {
             RouterClient.Builder()
                 .baseUrl("app://music")
                 .loginProvider { context, callback ->
-                    val activity = ActivityUtils.getTopActivity()
-                    activity?.let {
-
+                    var activity = context.findActivity()
+                    if (activity == null) {
+                        activity = ActivityUtils.getTopActivity()
+                    }
+                    if (activity != null) {
+                        userService.checkLogin(activity) {
+                            callback()
+                        }
                     }
                 }
                 .fragmentContainerIntentProvider {
