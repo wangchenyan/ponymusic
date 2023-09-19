@@ -8,12 +8,14 @@ import android.graphics.BitmapFactory
 import android.media.AudioManager
 import android.os.Bundle
 import android.text.format.DateUtils
+import android.util.Log
 import android.view.View
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.blurry.Blurry
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.wcy.common.ext.toast
@@ -23,12 +25,13 @@ import me.wcy.lrcview.LrcView
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicActivity
 import me.wcy.music.databinding.ActivityPlayingBinding
+import me.wcy.music.discover.OnlineMusicApi
 import me.wcy.music.ext.registerReceiverCompat
-import me.wcy.music.service.AudioPlayer
-import me.wcy.music.service.PlayModeEnum
+import me.wcy.music.service.IAudioPlayer
+import me.wcy.music.service.PlayMode
+import me.wcy.music.storage.LrcCache
 import me.wcy.music.storage.db.entity.SongEntity
 import me.wcy.music.storage.preference.MusicPreferences
-import me.wcy.music.utils.FileUtils
 import me.wcy.music.utils.TimeUtils
 import me.wcy.router.annotation.Route
 import java.io.File
@@ -43,7 +46,7 @@ class PlayingActivity : BaseMusicActivity() {
     private val viewBinding by viewBindings<ActivityPlayingBinding>()
 
     @Inject
-    lateinit var audioPlayer: AudioPlayer
+    lateinit var audioPlayer: IAudioPlayer
 
     private val mAudioManager by lazy {
         getSystemService(Context.AUDIO_SERVICE) as AudioManager
@@ -52,6 +55,8 @@ class PlayingActivity : BaseMusicActivity() {
     private val defaultCoverBitmap by lazy {
         BitmapFactory.decodeResource(resources, R.drawable.bg_playing_default_cover)
     }
+
+    private var loadLrcJob: Job? = null
 
     private var mLastProgress = 0
     private var isDraggingProgress = false
@@ -240,17 +245,33 @@ class PlayingActivity : BaseMusicActivity() {
     }
 
     private fun updateLrc(song: SongEntity) {
-        if (song.type == SongEntity.LOCAL) {
-            val lrcPath = FileUtils.getLrcFilePath(song)
-            if (lrcPath?.isNotEmpty() == true) {
-                loadLrc(lrcPath)
-            } else {
-                setLrcLabel("暂无歌词")
-            }
-        } else {
-            val lrcPath =
-                FileUtils.getLrcDir() + "/" + FileUtils.getLrcFileName(song.artist, song.title)
+        loadLrcJob?.cancel()
+        loadLrcJob = null
+        val lrcPath = LrcCache.getLrcFilePath(song)
+        if (lrcPath?.isNotEmpty() == true) {
             loadLrc(lrcPath)
+            return
+        }
+        if (song.isLocal()) {
+            setLrcLabel("暂无歌词")
+        } else {
+            setLrcLabel("歌词加载中…")
+            loadLrcJob = lifecycleScope.launch {
+                kotlin.runCatching {
+                    val lrcWrap = OnlineMusicApi.get().getLrc(song.songId)
+                    if (lrcWrap.code == 200 && lrcWrap.lrc.isValid()) {
+                        lrcWrap.lrc
+                    } else {
+                        throw IllegalStateException("lrc is invalid")
+                    }
+                }.onSuccess {
+                    val file = LrcCache.saveLrcFile(song, it.lyric)
+                    loadLrc(file.path)
+                }.onFailure {
+                    Log.e(TAG, "load lrc error", it)
+                    setLrcLabel("歌词加载失败")
+                }
+            }
         }
     }
 
@@ -270,24 +291,24 @@ class PlayingActivity : BaseMusicActivity() {
     }
 
     private fun switchPlayMode() {
-        var mode: PlayModeEnum = PlayModeEnum.valueOf(MusicPreferences.playMode)
+        var mode = PlayMode.valueOf(MusicPreferences.playMode)
         when (mode) {
-            PlayModeEnum.LOOP -> {
-                mode = PlayModeEnum.SHUFFLE
+            PlayMode.Loop -> {
+                mode = PlayMode.Shuffle
                 toast(R.string.play_mode_shuffle)
             }
 
-            PlayModeEnum.SHUFFLE -> {
-                mode = PlayModeEnum.SINGLE
+            PlayMode.Shuffle -> {
+                mode = PlayMode.Single
                 toast(R.string.play_mode_single)
             }
 
-            PlayModeEnum.SINGLE -> {
-                mode = PlayModeEnum.LOOP
+            PlayMode.Single -> {
+                mode = PlayMode.Loop
                 toast(R.string.play_mode_loop)
             }
         }
-        MusicPreferences.playMode = mode.value()
+        MusicPreferences.playMode = mode.value
         updatePlayMode()
     }
 
@@ -308,6 +329,7 @@ class PlayingActivity : BaseMusicActivity() {
     }
 
     companion object {
+        private const val TAG = "PlayingActivity"
         private const val VOLUME_CHANGED_ACTION = "android.media.VOLUME_CHANGED_ACTION"
     }
 }

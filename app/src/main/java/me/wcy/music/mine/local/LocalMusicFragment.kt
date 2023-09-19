@@ -10,8 +10,9 @@ import me.wcy.common.ext.viewBindings
 import me.wcy.common.permission.Permissioner
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicFragment
+import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentLocalMusicBinding
-import me.wcy.music.service.AudioPlayer
+import me.wcy.music.service.IAudioPlayer
 import me.wcy.music.storage.db.entity.SongEntity
 import me.wcy.radapter3.RAdapter
 import me.wcy.router.annotation.Route
@@ -20,7 +21,7 @@ import javax.inject.Inject
 /**
  * Created by wangchenyan.top on 2023/8/30.
  */
-@Route("/local_music")
+@Route(RoutePath.LOCAL_SONG)
 @AndroidEntryPoint
 class LocalMusicFragment : BaseMusicFragment() {
     private val viewBinding by viewBindings<FragmentLocalMusicBinding>()
@@ -32,7 +33,7 @@ class LocalMusicFragment : BaseMusicFragment() {
     }
 
     @Inject
-    lateinit var audioPlayer: AudioPlayer
+    lateinit var audioPlayer: IAudioPlayer
 
     override fun getRootView(): View {
         return viewBinding.root
@@ -85,5 +86,9 @@ class LocalMusicFragment : BaseMusicFragment() {
                 showLoadSirError(getString(R.string.no_permission_storage))
             }
         }
+    }
+
+    override fun getNavigationBarColor(): Int {
+        return R.color.play_bar_bg
     }
 }

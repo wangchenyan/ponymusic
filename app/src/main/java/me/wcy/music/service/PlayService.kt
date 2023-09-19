@@ -20,8 +20,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import me.wcy.common.permission.Permissioner
 import me.wcy.music.R
 import me.wcy.music.ext.registerReceiverCompat
+import me.wcy.music.service.receiver.StatusBarReceiver
 import me.wcy.music.storage.db.entity.SongEntity
-import me.wcy.music.utils.FileUtils
+import me.wcy.music.utils.MusicUtils
 
 /**
  * 音乐播放后台服务
@@ -164,7 +165,7 @@ class PlayService : Service() {
         isPlaying: Boolean
     ): RemoteViews {
         val title = music.title
-        val subtitle = FileUtils.getArtistAndAlbum(music.artist, music.album)
+        val subtitle = MusicUtils.getArtistAndAlbum(music.artist, music.album)
         // TODO
         // val cover: Bitmap? = CoverLoader.get().loadThumb(music)
         val cover: Bitmap? = null

@@ -5,7 +5,7 @@ import com.ihsanbal.logging.Level
 import com.ihsanbal.logging.LoggingInterceptor
 import me.wcy.common.CommonApp
 import me.wcy.common.utils.ServerTime
-import me.wcy.music.const.FilePath
+import me.wcy.music.consts.FilePath
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import java.io.File
@@ -23,7 +23,7 @@ object HttpClient {
             .writeTimeout(125, TimeUnit.SECONDS)
             // 忽略host验证
             .hostnameVerifier { hostname, session -> true }
-            .cache(Cache(File(FilePath.HTTP_CACHE), 10 * 1024 * 1024))
+            .cache(Cache(File(FilePath.httpCache), 10 * 1024 * 1024))
             .addInterceptor(HeaderInterceptor())
             .addInterceptor(ServerTime)
         if (CommonApp.test) {

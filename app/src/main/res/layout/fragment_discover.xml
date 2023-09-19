@@ -37,7 +37,7 @@
                 android:gravity="center_horizontal"
                 android:text="每日推荐"
                 android:textColor="@color/common_text_h1_color"
-                android:textSize="10dp" />
+                android:textSize="12dp" />
 
             <TextView
                 android:id="@+id/btnPrivateFm"
@@ -50,7 +50,7 @@
                 android:gravity="center_horizontal"
                 android:text="私人漫游"
                 android:textColor="@color/common_text_h1_color"
-                android:textSize="10dp" />
+                android:textSize="12dp" />
 
             <TextView
                 android:id="@+id/btnRecommendPlaylist"
@@ -63,7 +63,7 @@
                 android:gravity="center_horizontal"
                 android:text="歌单"
                 android:textColor="@color/common_text_h1_color"
-                android:textSize="10dp" />
+                android:textSize="12dp" />
 
             <TextView
                 android:id="@+id/btnRank"
@@ -76,7 +76,7 @@
                 android:gravity="center_horizontal"
                 android:text="排行榜"
                 android:textColor="@color/common_text_h1_color"
-                android:textSize="10dp" />
+                android:textSize="12dp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -1,10 +1,6 @@
 package me.wcy.music.account.service
 
 import android.app.Activity
-import android.app.Application
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
@@ -14,7 +10,7 @@ import me.wcy.common.model.CommonResult
 import me.wcy.music.account.AccountApi
 import me.wcy.music.account.AccountPreference
 import me.wcy.music.account.bean.ProfileData
-import me.wcy.music.ext.accessEntryPoint
+import me.wcy.music.consts.RoutePath
 import me.wcy.router.CRouter
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,19 +19,19 @@ import javax.inject.Singleton
  * Created by wangchenyan.top on 2023/8/25.
  */
 @Singleton
-class UserService @Inject constructor() {
+class UserServiceImpl @Inject constructor() : IUserService {
     private val _profile = MutableStateFlow(AccountPreference.profile)
-    val profile = _profile.toUnMutable()
+    override val profile = _profile.toUnMutable()
 
-    fun getCookie(): String {
+    override fun getCookie(): String {
         return AccountPreference.cookie
     }
 
-    fun isLogin(): Boolean {
+    override fun isLogin(): Boolean {
         return profile.value != null
     }
 
-    suspend fun login(cookie: String): CommonResult<ProfileData> {
+    override suspend fun login(cookie: String): CommonResult<ProfileData> {
         AccountPreference.cookie = cookie
         val res = kotlin.runCatching {
             AccountApi.get().getLoginStatus()
@@ -60,25 +56,25 @@ class UserService @Inject constructor() {
         }
     }
 
-    suspend fun logout() {
+    override suspend fun logout() {
         withContext(Dispatchers.IO) {
             AccountPreference.clear()
         }
         _profile.value = null
     }
 
-    fun checkLogin(
+    override fun checkLogin(
         activity: Activity,
-        showDialog: Boolean = true,
-        onCancel: (() -> Unit)? = null,
-        onLogin: (() -> Unit)? = null
+        showDialog: Boolean,
+        onCancel: (() -> Unit)?,
+        onLogin: (() -> Unit)?
     ) {
         if (isLogin()) {
             onLogin?.invoke()
             return
         }
         val startLogin = {
-            CRouter.with(activity).url("/login").startForResult {
+            CRouter.with(activity).url(RoutePath.LOGIN).startForResult {
                 if (it.isSuccess()) {
                     onLogin?.invoke()
                 }
@@ -98,17 +94,5 @@ class UserService @Inject constructor() {
         ) {
             startLogin()
         }
-    }
-
-    companion object {
-        fun Application.userService(): UserService {
-            return accessEntryPoint<UserServiceEntryPoint>().userService()
-        }
-    }
-
-    @EntryPoint
-    @InstallIn(SingletonComponent::class)
-    interface UserServiceEntryPoint {
-        fun userService(): UserService
     }
 }

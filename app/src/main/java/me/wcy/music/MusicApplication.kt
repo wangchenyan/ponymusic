@@ -5,11 +5,11 @@ import android.content.Intent
 import com.blankj.utilcode.util.ActivityUtils
 import dagger.hilt.android.HiltAndroidApp
 import me.wcy.common.CommonApp
-import me.wcy.music.account.service.UserService
+import me.wcy.music.account.service.IUserService
 import me.wcy.music.common.DarkModeService
 import me.wcy.music.common.MusicFragmentContainerActivity
 import me.wcy.music.ext.findActivity
-import me.wcy.music.service.AudioPlayer
+import me.wcy.music.service.IAudioPlayer
 import me.wcy.router.CRouter
 import me.wcy.router.RouterClient
 import javax.inject.Inject
@@ -21,10 +21,10 @@ import javax.inject.Inject
 @HiltAndroidApp
 class MusicApplication : Application() {
     @Inject
-    lateinit var userService: UserService
+    lateinit var userService: IUserService
 
     @Inject
-    lateinit var audioPlayer: AudioPlayer
+    lateinit var audioPlayer: IAudioPlayer
 
     @Inject
     lateinit var darkModeService: DarkModeService

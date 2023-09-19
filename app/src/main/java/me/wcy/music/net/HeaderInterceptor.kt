@@ -4,7 +4,7 @@ import android.util.Log
 import com.blankj.utilcode.util.GsonUtils
 import com.google.gson.JsonObject
 import me.wcy.common.CommonApp
-import me.wcy.music.account.service.UserService.Companion.userService
+import me.wcy.music.account.service.UserServiceModule.Companion.userService
 import me.wcy.music.net.NetUtils.toJsonBody
 import okhttp3.Interceptor
 import okhttp3.RequestBody

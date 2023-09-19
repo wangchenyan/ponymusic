@@ -8,10 +8,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.wcy.common.ext.viewBindings
-import me.wcy.common.ui.fragment.BaseFragment
 import me.wcy.music.account.bean.CheckLoginStatusData
-import me.wcy.music.account.service.UserService
+import me.wcy.music.account.service.IUserService
 import me.wcy.music.common.BaseMusicFragment
+import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentLoginBinding
 import me.wcy.router.annotation.Route
 import javax.inject.Inject
@@ -19,14 +19,14 @@ import javax.inject.Inject
 /**
  * Created by wangchenyan.top on 2023/8/28.
  */
-@Route("/login")
+@Route(RoutePath.LOGIN)
 @AndroidEntryPoint
 class LoginFragment : BaseMusicFragment() {
     private val viewBinding by viewBindings<FragmentLoginBinding>()
     private val viewModel by viewModels<LoginViewModel>()
 
     @Inject
-    lateinit var userService: UserService
+    lateinit var userService: IUserService
 
     override fun getRootView(): View {
         return viewBinding.root

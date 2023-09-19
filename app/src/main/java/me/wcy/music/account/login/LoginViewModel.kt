@@ -14,7 +14,7 @@ import me.wcy.common.ext.toUnMutable
 import me.wcy.common.net.apiCall
 import me.wcy.music.account.AccountApi
 import me.wcy.music.account.bean.CheckLoginStatusData
-import me.wcy.music.account.service.UserService
+import me.wcy.music.account.service.IUserService
 import javax.inject.Inject
 
 /**
@@ -22,7 +22,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val userService: UserService
+    private val userService: IUserService
 ) : ViewModel() {
     private var qrCodeKey = ""
     private val _qrCode = MutableStateFlow<Bitmap?>(null)

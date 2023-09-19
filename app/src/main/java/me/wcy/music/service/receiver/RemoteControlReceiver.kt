@@ -1,4 +1,4 @@
-package me.wcy.music.service
+package me.wcy.music.service.receiver
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -6,6 +6,7 @@ import android.content.Intent
 import android.support.v4.media.session.MediaSessionCompat
 import android.view.KeyEvent
 import dagger.hilt.android.AndroidEntryPoint
+import me.wcy.music.service.IAudioPlayer
 import javax.inject.Inject
 
 /**
@@ -15,7 +16,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class RemoteControlReceiver : BroadcastReceiver() {
     @Inject
-    lateinit var audioPlayer: AudioPlayer
+    lateinit var audioPlayer: IAudioPlayer
 
     override fun onReceive(context: Context, intent: Intent) {
         val event = intent.getParcelableExtra<KeyEvent>(Intent.EXTRA_KEY_EVENT)

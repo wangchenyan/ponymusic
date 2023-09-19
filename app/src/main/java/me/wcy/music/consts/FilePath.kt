@@ -1,4 +1,4 @@
-package me.wcy.music.const
+package me.wcy.music.consts
 
 import me.wcy.common.CommonApp
 import java.io.File
@@ -7,15 +7,15 @@ import java.io.File
  * Created by wangchenyan.top on 2022/9/24.
  */
 object FilePath {
-    val HTTP_CACHE: String
+    val httpCache: String
         get() = "http".assembleExternalCachePath()
-    val APP_UPDATE: String
-        get() = "update".assembleExternalCachePath()
-    val LOG_ROOT_DIR: String
+    val logRootDir: String
         get() = "log".assembleExternalFilePath()
+    val lrcDir: String
+        get() = "lrc".assembleExternalFilePath().mkdirs()
 
     fun getLogPath(type: String): String {
-        return LOG_ROOT_DIR + File.separator + type
+        return logRootDir + File.separator + type
     }
 
     private fun String.assembleExternalCachePath(): String {
@@ -24,5 +24,12 @@ object FilePath {
 
     private fun String.assembleExternalFilePath(): String {
         return CommonApp.app.getExternalFilesDir("music_$this")?.path ?: ""
+    }
+
+    private fun String.mkdirs() = apply {
+        val file = File(this)
+        if (!file.exists()) {
+            file.mkdirs()
+        }
     }
 }

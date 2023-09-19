@@ -17,7 +17,7 @@ import me.wcy.common.widget.CustomSpan.appendStyle
 import me.wcy.music.R
 import me.wcy.music.databinding.LayoutPlayBarBinding
 import me.wcy.music.ext.findLifecycleOwner
-import me.wcy.music.service.AudioPlayer.Companion.audioPlayer
+import me.wcy.music.service.AudioPlayerModule.Companion.audioPlayer
 import me.wcy.router.CRouter
 
 /**

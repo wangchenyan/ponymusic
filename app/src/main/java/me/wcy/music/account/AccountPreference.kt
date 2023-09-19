@@ -4,7 +4,7 @@ import me.wcy.common.CommonApp
 import me.wcy.common.storage.IPreferencesFile
 import me.wcy.common.storage.PreferencesFile
 import me.wcy.music.account.bean.ProfileData
-import me.wcy.music.const.PreferenceName
+import me.wcy.music.consts.PreferenceName
 
 /**
  * Created by wangchenyan.top on 2023/8/28.

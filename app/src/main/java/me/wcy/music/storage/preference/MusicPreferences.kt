@@ -6,7 +6,7 @@ import me.wcy.common.storage.IPreferencesFile
 import me.wcy.common.storage.PreferencesFile
 import me.wcy.music.R
 import me.wcy.music.common.DarkModeService
-import me.wcy.music.const.PreferenceName
+import me.wcy.music.consts.PreferenceName
 
 /**
  * SharedPreferences工具类

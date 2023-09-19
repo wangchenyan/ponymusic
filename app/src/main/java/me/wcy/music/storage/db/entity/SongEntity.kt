@@ -49,7 +49,7 @@ data class SongEntity(
     @ColumnInfo("duration")
     val duration: Long = 0,
 
-    // 播放地址
+    // [本地]播放地址
     @ColumnInfo("path")
     var path: String = "",
 

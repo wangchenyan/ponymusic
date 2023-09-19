@@ -9,10 +9,11 @@ import me.wcy.common.net.apiCall
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.common.bean.SongData
+import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentRecommendSongBinding
 import me.wcy.music.discover.OnlineMusicApi
 import me.wcy.music.discover.recommend.item.OnlineSongItemBinder
-import me.wcy.music.service.AudioPlayer
+import me.wcy.music.service.IAudioPlayer
 import me.wcy.music.utils.toEntity
 import me.wcy.radapter3.RAdapter
 import me.wcy.router.annotation.Route
@@ -21,7 +22,7 @@ import javax.inject.Inject
 /**
  * Created by wangchenyan.top on 2023/9/15.
  */
-@Route("/recommend_song", needLogin = true)
+@Route(RoutePath.RECOMMEND_SONG, needLogin = true)
 @AndroidEntryPoint
 class RecommendSongFragment : BaseMusicFragment() {
     private val viewBinding by viewBindings<FragmentRecommendSongBinding>()
@@ -30,7 +31,7 @@ class RecommendSongFragment : BaseMusicFragment() {
     }
 
     @Inject
-    lateinit var audioPlayer: AudioPlayer
+    lateinit var audioPlayer: IAudioPlayer
 
     override fun getRootView(): View {
         return viewBinding.root

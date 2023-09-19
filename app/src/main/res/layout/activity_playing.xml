@@ -21,7 +21,8 @@
         <me.wcy.common.widget.TitleLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tlJustShowStatusBar="true" />
+            app:tlJustShowStatusBar="true"
+            app:tlTextStyle="white" />
 
         <LinearLayout
             android:layout_width="match_parent"

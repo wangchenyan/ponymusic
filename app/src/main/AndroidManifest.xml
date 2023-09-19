@@ -25,7 +25,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".service.RemoteControlReceiver"
+            android:name=".service.receiver.RemoteControlReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />

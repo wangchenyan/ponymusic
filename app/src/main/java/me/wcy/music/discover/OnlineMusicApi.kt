@@ -3,6 +3,7 @@ package me.wcy.music.discover
 import me.wcy.common.net.NetResult
 import me.wcy.common.net.gson.GsonConverterFactory
 import me.wcy.common.utils.GsonUtils
+import me.wcy.music.common.bean.LrcDataWrap
 import me.wcy.music.common.bean.SongUrlData
 import me.wcy.music.discover.recommend.bean.RecommendSongListData
 import me.wcy.music.net.HttpClient
@@ -24,6 +25,11 @@ interface OnlineMusicApi {
         @Query("id") id: Long,
         @Query("level") level: String = "standard",
     ): NetResult<List<SongUrlData>>
+
+    @POST("lyric")
+    suspend fun getLrc(
+        @Query("id") id: Long,
+    ): LrcDataWrap
 
     companion object {
         private val api: OnlineMusicApi by lazy {

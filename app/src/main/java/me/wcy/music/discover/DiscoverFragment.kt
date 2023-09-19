@@ -5,6 +5,7 @@ import me.wcy.common.ext.viewBindings
 import me.wcy.music.R
 import me.wcy.music.common.ApiDomainDialog
 import me.wcy.music.common.BaseMusicFragment
+import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentDiscoverBinding
 import me.wcy.music.main.MainActivity
 import me.wcy.music.storage.preference.MusicPreferences
@@ -39,7 +40,7 @@ class DiscoverFragment : BaseMusicFragment() {
         initTitle()
         checkApiDomain(false)
         viewBinding.btnRecommendSong.setOnClickListener {
-            CRouter.with(requireActivity()).url("/recommend_song").start()
+            CRouter.with(requireActivity()).url(RoutePath.RECOMMEND_SONG).start()
         }
     }
 

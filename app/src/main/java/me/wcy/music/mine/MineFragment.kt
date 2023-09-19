@@ -9,9 +9,10 @@ import me.wcy.common.ext.loadAvatar
 import me.wcy.common.ext.toast
 import me.wcy.common.ext.viewBindings
 import me.wcy.music.R
-import me.wcy.music.account.service.UserService
+import me.wcy.music.account.service.IUserService
 import me.wcy.music.common.ApiDomainDialog
 import me.wcy.music.common.BaseMusicFragment
+import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentMineBinding
 import me.wcy.music.main.MainActivity
 import me.wcy.router.CRouter
@@ -25,7 +26,7 @@ class MineFragment : BaseMusicFragment() {
     private val viewBinding by viewBindings<FragmentMineBinding>()
 
     @Inject
-    lateinit var userService: UserService
+    lateinit var userService: IUserService
 
     override fun getRootView(): View {
         return viewBinding.root
@@ -72,7 +73,7 @@ class MineFragment : BaseMusicFragment() {
                     if (ApiDomainDialog.checkApiDomain(requireActivity())) {
                         if (userService.isLogin().not()) {
                             CRouter.with(requireActivity())
-                                .url("/login")
+                                .url(RoutePath.LOGIN)
                                 .start()
                         }
                     }
@@ -83,7 +84,7 @@ class MineFragment : BaseMusicFragment() {
 
     private fun initLocalMusic() {
         viewBinding.localMusic.setOnClickListener {
-            CRouter.with().url("/local_music").start()
+            CRouter.with().url(RoutePath.LOCAL_SONG).start()
         }
     }
 }

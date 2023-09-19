@@ -11,7 +11,7 @@ import me.wcy.music.storage.db.entity.SongEntity
  */
 class MediaSessionManager(
     private val context: Context,
-    private val audioPlayer: AudioPlayer
+    private val audioPlayer: IAudioPlayer
 ) {
     private val mediaSession: MediaSessionCompat by lazy {
         MediaSessionCompat(context, TAG).apply {

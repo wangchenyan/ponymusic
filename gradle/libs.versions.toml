@@ -61,7 +61,7 @@ init-compiler = { group = "com.github.wangchenyan.init", name = "init-compiler-k
 init-api = { group = "com.github.wangchenyan.init", name = "init-api", version.ref = "init" }
 crouter-compiler = { group = "com.github.wangchenyan.crouter", name = "crouter-compiler", version.ref = "crouter" }
 crouter-api = { group = "com.github.wangchenyan.crouter", name = "crouter-api", version.ref = "crouter" }
-lrcview = { group = "com.github.wangchenyan", name = "lrcview", version = "2.2" }
+lrcview = { group = "com.github.wangchenyan", name = "lrcview", version = "2.2.1" }
 # open source
 loggingInterceptor = { group = "com.github.ihsanbal", name = "LoggingInterceptor", version = "3.1.0" }
 persistentCookieJar = { group = "com.github.franmontiel", name = "PersistentCookieJar", version = "v1.0.1" }

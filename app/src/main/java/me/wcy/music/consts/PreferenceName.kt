@@ -1,4 +1,4 @@
-package me.wcy.music.const
+package me.wcy.music.consts
 
 /**
  * Created by wangchenyan.top on 2023/4/19.

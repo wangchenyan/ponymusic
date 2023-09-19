@@ -11,8 +11,8 @@ import me.wcy.common.ext.toast
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicActivity
 import me.wcy.music.common.DarkModeService
-import me.wcy.music.const.PreferenceName
-import me.wcy.music.service.AudioPlayer
+import me.wcy.music.consts.PreferenceName
+import me.wcy.music.service.IAudioPlayer
 import me.wcy.music.storage.preference.MusicPreferences
 import me.wcy.music.utils.MusicUtils
 import me.wcy.router.annotation.Route
@@ -47,7 +47,7 @@ class SettingsActivity : BaseMusicActivity() {
         }
 
         @Inject
-        lateinit var player: AudioPlayer
+        lateinit var player: IAudioPlayer
 
         @Inject
         lateinit var darkModeService: DarkModeService
