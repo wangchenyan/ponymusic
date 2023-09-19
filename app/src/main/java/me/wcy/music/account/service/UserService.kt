@@ -8,7 +8,7 @@ import me.wcy.music.account.bean.ProfileData
 /**
  * Created by wangchenyan.top on 2023/9/18.
  */
-interface IUserService {
+interface UserService {
     val profile: StateFlow<ProfileData?>
 
     fun getCookie(): String

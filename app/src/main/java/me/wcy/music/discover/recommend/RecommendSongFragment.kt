@@ -13,7 +13,7 @@ import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentRecommendSongBinding
 import me.wcy.music.discover.OnlineMusicApi
 import me.wcy.music.discover.recommend.item.OnlineSongItemBinder
-import me.wcy.music.service.IAudioPlayer
+import me.wcy.music.service.AudioPlayer
 import me.wcy.music.utils.toEntity
 import me.wcy.radapter3.RAdapter
 import me.wcy.router.annotation.Route
@@ -31,7 +31,7 @@ class RecommendSongFragment : BaseMusicFragment() {
     }
 
     @Inject
-    lateinit var audioPlayer: IAudioPlayer
+    lateinit var audioPlayer: AudioPlayer
 
     override fun getRootView(): View {
         return viewBinding.root

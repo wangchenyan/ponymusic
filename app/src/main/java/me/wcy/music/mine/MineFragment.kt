@@ -9,7 +9,7 @@ import me.wcy.common.ext.loadAvatar
 import me.wcy.common.ext.toast
 import me.wcy.common.ext.viewBindings
 import me.wcy.music.R
-import me.wcy.music.account.service.IUserService
+import me.wcy.music.account.service.UserService
 import me.wcy.music.common.ApiDomainDialog
 import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.consts.RoutePath
@@ -26,7 +26,7 @@ class MineFragment : BaseMusicFragment() {
     private val viewBinding by viewBindings<FragmentMineBinding>()
 
     @Inject
-    lateinit var userService: IUserService
+    lateinit var userService: UserService
 
     override fun getRootView(): View {
         return viewBinding.root

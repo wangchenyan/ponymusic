@@ -21,14 +21,14 @@ import me.wcy.common.ext.viewBindings
 import me.wcy.common.permission.Permissioner
 import me.wcy.common.widget.pager.CustomTabPager
 import me.wcy.music.R
-import me.wcy.music.account.service.IUserService
+import me.wcy.music.account.service.UserService
 import me.wcy.music.common.ApiDomainDialog
 import me.wcy.music.common.BaseMusicActivity
 import me.wcy.music.common.DarkModeService
 import me.wcy.music.databinding.ActivityMainBinding
 import me.wcy.music.databinding.NavigationHeaderBinding
 import me.wcy.music.databinding.TabItemBinding
-import me.wcy.music.service.IAudioPlayer
+import me.wcy.music.service.AudioPlayer
 import me.wcy.music.service.PlayService
 import me.wcy.music.utils.QuitTimer
 import me.wcy.music.utils.TimeUtils
@@ -47,10 +47,10 @@ class MainActivity : BaseMusicActivity() {
     private var timerItem: MenuItem? = null
 
     @Inject
-    lateinit var userService: IUserService
+    lateinit var userService: UserService
 
     @Inject
-    lateinit var audioPlayer: IAudioPlayer
+    lateinit var audioPlayer: AudioPlayer
 
     @Inject
     lateinit var darkModeService: DarkModeService

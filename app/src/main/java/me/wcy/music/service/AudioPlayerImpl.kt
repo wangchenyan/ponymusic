@@ -34,7 +34,7 @@ import javax.inject.Singleton
 @Singleton
 class AudioPlayerImpl @Inject constructor(
     private val db: MusicDatabase,
-) : IAudioPlayer, CoroutineScope by MainScope() {
+) : AudioPlayer, CoroutineScope by MainScope() {
     private val context by lazy {
         CommonApp.app
     }

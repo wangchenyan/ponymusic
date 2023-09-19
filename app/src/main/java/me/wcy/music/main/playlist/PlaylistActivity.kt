@@ -10,7 +10,7 @@ import me.wcy.common.widget.CustomSpan.appendStyle
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicActivity
 import me.wcy.music.databinding.ActivityPlaylistBinding
-import me.wcy.music.service.IAudioPlayer
+import me.wcy.music.service.AudioPlayer
 import me.wcy.music.storage.db.entity.SongEntity
 import me.wcy.radapter3.RAdapter
 import me.wcy.router.annotation.Route
@@ -26,7 +26,7 @@ class PlaylistActivity : BaseMusicActivity() {
     private val adapter = RAdapter<SongEntity>()
 
     @Inject
-    lateinit var audioPlayer: IAudioPlayer
+    lateinit var audioPlayer: AudioPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

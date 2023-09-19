@@ -18,10 +18,10 @@ abstract class AudioPlayerModule {
     @Binds
     abstract fun bindAudioPlayer(
         audioPlayerImpl: AudioPlayerImpl
-    ): IAudioPlayer
+    ): AudioPlayer
 
     companion object {
-        fun Application.audioPlayer(): IAudioPlayer {
+        fun Application.audioPlayer(): AudioPlayer {
             return accessEntryPoint<AudioPlayerEntryPoint>().audioPlayer()
         }
     }
@@ -29,6 +29,6 @@ abstract class AudioPlayerModule {
     @EntryPoint
     @InstallIn(SingletonComponent::class)
     interface AudioPlayerEntryPoint {
-        fun audioPlayer(): IAudioPlayer
+        fun audioPlayer(): AudioPlayer
     }
 }

@@ -8,7 +8,7 @@ import me.wcy.music.storage.db.entity.SongEntity
 /**
  * Created by wangchenyan.top on 2023/9/18.
  */
-interface IAudioPlayer {
+interface AudioPlayer {
 
     val playlist: LiveData<List<SongEntity>>
     val currentSong: LiveData<SongEntity?>

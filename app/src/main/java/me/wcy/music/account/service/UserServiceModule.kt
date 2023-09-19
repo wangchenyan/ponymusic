@@ -16,10 +16,10 @@ import me.wcy.music.ext.accessEntryPoint
 abstract class UserServiceModule {
 
     @Binds
-    abstract fun bindUserService(userServiceImpl: UserServiceImpl): IUserService
+    abstract fun bindUserService(userServiceImpl: UserServiceImpl): UserService
 
     companion object {
-        fun Application.userService(): IUserService {
+        fun Application.userService(): UserService {
             return accessEntryPoint<UserServiceEntryPoint>().userService()
         }
     }
@@ -27,6 +27,6 @@ abstract class UserServiceModule {
     @EntryPoint
     @InstallIn(SingletonComponent::class)
     interface UserServiceEntryPoint {
-        fun userService(): IUserService
+        fun userService(): UserService
     }
 }

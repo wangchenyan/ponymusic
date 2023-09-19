@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import dagger.hilt.android.AndroidEntryPoint
-import me.wcy.music.service.IAudioPlayer
+import me.wcy.music.service.AudioPlayer
 import javax.inject.Inject
 
 /**
@@ -13,7 +13,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class StatusBarReceiver : BroadcastReceiver() {
     @Inject
-    lateinit var audioPlayer: IAudioPlayer
+    lateinit var audioPlayer: AudioPlayer
 
     override fun onReceive(context: Context, intent: Intent?) {
         val extra = intent?.getStringExtra(EXTRA)

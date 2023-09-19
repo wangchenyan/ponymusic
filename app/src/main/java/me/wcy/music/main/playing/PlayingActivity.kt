@@ -27,7 +27,7 @@ import me.wcy.music.common.BaseMusicActivity
 import me.wcy.music.databinding.ActivityPlayingBinding
 import me.wcy.music.discover.OnlineMusicApi
 import me.wcy.music.ext.registerReceiverCompat
-import me.wcy.music.service.IAudioPlayer
+import me.wcy.music.service.AudioPlayer
 import me.wcy.music.service.PlayMode
 import me.wcy.music.storage.LrcCache
 import me.wcy.music.storage.db.entity.SongEntity
@@ -46,7 +46,7 @@ class PlayingActivity : BaseMusicActivity() {
     private val viewBinding by viewBindings<ActivityPlayingBinding>()
 
     @Inject
-    lateinit var audioPlayer: IAudioPlayer
+    lateinit var audioPlayer: AudioPlayer
 
     private val mAudioManager by lazy {
         getSystemService(Context.AUDIO_SERVICE) as AudioManager

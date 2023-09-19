@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.wcy.common.ext.viewBindings
 import me.wcy.music.account.bean.CheckLoginStatusData
-import me.wcy.music.account.service.IUserService
+import me.wcy.music.account.service.UserService
 import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentLoginBinding
@@ -26,7 +26,7 @@ class LoginFragment : BaseMusicFragment() {
     private val viewModel by viewModels<LoginViewModel>()
 
     @Inject
-    lateinit var userService: IUserService
+    lateinit var userService: UserService
 
     override fun getRootView(): View {
         return viewBinding.root

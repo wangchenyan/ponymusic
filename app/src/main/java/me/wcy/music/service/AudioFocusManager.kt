@@ -9,7 +9,7 @@ import android.media.AudioManager.OnAudioFocusChangeListener
  */
 class AudioFocusManager(
     private val context: Context,
-    private val audioPlayer: IAudioPlayer
+    private val audioPlayer: AudioPlayer
 ) {
     private val audioManager by lazy {
         context.getSystemService(Context.AUDIO_SERVICE) as AudioManager

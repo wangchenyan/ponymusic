@@ -12,7 +12,7 @@ import me.wcy.music.R
 import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentLocalMusicBinding
-import me.wcy.music.service.IAudioPlayer
+import me.wcy.music.service.AudioPlayer
 import me.wcy.music.storage.db.entity.SongEntity
 import me.wcy.radapter3.RAdapter
 import me.wcy.router.annotation.Route
@@ -33,7 +33,7 @@ class LocalMusicFragment : BaseMusicFragment() {
     }
 
     @Inject
-    lateinit var audioPlayer: IAudioPlayer
+    lateinit var audioPlayer: AudioPlayer
 
     override fun getRootView(): View {
         return viewBinding.root
