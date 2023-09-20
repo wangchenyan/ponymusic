@@ -11,7 +11,7 @@ import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.common.bean.SongData
 import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentRecommendSongBinding
-import me.wcy.music.discover.OnlineMusicApi
+import me.wcy.music.discover.DiscoverApi
 import me.wcy.music.discover.recommend.item.OnlineSongItemBinder
 import me.wcy.music.service.AudioPlayer
 import me.wcy.music.utils.toEntity
@@ -69,7 +69,7 @@ class RecommendSongFragment : BaseMusicFragment() {
     private fun loadData() {
         lifecycleScope.launch {
             showLoadSirLoading()
-            val res = apiCall { OnlineMusicApi.get().getRecommendSongs() }
+            val res = apiCall { DiscoverApi.get().getRecommendSongs() }
             if (res.isSuccessWithData()) {
                 showLoadSirSuccess()
                 adapter.refresh(res.getDataOrThrow().dailySongs)

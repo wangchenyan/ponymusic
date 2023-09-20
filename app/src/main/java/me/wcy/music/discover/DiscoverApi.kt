@@ -15,7 +15,7 @@ import retrofit2.http.Query
 /**
  * Created by wangchenyan.top on 2023/9/6.
  */
-interface OnlineMusicApi {
+interface DiscoverApi {
 
     @POST("recommend/songs")
     suspend fun getRecommendSongs(): NetResult<RecommendSongListData>
@@ -32,15 +32,15 @@ interface OnlineMusicApi {
     ): LrcDataWrap
 
     companion object {
-        private val api: OnlineMusicApi by lazy {
+        private val api: DiscoverApi by lazy {
             val retrofit = Retrofit.Builder()
                 .baseUrl(MusicPreferences.apiDomain)
                 .addConverterFactory(GsonConverterFactory.create(GsonUtils.gson, true))
                 .client(HttpClient.okHttpClient)
                 .build()
-            retrofit.create(OnlineMusicApi::class.java)
+            retrofit.create(DiscoverApi::class.java)
         }
 
-        fun get(): OnlineMusicApi = api
+        fun get(): DiscoverApi = api
     }
 }

@@ -25,7 +25,7 @@ import me.wcy.lrcview.LrcView
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicActivity
 import me.wcy.music.databinding.ActivityPlayingBinding
-import me.wcy.music.discover.OnlineMusicApi
+import me.wcy.music.discover.DiscoverApi
 import me.wcy.music.ext.registerReceiverCompat
 import me.wcy.music.service.AudioPlayer
 import me.wcy.music.service.PlayMode
@@ -258,7 +258,7 @@ class PlayingActivity : BaseMusicActivity() {
             setLrcLabel("歌词加载中…")
             loadLrcJob = lifecycleScope.launch {
                 kotlin.runCatching {
-                    val lrcWrap = OnlineMusicApi.get().getLrc(song.songId)
+                    val lrcWrap = DiscoverApi.get().getLrc(song.songId)
                     if (lrcWrap.code == 200 && lrcWrap.lrc.isValid()) {
                         lrcWrap.lrc
                     } else {

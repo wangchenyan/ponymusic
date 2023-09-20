@@ -110,6 +110,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.media)
     implementation(libs.preference)
+    implementation(libs.flexbox)
 
     ksp(libs.room.compiler)
     implementation(libs.room)

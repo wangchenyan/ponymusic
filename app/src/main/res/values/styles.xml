@@ -20,4 +20,12 @@
         <item name="android:activityCloseEnterAnimation">@anim/anim_slide_up</item>
         <item name="android:activityCloseExitAnimation">@anim/anim_slide_down</item>
     </style>
+
+    <style name="TabLayout">
+        <item name="tabIndicator">@drawable/ic_tab_layout_indicator</item>
+        <item name="tabMode">fixed</item>
+        <item name="tabPaddingEnd">0dp</item>
+        <item name="tabPaddingStart">0dp</item>
+        <item name="tabRippleColor">@null</item>
+    </style>
 </resources>

@@ -18,7 +18,7 @@ import me.wcy.common.CommonApp
 import me.wcy.common.ext.toUnMutable
 import me.wcy.common.ext.toast
 import me.wcy.common.net.apiCall
-import me.wcy.music.discover.OnlineMusicApi
+import me.wcy.music.discover.DiscoverApi
 import me.wcy.music.ext.registerReceiverCompat
 import me.wcy.music.service.receiver.NoisyAudioStreamReceiver
 import me.wcy.music.storage.db.MusicDatabase
@@ -177,7 +177,7 @@ class AudioPlayerImpl @Inject constructor(
             realPlay()
         } else {
             getSongUrlJob = launch(Dispatchers.Main.immediate) {
-                val res = apiCall { OnlineMusicApi.get().getSongUrl(playSong.songId) }
+                val res = apiCall { DiscoverApi.get().getSongUrl(playSong.songId) }
                 if (res.isSuccessWithData() && res.getDataOrThrow().isNotEmpty()) {
                     playSong.path = res.getDataOrThrow().first().url
                     realPlay()

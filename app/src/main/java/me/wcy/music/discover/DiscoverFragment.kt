@@ -57,6 +57,11 @@ class DiscoverFragment : BaseMusicFragment() {
                 }
             }
         }
+        getTitleLayout()?.getContentView()?.setOnClickListener {
+            if (ApiDomainDialog.checkApiDomain(requireContext())) {
+                CRouter.with(requireActivity()).url(RoutePath.SEARCH).start()
+            }
+        }
     }
 
     private fun checkApiDomain(isReload: Boolean) {

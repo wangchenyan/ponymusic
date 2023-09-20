@@ -6,7 +6,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.wcy.common.ext.loadAvatar
-import me.wcy.common.ext.toast
 import me.wcy.common.ext.viewBindings
 import me.wcy.music.R
 import me.wcy.music.account.service.UserService
@@ -58,7 +57,7 @@ class MineFragment : BaseMusicFragment() {
                 isLeft = false
             ).setOnClickListener {
                 if (ApiDomainDialog.checkApiDomain(requireContext())) {
-                    toast("搜索")
+                    CRouter.with(requireActivity()).url(RoutePath.SEARCH).start()
                 }
             }
         }
