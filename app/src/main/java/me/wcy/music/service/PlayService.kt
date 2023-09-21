@@ -17,7 +17,11 @@ import androidx.core.app.NotificationManagerCompat
 import com.blankj.utilcode.util.IntentUtils
 import com.blankj.utilcode.util.StringUtils
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import me.wcy.common.CommonApp
 import me.wcy.common.permission.Permissioner
+import me.wcy.common.utils.image.ImageUtils
 import me.wcy.music.R
 import me.wcy.music.ext.registerReceiverCompat
 import me.wcy.music.service.receiver.StatusBarReceiver
@@ -33,6 +37,7 @@ class PlayService : Service() {
     private val notificationReceiver by lazy {
         StatusBarReceiver()
     }
+    private var loadCoverJob: Job? = null
     private var isChannelCreated = false
 
     inner class PlayBinder : Binder() {
@@ -76,20 +81,40 @@ class PlayService : Service() {
         unregisterNotificationReceiver()
     }
 
-    private fun showNotification(isPlaying: Boolean, music: SongEntity) {
+    private fun showNotification(isPlaying: Boolean, song: SongEntity) {
         if (checkNotificationPermission()) {
+            loadCoverJob?.cancel()
             if (isPlaying) {
                 startForeground(
                     NOTIFICATION_ID,
-                    buildNotification(music, true)
+                    buildNotification(song, null, true)
                 )
+                loadCoverJob = CommonApp.appScope.launch {
+                    val bitmap = ImageUtils.loadBitmap(song.albumCover).data
+                    if (bitmap != null) {
+                        startForeground(
+                            NOTIFICATION_ID,
+                            buildNotification(song, bitmap, true)
+                        )
+                    }
+                }
             } else {
                 stopForeground(false)
                 NotificationManagerCompat.from(this)
                     .notify(
                         NOTIFICATION_ID,
-                        buildNotification(music, false)
+                        buildNotification(song, null, false)
                     )
+                loadCoverJob = CommonApp.appScope.launch {
+                    val bitmap = ImageUtils.loadBitmap(song.albumCover).data
+                    if (bitmap != null) {
+                        NotificationManagerCompat.from(this@PlayService)
+                            .notify(
+                                NOTIFICATION_ID,
+                                buildNotification(song, bitmap, false)
+                            )
+                    }
+                }
             }
         }
     }
@@ -136,7 +161,8 @@ class PlayService : Service() {
     }
 
     private fun buildNotification(
-        music: SongEntity,
+        song: SongEntity,
+        cover: Bitmap?,
         isPlaying: Boolean
     ): Notification {
         val intent = IntentUtils.getLaunchAppIntent(packageName)
@@ -155,25 +181,22 @@ class PlayService : Service() {
         val builder = NotificationCompat.Builder(this, NOTIFICATION_ID.toString())
             .setContentIntent(pendingIntent)
             .setSmallIcon(R.drawable.ic_notification)
-            .setCustomContentView(getRemoteViews(this, music, isPlaying))
+            .setCustomContentView(getRemoteViews(song, cover, isPlaying))
         return builder.build()
     }
 
     private fun getRemoteViews(
-        context: Context,
-        music: SongEntity,
+        song: SongEntity,
+        cover: Bitmap?,
         isPlaying: Boolean
     ): RemoteViews {
-        val title = music.title
-        val subtitle = MusicUtils.getArtistAndAlbum(music.artist, music.album)
-        // TODO
-        // val cover: Bitmap? = CoverLoader.get().loadThumb(music)
-        val cover: Bitmap? = null
-        val remoteViews = RemoteViews(context.packageName, R.layout.notification)
+        val title = song.title
+        val subtitle = MusicUtils.getArtistAndAlbum(song.artist, song.album)
+        val remoteViews = RemoteViews(packageName, R.layout.notification)
         if (cover != null) {
             remoteViews.setImageViewBitmap(R.id.iv_icon, cover)
         } else {
-            remoteViews.setImageViewResource(R.id.iv_icon, R.drawable.ic_launcher)
+            remoteViews.setImageViewResource(R.id.iv_icon, R.drawable.ic_default_cover)
         }
         remoteViews.setTextViewText(R.id.tv_title, title)
         remoteViews.setTextViewText(R.id.tv_subtitle, subtitle)
@@ -183,7 +206,7 @@ class PlayService : Service() {
             StatusBarReceiver.EXTRA_PLAY_PAUSE
         )
         val playPendingIntent = PendingIntent.getBroadcast(
-            context,
+            this,
             0,
             playIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
@@ -198,7 +221,7 @@ class PlayService : Service() {
         val nextIntent = Intent(StatusBarReceiver.ACTION_STATUS_BAR)
         nextIntent.putExtra(StatusBarReceiver.EXTRA, StatusBarReceiver.EXTRA_NEXT)
         val nextPendingIntent = PendingIntent.getBroadcast(
-            context,
+            this,
             1,
             nextIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE

@@ -4,6 +4,10 @@ import android.content.Context
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import me.wcy.common.CommonApp
+import me.wcy.common.utils.image.ImageUtils
 import me.wcy.music.storage.db.entity.SongEntity
 
 /**
@@ -20,9 +24,12 @@ class MediaSessionManager(
             isActive = true
         }
     }
+    private var loadCoverJob: Job? = null
 
     fun updatePlaybackState() {
-        val state = if (audioPlayer.playState.value.isPlaying) {
+        val state = if (audioPlayer.playState.value.isPlaying
+            || audioPlayer.playState.value.isPreparing
+        ) {
             PlaybackStateCompat.STATE_PLAYING
         } else {
             PlaybackStateCompat.STATE_PAUSED
@@ -35,29 +42,34 @@ class MediaSessionManager(
         )
     }
 
-    fun updateMetaData(music: SongEntity?) {
-        if (music == null) {
+    fun updateMetaData(song: SongEntity?) {
+        loadCoverJob?.cancel()
+        if (song == null) {
             mediaSession.setMetadata(null)
             return
-        }
-        mediaSession.setMetadata(
-            MediaMetadataCompat.Builder()
-                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, music.title)
-                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, music.artist)
-                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, music.album)
-                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, music.artist)
-                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, music.duration)
-                // TODO
-                // .putBitmap(
-                //     MediaMetadataCompat.METADATA_KEY_ALBUM_ART,
-                //     CoverLoader.get().loadThumb(music)
-                // )
+        } else {
+            val builder = MediaMetadataCompat.Builder()
+                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, song.title)
+                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, song.artist)
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, song.album)
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, song.artist)
+                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, song.duration)
                 .putLong(
                     MediaMetadataCompat.METADATA_KEY_NUM_TRACKS,
                     (audioPlayer.playlist.value?.size ?: 0).toLong()
                 )
-                .build()
-        )
+            mediaSession.setMetadata(builder.build())
+            loadCoverJob = CommonApp.appScope.launch {
+                val bitmap = ImageUtils.loadBitmap(song.albumCover).data
+                if (bitmap != null) {
+                    builder.putBitmap(
+                        MediaMetadataCompat.METADATA_KEY_ALBUM_ART,
+                        bitmap
+                    )
+                    mediaSession.setMetadata(builder.build())
+                }
+            }
+        }
     }
 
     private val callback: MediaSessionCompat.Callback = object : MediaSessionCompat.Callback() {

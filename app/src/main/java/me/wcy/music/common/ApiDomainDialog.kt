@@ -7,6 +7,7 @@ import com.blankj.utilcode.util.RegexUtils
 import me.wcy.common.ext.getColorEx
 import me.wcy.common.ext.setLink
 import me.wcy.common.ext.showConfirmDialog
+import me.wcy.common.ext.showSingleDialog
 import me.wcy.common.ext.toast
 import me.wcy.common.utils.LaunchUtils
 import me.wcy.common.widget.CustomSpan.appendStyle
@@ -59,7 +60,7 @@ class ApiDomainDialog(private val context: Context) {
                         MusicPreferences.apiDomain = domain
                         AccountPreference.clear()
                         dialog.dismiss()
-                        context.showConfirmDialog("设置成功，重启后生效") {
+                        context.showSingleDialog("设置成功，重启后生效") {
                             AppUtils.relaunchApp(true)
                         }
                     }
