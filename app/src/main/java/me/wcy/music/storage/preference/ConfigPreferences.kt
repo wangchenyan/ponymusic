@@ -12,18 +12,8 @@ import me.wcy.music.consts.PreferenceName
  * SharedPreferences工具类
  * Created by wcy on 2015/11/28.
  */
-object MusicPreferences :
+object ConfigPreferences :
     IPreferencesFile by PreferencesFile(CommonApp.app, PreferenceName.CONFIG, false) {
-
-    var enableMobileNetworkPlay by IPreferencesFile.BooleanProperty(
-        StringUtils.getString(R.string.setting_key_mobile_network_play),
-        false
-    )
-
-    var enableMobileNetworkDownload by IPreferencesFile.BooleanProperty(
-        StringUtils.getString(R.string.setting_key_mobile_network_download),
-        false
-    )
 
     var filterSize by IPreferencesFile.StringProperty(
         StringUtils.getString(R.string.setting_key_filter_size),

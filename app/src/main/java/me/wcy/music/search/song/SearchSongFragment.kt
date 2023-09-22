@@ -9,6 +9,7 @@ import me.wcy.common.model.CommonResult
 import me.wcy.common.net.apiCall
 import me.wcy.music.common.SimpleMusicRefreshFragment
 import me.wcy.music.common.bean.SongData
+import me.wcy.music.consts.Consts
 import me.wcy.music.search.SearchApi
 import me.wcy.music.search.SearchViewModel
 import me.wcy.music.service.AudioPlayer
@@ -22,6 +23,13 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SearchSongFragment : SimpleMusicRefreshFragment<SongData>() {
     private val viewModel by activityViewModels<SearchViewModel>()
+    private val itemBinder by lazy {
+        SearchSongItemBinder { item, position ->
+            audioPlayer.addAndPlay(item.toEntity())
+        }.apply {
+            keywords = viewModel.keywords.value
+        }
+    }
 
     @Inject
     lateinit var audioPlayer: AudioPlayer
@@ -40,6 +48,7 @@ class SearchSongFragment : SimpleMusicRefreshFragment<SongData>() {
             viewModel.keywords.collectLatest {
                 if (it.isNotEmpty()) {
                     showLoadSirLoading()
+                    itemBinder.keywords = it
                     autoRefresh(true)
                 }
             }
@@ -47,9 +56,7 @@ class SearchSongFragment : SimpleMusicRefreshFragment<SongData>() {
     }
 
     override fun initAdapter(adapter: RAdapter<SongData>) {
-        adapter.register(SearchSongItemBinder { item, position ->
-            audioPlayer.addAndPlay(item.toEntity())
-        })
+        adapter.register(itemBinder)
     }
 
     override suspend fun getData(page: Int): CommonResult<List<SongData>> {
@@ -58,16 +65,12 @@ class SearchSongFragment : SimpleMusicRefreshFragment<SongData>() {
             return CommonResult.success(emptyList())
         }
         val res = apiCall {
-            SearchApi.get().search(1, keywords, PAGE_COUNT, (page - 1) * PAGE_COUNT)
+            SearchApi.get().search(1, keywords, Consts.PAGE_COUNT, (page - 1) * Consts.PAGE_COUNT)
         }
         return if (res.isSuccessWithData()) {
             CommonResult.success(res.getDataOrThrow().songs)
         } else {
             CommonResult.fail(res.code, res.msg)
         }
-    }
-
-    companion object {
-        private const val PAGE_COUNT = 20
     }
 }

@@ -15,4 +15,4 @@
     android:textColor="@color/common_text_h2_color"
     android:textSize="14dp"
     app:shape_radius="100dp"
-    app:shape_solidColor="@color/grey_100" />
+    app:shape_solidColor="@color/common_divider" />

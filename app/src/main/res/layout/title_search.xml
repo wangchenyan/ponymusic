@@ -10,6 +10,7 @@
     android:drawableTint="@color/common_text_h2_color"
     android:gravity="center_vertical"
     android:hint="歌曲/歌手/专辑/歌单/用户"
+    android:imeOptions="actionSearch"
     android:paddingHorizontal="10dp"
     android:paddingVertical="0dp"
     android:singleLine="true"

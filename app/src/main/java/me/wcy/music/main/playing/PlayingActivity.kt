@@ -31,7 +31,7 @@ import me.wcy.music.service.AudioPlayer
 import me.wcy.music.service.PlayMode
 import me.wcy.music.storage.LrcCache
 import me.wcy.music.storage.db.entity.SongEntity
-import me.wcy.music.storage.preference.MusicPreferences
+import me.wcy.music.storage.preference.ConfigPreferences
 import me.wcy.music.utils.TimeUtils
 import me.wcy.router.annotation.Route
 import java.io.File
@@ -228,7 +228,7 @@ class PlayingActivity : BaseMusicActivity() {
     }
 
     private fun updatePlayMode() {
-        val mode = MusicPreferences.playMode
+        val mode = ConfigPreferences.playMode
         viewBinding.ivMode.setImageLevel(mode)
     }
 
@@ -291,7 +291,7 @@ class PlayingActivity : BaseMusicActivity() {
     }
 
     private fun switchPlayMode() {
-        var mode = PlayMode.valueOf(MusicPreferences.playMode)
+        var mode = PlayMode.valueOf(ConfigPreferences.playMode)
         when (mode) {
             PlayMode.Loop -> {
                 mode = PlayMode.Shuffle
@@ -308,7 +308,7 @@ class PlayingActivity : BaseMusicActivity() {
                 toast(R.string.play_mode_loop)
             }
         }
-        MusicPreferences.playMode = mode.value
+        ConfigPreferences.playMode = mode.value
         updatePlayMode()
     }
 

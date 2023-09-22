@@ -7,7 +7,7 @@ import me.wcy.music.common.bean.LrcDataWrap
 import me.wcy.music.common.bean.SongUrlData
 import me.wcy.music.discover.recommend.bean.RecommendSongListData
 import me.wcy.music.net.HttpClient
-import me.wcy.music.storage.preference.MusicPreferences
+import me.wcy.music.storage.preference.ConfigPreferences
 import retrofit2.Retrofit
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -34,7 +34,7 @@ interface DiscoverApi {
     companion object {
         private val api: DiscoverApi by lazy {
             val retrofit = Retrofit.Builder()
-                .baseUrl(MusicPreferences.apiDomain)
+                .baseUrl(ConfigPreferences.apiDomain)
                 .addConverterFactory(GsonConverterFactory.create(GsonUtils.gson, true))
                 .client(HttpClient.okHttpClient)
                 .build()

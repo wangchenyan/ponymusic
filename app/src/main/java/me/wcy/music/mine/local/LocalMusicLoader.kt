@@ -5,7 +5,7 @@ import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
 import me.wcy.music.storage.db.entity.SongEntity
-import me.wcy.music.storage.preference.MusicPreferences
+import me.wcy.music.storage.preference.ConfigPreferences
 
 /**
  * Created by wangchenyan.top on 2023/8/30.
@@ -50,8 +50,8 @@ class LocalMusicLoader {
             val durationColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
             val sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
 
-            val filterTime = MusicPreferences.filterTime.toLong() * 1000
-            val filterSize = MusicPreferences.filterSize.toLong() * 1024
+            val filterTime = ConfigPreferences.filterTime.toLong() * 1000
+            val filterSize = ConfigPreferences.filterSize.toLong() * 1024
 
             while (cursor.moveToNext()) {
                 val isMusic = cursor.getInt(isMusicColumn)

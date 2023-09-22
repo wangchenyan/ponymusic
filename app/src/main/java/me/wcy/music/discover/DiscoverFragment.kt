@@ -8,7 +8,7 @@ import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentDiscoverBinding
 import me.wcy.music.main.MainActivity
-import me.wcy.music.storage.preference.MusicPreferences
+import me.wcy.music.storage.preference.ConfigPreferences
 import me.wcy.router.CRouter
 
 /**
@@ -65,7 +65,7 @@ class DiscoverFragment : BaseMusicFragment() {
     }
 
     private fun checkApiDomain(isReload: Boolean) {
-        if (MusicPreferences.apiDomain.isNotEmpty()) {
+        if (ConfigPreferences.apiDomain.isNotEmpty()) {
             showLoadSirSuccess()
         } else {
             showLoadSirError("请先设置云音乐API域名")

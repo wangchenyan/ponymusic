@@ -13,7 +13,7 @@ import me.wcy.music.common.BaseMusicActivity
 import me.wcy.music.common.DarkModeService
 import me.wcy.music.consts.PreferenceName
 import me.wcy.music.service.AudioPlayer
-import me.wcy.music.storage.preference.MusicPreferences
+import me.wcy.music.storage.preference.ConfigPreferences
 import me.wcy.music.utils.MusicUtils
 import me.wcy.router.annotation.Route
 import javax.inject.Inject
@@ -63,7 +63,7 @@ class SettingsActivity : BaseMusicActivity() {
 
         private fun initDarkMode() {
             darkMode.summary = getSummary(
-                MusicPreferences.darkMode,
+                ConfigPreferences.darkMode,
                 R.array.dark_mode_entries,
                 R.array.dark_mode_values
             )
@@ -89,7 +89,7 @@ class SettingsActivity : BaseMusicActivity() {
 
         private fun initFilter() {
             mFilterSize.summary = getSummary(
-                MusicPreferences.filterSize,
+                ConfigPreferences.filterSize,
                 R.array.filter_size_entries,
                 R.array.filter_size_entry_values
             )
@@ -104,7 +104,7 @@ class SettingsActivity : BaseMusicActivity() {
             }
 
             mFilterTime.summary = getSummary(
-                MusicPreferences.filterTime,
+                ConfigPreferences.filterTime,
                 R.array.filter_time_entries,
                 R.array.filter_time_entry_values
             )

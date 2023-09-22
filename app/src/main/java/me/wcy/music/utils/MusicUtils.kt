@@ -1,23 +1,20 @@
 package me.wcy.music.utils
 
-import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.audiofx.AudioEffect
-import android.net.Uri
 import android.text.TextUtils
+import androidx.core.text.buildSpannedString
+import me.wcy.common.ext.getColorEx
+import me.wcy.common.widget.CustomSpan.appendStyle
+import me.wcy.music.R
 
 /**
  * 歌曲工具类
  * Created by wcy on 2015/11/27.
  */
 object MusicUtils {
-
-    fun getMediaStoreAlbumCoverUri(albumId: Long): Uri {
-        val artworkUri = Uri.parse("content://media/external/audio/albumart")
-        return ContentUris.withAppendedId(artworkUri, albumId)
-    }
 
     fun isAudioControlPanelAvailable(context: Context): Boolean {
         return isIntentAvailable(
@@ -42,6 +39,24 @@ object MusicUtils {
             album
         } else {
             "$artist - $album"
+        }
+    }
+
+    fun keywordsTint(context: Context, text: String, keywords: String): CharSequence {
+        if (text.isEmpty() || keywords.isEmpty()) {
+            return text
+        }
+        val splitText = text.split(keywords)
+        return buildSpannedString {
+            splitText.forEachIndexed { index, s ->
+                append(s)
+                if (index < splitText.size - 1) {
+                    appendStyle(
+                        keywords,
+                        color = context.getColorEx(R.color.common_theme_color)
+                    )
+                }
+            }
         }
     }
 }

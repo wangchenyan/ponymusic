@@ -3,7 +3,7 @@ package me.wcy.music.common
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatDelegate
 import com.blankj.utilcode.util.ActivityUtils
-import me.wcy.music.storage.preference.MusicPreferences
+import me.wcy.music.storage.preference.ConfigPreferences
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -11,12 +11,12 @@ import javax.inject.Singleton
 class DarkModeService @Inject constructor() {
 
     fun init() {
-        setDarkModeInternal(DarkMode.fromValue(MusicPreferences.darkMode))
+        setDarkModeInternal(DarkMode.fromValue(ConfigPreferences.darkMode))
     }
 
     fun setDarkMode(mode: DarkMode) {
-        if (mode.value != MusicPreferences.darkMode) {
-            MusicPreferences.darkMode = mode.value
+        if (mode.value != ConfigPreferences.darkMode) {
+            ConfigPreferences.darkMode = mode.value
             setDarkModeInternal(mode)
         }
     }

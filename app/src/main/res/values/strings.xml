@@ -29,9 +29,6 @@
     <string name="menu_night">夜间模式</string>
     <string name="menu_timer">定时停止播放</string>
     <string name="menu_exit">关闭应用</string>
-    <string name="network">网络</string>
-    <string name="mobile_network_play">使用移动网络播放</string>
-    <string name="mobile_network_download">使用移动网络下载</string>
     <string name="play">播放</string>
     <string name="sound_effect">音效调节</string>
     <string name="tips">温馨提示</string>

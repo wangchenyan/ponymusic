@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="176dp"
-    android:background="@color/common_theme_color">
+    android:layout_height="wrap_content"
+    android:background="@color/common_theme_color"
+    android:orientation="vertical">
+
+    <me.wcy.common.widget.TitleLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tlJustShowStatusBar="true" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="广告位招租~"
-        android:textColor="@color/white"
-        android:textSize="18dp" />
-</FrameLayout>
+        android:layout_width="match_parent"
+        android:layout_height="176dp"
+        android:gravity="center"
+        android:text="广告位招租~" />
+</LinearLayout>

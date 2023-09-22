@@ -19,6 +19,16 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <com.hjq.shape.view.ShapeTextView
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="广告位招租~"
+            app:shape_radius="8dp"
+            app:shape_solidColor="@color/common_divider" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

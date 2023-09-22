@@ -16,7 +16,7 @@ import me.wcy.common.widget.dialog.CenterDialogBuilder
 import me.wcy.music.R
 import me.wcy.music.account.AccountPreference
 import me.wcy.music.databinding.DialogApiDomainBinding
-import me.wcy.music.storage.preference.MusicPreferences
+import me.wcy.music.storage.preference.ConfigPreferences
 
 /**
  * Created by wangchenyan.top on 2023/9/18.
@@ -40,8 +40,8 @@ class ApiDomainDialog(private val context: Context) {
                         )
                     }
                 }
-                if (MusicPreferences.apiDomain.isNotEmpty()) {
-                    viewBinding.etInput.hint = MusicPreferences.apiDomain
+                if (ConfigPreferences.apiDomain.isNotEmpty()) {
+                    viewBinding.etInput.hint = ConfigPreferences.apiDomain
                 }
             }
             .buttonText(
@@ -57,7 +57,7 @@ class ApiDomainDialog(private val context: Context) {
                     } else if (domain!!.endsWith("/").not()) {
                         toast("域名需要以'/'结尾")
                     } else {
-                        MusicPreferences.apiDomain = domain
+                        ConfigPreferences.apiDomain = domain
                         AccountPreference.clear()
                         dialog.dismiss()
                         context.showSingleDialog("设置成功，重启后生效") {
@@ -75,7 +75,7 @@ class ApiDomainDialog(private val context: Context) {
 
     companion object {
         fun checkApiDomain(context: Context): Boolean {
-            return if (MusicPreferences.apiDomain.isEmpty()) {
+            return if (ConfigPreferences.apiDomain.isEmpty()) {
                 context.showConfirmDialog("请先设置云音乐API域名") {
                     ApiDomainDialog(context).show()
                 }

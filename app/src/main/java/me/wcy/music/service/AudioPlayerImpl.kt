@@ -23,7 +23,7 @@ import me.wcy.music.ext.registerReceiverCompat
 import me.wcy.music.service.receiver.NoisyAudioStreamReceiver
 import me.wcy.music.storage.db.MusicDatabase
 import me.wcy.music.storage.db.entity.SongEntity
-import me.wcy.music.storage.preference.MusicPreferences
+import me.wcy.music.storage.preference.ConfigPreferences
 import java.util.Random
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -91,7 +91,7 @@ class AudioPlayerImpl @Inject constructor(
             withContext(Dispatchers.IO) {
                 val playlist = db.playlistDao().queryAll()
                 _playlist.postValue(playlist)
-                val currentSongId = MusicPreferences.currentSongId
+                val currentSongId = ConfigPreferences.currentSongId
                 if (currentSongId.isNotEmpty()) {
                     val song =
                         db.playlistDao().queryByUniqueId(currentSongId) ?: playlist.firstOrNull()
@@ -100,7 +100,7 @@ class AudioPlayerImpl @Inject constructor(
             }
 
             _currentSong.observeForever {
-                MusicPreferences.currentSongId = it?.uniqueId ?: ""
+                ConfigPreferences.currentSongId = it?.uniqueId ?: ""
             }
         }
     }
@@ -297,7 +297,7 @@ class AudioPlayerImpl @Inject constructor(
         if (playlist.isNullOrEmpty()) {
             return
         }
-        val mode = PlayMode.valueOf(MusicPreferences.playMode)
+        val mode = PlayMode.valueOf(ConfigPreferences.playMode)
         when (mode) {
             PlayMode.Shuffle -> {
                 play(playlist[Random().nextInt(playlist.size)])
@@ -323,7 +323,7 @@ class AudioPlayerImpl @Inject constructor(
         if (playlist.isNullOrEmpty()) {
             return
         }
-        val mode = PlayMode.valueOf(MusicPreferences.playMode)
+        val mode = PlayMode.valueOf(ConfigPreferences.playMode)
         when (mode) {
             PlayMode.Shuffle -> {
                 play(playlist[Random().nextInt(playlist.size)])
