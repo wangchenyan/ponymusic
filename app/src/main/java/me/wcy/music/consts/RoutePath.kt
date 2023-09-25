@@ -8,4 +8,5 @@ object RoutePath {
     const val LOCAL_SONG = "/local_music"
     const val RECOMMEND_SONG = "/recommend_song"
     const val SEARCH = "/search"
+    const val PLAYLIST_DETAIL = "/playlist/detail"
 }

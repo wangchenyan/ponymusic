@@ -39,6 +39,7 @@ class MusicApplication : Application() {
                 isStatusBarDarkFontWhenAuto = { darkModeService.isDarkMode().not() }
                 textColorAuto = { R.color.common_text_h1_color }
                 textColorBlack = { R.color.common_text_h1_color }
+                isTitleCenter = false
             }
         }
         initCRouter()

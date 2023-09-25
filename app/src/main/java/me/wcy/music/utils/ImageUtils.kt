@@ -1,6 +1,11 @@
 package me.wcy.music.utils
 
 import android.graphics.Bitmap
+import android.widget.ImageView
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import me.wcy.common.ext.load
+import me.wcy.music.R
 
 /**
  * 图像工具类
@@ -16,6 +21,18 @@ object ImageUtils {
             source
         } else {
             Bitmap.createScaledBitmap(source, dstWidth, dstHeight, true)
+        }
+    }
+
+    fun ImageView.loadCover(url: Any?, corners: Int) {
+        load(url) {
+            placeholder(R.drawable.ic_default_cover)
+            error(R.drawable.ic_default_cover)
+
+            if (corners > 0) {
+                // 圆角和 CenterCrop 不兼容，需同时设置
+                transform(CenterCrop(), RoundedCorners(corners))
+            }
         }
     }
 }

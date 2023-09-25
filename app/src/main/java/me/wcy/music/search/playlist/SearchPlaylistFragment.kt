@@ -10,9 +10,11 @@ import me.wcy.common.net.apiCall
 import me.wcy.music.common.SimpleMusicRefreshFragment
 import me.wcy.music.common.bean.PlaylistData
 import me.wcy.music.consts.Consts
+import me.wcy.music.consts.RoutePath
 import me.wcy.music.search.SearchApi
 import me.wcy.music.search.SearchViewModel
 import me.wcy.radapter3.RAdapter
+import me.wcy.router.CRouter
 
 /**
  * Created by wangchenyan.top on 2023/9/20.
@@ -22,7 +24,10 @@ class SearchPlaylistFragment : SimpleMusicRefreshFragment<PlaylistData>() {
     private val viewModel by activityViewModels<SearchViewModel>()
     private val itemBinder by lazy {
         SearchPlaylistItemBinder { item ->
-
+            CRouter.with(requireActivity())
+                .url(RoutePath.PLAYLIST_DETAIL)
+                .extra("id", item.id)
+                .start()
         }.apply {
             keywords = viewModel.keywords.value
         }

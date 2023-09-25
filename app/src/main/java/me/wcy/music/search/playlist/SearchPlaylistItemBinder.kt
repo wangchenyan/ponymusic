@@ -3,10 +3,10 @@ package me.wcy.music.search.playlist
 import android.annotation.SuppressLint
 import com.blankj.utilcode.util.SizeUtils
 import me.wcy.common.ext.context
-import me.wcy.common.ext.load
 import me.wcy.music.common.bean.PlaylistData
 import me.wcy.music.databinding.ItemSearchPlaylistBinding
 import me.wcy.music.utils.ConvertUtils
+import me.wcy.music.utils.ImageUtils.loadCover
 import me.wcy.music.utils.MusicUtils
 import me.wcy.radapter3.RItemBinder
 
@@ -22,7 +22,7 @@ class SearchPlaylistItemBinder(private val onItemClick: (PlaylistData) -> Unit) 
         viewBinding.root.setOnClickListener {
             onItemClick(item)
         }
-        viewBinding.ivCover.load(item.coverImgUrl, SizeUtils.dp2px(4f))
+        viewBinding.ivCover.loadCover(item.coverImgUrl, SizeUtils.dp2px(4f))
         viewBinding.tvTitle.text = MusicUtils.keywordsTint(viewBinding.context, item.name, keywords)
         viewBinding.tvSubTitle.text = "${item.trackCount}首 , by ${item.creator.nickname} , 播放${
             ConvertUtils.formatByWan(item.playCount, 1)

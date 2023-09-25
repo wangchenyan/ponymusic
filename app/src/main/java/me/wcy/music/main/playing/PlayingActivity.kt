@@ -102,9 +102,9 @@ class PlayingActivity : BaseMusicActivity() {
                 if (audioPlayer.playState.value.isPausing) {
                     audioPlayer.playPause()
                 }
-                true
+                return@setDraggable true
             }
-            false
+            return@setDraggable false
         }
         viewBinding.lrcView.setOnTapListener { view: LrcView?, x: Float, y: Float ->
             switchCoverLrc(true)

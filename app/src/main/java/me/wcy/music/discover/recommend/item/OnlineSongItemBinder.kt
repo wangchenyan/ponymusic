@@ -2,9 +2,9 @@ package me.wcy.music.discover.recommend.item
 
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SizeUtils
-import me.wcy.common.ext.load
 import me.wcy.music.common.bean.SongData
 import me.wcy.music.databinding.ItemOnlineSongBinding
+import me.wcy.music.utils.ImageUtils.loadCover
 import me.wcy.music.utils.getSimpleArtist
 import me.wcy.radapter3.RItemBinder
 
@@ -18,7 +18,7 @@ class OnlineSongItemBinder(private val onItemClick: (SongData, Int) -> Unit) :
         viewBinding.root.setOnClickListener {
             onItemClick(item, position)
         }
-        viewBinding.ivCover.load(item.al.picUrl, SizeUtils.dp2px(4f))
+        viewBinding.ivCover.loadCover(item.al.picUrl, SizeUtils.dp2px(4f))
         viewBinding.tvTitle.text = item.name
         viewBinding.tvTag.isVisible = item.recommendReason.isNotEmpty()
         viewBinding.tvTag.text = item.recommendReason

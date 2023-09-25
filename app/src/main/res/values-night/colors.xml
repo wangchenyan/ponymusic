@@ -9,5 +9,5 @@
 
     <color name="tab_bg">@color/black</color>
     <color name="card_bg">@color/grey_800</color>
-    <color name="play_bar_bg">@color/grey_900_p96</color>
+    <color name="play_bar_bg">@color/grey_900</color>
 </resources>

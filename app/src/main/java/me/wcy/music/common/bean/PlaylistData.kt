@@ -26,6 +26,8 @@ data class PlaylistData(
     val specialType: Int = 0,
     @SerializedName("description")
     val description: String = "",
+    @SerializedName("tags")
+    val tags: List<String> = emptyList(),
     @SerializedName("highQuality")
     val highQuality: Boolean = false
 )

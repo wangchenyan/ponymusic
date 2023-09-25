@@ -5,6 +5,8 @@ import me.wcy.common.net.gson.GsonConverterFactory
 import me.wcy.common.utils.GsonUtils
 import me.wcy.music.common.bean.LrcDataWrap
 import me.wcy.music.common.bean.SongUrlData
+import me.wcy.music.discover.playlist.PlaylistDetailData
+import me.wcy.music.discover.playlist.PlaylistSongListData
 import me.wcy.music.discover.recommend.bean.RecommendSongListData
 import me.wcy.music.net.HttpClient
 import me.wcy.music.storage.preference.ConfigPreferences
@@ -30,6 +32,16 @@ interface DiscoverApi {
     suspend fun getLrc(
         @Query("id") id: Long,
     ): LrcDataWrap
+
+    @POST("playlist/detail")
+    suspend fun getPlaylistDetail(
+        @Query("id") id: Long,
+    ): PlaylistDetailData
+
+    @POST("playlist/track/all")
+    suspend fun getPlaylistSongList(
+        @Query("id") id: Long,
+    ): PlaylistSongListData
 
     companion object {
         private val api: DiscoverApi by lazy {

@@ -9,7 +9,6 @@
     <me.wcy.common.widget.TitleLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tlTitleCenter="false"
         app:tlTitleText="本地音乐" />
 
     <LinearLayout
