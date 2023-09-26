@@ -18,6 +18,8 @@ import me.wcy.music.common.bean.SongData
 import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentPlaylistBinding
 import me.wcy.music.databinding.ItemPlaylistTagBinding
+import me.wcy.music.discover.playlist.item.PlaylistSongItemBinder
+import me.wcy.music.discover.playlist.viewmodel.PlaylistViewModel
 import me.wcy.music.service.AudioPlayer
 import me.wcy.music.utils.ConvertUtils
 import me.wcy.music.utils.ImageUtils.loadCover
@@ -109,7 +111,7 @@ class PlaylistFragment : BaseMusicFragment() {
                 if (playlistData != null) {
                     getTitleLayout()?.setTitleText(playlistData.name)
                     viewBinding.ivCover.loadCover(playlistData.coverImgUrl, SizeUtils.dp2px(6f))
-                    viewBinding.tvPlayCount.text = ConvertUtils.formatByWan(playlistData.playCount)
+                    viewBinding.tvPlayCount.text = ConvertUtils.formatPlayCount(playlistData.playCount)
                     viewBinding.tvName.text = playlistData.name
                     viewBinding.ivCreatorAvatar.loadAvatar(playlistData.creator.avatarUrl)
                     viewBinding.tvCreatorName.text = playlistData.creator.nickname

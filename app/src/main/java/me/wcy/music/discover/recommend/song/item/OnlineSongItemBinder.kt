@@ -1,4 +1,4 @@
-package me.wcy.music.discover.recommend.item
+package me.wcy.music.discover.recommend.song.item
 
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SizeUtils

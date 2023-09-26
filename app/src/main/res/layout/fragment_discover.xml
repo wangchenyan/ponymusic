@@ -87,5 +87,26 @@
                 android:textColor="@color/common_text_h1_color"
                 android:textSize="12dp" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvRecommendPlaylist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:drawableEnd="@drawable/ic_arrow_right"
+            android:drawableTint="@color/common_text_h1_color"
+            android:text="推荐歌单"
+            android:textColor="@color/common_text_h1_color"
+            android:textSize="17dp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvRecommendPlaylist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:clipToPadding="false"
+            android:paddingHorizontal="16dp" />
     </LinearLayout>
 </LinearLayout>

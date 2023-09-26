@@ -1,4 +1,4 @@
-package me.wcy.music.discover.playlist
+package me.wcy.music.discover.playlist.viewmodel
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

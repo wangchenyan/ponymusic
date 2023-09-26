@@ -5,9 +5,10 @@ import me.wcy.common.net.gson.GsonConverterFactory
 import me.wcy.common.utils.GsonUtils
 import me.wcy.music.common.bean.LrcDataWrap
 import me.wcy.music.common.bean.SongUrlData
-import me.wcy.music.discover.playlist.PlaylistDetailData
-import me.wcy.music.discover.playlist.PlaylistSongListData
-import me.wcy.music.discover.recommend.bean.RecommendSongListData
+import me.wcy.music.discover.playlist.bean.PlaylistDetailData
+import me.wcy.music.discover.playlist.bean.PlaylistSongListData
+import me.wcy.music.discover.recommend.playlist.RecommendPlaylistData
+import me.wcy.music.discover.recommend.song.bean.RecommendSongListData
 import me.wcy.music.net.HttpClient
 import me.wcy.music.storage.preference.ConfigPreferences
 import retrofit2.Retrofit
@@ -21,6 +22,9 @@ interface DiscoverApi {
 
     @POST("recommend/songs")
     suspend fun getRecommendSongs(): NetResult<RecommendSongListData>
+
+    @POST("recommend/resource")
+    suspend fun getRecommendPlaylists(): RecommendPlaylistData
 
     @POST("song/url/v1")
     suspend fun getSongUrl(

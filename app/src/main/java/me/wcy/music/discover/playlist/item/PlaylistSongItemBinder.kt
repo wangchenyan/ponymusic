@@ -1,4 +1,4 @@
-package me.wcy.music.discover.playlist
+package me.wcy.music.discover.playlist.item
 
 import me.wcy.music.common.bean.SongData
 import me.wcy.music.databinding.ItemPlaylistSongBinding

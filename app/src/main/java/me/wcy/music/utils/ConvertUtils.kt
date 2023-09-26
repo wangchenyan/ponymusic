@@ -9,12 +9,15 @@ import java.math.RoundingMode
  */
 object ConvertUtils {
 
-    fun formatByWan(num: Int, dot: Int = 0): String {
+    fun formatPlayCount(num: Long, dot: Int = 0): String {
         return if (num < 100000) {
             num.toString()
-        } else {
+        } else if (num < 100000000) {
             val wan = num.toDouble().divide(10000.0).format(dot, RoundingMode.HALF_DOWN)
             wan + "万"
+        } else {
+            val wan = num.toDouble().divide(100000000.0).format(dot, RoundingMode.HALF_DOWN)
+            wan + "亿"
         }
     }
 }

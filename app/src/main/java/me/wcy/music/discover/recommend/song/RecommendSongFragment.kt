@@ -1,4 +1,4 @@
-package me.wcy.music.discover.recommend
+package me.wcy.music.discover.recommend.song
 
 import android.view.View
 import androidx.lifecycle.lifecycleScope
@@ -12,7 +12,7 @@ import me.wcy.music.common.bean.SongData
 import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentRecommendSongBinding
 import me.wcy.music.discover.DiscoverApi
-import me.wcy.music.discover.recommend.item.OnlineSongItemBinder
+import me.wcy.music.discover.recommend.song.item.OnlineSongItemBinder
 import me.wcy.music.service.AudioPlayer
 import me.wcy.music.utils.toEntity
 import me.wcy.radapter3.RAdapter

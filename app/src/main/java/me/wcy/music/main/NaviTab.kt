@@ -3,7 +3,7 @@ package me.wcy.music.main
 import androidx.annotation.DrawableRes
 import androidx.fragment.app.Fragment
 import me.wcy.music.R
-import me.wcy.music.discover.DiscoverFragment
+import me.wcy.music.discover.home.DiscoverFragment
 import me.wcy.music.mine.MineFragment
 
 sealed class NaviTab private constructor(
