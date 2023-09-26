@@ -1,4 +1,4 @@
-package me.wcy.music.discover.recommend.playlist
+package me.wcy.music.discover.playlist.square.bean
 
 import com.google.gson.annotations.SerializedName
 import me.wcy.music.common.bean.PlaylistData
@@ -6,9 +6,9 @@ import me.wcy.music.common.bean.PlaylistData
 /**
  * Created by wangchenyan.top on 2023/9/25.
  */
-data class RecommendPlaylistData(
+data class PlaylistListData(
     @SerializedName("code")
     val code: Int = 0,
-    @SerializedName("recommend")
-    val recommend: List<PlaylistData> = emptyList(),
+    @SerializedName("playlists", alternate = ["recommend"])
+    val playlists: List<PlaylistData> = emptyList(),
 )

@@ -1,4 +1,4 @@
-package me.wcy.music.discover.playlist
+package me.wcy.music.discover.playlist.detail
 
 import android.view.LayoutInflater
 import android.view.View
@@ -16,10 +16,10 @@ import me.wcy.music.R
 import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.common.bean.SongData
 import me.wcy.music.consts.RoutePath
-import me.wcy.music.databinding.FragmentPlaylistBinding
+import me.wcy.music.databinding.FragmentPlaylistDetailBinding
 import me.wcy.music.databinding.ItemPlaylistTagBinding
-import me.wcy.music.discover.playlist.item.PlaylistSongItemBinder
-import me.wcy.music.discover.playlist.viewmodel.PlaylistViewModel
+import me.wcy.music.discover.playlist.detail.item.PlaylistSongItemBinder
+import me.wcy.music.discover.playlist.detail.viewmodel.PlaylistViewModel
 import me.wcy.music.service.AudioPlayer
 import me.wcy.music.utils.ConvertUtils
 import me.wcy.music.utils.ImageUtils.loadCover
@@ -33,8 +33,8 @@ import javax.inject.Inject
  */
 @Route(RoutePath.PLAYLIST_DETAIL)
 @AndroidEntryPoint
-class PlaylistFragment : BaseMusicFragment() {
-    private val viewBinding by viewBindings<FragmentPlaylistBinding>()
+class PlaylistDetailFragment : BaseMusicFragment() {
+    private val viewBinding by viewBindings<FragmentPlaylistDetailBinding>()
     private val viewModel by viewModels<PlaylistViewModel>()
     private val adapter by lazy {
         RAdapter<SongData>()

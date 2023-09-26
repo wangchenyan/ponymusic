@@ -5,6 +5,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -20,7 +21,7 @@ import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentDiscoverBinding
 import me.wcy.music.discover.DiscoverApi
 import me.wcy.music.discover.home.viewmodel.DiscoverViewModel
-import me.wcy.music.discover.recommend.playlist.RecommendPlaylistItemBinder
+import me.wcy.music.discover.playlist.square.item.PlaylistItemBinder
 import me.wcy.music.main.MainActivity
 import me.wcy.music.service.AudioPlayer
 import me.wcy.music.storage.preference.ConfigPreferences
@@ -106,8 +107,14 @@ class DiscoverFragment : BaseMusicFragment() {
     }
 
     private fun initRecommendPlaylist() {
-        recommendPlaylistAdapter.register(RecommendPlaylistItemBinder(object :
-            RecommendPlaylistItemBinder.OnClickListener {
+        viewBinding.tvRecommendPlaylist.setOnClickListener {
+            CRouter.with(requireActivity())
+                .url(RoutePath.PLAYLIST_SQUARE)
+                .start()
+        }
+        val itemWidth = (ScreenUtils.getAppScreenWidth() - SizeUtils.dp2px(20f)) / 3
+        recommendPlaylistAdapter.register(PlaylistItemBinder(itemWidth, true, object :
+            PlaylistItemBinder.OnItemClickListener {
             override fun onItemClick(item: PlaylistData) {
                 CRouter.with(requireActivity())
                     .url(RoutePath.PLAYLIST_DETAIL)

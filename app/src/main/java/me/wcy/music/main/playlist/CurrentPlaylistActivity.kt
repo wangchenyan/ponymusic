@@ -9,7 +9,7 @@ import me.wcy.common.ext.viewBindings
 import me.wcy.common.widget.CustomSpan.appendStyle
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicActivity
-import me.wcy.music.databinding.ActivityPlaylistBinding
+import me.wcy.music.databinding.ActivityCurrentPlaylistBinding
 import me.wcy.music.service.AudioPlayer
 import me.wcy.music.storage.db.entity.SongEntity
 import me.wcy.radapter3.RAdapter
@@ -21,8 +21,8 @@ import javax.inject.Inject
  */
 @Route("/playlist")
 @AndroidEntryPoint
-class PlaylistActivity : BaseMusicActivity() {
-    private val viewBinding by viewBindings<ActivityPlaylistBinding>()
+class CurrentPlaylistActivity : BaseMusicActivity() {
+    private val viewBinding by viewBindings<ActivityCurrentPlaylistBinding>()
     private val adapter = RAdapter<SongEntity>()
 
     @Inject
@@ -47,7 +47,7 @@ class PlaylistActivity : BaseMusicActivity() {
             toast("清空")
         }
 
-        adapter.register(PlaylistItemBinder(audioPlayer))
+        adapter.register(CurrentPlaylistItemBinder(audioPlayer))
         viewBinding.recyclerView.adapter = adapter
     }
 

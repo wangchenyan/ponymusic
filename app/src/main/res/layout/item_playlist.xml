@@ -2,48 +2,64 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="42dp"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:paddingStart="16dp"
-    android:paddingEnd="8dp">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="0dp"
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivCover"
+            android:layout_width="108dp"
+            android:layout_height="108dp"
+            android:src="@drawable/ic_default_cover" />
+
+        <com.hjq.shape.layout.ShapeLinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_margin="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="2dp"
+            app:shape_radius="3dp"
+            app:shape_solidColor="@color/translucent_black_p30">
+
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@drawable/ic_play_arrow"
+                app:tint="@color/white" />
+
+            <TextView
+                android:id="@+id/tvPlayCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="12dp"
+                android:textStyle="bold"
+                tools:text="29万" />
+        </com.hjq.shape.layout.ShapeLinearLayout>
+
+        <ImageView
+            android:id="@+id/ivPlay"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="4dp"
+            android:src="@drawable/ic_play_arrow"
+            app:tint="@color/white" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-
-        <com.hjq.shape.view.ShapeTextView
-            android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:textSize="15dp"
-            app:shape_textColor="@color/common_text_h1_color"
-            app:shape_textSelectedColor="@color/common_theme_color"
-            tools:text="听不到" />
-
-        <com.hjq.shape.view.ShapeTextView
-            android:id="@+id/tvArtist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:textSize="12dp"
-            app:shape_textColor="@color/common_text_h2_color"
-            app:shape_textSelectedColor="@color/common_theme_color"
-            tools:text=" · 五月天" />
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/ivDelete"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
-        android:padding="10dp"
-        android:scaleType="centerInside"
-        android:src="@drawable/ic_close"
-        app:tint="@color/common_text_h2_color" />
+        android:layout_marginTop="2dp"
+        android:lines="2"
+        android:textColor="@color/common_text_h2_color"
+        android:textSize="12dp"
+        tools:text="华语私人订制 | 最懂你的华语推荐 每日更新35首" />
 </LinearLayout>

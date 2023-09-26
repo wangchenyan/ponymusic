@@ -1,4 +1,4 @@
-package me.wcy.music.discover.playlist.bean
+package me.wcy.music.discover.playlist.detail.bean
 
 import com.google.gson.annotations.SerializedName
 import me.wcy.music.common.bean.PlaylistData

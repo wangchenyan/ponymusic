@@ -39,7 +39,7 @@ class DiscoverViewModel @Inject constructor() : ViewModel() {
             kotlin.runCatching {
                 DiscoverApi.get().getRecommendPlaylists()
             }.onSuccess {
-                _recommendPlaylist.value = it.recommend
+                _recommendPlaylist.value = it.playlists
             }.onFailure {
             }
         }

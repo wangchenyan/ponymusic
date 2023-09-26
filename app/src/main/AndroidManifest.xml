@@ -56,7 +56,7 @@
             android:label="@string/menu_about"
             android:screenOrientation="portrait" />
         <activity
-            android:name="me.wcy.music.main.playlist.PlaylistActivity"
+            android:name="me.wcy.music.main.playlist.CurrentPlaylistActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Popup" />
