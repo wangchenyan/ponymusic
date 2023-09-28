@@ -47,12 +47,13 @@ android {
     }
 
     buildTypes {
-        debug {
-        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
             signingConfig = signingConfigs.getByName("release")
         }
     }
@@ -70,7 +71,11 @@ fun getLocalValue(key: String): String {
 fun getLocalValue(key: String, quot: Boolean): String {
     val properties = Properties()
     properties.load(project.rootProject.file("local.properties").inputStream())
-    var value = if (properties.containsKey(key)) properties[key].toString() else ""
+    var value = if (properties.containsKey(key)) {
+        properties[key].toString()
+    } else {
+        ""
+    }
     if (quot) {
         value = "\"" + value + "\""
     }
