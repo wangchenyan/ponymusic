@@ -17,7 +17,7 @@ data class PlaylistData(
     @SerializedName("trackCount")
     val trackCount: Int = 0,
     @SerializedName("userId")
-    val userId: Int = 0,
+    val userId: Long = 0,
     @SerializedName("playCount", alternate = ["playcount"])
     val playCount: Long = 0,
     @SerializedName("bookCount")

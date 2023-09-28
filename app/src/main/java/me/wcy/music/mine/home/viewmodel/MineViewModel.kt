@@ -17,9 +17,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class MineViewModel @Inject constructor() : ViewModel() {
-    private val _likeSongData = MutableStateFlow(LikeSongData())
-    val likeSongData = _likeSongData.toUnMutable()
-
+    private val _likePlaylist = MutableStateFlow<PlaylistData?>(null)
+    val likePlaylist = _likePlaylist.toUnMutable()
     private val _myPlaylists = MutableStateFlow<List<PlaylistData>>(emptyList())
     val myPlaylists = _myPlaylists
     private val _collectPlaylists = MutableStateFlow<List<PlaylistData>>(emptyList())
@@ -32,32 +31,8 @@ class MineViewModel @Inject constructor() : ViewModel() {
         viewModelScope.launch {
             userService.profile.collectLatest { profile ->
                 if (profile != null) {
-                    updateLikeSong(profile.userId)
                     updatePlaylist(profile.userId)
                 }
-            }
-        }
-    }
-
-    private fun updateLikeSong(uid: Long) {
-        viewModelScope.launch {
-            val likeRes = kotlin.runCatching {
-                MineApi.get().getLikeSongList(uid)
-            }
-            if (likeRes.getOrNull()?.code == 200) {
-                val likeIds = likeRes.getOrThrow().ids
-                val likeSongData = LikeSongData(count = likeIds.size)
-                if (likeIds.isEmpty()) {
-                    _likeSongData.value = likeSongData
-                    return@launch
-                }
-                val songRes = kotlin.runCatching {
-                    MineApi.get().getSongDetailById(likeIds.first().toString())
-                }
-                if (songRes.getOrNull()?.code == 200) {
-                    likeSongData.cover = songRes.getOrThrow().songs.firstOrNull()?.al?.picUrl ?: ""
-                }
-                _likeSongData.value = likeSongData
             }
         }
     }
@@ -69,14 +44,11 @@ class MineViewModel @Inject constructor() : ViewModel() {
             }
             if (res.getOrNull()?.code == 200) {
                 val list = res.getOrThrow().playlists
-                _myPlaylists.value = list.filter { it.creator.userId == uid }
-                _collectPlaylists.value = list.filter { it.creator.userId != uid }
+                val mineList = list.filter { it.userId == uid }
+                _likePlaylist.value = mineList.firstOrNull()
+                _myPlaylists.value = mineList.takeLast((mineList.size - 1).coerceAtLeast(0))
+                _collectPlaylists.value = list.filter { it.userId != uid }
             }
         }
     }
-
-    data class LikeSongData(
-        var cover: String = "",
-        var count: Int = 0
-    )
 }

@@ -2,9 +2,7 @@ package me.wcy.music.mine
 
 import me.wcy.common.net.gson.GsonConverterFactory
 import me.wcy.common.utils.GsonUtils
-import me.wcy.music.discover.playlist.detail.bean.SongListData
 import me.wcy.music.discover.playlist.square.bean.PlaylistListData
-import me.wcy.music.mine.likesong.LikeSongListData
 import me.wcy.music.net.HttpClient
 import me.wcy.music.storage.preference.ConfigPreferences
 import retrofit2.Retrofit
@@ -15,16 +13,6 @@ import retrofit2.http.Query
  * Created by wangchenyan.top on 2023/9/26.
  */
 interface MineApi {
-
-    @POST("likelist")
-    suspend fun getLikeSongList(
-        @Query("uid") uid: Long,
-    ): LikeSongListData
-
-    @POST("song/detail")
-    suspend fun getSongDetailById(
-        @Query("ids") ids: String,
-    ): SongListData
 
     @POST("user/playlist")
     suspend fun getUserPlaylist(

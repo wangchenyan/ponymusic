@@ -9,7 +9,6 @@ import com.blankj.utilcode.util.SizeUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import me.wcy.common.ext.load
 import me.wcy.common.ext.loadAvatar
 import me.wcy.common.ext.viewBindings
 import me.wcy.common.widget.decoration.SpacingDecoration
@@ -48,7 +47,6 @@ class MineFragment : BaseMusicFragment() {
         initTitle()
         initProfile()
         initLocalMusic()
-        initLikeSong()
         initPlaylist()
     }
 
@@ -100,25 +98,6 @@ class MineFragment : BaseMusicFragment() {
         }
     }
 
-    private fun initLikeSong() {
-        viewBinding.llLikeSong.setOnClickListener {
-            CRouter.with(requireActivity())
-                .url(RoutePath.LIKE_SONG_LIST)
-                .start()
-        }
-        lifecycleScope.launch {
-            userService.profile.collectLatest {
-                viewBinding.llLikeSong.isVisible = userService.isLogin()
-            }
-        }
-        lifecycleScope.launch {
-            viewModel.likeSongData.collectLatest { likeSongData ->
-                viewBinding.ivLikeSongCover.load(likeSongData.cover, SizeUtils.dp2px(4f))
-                viewBinding.tvLikeSongCount.text = "${likeSongData.count}首"
-            }
-        }
-    }
-
     @SuppressLint("SetTextI18n")
     private fun initPlaylist() {
         val listener = object : UserPlaylistItemBinder.OnItemClickListener {
@@ -132,6 +111,9 @@ class MineFragment : BaseMusicFragment() {
             override fun onMoreClick(item: PlaylistData) {
             }
         }
+        val likePlaylistAdapter = RAdapter<PlaylistData>().apply {
+            register(UserPlaylistItemBinder(true, listener))
+        }
         val myPlaylistAdapter = RAdapter<PlaylistData>().apply {
             register(UserPlaylistItemBinder(true, listener))
         }
@@ -140,26 +122,45 @@ class MineFragment : BaseMusicFragment() {
         }
 
         val spacingDecoration = SpacingDecoration(SizeUtils.dp2px(10f))
+        viewBinding.rvLikePlaylist.adapter = likePlaylistAdapter
         viewBinding.rvMyPlaylist.addItemDecoration(spacingDecoration)
         viewBinding.rvMyPlaylist.adapter = myPlaylistAdapter
         viewBinding.rvCollectPlaylist.addItemDecoration(spacingDecoration)
         viewBinding.rvCollectPlaylist.adapter = collectPlaylistAdapter
 
+        val updateVisible = {
+            viewBinding.llLikePlaylist.isVisible =
+                userService.isLogin() && viewModel.likePlaylist.value != null
+            viewBinding.llMyPlaylist.isVisible =
+                userService.isLogin() && viewModel.myPlaylists.value.isNotEmpty()
+            viewBinding.llCollectPlaylist.isVisible =
+                userService.isLogin() && viewModel.collectPlaylists.value.isNotEmpty()
+        }
+
         lifecycleScope.launch {
             userService.profile.collectLatest {
-                viewBinding.llMyPlaylist.isVisible = userService.isLogin()
-                viewBinding.llCollectPlaylist.isVisible = userService.isLogin()
+                updateVisible()
             }
         }
 
         lifecycleScope.launch {
+            viewModel.likePlaylist.collectLatest { likePlaylist ->
+                updateVisible()
+                if (likePlaylist != null) {
+                    likePlaylistAdapter.refresh(listOf(likePlaylist))
+                }
+            }
+        }
+        lifecycleScope.launch {
             viewModel.myPlaylists.collectLatest { myPlaylists ->
+                updateVisible()
                 viewBinding.tvMyPlaylist.text = "创建歌单(${myPlaylists.size})"
                 myPlaylistAdapter.refresh(myPlaylists)
             }
         }
         lifecycleScope.launch {
             viewModel.collectPlaylists.collectLatest { collectPlaylists ->
+                updateVisible()
                 viewBinding.tvCollectPlaylist.text = "收藏歌单(${collectPlaylists.size})"
                 collectPlaylistAdapter.refresh(collectPlaylists)
             }
