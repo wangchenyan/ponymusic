@@ -1,5 +1,6 @@
 package me.wcy.music.mine.home
 
+import android.annotation.SuppressLint
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -11,14 +12,18 @@ import kotlinx.coroutines.launch
 import me.wcy.common.ext.load
 import me.wcy.common.ext.loadAvatar
 import me.wcy.common.ext.viewBindings
+import me.wcy.common.widget.decoration.SpacingDecoration
 import me.wcy.music.R
 import me.wcy.music.account.service.UserService
 import me.wcy.music.common.ApiDomainDialog
 import me.wcy.music.common.BaseMusicFragment
+import me.wcy.music.common.bean.PlaylistData
 import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentMineBinding
 import me.wcy.music.main.MainActivity
 import me.wcy.music.mine.home.viewmodel.MineViewModel
+import me.wcy.music.mine.playlist.UserPlaylistItemBinder
+import me.wcy.radapter3.RAdapter
 import me.wcy.router.CRouter
 import javax.inject.Inject
 
@@ -44,6 +49,7 @@ class MineFragment : BaseMusicFragment() {
         initProfile()
         initLocalMusic()
         initLikeSong()
+        initPlaylist()
     }
 
     private fun initTitle() {
@@ -109,6 +115,53 @@ class MineFragment : BaseMusicFragment() {
             viewModel.likeSongData.collectLatest { likeSongData ->
                 viewBinding.ivLikeSongCover.load(likeSongData.cover, SizeUtils.dp2px(4f))
                 viewBinding.tvLikeSongCount.text = "${likeSongData.count}首"
+            }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun initPlaylist() {
+        val listener = object : UserPlaylistItemBinder.OnItemClickListener {
+            override fun onItemClick(item: PlaylistData) {
+                CRouter.with(requireActivity())
+                    .url(RoutePath.PLAYLIST_DETAIL)
+                    .extra("id", item.id)
+                    .start()
+            }
+
+            override fun onMoreClick(item: PlaylistData) {
+            }
+        }
+        val myPlaylistAdapter = RAdapter<PlaylistData>().apply {
+            register(UserPlaylistItemBinder(true, listener))
+        }
+        val collectPlaylistAdapter = RAdapter<PlaylistData>().apply {
+            register(UserPlaylistItemBinder(false, listener))
+        }
+
+        val spacingDecoration = SpacingDecoration(SizeUtils.dp2px(10f))
+        viewBinding.rvMyPlaylist.addItemDecoration(spacingDecoration)
+        viewBinding.rvMyPlaylist.adapter = myPlaylistAdapter
+        viewBinding.rvCollectPlaylist.addItemDecoration(spacingDecoration)
+        viewBinding.rvCollectPlaylist.adapter = collectPlaylistAdapter
+
+        lifecycleScope.launch {
+            userService.profile.collectLatest {
+                viewBinding.llMyPlaylist.isVisible = userService.isLogin()
+                viewBinding.llCollectPlaylist.isVisible = userService.isLogin()
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.myPlaylists.collectLatest { myPlaylists ->
+                viewBinding.tvMyPlaylist.text = "创建歌单(${myPlaylists.size})"
+                myPlaylistAdapter.refresh(myPlaylists)
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.collectPlaylists.collectLatest { collectPlaylists ->
+                viewBinding.tvCollectPlaylist.text = "收藏歌单(${collectPlaylists.size})"
+                collectPlaylistAdapter.refresh(collectPlaylists)
             }
         }
     }

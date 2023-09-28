@@ -14,6 +14,7 @@ import me.wcy.common.ext.toast
 import me.wcy.common.ext.viewBindings
 import me.wcy.common.widget.decoration.SpacingDecoration
 import me.wcy.music.R
+import me.wcy.music.account.service.UserService
 import me.wcy.music.common.ApiDomainDialog
 import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.common.bean.PlaylistData
@@ -41,6 +42,9 @@ class DiscoverFragment : BaseMusicFragment() {
     private val recommendPlaylistAdapter by lazy {
         RAdapter<PlaylistData>()
     }
+
+    @Inject
+    lateinit var userService: UserService
 
     @Inject
     lateinit var audioPlayer: AudioPlayer
@@ -133,16 +137,26 @@ class DiscoverFragment : BaseMusicFragment() {
             SpacingDecoration(SizeUtils.dp2px(10f))
         )
 
+        val updateVisibility = {
+            if (userService.isLogin() && viewModel.recommendPlaylist.value.isNotEmpty()) {
+                viewBinding.tvRecommendPlaylist.isVisible = true
+                viewBinding.rvRecommendPlaylist.isVisible = true
+            } else {
+                viewBinding.tvRecommendPlaylist.isVisible = false
+                viewBinding.rvRecommendPlaylist.isVisible = false
+            }
+        }
+
+        lifecycleScope.launch {
+            userService.profile.collectLatest {
+                updateVisibility()
+            }
+        }
+
         lifecycleScope.launch {
             viewModel.recommendPlaylist.collectLatest { recommendPlaylist ->
-                if (recommendPlaylist.isNotEmpty()) {
-                    viewBinding.tvRecommendPlaylist.isVisible = true
-                    viewBinding.rvRecommendPlaylist.isVisible = true
-                    recommendPlaylistAdapter.refresh(recommendPlaylist)
-                } else {
-                    viewBinding.tvRecommendPlaylist.isVisible = false
-                    viewBinding.rvRecommendPlaylist.isVisible = false
-                }
+                updateVisibility()
+                recommendPlaylistAdapter.refresh(recommendPlaylist)
             }
         }
     }

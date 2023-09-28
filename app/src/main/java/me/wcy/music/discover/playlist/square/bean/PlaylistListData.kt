@@ -9,6 +9,6 @@ import me.wcy.music.common.bean.PlaylistData
 data class PlaylistListData(
     @SerializedName("code")
     val code: Int = 0,
-    @SerializedName("playlists", alternate = ["recommend"])
+    @SerializedName("playlists", alternate = ["playlist", "recommend"])
     val playlists: List<PlaylistData> = emptyList(),
 )

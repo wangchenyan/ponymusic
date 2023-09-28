@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:paddingVertical="10dp">
+    android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/ivCover"
@@ -22,23 +21,22 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvTitle"
+            android:id="@+id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="歌曲"
+            android:text="名称"
             android:textColor="@color/common_text_h1_color"
             android:textSize="16dp" />
 
         <TextView
-            android:id="@+id/tvArtist"
+            android:id="@+id/tvCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="歌手 - 专辑"
+            android:text="54首, by xxx"
             android:textColor="@color/common_text_h2_color"
             android:textSize="12sp" />
     </LinearLayout>

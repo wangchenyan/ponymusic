@@ -1,4 +1,4 @@
-package me.wcy.music.mine.like
+package me.wcy.music.mine.likesong
 
 import com.google.gson.annotations.SerializedName
 

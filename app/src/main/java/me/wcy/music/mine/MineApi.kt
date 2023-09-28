@@ -3,7 +3,8 @@ package me.wcy.music.mine
 import me.wcy.common.net.gson.GsonConverterFactory
 import me.wcy.common.utils.GsonUtils
 import me.wcy.music.discover.playlist.detail.bean.SongListData
-import me.wcy.music.mine.like.LikeSongListData
+import me.wcy.music.discover.playlist.square.bean.PlaylistListData
+import me.wcy.music.mine.likesong.LikeSongListData
 import me.wcy.music.net.HttpClient
 import me.wcy.music.storage.preference.ConfigPreferences
 import retrofit2.Retrofit
@@ -24,6 +25,12 @@ interface MineApi {
     suspend fun getSongDetailById(
         @Query("ids") ids: String,
     ): SongListData
+
+    @POST("user/playlist")
+    suspend fun getUserPlaylist(
+        @Query("uid") uid: Long,
+        @Query("limit") limit: Int = 1000,
+    ): PlaylistListData
 
     companion object {
         private val api: MineApi by lazy {

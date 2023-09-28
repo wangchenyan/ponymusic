@@ -1,4 +1,4 @@
-package me.wcy.music.mine.like
+package me.wcy.music.mine.likesong
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
