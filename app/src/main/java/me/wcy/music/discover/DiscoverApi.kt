@@ -6,7 +6,7 @@ import me.wcy.common.utils.GsonUtils
 import me.wcy.music.common.bean.LrcDataWrap
 import me.wcy.music.common.bean.SongUrlData
 import me.wcy.music.discover.playlist.detail.bean.PlaylistDetailData
-import me.wcy.music.discover.playlist.detail.bean.PlaylistSongListData
+import me.wcy.music.discover.playlist.detail.bean.SongListData
 import me.wcy.music.discover.playlist.square.bean.PlaylistListData
 import me.wcy.music.discover.playlist.square.bean.PlaylistTagListData
 import me.wcy.music.discover.recommend.song.bean.RecommendSongListData
@@ -46,7 +46,7 @@ interface DiscoverApi {
     @POST("playlist/track/all")
     suspend fun getPlaylistSongList(
         @Query("id") id: Long,
-    ): PlaylistSongListData
+    ): SongListData
 
     @POST("playlist/hot")
     suspend fun getPlaylistTagList(): PlaylistTagListData

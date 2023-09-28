@@ -4,7 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.fragment.app.Fragment
 import me.wcy.music.R
 import me.wcy.music.discover.home.DiscoverFragment
-import me.wcy.music.mine.MineFragment
+import me.wcy.music.mine.home.MineFragment
 
 sealed class NaviTab private constructor(
     val id: String,

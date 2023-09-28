@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinatorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/play_bar">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/common_background_color"
+            app:elevation="0dp">
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbarPlaceholder"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/common_title_bar_size"
+                    app:layout_collapseMode="pin" />
+
+                <com.hjq.shape.layout.ShapeLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="16dp"
+                    app:shape_angle="-90"
+                    app:shape_endColor="@color/grey"
+                    app:shape_startColor="@color/grey_800">
+
+                    <View
+                        android:id="@+id/titlePlaceholder"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/common_title_bar_size" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="16dp">
+
+                        <FrameLayout
+                            android:layout_width="96dp"
+                            android:layout_height="96dp">
+
+                            <ImageView
+                                android:id="@+id/ivCover"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/common_bg_image_placeholder" />
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_favorite"
+                                app:tint="@color/white" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="2"
+                                android:text="我喜欢的音乐"
+                                android:textColor="@color/white"
+                                android:textSize="16dp"
+                                android:textStyle="bold" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/ivCreatorAvatar"
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:src="@drawable/common_bg_image_placeholder_round" />
+
+                                <TextView
+                                    android:id="@+id/tvCreatorName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:textColor="@color/grey_300"
+                                    android:textSize="12dp"
+                                    android:textStyle="bold"
+                                    tools:text="世间美好与你环环相扣" />
+                            </LinearLayout>
+
+                            <com.google.android.flexbox.FlexboxLayout
+                                android:id="@+id/flTags"
+                                android:layout_width="match_parent"
+                                android:layout_height="14dp"
+                                android:layout_marginTop="4dp"
+                                app:dividerDrawable="@drawable/common_ic_divider_flexbox_5"
+                                app:flexWrap="wrap"
+                                app:showDivider="middle" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.hjq.shape.layout.ShapeLinearLayout>
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@color/grey">
+
+                <com.hjq.shape.layout.ShapeLinearLayout
+                    android:id="@+id/llPlayAll"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="16dp"
+                    app:shape_solidColor="@color/common_background_color"
+                    app:shape_topLeftRadius="12dp"
+                    app:shape_topRightRadius="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_play_circle"
+                        android:drawablePadding="10dp"
+                        android:drawableTint="@color/common_theme_color"
+                        android:text="播放全部"
+                        android:textColor="@color/common_text_h1_color"
+                        android:textSize="16dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvSongCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:textColor="@color/common_text_h2_color"
+                        android:textSize="14dp"
+                        tools:text="(155)" />
+                </com.hjq.shape.layout.ShapeLinearLayout>
+            </FrameLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:listitem="@layout/item_playlist_song" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <me.wcy.music.widget.PlayBar
+        android:id="@+id/play_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
+    <me.wcy.common.widget.TitleLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tlBackgroundColor="@color/grey"
+        app:tlScrollViewId="@+id/coordinatorLayout"
+        app:tlTextStyle="white"
+        app:tlTextStyleAfterScroll="white"
+        app:tlTitleText=""
+        app:tlUpdateTitleAlphaWhenScroll="true" />
+</RelativeLayout>

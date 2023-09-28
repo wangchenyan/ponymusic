@@ -1,10 +1,14 @@
-package me.wcy.music.mine
+package me.wcy.music.mine.home
 
 import android.view.View
+import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.blankj.utilcode.util.SizeUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import me.wcy.common.ext.load
 import me.wcy.common.ext.loadAvatar
 import me.wcy.common.ext.viewBindings
 import me.wcy.music.R
@@ -14,6 +18,7 @@ import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentMineBinding
 import me.wcy.music.main.MainActivity
+import me.wcy.music.mine.home.viewmodel.MineViewModel
 import me.wcy.router.CRouter
 import javax.inject.Inject
 
@@ -23,6 +28,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MineFragment : BaseMusicFragment() {
     private val viewBinding by viewBindings<FragmentMineBinding>()
+    private val viewModel by viewModels<MineViewModel>()
 
     @Inject
     lateinit var userService: UserService
@@ -37,6 +43,7 @@ class MineFragment : BaseMusicFragment() {
         initTitle()
         initProfile()
         initLocalMusic()
+        initLikeSong()
     }
 
     private fun initTitle() {
@@ -84,6 +91,25 @@ class MineFragment : BaseMusicFragment() {
     private fun initLocalMusic() {
         viewBinding.localMusic.setOnClickListener {
             CRouter.with().url(RoutePath.LOCAL_SONG).start()
+        }
+    }
+
+    private fun initLikeSong() {
+        viewBinding.llLikeSong.setOnClickListener {
+            CRouter.with(requireActivity())
+                .url(RoutePath.LIKE_SONG_LIST)
+                .start()
+        }
+        lifecycleScope.launch {
+            userService.profile.collectLatest {
+                viewBinding.llLikeSong.isVisible = userService.isLogin()
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.likeSongData.collectLatest { likeSongData ->
+                viewBinding.ivLikeSongCover.load(likeSongData.cover, SizeUtils.dp2px(4f))
+                viewBinding.tvLikeSongCount.text = "${likeSongData.count}首"
+            }
         }
     }
 }

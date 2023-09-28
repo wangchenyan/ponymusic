@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
  */
 data class ProfileData(
     @SerializedName("userId")
-    val userId: Int = 0,
+    val userId: Long = 0,
     @SerializedName("userType")
     val userType: Int = 0,
     @SerializedName("nickname")

@@ -6,7 +6,7 @@ import me.wcy.music.common.bean.SongData
 /**
  * Created by wangchenyan.top on 2023/9/22.
  */
-data class PlaylistSongListData(
+data class SongListData(
     @SerializedName("code")
     val code: Int = 0,
     @SerializedName("songs")
