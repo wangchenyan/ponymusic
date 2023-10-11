@@ -2,6 +2,7 @@ package me.wcy.music.discover.recommend.song.item
 
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SizeUtils
+import me.wcy.music.common.OnSongItemClickListener
 import me.wcy.music.common.bean.SongData
 import me.wcy.music.databinding.ItemOnlineSongBinding
 import me.wcy.music.utils.ImageUtils.loadCover
@@ -11,12 +12,15 @@ import me.wcy.radapter3.RItemBinder
 /**
  * Created by wangchenyan.top on 2023/9/15.
  */
-class OnlineSongItemBinder(private val onItemClick: (SongData, Int) -> Unit) :
+class OnlineSongItemBinder(private val listener: OnSongItemClickListener<SongData>) :
     RItemBinder<ItemOnlineSongBinding, SongData>() {
 
     override fun onBind(viewBinding: ItemOnlineSongBinding, item: SongData, position: Int) {
         viewBinding.root.setOnClickListener {
-            onItemClick(item, position)
+            listener.onItemClick(item, position)
+        }
+        viewBinding.ivMore.setOnClickListener {
+            listener.onMoreClick(item, position)
         }
         viewBinding.ivCover.loadCover(item.al.picUrl, SizeUtils.dp2px(4f))
         viewBinding.tvTitle.text = item.name

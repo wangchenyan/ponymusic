@@ -7,8 +7,14 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.wcy.common.model.CommonResult
 import me.wcy.common.net.apiCall
+import me.wcy.music.common.OnSongItemClickListener
 import me.wcy.music.common.SimpleMusicRefreshFragment
 import me.wcy.music.common.bean.SongData
+import me.wcy.music.common.dialog.songmenu.SongMoreMenuDialog
+import me.wcy.music.common.dialog.songmenu.items.AlbumMenuItem
+import me.wcy.music.common.dialog.songmenu.items.ArtistMenuItem
+import me.wcy.music.common.dialog.songmenu.items.CollectMenuItem
+import me.wcy.music.common.dialog.songmenu.items.CommentMenuItem
 import me.wcy.music.consts.Consts
 import me.wcy.music.search.SearchApi
 import me.wcy.music.search.SearchViewModel
@@ -24,9 +30,24 @@ import javax.inject.Inject
 class SearchSongFragment : SimpleMusicRefreshFragment<SongData>() {
     private val viewModel by activityViewModels<SearchViewModel>()
     private val itemBinder by lazy {
-        SearchSongItemBinder { item, position ->
-            audioPlayer.addAndPlay(item.toEntity())
-        }.apply {
+        SearchSongItemBinder(object : OnSongItemClickListener<SongData> {
+            override fun onItemClick(item: SongData, position: Int) {
+                audioPlayer.addAndPlay(item.toEntity())
+            }
+
+            override fun onMoreClick(item: SongData, position: Int) {
+                SongMoreMenuDialog(requireActivity(), item)
+                    .setItems(
+                        listOf(
+                            CollectMenuItem(lifecycleScope, item),
+                            CommentMenuItem(item),
+                            ArtistMenuItem(item),
+                            AlbumMenuItem(item)
+                        )
+                    )
+                    .show()
+            }
+        }).apply {
             keywords = viewModel.keywords.value
         }
     }

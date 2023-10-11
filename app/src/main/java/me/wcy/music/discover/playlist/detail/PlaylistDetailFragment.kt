@@ -13,8 +13,16 @@ import me.wcy.common.ext.loadAvatar
 import me.wcy.common.ext.viewBindings
 import me.wcy.common.utils.StatusBarUtils
 import me.wcy.music.R
+import me.wcy.music.account.service.UserService
 import me.wcy.music.common.BaseMusicFragment
+import me.wcy.music.common.OnSongItemClickListener
 import me.wcy.music.common.bean.SongData
+import me.wcy.music.common.dialog.songmenu.SongMoreMenuDialog
+import me.wcy.music.common.dialog.songmenu.items.AlbumMenuItem
+import me.wcy.music.common.dialog.songmenu.items.ArtistMenuItem
+import me.wcy.music.common.dialog.songmenu.items.CollectMenuItem
+import me.wcy.music.common.dialog.songmenu.items.CommentMenuItem
+import me.wcy.music.common.dialog.songmenu.items.DeletePlaylistSongMenuItem
 import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentPlaylistDetailBinding
 import me.wcy.music.databinding.ItemPlaylistTagBinding
@@ -39,6 +47,9 @@ class PlaylistDetailFragment : BaseMusicFragment() {
     private val adapter by lazy {
         RAdapter<SongData>()
     }
+
+    @Inject
+    lateinit var userService: UserService
 
     @Inject
     lateinit var audioPlayer: AudioPlayer
@@ -111,7 +122,8 @@ class PlaylistDetailFragment : BaseMusicFragment() {
                 if (playlistData != null) {
                     getTitleLayout()?.setTitleText(playlistData.name)
                     viewBinding.ivCover.loadCover(playlistData.coverImgUrl, SizeUtils.dp2px(6f))
-                    viewBinding.tvPlayCount.text = ConvertUtils.formatPlayCount(playlistData.playCount)
+                    viewBinding.tvPlayCount.text =
+                        ConvertUtils.formatPlayCount(playlistData.playCount)
                     viewBinding.tvName.text = playlistData.name
                     viewBinding.ivCreatorAvatar.loadAvatar(playlistData.creator.avatarUrl)
                     viewBinding.tvCreatorName.text = playlistData.creator.nickname
@@ -141,12 +153,30 @@ class PlaylistDetailFragment : BaseMusicFragment() {
             }
         }
 
-        adapter.register(PlaylistSongItemBinder { item, position ->
-            val songList = viewModel.songList.value.map { it.toEntity() }
-            if (songList.isNotEmpty()) {
-                audioPlayer.replaceAll(songList, songList[position])
+        adapter.register(PlaylistSongItemBinder(object : OnSongItemClickListener<SongData> {
+            override fun onItemClick(item: SongData, position: Int) {
+                val songList = viewModel.songList.value.map { it.toEntity() }
+                if (songList.isNotEmpty()) {
+                    audioPlayer.replaceAll(songList, songList[position])
+                }
             }
-        })
+
+            override fun onMoreClick(item: SongData, position: Int) {
+                val items = mutableListOf(
+                    CollectMenuItem(lifecycleScope, item),
+                    CommentMenuItem(item),
+                    ArtistMenuItem(item),
+                    AlbumMenuItem(item)
+                )
+                val playlistData = viewModel.playlistData.value
+                if (playlistData != null && playlistData.creator.userId == userService.getUserId()) {
+                    items.add(DeletePlaylistSongMenuItem(playlistData, item))
+                }
+                SongMoreMenuDialog(requireActivity(), item)
+                    .setItems(items)
+                    .show()
+            }
+        }))
         viewBinding.recyclerView.adapter = adapter
 
         lifecycleScope.launch {

@@ -128,7 +128,7 @@ class PlayingActivity : BaseMusicActivity() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (Math.abs(progress - mLastProgress) >= DateUtils.SECOND_IN_MILLIS) {
                     viewBinding.tvCurrentTime.text =
-                        TimeUtils.formatTime("mm:ss", progress.toLong())
+                        TimeUtils.formatMs(progress.toLong())
                     mLastProgress = progress
                 }
             }
@@ -181,7 +181,7 @@ class PlayingActivity : BaseMusicActivity() {
                 viewBinding.sbProgress.max = song.duration.toInt()
                 mLastProgress = 0
                 viewBinding.tvCurrentTime.setText(R.string.play_time_start)
-                viewBinding.tvTotalTime.text = TimeUtils.formatTime("mm:ss", song.duration)
+                viewBinding.tvTotalTime.text = TimeUtils.formatMs(song.duration)
                 updateCover(song)
                 updateLrc(song)
                 if (audioPlayer.playState.value.isPlaying || audioPlayer.playState.value.isPreparing) {

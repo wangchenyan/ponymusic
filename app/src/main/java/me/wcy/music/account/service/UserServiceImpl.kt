@@ -31,6 +31,10 @@ class UserServiceImpl @Inject constructor() : UserService {
         return profile.value != null
     }
 
+    override fun getUserId(): Long {
+        return _profile.value?.userId ?: 0
+    }
+
     override suspend fun login(cookie: String): CommonResult<ProfileData> {
         AccountPreference.cookie = cookie
         val res = kotlin.runCatching {

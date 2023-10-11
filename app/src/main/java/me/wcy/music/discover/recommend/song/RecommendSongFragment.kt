@@ -8,7 +8,13 @@ import me.wcy.common.ext.viewBindings
 import me.wcy.common.net.apiCall
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicFragment
+import me.wcy.music.common.OnSongItemClickListener
 import me.wcy.music.common.bean.SongData
+import me.wcy.music.common.dialog.songmenu.SongMoreMenuDialog
+import me.wcy.music.common.dialog.songmenu.items.AlbumMenuItem
+import me.wcy.music.common.dialog.songmenu.items.ArtistMenuItem
+import me.wcy.music.common.dialog.songmenu.items.CollectMenuItem
+import me.wcy.music.common.dialog.songmenu.items.CommentMenuItem
 import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentRecommendSongBinding
 import me.wcy.music.discover.DiscoverApi
@@ -53,10 +59,25 @@ class RecommendSongFragment : BaseMusicFragment() {
     override fun onLazyCreate() {
         super.onLazyCreate()
 
-        adapter.register(OnlineSongItemBinder { item, position ->
-            val entityList = adapter.getDataList().map { it.toEntity() }
-            audioPlayer.replaceAll(entityList, entityList[position])
-        })
+        adapter.register(OnlineSongItemBinder(object : OnSongItemClickListener<SongData> {
+            override fun onItemClick(item: SongData, position: Int) {
+                val entityList = adapter.getDataList().map { it.toEntity() }
+                audioPlayer.replaceAll(entityList, entityList[position])
+            }
+
+            override fun onMoreClick(item: SongData, position: Int) {
+                SongMoreMenuDialog(requireActivity(), item)
+                    .setItems(
+                        listOf(
+                            CollectMenuItem(lifecycleScope, item),
+                            CommentMenuItem(item),
+                            ArtistMenuItem(item),
+                            AlbumMenuItem(item)
+                        )
+                    )
+                    .show()
+            }
+        }))
         viewBinding.recyclerView.adapter = adapter
         viewBinding.tvPlayAll.setOnClickListener {
             val entityList = adapter.getDataList().map { it.toEntity() }

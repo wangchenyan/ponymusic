@@ -6,14 +6,6 @@
     android:orientation="horizontal"
     android:paddingVertical="10dp">
 
-    <ImageView
-        android:id="@+id/ivCover"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_default_cover" />
-
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -35,7 +27,6 @@
             android:id="@+id/tvArtist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:ellipsize="end"
             android:singleLine="true"
             android:text="歌手 - 专辑"

@@ -2,6 +2,7 @@ package me.wcy.music.search.song
 
 import androidx.core.view.isVisible
 import me.wcy.common.ext.context
+import me.wcy.music.common.OnSongItemClickListener
 import me.wcy.music.common.bean.SongData
 import me.wcy.music.databinding.ItemSearchSongBinding
 import me.wcy.music.utils.MusicUtils
@@ -11,13 +12,16 @@ import me.wcy.radapter3.RItemBinder
 /**
  * Created by wangchenyan.top on 2023/9/20.
  */
-class SearchSongItemBinder(private val onItemClick: (SongData, Int) -> Unit) :
+class SearchSongItemBinder(private val listener: OnSongItemClickListener<SongData>) :
     RItemBinder<ItemSearchSongBinding, SongData>() {
     var keywords = ""
 
     override fun onBind(viewBinding: ItemSearchSongBinding, item: SongData, position: Int) {
         viewBinding.root.setOnClickListener {
-            onItemClick(item, position)
+            listener.onItemClick(item, position)
+        }
+        viewBinding.ivMore.setOnClickListener {
+            listener.onMoreClick(item, position)
         }
         viewBinding.tvTitle.text = MusicUtils.keywordsTint(viewBinding.context, item.name, keywords)
         viewBinding.tvTag.isVisible = item.recommendReason.isNotEmpty()

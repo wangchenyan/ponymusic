@@ -2,6 +2,7 @@ package me.wcy.music.mine.local
 
 import android.view.View
 import androidx.lifecycle.lifecycleScope
+import com.blankj.utilcode.util.ConvertUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -10,10 +11,14 @@ import me.wcy.common.ext.viewBindings
 import me.wcy.common.permission.Permissioner
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicFragment
+import me.wcy.music.common.OnSongItemClickListener
+import me.wcy.music.common.dialog.songmenu.SimpleMenuItem
+import me.wcy.music.common.dialog.songmenu.SongMoreMenuDialog
 import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentLocalMusicBinding
 import me.wcy.music.service.AudioPlayer
 import me.wcy.music.storage.db.entity.SongEntity
+import me.wcy.music.utils.TimeUtils
 import me.wcy.radapter3.RAdapter
 import me.wcy.router.annotation.Route
 import javax.inject.Inject
@@ -55,9 +60,26 @@ class LocalMusicFragment : BaseMusicFragment() {
     override fun onLazyCreate() {
         super.onLazyCreate()
 
-        adapter.register(LocalSongItemBinder {
-            audioPlayer.replaceAll(adapter.getDataList(), it)
-        })
+        adapter.register(LocalSongItemBinder(object : OnSongItemClickListener<SongEntity> {
+            override fun onItemClick(item: SongEntity, position: Int) {
+                audioPlayer.replaceAll(adapter.getDataList(), item)
+            }
+
+            override fun onMoreClick(item: SongEntity, position: Int) {
+                SongMoreMenuDialog(requireActivity(), item)
+                    .setItems(
+                        listOf(
+                            SimpleMenuItem("文件名称: ${item.fileName}"),
+                            SimpleMenuItem("播放时长: ${TimeUtils.formatMs(item.duration)}"),
+                            SimpleMenuItem(
+                                "文件大小: ${ConvertUtils.byte2FitMemorySize(item.fileSize)}"
+                            ),
+                            SimpleMenuItem("文件路径: ${item.path}")
+                        )
+                    )
+                    .show()
+            }
+        }))
         viewBinding.recyclerView.adapter = adapter
 
         viewBinding.tvPlayAll.setOnClickListener {

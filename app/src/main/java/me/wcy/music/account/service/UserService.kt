@@ -15,6 +15,8 @@ interface UserService {
 
     fun isLogin(): Boolean
 
+    fun getUserId(): Long
+
     suspend fun login(cookie: String): CommonResult<ProfileData>
 
     suspend fun logout()
