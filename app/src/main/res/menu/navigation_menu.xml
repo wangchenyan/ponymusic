@@ -3,7 +3,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/action_domain_setting"
-            android:icon="@drawable/ic_menu_settings"
+            android:icon="@drawable/ic_menu_domain"
             android:title="域名设置" />
         <item
             android:id="@+id/action_setting"
@@ -15,7 +15,7 @@
             android:title="@string/menu_timer" />
         <item
             android:id="@+id/action_logout"
-            android:icon="@drawable/ic_menu_exit"
+            android:icon="@drawable/ic_menu_logout"
             android:title="退出登录" />
         <item
             android:id="@+id/action_exit"

@@ -6,19 +6,19 @@
             <solid android:color="@color/translucent_white_p30" />
         </shape>
     </item>
-    <item android:id="@android:id/progress">
-        <clip>
-            <shape>
-                <corners android:radius="1dp" />
-                <solid android:color="@color/red_500" />
-            </shape>
-        </clip>
-    </item>
     <item android:id="@android:id/secondaryProgress">
         <clip>
             <shape>
                 <corners android:radius="1dp" />
-                <solid android:color="@color/red_500_p30" />
+                <solid android:color="@color/translucent_white_p50" />
+            </shape>
+        </clip>
+    </item>
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <corners android:radius="1dp" />
+                <solid android:color="@color/translucent_white_p80" />
             </shape>
         </clip>
     </item>

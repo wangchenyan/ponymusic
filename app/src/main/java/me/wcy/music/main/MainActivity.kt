@@ -25,6 +25,7 @@ import me.wcy.music.account.service.UserService
 import me.wcy.music.common.ApiDomainDialog
 import me.wcy.music.common.BaseMusicActivity
 import me.wcy.music.common.DarkModeService
+import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.ActivityMainBinding
 import me.wcy.music.databinding.NavigationHeaderBinding
 import me.wcy.music.databinding.TabItemBinding
@@ -113,7 +114,7 @@ class MainActivity : BaseMusicActivity() {
         val intent = intent
         if (intent.hasExtra(PlayService.EXTRA_NOTIFICATION)) {
             if (audioPlayer.currentSong.value != null) {
-                CRouter.with(this).url("/playing").start()
+                CRouter.with(this).url(RoutePath.PLAYING).start()
             }
             setIntent(Intent())
         }

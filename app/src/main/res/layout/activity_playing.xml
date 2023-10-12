@@ -12,7 +12,7 @@
         android:src="@drawable/bg_playing_default" />
 
     <LinearLayout
-        android:id="@+id/ll_content"
+        android:id="@+id/llContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/translucent_black_p50"
@@ -24,57 +24,62 @@
             app:tlJustShowStatusBar="true"
             app:tlTextStyle="white" />
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="@dimen/common_title_bar_size"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/iv_back"
-                android:layout_width="?attr/actionBarSize"
-                android:layout_height="?attr/actionBarSize"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_arrow_down" />
+                android:id="@+id/ivClose"
+                android:layout_width="@dimen/common_title_bar_size"
+                android:layout_height="@dimen/common_title_bar_size"
+                android:padding="4dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_arrow_down"
+                app:tint="@color/translucent_white_p80" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv_title"
+                    android:id="@+id/tvTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:text="无音乐"
-                    android:textColor="@color/white"
+                    android:text="曲目"
+                    android:textColor="@color/translucent_white_p80"
                     android:textSize="16dp" />
 
                 <TextView
-                    android:id="@+id/tv_artist"
+                    android:id="@+id/tvArtist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:singleLine="true"
+                    android:text="艺术家"
                     android:textColor="@color/grey"
-                    android:textSize="12sp" />
+                    android:textSize="12dp" />
             </LinearLayout>
-        </LinearLayout>
+        </FrameLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="16dp"
             android:layout_weight="1">
 
             <me.wcy.music.widget.AlbumCoverView
-                android:id="@+id/album_cover_view"
+                android:id="@+id/albumCoverView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp" />
+                android:paddingHorizontal="16dp"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/lrcLayout"
@@ -91,13 +96,14 @@
                     android:paddingRight="16dp">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:contentDescription="@null"
-                        android:src="@drawable/ic_volume" />
+                        android:src="@drawable/ic_volume"
+                        app:tint="@color/translucent_white_p80" />
 
                     <SeekBar
-                        android:id="@+id/sb_volume"
+                        android:id="@+id/sbVolume"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:maxHeight="2dp"
@@ -109,7 +115,7 @@
                 </LinearLayout>
 
                 <me.wcy.lrcview.LrcView
-                    android:id="@+id/lrc_view"
+                    android:id="@+id/lrcView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
@@ -127,79 +133,87 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:orientation="vertical"
-            android:paddingBottom="10dp">
+            android:layout_marginTop="26dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tvCurrentTime"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:text="@string/play_time_start"
+                android:textColor="@color/white"
+                android:textSize="10dp" />
 
-                <TextView
-                    android:id="@+id/tv_current_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/play_time_start"
-                    android:textColor="@color/white"
-                    android:textSize="10sp" />
+            <SeekBar
+                android:id="@+id/sbProgress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:maxHeight="2dp"
+                android:minHeight="2dp"
+                android:progressDrawable="@drawable/bg_playing_playback_progress"
+                android:thumb="@drawable/ic_playing_playback_progress_thumb" />
 
-                <SeekBar
-                    android:id="@+id/sb_progress"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:maxHeight="2dp"
-                    android:minHeight="2dp"
-                    android:progressDrawable="@drawable/bg_playing_playback_progress"
-                    android:thumb="@drawable/ic_playing_playback_progress_thumb" />
-
-                <TextView
-                    android:id="@+id/tv_total_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/play_time_start"
-                    android:textColor="@color/translucent_white_p50"
-                    android:textSize="10sp" />
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/iv_mode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/ic_play_mode_level_list" />
-
-                <ImageView
-                    android:id="@+id/iv_prev"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/iv_play"
-                    android:src="@drawable/ic_playing_prev" />
-
-                <ImageView
-                    android:id="@+id/iv_play"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/ic_playing_play_pause_selector" />
-
-                <ImageView
-                    android:id="@+id/iv_next"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/iv_play"
-                    android:src="@drawable/ic_playing_next" />
-            </RelativeLayout>
+            <TextView
+                android:id="@+id/tvTotalTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/play_time_start"
+                android:textColor="@color/translucent_white_p50"
+                android:textSize="10dp" />
         </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="24dp"
+            android:paddingHorizontal="32dp">
+
+            <ImageView
+                android:id="@+id/ivMode"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_play_mode_level_list"
+                app:tint="@color/translucent_white_p80" />
+
+            <ImageView
+                android:id="@+id/ivPrev"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/ivPlay"
+                android:src="@drawable/ic_previous"
+                app:tint="@color/translucent_white_p80" />
+
+            <ImageView
+                android:id="@+id/ivPlay"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_centerInParent="true"
+                android:layout_marginHorizontal="28dp"
+                android:src="@drawable/ic_playing_play_pause_selector"
+                app:tint="@color/translucent_white_p80" />
+
+            <ImageView
+                android:id="@+id/ivNext"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/ivPlay"
+                android:src="@drawable/ic_next"
+                app:tint="@color/translucent_white_p80" />
+
+            <ImageView
+                android:id="@+id/ivPlaylist"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_playlist"
+                app:tint="@color/translucent_white_p80" />
+        </RelativeLayout>
     </LinearLayout>
 </FrameLayout>

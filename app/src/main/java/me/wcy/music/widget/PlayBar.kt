@@ -1,8 +1,11 @@
 package me.wcy.music.widget
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import androidx.core.text.buildSpannedString
 import androidx.core.view.isVisible
@@ -15,6 +18,7 @@ import me.wcy.common.ext.getColor
 import me.wcy.common.ext.load
 import me.wcy.common.widget.CustomSpan.appendStyle
 import me.wcy.music.R
+import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.LayoutPlayBarBinding
 import me.wcy.music.ext.findLifecycleOwner
 import me.wcy.music.service.AudioPlayerModule.Companion.audioPlayer
@@ -30,10 +34,18 @@ class PlayBar @JvmOverloads constructor(
     private val audioPlayer by lazy {
         CommonApp.app.audioPlayer()
     }
+    private val rotateAnimator: ObjectAnimator
 
     init {
         id = R.id.play_bar
         viewBinding = LayoutPlayBarBinding.inflate(LayoutInflater.from(context), this, true)
+
+        rotateAnimator = ObjectAnimator.ofFloat(viewBinding.ivCover, "rotation", 0f, 360f).apply {
+            duration = 20000
+            repeatCount = ValueAnimator.INFINITE
+            repeatMode = ObjectAnimator.RESTART
+            interpolator = LinearInterpolator()
+        }
 
         initView()
         context.findLifecycleOwner()?.let {
@@ -43,7 +55,7 @@ class PlayBar @JvmOverloads constructor(
 
     private fun initView() {
         viewBinding.root.setOnClickListener {
-            CRouter.with(context).url("/playing").start()
+            CRouter.with(context).url(RoutePath.PLAYING).start()
         }
         viewBinding.ivPlay.setOnClickListener {
             audioPlayer.playPause()
@@ -52,7 +64,7 @@ class PlayBar @JvmOverloads constructor(
             audioPlayer.next()
         }
         viewBinding.ivPlaylist.setOnClickListener {
-            CRouter.with(context).url("/playlist").start()
+            CRouter.with(context).url(RoutePath.CURRENT_PLAYLIST).start()
         }
     }
 
@@ -77,7 +89,19 @@ class PlayBar @JvmOverloads constructor(
 
         lifecycleOwner.lifecycleScope.launch {
             audioPlayer.playState.collectLatest { playState ->
-                viewBinding.ivPlay.isSelected = playState.isPreparing || playState.isPlaying
+                val isPlaying = playState.isPreparing || playState.isPlaying
+                viewBinding.ivPlay.isSelected = isPlaying
+                if (isPlaying) {
+                    if (rotateAnimator.isPaused) {
+                        rotateAnimator.resume()
+                    } else if (rotateAnimator.isStarted.not()) {
+                        rotateAnimator.start()
+                    }
+                } else {
+                    if (rotateAnimator.isRunning) {
+                        rotateAnimator.pause()
+                    }
+                }
             }
         }
 

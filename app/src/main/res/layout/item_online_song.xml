@@ -70,5 +70,6 @@
         android:layout_height="match_parent"
         android:contentDescription="@null"
         android:scaleType="centerInside"
-        android:src="@drawable/ic_more" />
+        android:src="@drawable/ic_more"
+        app:tint="@color/common_text_h2_color" />
 </LinearLayout>

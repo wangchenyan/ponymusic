@@ -157,7 +157,9 @@ class PlayService : Service() {
     }
 
     private fun unregisterNotificationReceiver() {
-        unregisterReceiver(notificationReceiver)
+        if (isChannelCreated) {
+            unregisterReceiver(notificationReceiver)
+        }
     }
 
     private fun buildNotification(

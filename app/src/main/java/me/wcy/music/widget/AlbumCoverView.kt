@@ -31,9 +31,6 @@ class AlbumCoverView @JvmOverloads constructor(
         Handler(Looper.getMainLooper())
     }
 
-    private val topLine: Drawable by lazy {
-        ResourcesCompat.getDrawable(resources, R.drawable.bg_playing_cover_top_line, null)!!
-    }
     private val coverBorder: Drawable by lazy {
         ResourcesCompat.getDrawable(resources, R.drawable.bg_playing_cover_border, null)!!
     }
@@ -44,7 +41,8 @@ class AlbumCoverView @JvmOverloads constructor(
     private val discCenterPoint by lazy { Point() } // 旋转中心坐标
     private var discRotation = 0.0f
 
-    private var needleBitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_playing_needle)
+    private var needleBitmap =
+        BitmapFactory.decodeResource(resources, R.drawable.ic_playing_needle)
     private val needleMatrix by lazy { Matrix() }
     private val needleStartPoint by lazy { Point() }
     private val needleCenterPoint by lazy { Point() }
@@ -81,18 +79,18 @@ class AlbumCoverView @JvmOverloads constructor(
     private fun initSize() {
         val unit = Math.min(width, height) / 8
 
+        needleBitmap = ImageUtils.resizeImage(needleBitmap, unit * 2, (unit * 3.33).toInt())
+        needleStartPoint.x = (width / 2 - needleBitmap.width / 5.5f).toInt()
+        needleStartPoint.y = 0
+        needleCenterPoint.x = width / 2
+        needleCenterPoint.y = (needleBitmap.width / 5.5f).toInt()
+
         discBitmap = ImageUtils.resizeImage(discBitmap, unit * 6, unit * 6)
-        val discOffsetY = needleBitmap.height / 2
-        discStartPoint.x = (width - discBitmap!!.width) / 2
+        val discOffsetY = (needleBitmap.height / 1.5).toInt()
+        discStartPoint.x = (width - discBitmap.width) / 2
         discStartPoint.y = discOffsetY
         discCenterPoint.x = width / 2
         discCenterPoint.y = discBitmap.height / 2 + discOffsetY
-
-        needleBitmap = ImageUtils.resizeImage(needleBitmap, unit * 2, unit * 3)
-        needleStartPoint.x = width / 2 - needleBitmap.width / 6
-        needleStartPoint.y = -needleBitmap.width / 6
-        needleCenterPoint.x = discCenterPoint.x
-        needleCenterPoint.y = 0
 
         coverSize = unit * 4
         coverStartPoint.x = (width - coverSize) / 2
@@ -102,11 +100,7 @@ class AlbumCoverView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
-        // 1.绘制顶部虚线
-        topLine.setBounds(0, 0, width, TOP_LINE_HEIGHT)
-        topLine.draw(canvas)
-
-        // 2.绘制封面
+        // 1.绘制封面
         val cover = coverBitmap
         if (cover != null) {
             coverMatrix.setRotate(
@@ -122,16 +116,16 @@ class AlbumCoverView @JvmOverloads constructor(
             canvas.drawBitmap(cover, coverMatrix, null)
         }
 
-        // 3.绘制黑胶唱片外侧半透明边框
+        // 2.绘制黑胶唱片外侧半透明边框
         coverBorder.setBounds(
             discStartPoint.x - COVER_BORDER_WIDTH,
             discStartPoint.y - COVER_BORDER_WIDTH,
-            discStartPoint.x + discBitmap!!.width + COVER_BORDER_WIDTH,
-            discStartPoint.y + discBitmap!!.height + COVER_BORDER_WIDTH
+            discStartPoint.x + discBitmap.width + COVER_BORDER_WIDTH,
+            discStartPoint.y + discBitmap.height + COVER_BORDER_WIDTH
         )
         coverBorder.draw(canvas)
 
-        // 4.绘制黑胶
+        // 3.绘制黑胶
         // 设置旋转中心和旋转角度，setRotate和preTranslate顺序很重要
         discMatrix.setRotate(
             discRotation,
@@ -140,9 +134,9 @@ class AlbumCoverView @JvmOverloads constructor(
         )
         // 设置图片起始坐标
         discMatrix.preTranslate(discStartPoint.x.toFloat(), discStartPoint.y.toFloat())
-        canvas.drawBitmap(discBitmap!!, discMatrix, null)
+        canvas.drawBitmap(discBitmap, discMatrix, null)
 
-        // 5.绘制指针
+        // 4.绘制指针
         needleMatrix.setRotate(
             needleRotation,
             needleCenterPoint.x.toFloat(),
@@ -205,7 +199,6 @@ class AlbumCoverView @JvmOverloads constructor(
         private const val NEEDLE_ROTATION_PLAY = 0.0f
         private const val NEEDLE_ROTATION_PAUSE = -25.0f
 
-        private val TOP_LINE_HEIGHT = SizeUtils.dp2px(1f)
-        private val COVER_BORDER_WIDTH = SizeUtils.dp2px(1f)
+        private val COVER_BORDER_WIDTH = SizeUtils.dp2px(6f)
     }
 }

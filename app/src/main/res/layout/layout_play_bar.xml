@@ -1,72 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/play_bar_height"
-    android:background="@color/play_bar_bg">
+    android:background="@color/play_bar_bg"
+    android:divider="@drawable/common_ic_divider_flexbox_12"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingHorizontal="16dp"
+    android:showDividers="middle">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+    <com.hjq.shape.layout.ShapeFrameLayout
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="6dp"
+        app:shape_radius="100dp"
+        app:shape_solidColor="@color/black">
 
         <ImageView
             android:id="@+id/ivCover"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:contentDescription="@null"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_default_cover" />
+            android:src="@drawable/common_bg_image_placeholder_round" />
+    </com.hjq.shape.layout.ShapeFrameLayout>
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:text="无音乐"
-                android:textColor="@color/common_text_h1_color"
-                android:textSize="15dp" />
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/ivPlay"
+        <TextView
+            android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@null"
-            android:src="@drawable/ic_play_bar_play_pause_selector" />
-
-        <ImageView
-            android:id="@+id/ivNext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@null"
-            android:src="@drawable/ic_play_bar_next" />
-
-        <ImageView
-            android:id="@+id/ivPlaylist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@null"
-            android:src="@drawable/ic_play_bar_playlist" />
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="无音乐"
+            android:textColor="@color/common_text_h1_color"
+            android:textSize="15dp" />
     </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_gravity="bottom"
-        android:progressDrawable="@drawable/bg_play_bar_progress" />
-</FrameLayout>
+    <FrameLayout
+        android:id="@+id/ivPlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:progress="75"
+            app:indicatorColor="@color/common_text_h1_color"
+            app:indicatorSize="28dp"
+            app:trackColor="@color/common_divider"
+            app:trackCornerRadius="1dp"
+            app:trackThickness="2dp" />
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_play_bar_play_pause_selector"
+            app:tint="@color/common_text_h1_color" />
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/ivNext"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_next"
+        app:tint="@color/common_text_h1_color" />
+
+    <ImageView
+        android:id="@+id/ivPlaylist"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_playlist"
+        app:tint="@color/common_text_h1_color" />
+</LinearLayout>

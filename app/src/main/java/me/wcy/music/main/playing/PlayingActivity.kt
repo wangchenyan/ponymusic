@@ -24,6 +24,7 @@ import me.wcy.common.utils.image.ImageUtils
 import me.wcy.lrcview.LrcView
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicActivity
+import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.ActivityPlayingBinding
 import me.wcy.music.discover.DiscoverApi
 import me.wcy.music.ext.registerReceiverCompat
@@ -33,6 +34,7 @@ import me.wcy.music.storage.LrcCache
 import me.wcy.music.storage.db.entity.SongEntity
 import me.wcy.music.storage.preference.ConfigPreferences
 import me.wcy.music.utils.TimeUtils
+import me.wcy.router.CRouter
 import me.wcy.router.annotation.Route
 import java.io.File
 import javax.inject.Inject
@@ -40,7 +42,7 @@ import javax.inject.Inject
 /**
  * Created by wangchenyan.top on 2023/9/4.
  */
-@Route("/playing")
+@Route(RoutePath.PLAYING)
 @AndroidEntryPoint
 class PlayingActivity : BaseMusicActivity() {
     private val viewBinding by viewBindings<ActivityPlayingBinding>()
@@ -76,7 +78,7 @@ class PlayingActivity : BaseMusicActivity() {
     }
 
     private fun initTitle() {
-        viewBinding.ivBack.setOnClickListener {
+        viewBinding.ivClose.setOnClickListener {
             onBackPressed()
         }
     }
@@ -123,6 +125,9 @@ class PlayingActivity : BaseMusicActivity() {
         }
         viewBinding.ivNext.setOnClickListener {
             audioPlayer.next()
+        }
+        viewBinding.ivPlaylist.setOnClickListener {
+            CRouter.with(this).url(RoutePath.CURRENT_PLAYLIST).start()
         }
         viewBinding.sbProgress.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {

@@ -3,7 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:divider="@drawable/common_ic_divider_flexbox_12"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:showDividers="middle">
 
     <ImageView
         android:id="@+id/iv_icon"
@@ -18,7 +21,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginStart="12dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -39,29 +41,21 @@
             android:ellipsize="end"
             android:fadingEdge="horizontal"
             android:maxLines="1"
-            android:text="周杰伦"
-            android:textAppearance="@style/TextAppearance.Compat.Notification.Info.Media" />
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Info.Media"
+            tools:text="周杰伦" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginStart="10dp">
+    <ImageView
+        android:id="@+id/iv_play_pause"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_notification_pause" />
 
-        <ImageView
-            android:id="@+id/iv_play_pause"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:contentDescription="@null"
-            android:scaleType="center"
-            android:src="@drawable/ic_notification_pause" />
-
-        <ImageView
-            android:id="@+id/iv_next"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:contentDescription="@null"
-            android:scaleType="center"
-            android:src="@drawable/ic_notification_next" />
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/iv_next"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_notification_next" />
 </LinearLayout>

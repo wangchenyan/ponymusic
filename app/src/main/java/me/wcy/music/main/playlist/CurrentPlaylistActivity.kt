@@ -9,6 +9,7 @@ import me.wcy.common.ext.viewBindings
 import me.wcy.common.widget.CustomSpan.appendStyle
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicActivity
+import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.ActivityCurrentPlaylistBinding
 import me.wcy.music.service.AudioPlayer
 import me.wcy.music.storage.db.entity.SongEntity
@@ -19,7 +20,7 @@ import javax.inject.Inject
 /**
  * 播放列表
  */
-@Route("/playlist")
+@Route(RoutePath.CURRENT_PLAYLIST)
 @AndroidEntryPoint
 class CurrentPlaylistActivity : BaseMusicActivity() {
     private val viewBinding by viewBindings<ActivityCurrentPlaylistBinding>()

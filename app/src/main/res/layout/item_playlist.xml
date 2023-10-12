@@ -30,7 +30,7 @@
             <ImageView
                 android:layout_width="14dp"
                 android:layout_height="14dp"
-                android:src="@drawable/ic_play_arrow"
+                android:src="@drawable/ic_play"
                 app:tint="@color/white" />
 
             <TextView
@@ -49,7 +49,7 @@
             android:layout_height="28dp"
             android:layout_gravity="end|bottom"
             android:layout_margin="4dp"
-            android:src="@drawable/ic_play_arrow"
+            android:src="@drawable/ic_play"
             app:tint="@color/white" />
     </FrameLayout>
 
