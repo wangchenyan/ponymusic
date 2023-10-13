@@ -5,10 +5,10 @@ import android.content.Intent
 import com.blankj.utilcode.util.ActivityUtils
 import dagger.hilt.android.HiltAndroidApp
 import me.wcy.common.CommonApp
+import me.wcy.common.ext.findActivity
 import me.wcy.music.account.service.UserService
 import me.wcy.music.common.DarkModeService
 import me.wcy.music.common.MusicFragmentContainerActivity
-import me.wcy.music.ext.findActivity
 import me.wcy.music.service.AudioPlayer
 import me.wcy.router.CRouter
 import me.wcy.router.RouterClient

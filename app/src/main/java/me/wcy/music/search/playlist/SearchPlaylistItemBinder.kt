@@ -22,7 +22,7 @@ class SearchPlaylistItemBinder(private val onItemClick: (PlaylistData) -> Unit) 
         viewBinding.root.setOnClickListener {
             onItemClick(item)
         }
-        viewBinding.ivCover.loadCover(item.coverImgUrl, SizeUtils.dp2px(4f))
+        viewBinding.ivCover.loadCover(item.getSmallCover(), SizeUtils.dp2px(4f))
         viewBinding.tvTitle.text = MusicUtils.keywordsTint(viewBinding.context, item.name, keywords)
         viewBinding.tvSubTitle.text = "${item.trackCount}首 , by ${item.creator.nickname} , 播放${
             ConvertUtils.formatPlayCount(item.playCount, 1)

@@ -2,12 +2,15 @@ package me.wcy.music.common.bean
 
 import com.google.gson.annotations.SerializedName
 import me.wcy.music.account.bean.ProfileData
+import me.wcy.music.utils.MusicUtils.asLargeCover
+import me.wcy.music.utils.MusicUtils.asSmallCover
 
 data class PlaylistData(
     @SerializedName("id")
     val id: Long = 0,
     @SerializedName("name")
     val name: String = "",
+    @Deprecated("Please use resized url")
     @SerializedName("coverImgUrl", alternate = ["picUrl"])
     val coverImgUrl: String = "",
     @SerializedName("creator")
@@ -30,4 +33,12 @@ data class PlaylistData(
     val tags: List<String> = emptyList(),
     @SerializedName("highQuality")
     val highQuality: Boolean = false
-)
+) {
+    fun getSmallCover(): String {
+        return coverImgUrl.asSmallCover()
+    }
+
+    fun getLargeCover(): String {
+        return coverImgUrl.asLargeCover()
+    }
+}

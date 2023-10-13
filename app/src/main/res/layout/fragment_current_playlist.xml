@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hjq.shape.layout.ShapeLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="bottom"
+    android:orientation="vertical"
+    app:shape_solidColor="@color/card_bg"
+    app:shape_topLeftRadius="16dp"
+    app:shape_topRightRadius="16dp">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:paddingHorizontal="16dp"
+        android:text="播放列表"
+        android:textColor="@color/common_text_h1_color"
+        android:textSize="18dp"
+        android:textStyle="bold" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="8dp">
+
+        <com.hjq.shape.layout.ShapeLinearLayout
+            android:id="@+id/llPlayMode"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="10dp"
+            app:shape_radius="100dp"
+            app:shape_strokeColor="@color/common_divider"
+            app:shape_strokeWidth="1dp">
+
+            <ImageView
+                android:id="@+id/ivMode"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_play_mode_level_list"
+                app:tint="@color/common_text_h1_color" />
+
+            <TextView
+                android:id="@+id/tvPlayMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="列表循环"
+                android:textColor="@color/common_text_h1_color"
+                android:textSize="12dp" />
+        </com.hjq.shape.layout.ShapeLinearLayout>
+
+        <ImageView
+            android:id="@+id/btnClear"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_gravity="center_vertical|end"
+            android:padding="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_delete"
+            app:tint="@color/common_text_h2_color" />
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_divider_size"
+        android:background="@color/common_divider"
+        android:paddingHorizontal="16dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_current_playlist" />
+</com.hjq.shape.layout.ShapeLinearLayout>

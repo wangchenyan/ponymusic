@@ -33,7 +33,7 @@ class PlaylistItemBinder(
         lp.width = itemWidth
         lp.height = itemWidth
         viewBinding.ivCover.layoutParams = lp
-        viewBinding.ivCover.loadCover(item.coverImgUrl, SizeUtils.dp2px(6f))
+        viewBinding.ivCover.loadCover(item.getSmallCover(), SizeUtils.dp2px(6f))
         viewBinding.tvPlayCount.text = ConvertUtils.formatPlayCount(item.playCount)
         viewBinding.tvName.text = item.name
     }

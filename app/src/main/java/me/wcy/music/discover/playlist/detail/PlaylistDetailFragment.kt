@@ -121,7 +121,7 @@ class PlaylistDetailFragment : BaseMusicFragment() {
             viewModel.playlistData.collectLatest { playlistData ->
                 if (playlistData != null) {
                     getTitleLayout()?.setTitleText(playlistData.name)
-                    viewBinding.ivCover.loadCover(playlistData.coverImgUrl, SizeUtils.dp2px(6f))
+                    viewBinding.ivCover.loadCover(playlistData.getSmallCover(), SizeUtils.dp2px(6f))
                     viewBinding.tvPlayCount.text =
                         ConvertUtils.formatPlayCount(playlistData.playCount)
                     viewBinding.tvName.text = playlistData.name

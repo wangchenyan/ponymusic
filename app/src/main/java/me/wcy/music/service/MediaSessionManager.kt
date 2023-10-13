@@ -60,7 +60,7 @@ class MediaSessionManager(
                 )
             mediaSession.setMetadata(builder.build())
             loadCoverJob = CommonApp.appScope.launch {
-                val bitmap = ImageUtils.loadBitmap(song.albumCover).data
+                val bitmap = ImageUtils.loadBitmap(song.getLargeCover()).data
                 if (bitmap != null) {
                     builder.putBitmap(
                         MediaMetadataCompat.METADATA_KEY_ALBUM_ART,

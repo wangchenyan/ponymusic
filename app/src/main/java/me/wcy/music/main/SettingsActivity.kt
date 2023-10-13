@@ -25,14 +25,14 @@ class SettingsActivity : BaseMusicActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        val fragment = SettingFragment()
+        val fragment = SettingsFragment()
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
             .commitAllowingStateLoss()
     }
 
     @AndroidEntryPoint
-    class SettingFragment : PreferenceFragmentCompat() {
+    class SettingsFragment : PreferenceFragmentCompat() {
         private val darkMode: Preference by lazy {
             findPreference(getString(R.string.setting_key_dark_mode))!!
         }
@@ -131,7 +131,7 @@ class SettingsActivity : BaseMusicActivity() {
                     player.getAudioSessionId()
                 )
                 try {
-                    startActivityForResult(intent, 1)
+                    startActivity(intent)
                 } catch (e: ActivityNotFoundException) {
                     e.printStackTrace()
                     toast(R.string.device_not_support)

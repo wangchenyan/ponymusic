@@ -9,18 +9,21 @@ import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import androidx.core.text.buildSpannedString
 import androidx.core.view.isVisible
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.wcy.common.CommonApp
+import me.wcy.common.ext.findActivity
+import me.wcy.common.ext.findLifecycleOwner
 import me.wcy.common.ext.getColor
 import me.wcy.common.ext.load
 import me.wcy.common.widget.CustomSpan.appendStyle
 import me.wcy.music.R
 import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.LayoutPlayBarBinding
-import me.wcy.music.ext.findLifecycleOwner
+import me.wcy.music.main.playlist.CurrentPlaylistFragment
 import me.wcy.music.service.AudioPlayerModule.Companion.audioPlayer
 import me.wcy.router.CRouter
 
@@ -64,7 +67,11 @@ class PlayBar @JvmOverloads constructor(
             audioPlayer.next()
         }
         viewBinding.ivPlaylist.setOnClickListener {
-            CRouter.with(context).url(RoutePath.CURRENT_PLAYLIST).start()
+            val activity = context.findActivity()
+            if (activity is FragmentActivity) {
+                CurrentPlaylistFragment.newInstance()
+                    .show(activity.supportFragmentManager, CurrentPlaylistFragment.TAG)
+            }
         }
     }
 
@@ -72,7 +79,7 @@ class PlayBar @JvmOverloads constructor(
         audioPlayer.currentSong.observe(lifecycleOwner) { currentSong ->
             if (currentSong != null) {
                 isVisible = true
-                viewBinding.ivCover.load(currentSong.albumCover, true)
+                viewBinding.ivCover.load(currentSong.getSmallCover(), true)
                 viewBinding.tvTitle.text = buildSpannedString {
                     append(currentSong.title)
                     appendStyle(

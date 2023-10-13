@@ -6,7 +6,7 @@ import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import dagger.hilt.android.AndroidEntryPoint
 import me.wcy.common.model.CommonResult
-import me.wcy.common.widget.decoration.GridSpacingDecoration
+import me.wcy.music.MyGridSpacingDecoration
 import me.wcy.music.common.SimpleMusicRefreshFragment
 import me.wcy.music.common.bean.PlaylistData
 import me.wcy.music.consts.Consts
@@ -65,7 +65,7 @@ class PlaylistTabFragment : SimpleMusicRefreshFragment<PlaylistData>() {
             setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical)
             clipToPadding = false
             val spacing = SizeUtils.dp2px(10f)
-            addItemDecoration(GridSpacingDecoration(spacing, spacing))
+            addItemDecoration(MyGridSpacingDecoration(spacing, spacing))
         }
     }
 

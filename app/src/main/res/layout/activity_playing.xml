@@ -11,6 +11,14 @@
         android:scaleType="centerCrop"
         android:src="@drawable/bg_playing_default" />
 
+    <com.hjq.shape.view.ShapeView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom"
+        app:shape_angle="-90"
+        app:shape_endColor="@color/translucent_black_p50"
+        app:shape_startColor="@color/transparent" />
+
     <LinearLayout
         android:id="@+id/llContent"
         android:layout_width="match_parent"
@@ -215,5 +223,10 @@
                 android:src="@drawable/ic_playlist"
                 app:tint="@color/translucent_white_p80" />
         </RelativeLayout>
+
+        <View
+            android:id="@+id/navigationBarPlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" />
     </LinearLayout>
 </FrameLayout>

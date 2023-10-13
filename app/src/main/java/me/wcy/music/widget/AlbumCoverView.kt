@@ -13,9 +13,11 @@ import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
 import android.view.View
+import android.view.animation.LinearInterpolator
 import androidx.core.content.res.ResourcesCompat
 import com.blankj.utilcode.util.SizeUtils
 import me.wcy.music.R
+import me.wcy.music.startOrResume
 import me.wcy.music.utils.ImageUtils
 
 /**
@@ -54,6 +56,14 @@ class AlbumCoverView @JvmOverloads constructor(
     private val coverCenterPoint by lazy { Point() }
     private var coverSize = 0
 
+    private val rotationAnimator by lazy {
+        ValueAnimator.ofFloat(0f, 360f).apply {
+            duration = 20000
+            repeatCount = ValueAnimator.INFINITE
+            interpolator = LinearInterpolator()
+            addUpdateListener(rotationUpdateListener)
+        }
+    }
     private val playAnimator by lazy {
         ValueAnimator.ofFloat(NEEDLE_ROTATION_PAUSE, NEEDLE_ROTATION_PLAY).apply {
             duration = 300
@@ -153,7 +163,6 @@ class AlbumCoverView @JvmOverloads constructor(
 
     fun setCoverBitmap(bitmap: Bitmap) {
         coverBitmap = bitmap
-        discRotation = 0.0f
         invalidate()
     }
 
@@ -162,7 +171,7 @@ class AlbumCoverView @JvmOverloads constructor(
             return
         }
         isPlaying = true
-        mainHandler.post(rotationRunnable)
+        rotationAnimator.startOrResume()
         playAnimator.start()
     }
 
@@ -171,8 +180,20 @@ class AlbumCoverView @JvmOverloads constructor(
             return
         }
         isPlaying = false
-        mainHandler.removeCallbacks(rotationRunnable)
+        rotationAnimator.pause()
         pauseAnimator.start()
+    }
+
+    fun reset() {
+        isPlaying = false
+        discRotation = 0.0f
+        rotationAnimator.cancel()
+        invalidate()
+    }
+
+    private val rotationUpdateListener = AnimatorUpdateListener { animation ->
+        discRotation = animation.animatedValue as Float
+        invalidate()
     }
 
     private val animationUpdateListener = AnimatorUpdateListener { animation ->
@@ -180,22 +201,7 @@ class AlbumCoverView @JvmOverloads constructor(
         invalidate()
     }
 
-    private val rotationRunnable = object : Runnable {
-        override fun run() {
-            if (isPlaying) {
-                discRotation += DISC_ROTATION_INCREASE
-                if (discRotation >= 360) {
-                    discRotation = 0f
-                }
-                invalidate()
-            }
-            mainHandler.postDelayed(this, TIME_UPDATE)
-        }
-    }
-
     companion object {
-        private const val TIME_UPDATE = 50L
-        private const val DISC_ROTATION_INCREASE = 0.5f
         private const val NEEDLE_ROTATION_PLAY = 0.0f
         private const val NEEDLE_ROTATION_PAUSE = -25.0f
 

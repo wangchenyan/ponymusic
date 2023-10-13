@@ -9,10 +9,11 @@ import android.media.AudioManager
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.util.Log
-import android.view.View
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import com.gyf.immersionbar.ImmersionBar
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.blurry.Blurry
 import kotlinx.coroutines.Job
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.wcy.common.ext.toast
 import me.wcy.common.ext.viewBindings
+import me.wcy.common.utils.StatusBarUtils
 import me.wcy.common.utils.image.ImageUtils
 import me.wcy.lrcview.LrcView
 import me.wcy.music.R
@@ -28,13 +30,12 @@ import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.ActivityPlayingBinding
 import me.wcy.music.discover.DiscoverApi
 import me.wcy.music.ext.registerReceiverCompat
+import me.wcy.music.main.playlist.CurrentPlaylistFragment
 import me.wcy.music.service.AudioPlayer
 import me.wcy.music.service.PlayMode
 import me.wcy.music.storage.LrcCache
 import me.wcy.music.storage.db.entity.SongEntity
-import me.wcy.music.storage.preference.ConfigPreferences
 import me.wcy.music.utils.TimeUtils
-import me.wcy.router.CRouter
 import me.wcy.router.annotation.Route
 import java.io.File
 import javax.inject.Inject
@@ -71,10 +72,19 @@ class PlayingActivity : BaseMusicActivity() {
         initVolume()
         initCover()
         initLrc()
-        switchCoverLrc(true)
         initPlayControl()
-        updatePlayMode()
         initData()
+        switchCoverLrc(true)
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        if (StatusBarUtils.isSupportStatusBarTransparent()) {
+            ImmersionBar.with(this)
+                .transparentNavigationBar()
+                .navigationBarDarkIcon(false)
+                .init()
+        }
     }
 
     private fun initTitle() {
@@ -114,6 +124,16 @@ class PlayingActivity : BaseMusicActivity() {
     }
 
     private fun initPlayControl() {
+        lifecycleScope.launch {
+            audioPlayer.playMode.collectLatest { playMode ->
+                viewBinding.ivMode.setImageLevel(playMode.value)
+            }
+        }
+
+        val lp = viewBinding.navigationBarPlaceholder.layoutParams
+        lp.height = ImmersionBar.getNavigationBarHeight(this)
+        viewBinding.navigationBarPlaceholder.layoutParams = lp
+
         viewBinding.ivMode.setOnClickListener {
             switchPlayMode()
         }
@@ -127,7 +147,8 @@ class PlayingActivity : BaseMusicActivity() {
             audioPlayer.next()
         }
         viewBinding.ivPlaylist.setOnClickListener {
-            CRouter.with(this).url(RoutePath.CURRENT_PLAYLIST).start()
+            CurrentPlaylistFragment.newInstance()
+                .show(supportFragmentManager, CurrentPlaylistFragment.TAG)
         }
         viewBinding.sbProgress.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -189,6 +210,7 @@ class PlayingActivity : BaseMusicActivity() {
                 viewBinding.tvTotalTime.text = TimeUtils.formatMs(song.duration)
                 updateCover(song)
                 updateLrc(song)
+                viewBinding.albumCoverView.reset()
                 if (audioPlayer.playState.value.isPlaying || audioPlayer.playState.value.isPreparing) {
                     viewBinding.ivPlay.isSelected = true
                     viewBinding.albumCoverView.start()
@@ -232,19 +254,14 @@ class PlayingActivity : BaseMusicActivity() {
         }
     }
 
-    private fun updatePlayMode() {
-        val mode = ConfigPreferences.playMode
-        viewBinding.ivMode.setImageLevel(mode)
-    }
-
     private fun updateCover(song: SongEntity) {
         viewBinding.albumCoverView.setCoverBitmap(defaultCoverBitmap)
         viewBinding.ivPlayingBg.setImageResource(R.drawable.bg_playing_default)
-        ImageUtils.loadBitmap(song.albumCover) {
+        ImageUtils.loadBitmap(song.getLargeCover()) {
             if (it.isSuccessWithData()) {
                 val bitmap = it.getDataOrThrow()
                 viewBinding.albumCoverView.setCoverBitmap(bitmap)
-                Blurry.with(this).from(bitmap).into(viewBinding.ivPlayingBg)
+                Blurry.with(this).sampling(10).from(bitmap).into(viewBinding.ivPlayingBg)
             }
         }
     }
@@ -290,31 +307,18 @@ class PlayingActivity : BaseMusicActivity() {
     }
 
     private fun switchCoverLrc(showCover: Boolean) {
-        viewBinding.albumCoverView.visibility =
-            if (showCover) View.VISIBLE else View.GONE
-        viewBinding.lrcLayout.visibility = if (showCover) View.GONE else View.VISIBLE
+        viewBinding.albumCoverView.isVisible = showCover
+        viewBinding.lrcLayout.isVisible = showCover.not()
     }
 
     private fun switchPlayMode() {
-        var mode = PlayMode.valueOf(ConfigPreferences.playMode)
-        when (mode) {
-            PlayMode.Loop -> {
-                mode = PlayMode.Shuffle
-                toast(R.string.play_mode_shuffle)
-            }
-
-            PlayMode.Shuffle -> {
-                mode = PlayMode.Single
-                toast(R.string.play_mode_single)
-            }
-
-            PlayMode.Single -> {
-                mode = PlayMode.Loop
-                toast(R.string.play_mode_loop)
-            }
+        val mode = when (audioPlayer.playMode.value) {
+            PlayMode.Loop -> PlayMode.Shuffle
+            PlayMode.Shuffle -> PlayMode.Single
+            PlayMode.Single -> PlayMode.Loop
         }
-        ConfigPreferences.playMode = mode.value
-        updatePlayMode()
+        toast(mode.nameRes)
+        audioPlayer.setPlayMode(mode)
     }
 
     override fun getNavigationBarColor(): Int {

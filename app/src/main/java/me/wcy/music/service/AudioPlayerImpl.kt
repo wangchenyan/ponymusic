@@ -12,6 +12,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.wcy.common.CommonApp
@@ -68,6 +69,9 @@ class AudioPlayerImpl @Inject constructor(
 
     private val _bufferingPercent = MutableStateFlow(0)
     override val bufferingPercent = _bufferingPercent.toUnMutable()
+
+    private val _playMode = MutableStateFlow(PlayMode.valueOf(ConfigPreferences.playMode))
+    override val playMode: StateFlow<PlayMode> = _playMode
 
     private var updateProgressJob: Job? = null
     private var getSongUrlJob: Job? = null
@@ -213,23 +217,24 @@ class AudioPlayerImpl @Inject constructor(
     }
 
     @MainThread
+    override fun clearPlaylist() {
+        launch(Dispatchers.Main.immediate) {
+            withContext(Dispatchers.IO) {
+                db.playlistDao().clear()
+            }
+            stopPlayer()
+            _playlist.value = emptyList()
+            _currentSong.value = null
+        }
+    }
+
+    @MainThread
     override fun playPause() {
         when (_playState.value) {
-            PlayState.Preparing -> {
-                stopPlayer()
-            }
-
-            PlayState.Playing -> {
-                pausePlayer()
-            }
-
-            PlayState.Pause -> {
-                startPlayer()
-            }
-
-            else -> {
-                play(_currentSong.value)
-            }
+            PlayState.Preparing -> stopPlayer()
+            PlayState.Playing -> pausePlayer()
+            PlayState.Pause -> startPlayer()
+            else -> play(_currentSong.value)
         }
     }
 
@@ -297,8 +302,7 @@ class AudioPlayerImpl @Inject constructor(
         if (playlist.isNullOrEmpty()) {
             return
         }
-        val mode = PlayMode.valueOf(ConfigPreferences.playMode)
-        when (mode) {
+        when (_playMode.value) {
             PlayMode.Shuffle -> {
                 play(playlist[Random().nextInt(playlist.size)])
             }
@@ -323,8 +327,7 @@ class AudioPlayerImpl @Inject constructor(
         if (playlist.isNullOrEmpty()) {
             return
         }
-        val mode = PlayMode.valueOf(ConfigPreferences.playMode)
-        when (mode) {
+        when (_playMode.value) {
             PlayMode.Shuffle -> {
                 play(playlist[Random().nextInt(playlist.size)])
             }
@@ -373,6 +376,11 @@ class AudioPlayerImpl @Inject constructor(
 
     @MainThread
     override fun getAudioSessionId() = mediaPlayer.audioSessionId
+
+    override fun setPlayMode(mode: PlayMode) {
+        ConfigPreferences.playMode = mode.value
+        _playMode.value = mode
+    }
 
     private fun onPlayError() {
         stopPlayer()

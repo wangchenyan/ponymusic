@@ -28,4 +28,12 @@
         <item name="tabPaddingStart">0dp</item>
         <item name="tabRippleColor">@null</item>
     </style>
+
+    <style name="BottomSheetDialogTheme" parent="Theme.Material3.DayNight.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheetStyleTransparent</item>
+    </style>
+
+    <style name="BottomSheetStyleTransparent" parent="Widget.Material3.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
 </resources>

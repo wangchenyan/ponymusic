@@ -19,7 +19,7 @@ class UserPlaylistItemBinder(
         viewBinding.root.setOnClickListener {
             listener.onItemClick(item)
         }
-        viewBinding.ivCover.loadCover(item.coverImgUrl, SizeUtils.dp2px(4f))
+        viewBinding.ivCover.loadCover(item.getSmallCover(), SizeUtils.dp2px(4f))
         viewBinding.tvName.text = item.name
         viewBinding.tvCount.text = if (isMine) {
             "${item.trackCount}首"

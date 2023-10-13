@@ -4,15 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/play_bar_height"
     android:background="@color/play_bar_bg"
-    android:divider="@drawable/common_ic_divider_flexbox_12"
     android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:paddingHorizontal="16dp"
-    android:showDividers="middle">
+    android:orientation="horizontal">
 
     <com.hjq.shape.layout.ShapeFrameLayout
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_marginStart="16dp"
         android:padding="6dp"
         app:shape_radius="100dp"
         app:shape_solidColor="@color/black">
@@ -29,6 +27,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -70,17 +69,19 @@
 
     <ImageView
         android:id="@+id/ivNext"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
         android:contentDescription="@null"
+        android:padding="10dp"
         android:src="@drawable/ic_next"
         app:tint="@color/common_text_h1_color" />
 
     <ImageView
         android:id="@+id/ivPlaylist"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
         android:contentDescription="@null"
+        android:padding="10dp"
         android:src="@drawable/ic_playlist"
         app:tint="@color/common_text_h1_color" />
 </LinearLayout>

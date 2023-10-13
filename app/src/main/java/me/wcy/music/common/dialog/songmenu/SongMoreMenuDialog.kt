@@ -55,11 +55,11 @@ class SongMoreMenuDialog {
         val songEntity = songEntity
         val songData = songData
         if (songEntity != null) {
-            viewBinding.ivCover.loadCover(songEntity.albumCover, SizeUtils.dp2px(4f))
+            viewBinding.ivCover.loadCover(songEntity.getSmallCover(), SizeUtils.dp2px(4f))
             viewBinding.tvTitle.text = "歌曲: ${songEntity.title}"
             viewBinding.tvArtist.text = songEntity.artist
         } else if (songData != null) {
-            viewBinding.ivCover.loadCover(songData.al.picUrl, SizeUtils.dp2px(4f))
+            viewBinding.ivCover.loadCover(songData.al.getSmallCover(), SizeUtils.dp2px(4f))
             viewBinding.tvTitle.text = "歌曲: ${songData.name}"
             viewBinding.tvArtist.text = songData.getSimpleArtist()
         }

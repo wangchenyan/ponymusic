@@ -15,6 +15,7 @@ interface AudioPlayer {
     val playState: StateFlow<PlayState>
     val playProgress: StateFlow<Long>
     val bufferingPercent: StateFlow<Int>
+    val playMode: StateFlow<PlayMode>
 
     @MainThread
     fun addAndPlay(song: SongEntity)
@@ -27,6 +28,9 @@ interface AudioPlayer {
 
     @MainThread
     fun delete(song: SongEntity)
+
+    @MainThread
+    fun clearPlaylist()
 
     @MainThread
     fun playPause()
@@ -57,4 +61,7 @@ interface AudioPlayer {
 
     @MainThread
     fun getAudioSessionId(): Int
+
+    @MainThread
+    fun setPlayMode(mode: PlayMode)
 }

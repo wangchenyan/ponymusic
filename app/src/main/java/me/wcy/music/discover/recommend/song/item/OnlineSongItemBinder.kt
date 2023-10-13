@@ -22,7 +22,7 @@ class OnlineSongItemBinder(private val listener: OnSongItemClickListener<SongDat
         viewBinding.ivMore.setOnClickListener {
             listener.onMoreClick(item, position)
         }
-        viewBinding.ivCover.loadCover(item.al.picUrl, SizeUtils.dp2px(4f))
+        viewBinding.ivCover.loadCover(item.al.getSmallCover(), SizeUtils.dp2px(4f))
         viewBinding.tvTitle.text = item.name
         viewBinding.tvTag.isVisible = item.recommendReason.isNotEmpty()
         viewBinding.tvTag.text = item.recommendReason

@@ -11,5 +11,4 @@ object RoutePath {
     const val PLAYLIST_DETAIL = "/playlist/detail"
     const val PLAYLIST_SQUARE = "/playlist/square"
     const val PLAYING = "/playing"
-    const val CURRENT_PLAYLIST = "/current_playlist"
 }

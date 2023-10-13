@@ -90,7 +90,7 @@ class PlayService : Service() {
                     buildNotification(song, null, true)
                 )
                 loadCoverJob = CommonApp.appScope.launch {
-                    val bitmap = ImageUtils.loadBitmap(song.albumCover).data
+                    val bitmap = ImageUtils.loadBitmap(song.getSmallCover()).data
                     if (bitmap != null) {
                         startForeground(
                             NOTIFICATION_ID,
@@ -106,7 +106,7 @@ class PlayService : Service() {
                         buildNotification(song, null, false)
                     )
                 loadCoverJob = CommonApp.appScope.launch {
-                    val bitmap = ImageUtils.loadBitmap(song.albumCover).data
+                    val bitmap = ImageUtils.loadBitmap(song.getSmallCover()).data
                     if (bitmap != null) {
                         NotificationManagerCompat.from(this@PlayService)
                             .notify(

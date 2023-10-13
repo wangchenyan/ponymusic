@@ -4,7 +4,7 @@
     <PreferenceCategory android:title="通用">
         <ListPreference
             android:defaultValue="0"
-            android:dialogTitle="最小大小"
+            android:dialogTitle="外观"
             android:entries="@array/dark_mode_entries"
             android:entryValues="@array/dark_mode_values"
             android:key="@string/setting_key_dark_mode"

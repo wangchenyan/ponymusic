@@ -8,9 +8,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.wcy.common.ext.viewBindings
-import me.wcy.common.ui.fragment.BaseFragment
 import me.wcy.common.widget.pager.TabLayoutPager
 import me.wcy.music.R
+import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentPlaylistSpuareBinding
 import me.wcy.music.discover.playlist.square.viewmodel.PlaylistSquareViewModel
@@ -21,7 +21,7 @@ import me.wcy.router.annotation.Route
  */
 @Route(RoutePath.PLAYLIST_SQUARE)
 @AndroidEntryPoint
-class PlaylistSquareFragment : BaseFragment() {
+class PlaylistSquareFragment : BaseMusicFragment() {
     private val viewBinding by viewBindings<FragmentPlaylistSpuareBinding>()
     private val viewModel by viewModels<PlaylistSquareViewModel>()
     private var pager: TabLayoutPager? = null

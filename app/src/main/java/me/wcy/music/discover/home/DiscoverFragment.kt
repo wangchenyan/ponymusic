@@ -103,7 +103,9 @@ class DiscoverFragment : BaseMusicFragment() {
             toast("敬请期待")
         }
         viewBinding.btnRecommendPlaylist.setOnClickListener {
-            toast("敬请期待")
+            CRouter.with(requireActivity())
+                .url(RoutePath.PLAYLIST_SQUARE)
+                .start()
         }
         viewBinding.btnRank.setOnClickListener {
             toast("敬请期待")

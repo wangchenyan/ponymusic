@@ -6,6 +6,8 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
+import me.wcy.music.utils.MusicUtils.asLargeCover
+import me.wcy.music.utils.MusicUtils.asSmallCover
 
 /**
  * Created by wangchenyan.top on 2023/8/29.
@@ -42,6 +44,7 @@ data class SongEntity(
     val albumId: Long = 0,
 
     // 专辑封面
+    @Deprecated("Please use resized url")
     @ColumnInfo("album_cover")
     val albumCover: String = "",
 
@@ -75,6 +78,16 @@ data class SongEntity(
     }
 
     fun isLocal() = type == LOCAL
+
+    fun getSmallCover(): String {
+        if (isLocal()) return albumCover
+        return albumCover.asSmallCover()
+    }
+
+    fun getLargeCover(): String {
+        if (isLocal()) return albumCover
+        return albumCover.asLargeCover()
+    }
 
     companion object {
         const val LOCAL = 0
