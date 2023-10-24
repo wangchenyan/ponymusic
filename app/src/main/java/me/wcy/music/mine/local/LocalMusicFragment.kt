@@ -11,7 +11,7 @@ import me.wcy.common.ext.viewBindings
 import me.wcy.common.permission.Permissioner
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicFragment
-import me.wcy.music.common.OnSongItemClickListener
+import me.wcy.music.common.OnItemClickListener2
 import me.wcy.music.common.dialog.songmenu.SimpleMenuItem
 import me.wcy.music.common.dialog.songmenu.SongMoreMenuDialog
 import me.wcy.music.consts.RoutePath
@@ -60,7 +60,7 @@ class LocalMusicFragment : BaseMusicFragment() {
     override fun onLazyCreate() {
         super.onLazyCreate()
 
-        adapter.register(LocalSongItemBinder(object : OnSongItemClickListener<SongEntity> {
+        adapter.register(LocalSongItemBinder(object : OnItemClickListener2<SongEntity> {
             override fun onItemClick(item: SongEntity, position: Int) {
                 audioPlayer.replaceAll(adapter.getDataList(), item)
             }

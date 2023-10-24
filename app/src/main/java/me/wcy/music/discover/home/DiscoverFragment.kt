@@ -5,6 +5,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,6 +25,7 @@ import me.wcy.music.databinding.FragmentDiscoverBinding
 import me.wcy.music.discover.DiscoverApi
 import me.wcy.music.discover.home.viewmodel.DiscoverViewModel
 import me.wcy.music.discover.playlist.square.item.PlaylistItemBinder
+import me.wcy.music.discover.ranking.discover.item.DiscoverRankingItemBinder
 import me.wcy.music.main.MainActivity
 import me.wcy.music.service.AudioPlayer
 import me.wcy.music.storage.preference.ConfigPreferences
@@ -40,6 +43,9 @@ class DiscoverFragment : BaseMusicFragment() {
     private val viewModel by viewModels<DiscoverViewModel>()
 
     private val recommendPlaylistAdapter by lazy {
+        RAdapter<PlaylistData>()
+    }
+    private val rankingListAdapter by lazy {
         RAdapter<PlaylistData>()
     }
 
@@ -72,6 +78,7 @@ class DiscoverFragment : BaseMusicFragment() {
         initTitle()
         initTopButton()
         initRecommendPlaylist()
+        initRankingList()
         checkApiDomain(false)
     }
 
@@ -108,7 +115,7 @@ class DiscoverFragment : BaseMusicFragment() {
                 .start()
         }
         viewBinding.btnRank.setOnClickListener {
-            toast("敬请期待")
+            CRouter.with(requireActivity()).url(RoutePath.RANKING).start()
         }
     }
 
@@ -129,7 +136,7 @@ class DiscoverFragment : BaseMusicFragment() {
             }
 
             override fun onPlayClick(item: PlaylistData) {
-                playPlaylist(item)
+                playPlaylist(item, 0)
             }
         }))
         viewBinding.rvRecommendPlaylist.adapter = recommendPlaylistAdapter
@@ -163,6 +170,48 @@ class DiscoverFragment : BaseMusicFragment() {
         }
     }
 
+    private fun initRankingList() {
+        viewBinding.tvRankingList.setOnClickListener {
+            CRouter.with(requireActivity())
+                .url(RoutePath.RANKING)
+                .start()
+        }
+        rankingListAdapter.register(DiscoverRankingItemBinder(object :
+            DiscoverRankingItemBinder.OnItemClickListener {
+            override fun onItemClick(item: PlaylistData, position: Int) {
+                CRouter.with(requireActivity())
+                    .url(RoutePath.PLAYLIST_DETAIL)
+                    .extra("id", item.id)
+                    .start()
+            }
+
+            override fun onSongClick(item: PlaylistData, songPosition: Int) {
+                playPlaylist(item, songPosition)
+            }
+        }))
+        viewBinding.vpRankingList.apply {
+            val recyclerView = getChildAt(0) as RecyclerView
+            recyclerView.apply {
+                setPadding(SizeUtils.dp2px(16f), 0, SizeUtils.dp2px(16f), 0)
+                clipToPadding = false
+            }
+            orientation = ViewPager2.ORIENTATION_HORIZONTAL
+            adapter = rankingListAdapter
+        }
+
+        viewModel.rankingList.observe(this) { rankingList ->
+            rankingList ?: return@observe
+            if (viewModel.rankingList.value?.isNotEmpty() == true) {
+                viewBinding.tvRankingList.isVisible = true
+                viewBinding.vpRankingList.isVisible = true
+            } else {
+                viewBinding.tvRankingList.isVisible = false
+                viewBinding.vpRankingList.isVisible = false
+            }
+            rankingListAdapter.refresh(rankingList)
+        }
+    }
+
     private fun checkApiDomain(isReload: Boolean) {
         if (ConfigPreferences.apiDomain.isNotEmpty()) {
             showLoadSirSuccess()
@@ -174,7 +223,7 @@ class DiscoverFragment : BaseMusicFragment() {
         }
     }
 
-    private fun playPlaylist(playlistData: PlaylistData) {
+    private fun playPlaylist(playlistData: PlaylistData, songPosition: Int) {
         lifecycleScope.launch {
             showLoading()
             kotlin.runCatching {
@@ -183,7 +232,7 @@ class DiscoverFragment : BaseMusicFragment() {
                 dismissLoading()
                 if (songListData.code == 200 && songListData.songs.isNotEmpty()) {
                     val songs = songListData.songs.map { it.toEntity() }
-                    audioPlayer.replaceAll(songs, songs.first())
+                    audioPlayer.replaceAll(songs, songs.getOrElse(songPosition) { songs[0] })
                 }
             }.onFailure {
                 dismissLoading()

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    tools:layout_height="100dp"
+    tools:layout_width="100dp">
+
+    <ImageView
+        android:id="@+id/ivCover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_default_cover" />
+
+    <com.hjq.shape.view.ShapeTextView
+        android:id="@+id/tvName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="2dp"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="14dp"
+        app:shape_angle="-90"
+        app:shape_endColor="@color/transparent"
+        app:shape_startColor="@color/translucent_black_p50"
+        app:shape_topLeftRadius="6dp"
+        app:shape_topRightRadius="6dp"
+        tools:text="飙升榜" />
+
+    <com.hjq.shape.view.ShapeTextView
+        android:id="@+id/tvUpdateTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="2dp"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="10dp"
+        app:shape_angle="-90"
+        app:shape_bottomLeftRadius="6dp"
+        app:shape_bottomRightRadius="6dp"
+        app:shape_endColor="@color/translucent_black_p50"
+        app:shape_startColor="@color/transparent"
+        tools:text="更新时间" />
+
+    <ImageView
+        android:id="@+id/ivPlay"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="6dp"
+        android:alpha="0.8"
+        android:src="@drawable/ic_play" />
+</FrameLayout>

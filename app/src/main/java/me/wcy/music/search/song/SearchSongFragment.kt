@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.wcy.common.model.CommonResult
 import me.wcy.common.net.apiCall
-import me.wcy.music.common.OnSongItemClickListener
+import me.wcy.music.common.OnItemClickListener2
 import me.wcy.music.common.SimpleMusicRefreshFragment
 import me.wcy.music.common.bean.SongData
 import me.wcy.music.common.dialog.songmenu.SongMoreMenuDialog
@@ -30,7 +30,7 @@ import javax.inject.Inject
 class SearchSongFragment : SimpleMusicRefreshFragment<SongData>() {
     private val viewModel by activityViewModels<SearchViewModel>()
     private val itemBinder by lazy {
-        SearchSongItemBinder(object : OnSongItemClickListener<SongData> {
+        SearchSongItemBinder(object : OnItemClickListener2<SongData> {
             override fun onItemClick(item: SongData, position: Int) {
                 audioPlayer.addAndPlay(item.toEntity())
             }

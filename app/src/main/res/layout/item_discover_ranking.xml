@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hjq.shape.layout.ShapeLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginEnd="10dp"
+    android:orientation="vertical"
+    app:shape_radius="16dp"
+    app:shape_solidColor="@color/card_bg"
+    app:shape_strokeColor="@color/common_divider"
+    app:shape_strokeWidth="@dimen/common_divider_size">
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:drawableEnd="@drawable/ic_arrow_right"
+        android:drawableTint="@color/common_text_h1_color"
+        android:singleLine="true"
+        android:textColor="@color/common_text_h1_color"
+        android:textSize="17dp"
+        android:textStyle="bold"
+        tools:text="飙升榜" />
+
+    <LinearLayout
+        android:id="@+id/llSongContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:divider="@drawable/common_ic_divider_flexbox_10"
+        android:orientation="vertical"
+        android:showDividers="middle" />
+</com.hjq.shape.layout.ShapeLinearLayout>

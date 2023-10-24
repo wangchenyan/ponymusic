@@ -46,6 +46,7 @@ interface DiscoverApi {
     @POST("playlist/track/all")
     suspend fun getPlaylistSongList(
         @Query("id") id: Long,
+        @Query("limit") limit: Long? = null,
     ): SongListData
 
     @POST("playlist/hot")
@@ -57,6 +58,9 @@ interface DiscoverApi {
         @Query("limit") limit: Int,
         @Query("offset") offset: Int,
     ): PlaylistListData
+
+    @POST("toplist")
+    suspend fun getRankingList(): PlaylistListData
 
     companion object {
         private val api: DiscoverApi by lazy {

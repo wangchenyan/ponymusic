@@ -8,7 +8,7 @@ import me.wcy.common.ext.viewBindings
 import me.wcy.common.net.apiCall
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicFragment
-import me.wcy.music.common.OnSongItemClickListener
+import me.wcy.music.common.OnItemClickListener2
 import me.wcy.music.common.bean.SongData
 import me.wcy.music.common.dialog.songmenu.SongMoreMenuDialog
 import me.wcy.music.common.dialog.songmenu.items.AlbumMenuItem
@@ -18,7 +18,7 @@ import me.wcy.music.common.dialog.songmenu.items.CommentMenuItem
 import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentRecommendSongBinding
 import me.wcy.music.discover.DiscoverApi
-import me.wcy.music.discover.recommend.song.item.OnlineSongItemBinder
+import me.wcy.music.discover.recommend.song.item.RecommendSongItemBinder
 import me.wcy.music.service.AudioPlayer
 import me.wcy.music.utils.toEntity
 import me.wcy.radapter3.RAdapter
@@ -59,7 +59,7 @@ class RecommendSongFragment : BaseMusicFragment() {
     override fun onLazyCreate() {
         super.onLazyCreate()
 
-        adapter.register(OnlineSongItemBinder(object : OnSongItemClickListener<SongData> {
+        adapter.register(RecommendSongItemBinder(object : OnItemClickListener2<SongData> {
             override fun onItemClick(item: SongData, position: Int) {
                 val entityList = adapter.getDataList().map { it.toEntity() }
                 audioPlayer.replaceAll(entityList, entityList[position])

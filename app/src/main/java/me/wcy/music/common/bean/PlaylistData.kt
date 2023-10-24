@@ -32,8 +32,14 @@ data class PlaylistData(
     @SerializedName("tags")
     val tags: List<String> = emptyList(),
     @SerializedName("highQuality")
-    val highQuality: Boolean = false
+    val highQuality: Boolean = false,
+    @SerializedName("updateFrequency")
+    val updateFrequency: String = "",
+    @SerializedName("ToplistType")
+    val toplistType: String = "",
 ) {
+    var songList: List<SongData> = emptyList()
+
     fun getSmallCover(): String {
         return coverImgUrl.asSmallCover()
     }

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hjq.shape.layout.ShapeLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:orientation="vertical"
+    android:paddingVertical="14dp"
+    android:paddingStart="18dp"
+    android:paddingEnd="16dp"
+    app:shape_radius="16dp"
+    app:shape_solidColor="@color/card_bg"
+    app:shape_strokeColor="@color/common_divider"
+    app:shape_strokeWidth="@dimen/common_divider_size">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:textColor="@color/common_text_h1_color"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            tools:text="飙升榜" />
+
+        <TextView
+            android:id="@+id/tvUpdateTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textColor="@color/common_text_h2_color"
+            android:textSize="12dp"
+            tools:text="刚刚更新" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/flCover"
+            android:layout_width="76dp"
+            android:layout_height="76dp">
+
+            <ImageView
+                android:id="@+id/ivCover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_default_cover" />
+
+            <com.hjq.shape.view.ShapeView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:shape_radius="6dp"
+                app:shape_solidColor="@color/translucent_black_p20" />
+
+            <ImageView
+                android:id="@+id/ivPlay"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:alpha="0.8"
+                android:src="@drawable/ic_play" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/llSongContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:divider="@drawable/common_ic_divider_flexbox_4"
+            android:orientation="vertical"
+            android:showDividers="middle" />
+    </LinearLayout>
+</com.hjq.shape.layout.ShapeLinearLayout>

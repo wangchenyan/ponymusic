@@ -15,7 +15,7 @@ import me.wcy.common.utils.StatusBarUtils
 import me.wcy.music.R
 import me.wcy.music.account.service.UserService
 import me.wcy.music.common.BaseMusicFragment
-import me.wcy.music.common.OnSongItemClickListener
+import me.wcy.music.common.OnItemClickListener2
 import me.wcy.music.common.bean.SongData
 import me.wcy.music.common.dialog.songmenu.SongMoreMenuDialog
 import me.wcy.music.common.dialog.songmenu.items.AlbumMenuItem
@@ -153,7 +153,7 @@ class PlaylistDetailFragment : BaseMusicFragment() {
             }
         }
 
-        adapter.register(PlaylistSongItemBinder(object : OnSongItemClickListener<SongData> {
+        adapter.register(PlaylistSongItemBinder(object : OnItemClickListener2<SongData> {
             override fun onItemClick(item: SongData, position: Int) {
                 val songList = viewModel.songList.value.map { it.toEntity() }
                 if (songList.isNotEmpty()) {

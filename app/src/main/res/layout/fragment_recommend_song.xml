@@ -38,7 +38,7 @@
             android:layout_weight="1"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="5"
-            tools:listitem="@layout/item_online_song" />
+            tools:listitem="@layout/item_recommend_song" />
 
         <me.wcy.music.widget.PlayBar
             android:layout_width="match_parent"
