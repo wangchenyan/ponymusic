@@ -3,10 +3,13 @@ package me.wcy.music.mine.home.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.wcy.common.ext.toUnMutable
+import me.wcy.common.model.CommonResult
+import me.wcy.common.net.apiCall
 import me.wcy.music.account.service.UserService
 import me.wcy.music.common.bean.PlaylistData
 import me.wcy.music.mine.MineApi
@@ -27,18 +30,32 @@ class MineViewModel @Inject constructor() : ViewModel() {
     @Inject
     lateinit var userService: UserService
 
+    private var updateJob: Job? = null
+
     init {
         viewModelScope.launch {
             userService.profile.collectLatest { profile ->
                 if (profile != null) {
                     updatePlaylist(profile.userId)
+                } else {
+                    _likePlaylist.value = null
+                    _myPlaylists.value = emptyList()
+                    _collectPlaylists.value = emptyList()
                 }
             }
         }
     }
 
+    fun updatePlaylist() {
+        if (userService.isLogin()) {
+            val uid = userService.profile.value?.userId ?: return
+            updatePlaylist(uid)
+        }
+    }
+
     private fun updatePlaylist(uid: Long) {
-        viewModelScope.launch {
+        updateJob?.cancel()
+        updateJob = viewModelScope.launch {
             val res = kotlin.runCatching {
                 MineApi.get().getUserPlaylist(uid)
             }
@@ -49,6 +66,19 @@ class MineViewModel @Inject constructor() : ViewModel() {
                 _myPlaylists.value = mineList.takeLast((mineList.size - 1).coerceAtLeast(0))
                 _collectPlaylists.value = list.filter { it.userId != uid }
             }
+        }
+    }
+
+    suspend fun removeCollect(id: Long): CommonResult<Unit> {
+        val res = apiCall { MineApi.get().collectPlaylist(id, 2) }
+        return if (res.isSuccess()) {
+            val list = _collectPlaylists.value
+            _collectPlaylists.value = list.toMutableList().apply {
+                removeAll { it.id == id }
+            }
+            CommonResult.success(Unit)
+        } else {
+            CommonResult.fail(res.code, res.msg)
         }
     }
 }

@@ -10,8 +10,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.wcy.common.ext.loadAvatar
+import me.wcy.common.ext.toast
 import me.wcy.common.ext.viewBindings
 import me.wcy.common.widget.decoration.SpacingDecoration
+import me.wcy.common.widget.dialog.BottomItemsDialogBuilder
 import me.wcy.music.R
 import me.wcy.music.account.service.UserService
 import me.wcy.music.common.ApiDomainDialog
@@ -48,6 +50,11 @@ class MineFragment : BaseMusicFragment() {
         initProfile()
         initLocalMusic()
         initPlaylist()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.updatePlaylist()
     }
 
     private fun initTitle() {
@@ -109,6 +116,20 @@ class MineFragment : BaseMusicFragment() {
             }
 
             override fun onMoreClick(item: PlaylistData) {
+                BottomItemsDialogBuilder(requireActivity())
+                    .items(listOf("删除"))
+                    .onClickListener { dialog, which ->
+                        lifecycleScope.launch {
+                            showLoading()
+                            val res = viewModel.removeCollect(item.id)
+                            dismissLoading()
+                            if (res.isSuccess().not()) {
+                                toast(res.msg)
+                            }
+                        }
+                    }
+                    .build()
+                    .show()
             }
         }
         val likePlaylistAdapter = RAdapter<PlaylistData>().apply {
@@ -129,18 +150,9 @@ class MineFragment : BaseMusicFragment() {
         viewBinding.rvCollectPlaylist.adapter = collectPlaylistAdapter
 
         val updateVisible = {
-            viewBinding.llLikePlaylist.isVisible =
-                userService.isLogin() && viewModel.likePlaylist.value != null
-            viewBinding.llMyPlaylist.isVisible =
-                userService.isLogin() && viewModel.myPlaylists.value.isNotEmpty()
-            viewBinding.llCollectPlaylist.isVisible =
-                userService.isLogin() && viewModel.collectPlaylists.value.isNotEmpty()
-        }
-
-        lifecycleScope.launch {
-            userService.profile.collectLatest {
-                updateVisible()
-            }
+            viewBinding.llLikePlaylist.isVisible = viewModel.likePlaylist.value != null
+            viewBinding.llMyPlaylist.isVisible = viewModel.myPlaylists.value.isNotEmpty()
+            viewBinding.llCollectPlaylist.isVisible = viewModel.collectPlaylists.value.isNotEmpty()
         }
 
         lifecycleScope.launch {

@@ -3,6 +3,7 @@ package me.wcy.music.discover.playlist.detail
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.SizeUtils
@@ -10,6 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.wcy.common.ext.loadAvatar
+import me.wcy.common.ext.toast
 import me.wcy.common.ext.viewBindings
 import me.wcy.common.utils.StatusBarUtils
 import me.wcy.music.R
@@ -44,9 +46,8 @@ import javax.inject.Inject
 class PlaylistDetailFragment : BaseMusicFragment() {
     private val viewBinding by viewBindings<FragmentPlaylistDetailBinding>()
     private val viewModel by viewModels<PlaylistViewModel>()
-    private val adapter by lazy {
-        RAdapter<SongData>()
-    }
+    private val adapter by lazy { RAdapter<SongData>() }
+    private var collectMenu: View? = null
 
     @Inject
     lateinit var userService: UserService
@@ -101,6 +102,23 @@ class PlaylistDetailFragment : BaseMusicFragment() {
     }
 
     private fun initTitle() {
+        collectMenu = getTitleLayout()?.addImageMenu(R.drawable.ic_favorite_selector, false)
+        collectMenu?.setOnClickListener {
+            viewModel.playlistData.value ?: return@setOnClickListener
+            userService.checkLogin(requireActivity()) {
+                lifecycleScope.launch {
+                    showLoading()
+                    val res = viewModel.collect()
+                    dismissLoading()
+                    if (res.isSuccess()) {
+                        toast("操作成功")
+                    } else {
+                        toast(res.msg)
+                    }
+                }
+            }
+        }
+
         StatusBarUtils.getStatusBarHeight(requireActivity()) {
             (viewBinding.titlePlaceholder.layoutParams as ViewGroup.MarginLayoutParams).apply {
                 topMargin = it
@@ -114,33 +132,39 @@ class PlaylistDetailFragment : BaseMusicFragment() {
         viewBinding.appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             getTitleLayout()?.updateScroll(-verticalOffset)
         }
+
+        lifecycleScope.launch {
+            userService.profile.collectLatest { profile ->
+                updateCollectState()
+            }
+        }
     }
 
     private fun initPlaylistInfo() {
         lifecycleScope.launch {
             viewModel.playlistData.collectLatest { playlistData ->
-                if (playlistData != null) {
-                    getTitleLayout()?.setTitleText(playlistData.name)
-                    viewBinding.ivCover.loadCover(playlistData.getSmallCover(), SizeUtils.dp2px(6f))
-                    viewBinding.tvPlayCount.text =
-                        ConvertUtils.formatPlayCount(playlistData.playCount)
-                    viewBinding.tvName.text = playlistData.name
-                    viewBinding.ivCreatorAvatar.loadAvatar(playlistData.creator.avatarUrl)
-                    viewBinding.tvCreatorName.text = playlistData.creator.nickname
+                playlistData ?: return@collectLatest
+                getTitleLayout()?.setTitleText(playlistData.name)
+                updateCollectState()
+                viewBinding.ivCover.loadCover(playlistData.getSmallCover(), SizeUtils.dp2px(6f))
+                viewBinding.tvPlayCount.text =
+                    ConvertUtils.formatPlayCount(playlistData.playCount)
+                viewBinding.tvName.text = playlistData.name
+                viewBinding.ivCreatorAvatar.loadAvatar(playlistData.creator.avatarUrl)
+                viewBinding.tvCreatorName.text = playlistData.creator.nickname
 
-                    viewBinding.flTags.removeAllViews()
-                    playlistData.tags.forEach { tag ->
-                        ItemPlaylistTagBinding.inflate(
-                            LayoutInflater.from(context),
-                            viewBinding.flTags,
-                            true
-                        ).apply {
-                            root.text = tag
-                        }
+                viewBinding.flTags.removeAllViews()
+                playlistData.tags.forEach { tag ->
+                    ItemPlaylistTagBinding.inflate(
+                        LayoutInflater.from(context),
+                        viewBinding.flTags,
+                        true
+                    ).apply {
+                        root.text = tag
                     }
-
-                    viewBinding.tvDesc.text = playlistData.description
                 }
+
+                viewBinding.tvDesc.text = playlistData.description
             }
         }
     }
@@ -184,6 +208,20 @@ class PlaylistDetailFragment : BaseMusicFragment() {
                 adapter.refresh(songList)
             }
         }
+    }
+
+    private fun updateCollectState() {
+        val playlistData = viewModel.playlistData.value
+        if (playlistData == null) {
+            collectMenu?.isVisible = false
+            return
+        }
+        if (userService.getUserId() == playlistData.userId) {
+            collectMenu?.isVisible = false
+            return
+        }
+        collectMenu?.isVisible = true
+        collectMenu?.isSelected = playlistData.subscribed
     }
 
     override fun getNavigationBarColor(): Int {
