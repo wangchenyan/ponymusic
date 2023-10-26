@@ -37,6 +37,9 @@ class AboutActivity : BaseActivity() {
         private val mGithub: Preference by lazy {
             findPreference("github")!!
         }
+        private val api: Preference by lazy {
+            findPreference("api")!!
+        }
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             addPreferencesFromResource(R.xml.preference_about)
@@ -59,6 +62,10 @@ class AboutActivity : BaseActivity() {
             }
             mGithub.setOnPreferenceClickListener {
                 openUrl(it.summary.toString())
+                true
+            }
+            api.setOnPreferenceClickListener {
+                openUrl("https://github.com/Binaryify/NeteaseCloudMusicApi")
                 true
             }
         }
