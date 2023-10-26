@@ -29,6 +29,14 @@ android {
                 add("arm64-v8a")
             }
         }
+
+        applicationVariants.all {
+            outputs.all {
+                if (this is com.android.build.gradle.internal.api.ApkVariantOutputImpl) {
+                    this.outputFileName = "ponymusic-$versionName.apk"
+                }
+            }
+        }
     }
 
     buildFeatures {
