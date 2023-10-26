@@ -23,7 +23,7 @@ crouter = "2.4.0-beta01"
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-gms = { id = "com.google.gms.google-services", version = "4.3.15" }
+gms = { id = "com.google.gms.google-services", version = "4.4.0" }
 crashlytics = { id = "com.google.firebase.crashlytics", version = "2.9.5" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
@@ -51,8 +51,8 @@ room = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 preference = { group = "androidx.preference", name = "preference-ktx", version = "1.2.0" }
 # google
-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx", version = "18.4.0" }
-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx", version = "21.3.0" }
+crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx", version = "18.5.0" }
+analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx", version = "21.4.0" }
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 # wangchenyan

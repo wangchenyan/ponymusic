@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "800738070101",
+    "project_id": "pony-music-wang",
+    "storage_bucket": "pony-music-wang.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:800738070101:android:b6b26ddaf8d839c8e80edc",
+        "android_client_info": {
+          "package_name": "me.wcy.music"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmxBo4JjtMqQs00Bnk438h-jeKNzAx2HY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
