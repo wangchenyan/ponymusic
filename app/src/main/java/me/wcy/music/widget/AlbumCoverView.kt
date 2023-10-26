@@ -121,7 +121,7 @@ class AlbumCoverView @JvmOverloads constructor(
             coverMatrix.preTranslate(coverStartPoint.x.toFloat(), coverStartPoint.y.toFloat())
             coverMatrix.preScale(
                 coverSize.toFloat() / cover.width,
-                coverSize.toFloat() / cover.height,
+                coverSize.toFloat() / cover.height
             )
             canvas.drawBitmap(cover, coverMatrix, null)
         }

@@ -64,7 +64,6 @@ crouter-api = { group = "com.github.wangchenyan.crouter", name = "crouter-api", 
 lrcview = { group = "com.github.wangchenyan", name = "lrcview", version = "2.2.1" }
 # open source
 loggingInterceptor = { group = "com.github.ihsanbal", name = "LoggingInterceptor", version = "3.1.0" }
-persistentCookieJar = { group = "com.github.franmontiel", name = "PersistentCookieJar", version = "v1.0.1" }
 circleimageview = { group = "de.hdodenhof", name = "circleimageview", version = "2.1.0" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version = "4.13.2" }
 zbar = { group = "cn.bertsir.zbarLibary", name = "zbarlibary", version = "1.4.2" }

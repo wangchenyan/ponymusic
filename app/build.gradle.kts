@@ -18,8 +18,8 @@ android {
         applicationId = "me.wcy.music"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 131
-        versionName = "1.3.1"
+        versionCode = 2000001
+        versionName = "2.0.0-beta01"
 
         multiDexEnabled = true
 
@@ -128,7 +128,6 @@ dependencies {
     implementation(libs.lrcview)
 
     implementation(libs.loggingInterceptor)
-    implementation(libs.persistentCookieJar)
     implementation(libs.zbar)
     implementation(libs.blurry)
 }

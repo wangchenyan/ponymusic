@@ -1,35 +1,44 @@
 # 波尼音乐
-![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/app/src/main/res/drawable-xxhdpi/ic_launcher.png)
-
-## 本项目已停止维护
-
-## 由于百度关闭了在线音乐 API 接口，所以本 APP 的在线音乐功能失效，目前还没找到替代方案，不是 bug，请大家不要诧异。
+![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/app/src/main/res/drawable-xxhdpi/ic_launcher.webp)
 
 ## 系列文章
+- [重生！入门级开源音乐播放器APP —— 波尼音乐](https://juejin.cn/post/7294072229003952143)
 - [Android开源在线音乐播放器——波尼音乐](https://juejin.im/post/5c373a32e51d4551cc6df6db)
 - [Android开源音乐播放器之播放器基本功能](https://juejin.im/post/5c373a32e51d45521315fc50)
 - [Android开源音乐播放器之高仿云音乐黑胶唱片](https://juejin.im/post/5c373a336fb9a04a016488e8)
 - [Android开源音乐播放器之自动滚动歌词](https://juejin.im/post/5c373a336fb9a049f43b85de)
 - [Android开源音乐播放器之在线音乐列表自动加载更多](https://juejin.im/post/5c373a336fb9a049b82aaaaf)
 
-## 前言
-毕业设计做的项目，答辩完了，就共享出来。
+## 效果展示
+视频: https://www.ixigua.com/7294169212384182291
 
-- 项目地址：https://github.com/wangchenyan/ponymusic
-- 有问题请提Issues
-- 如果喜欢，欢迎Star！
+截图: 
+![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/image.jpg)
 
 ## 简介
-波尼音乐是一款开源Android在线音乐播放器。
-- 播放本地音乐与在线音乐
-- 在线音乐排行榜，如热歌榜、新歌榜等
-- 高仿云音乐的黑胶唱片专辑封面
-- 歌词显示，自动搜索歌词
-- 编辑歌曲信息
-- 夜间模式
-- 定时关闭
+波尼音乐是一款开源 Android 在线音乐播放器。
+- 本地功能
+  - 添加和播放本地音乐文件
+  - 专辑封面显示
+  - 歌词显示，支持拖动歌词调节播放进度
+  - 通知栏控制
+  - 夜间模式
+  - 定时关闭
+- 在线功能
+  - 登录网易云
+  - 同步网易云歌单
+  - 每日推荐
+  - 歌单广场
+  - 排行榜
+  - 搜索歌曲和歌单
 
 ## 更新说明
+`v 2.0.0`
+- 使用 Kotlin 重写
+- 接口改为网易云音乐
+- 增加「每日推荐」、「歌单广场」、「排行榜」、「搜索」等在线功能
+- 适配到 Android 13
+
 `v 1.3.0`
 - 新增歌词支持上下拖动
 - 新增支持分屏模式
@@ -62,46 +71,61 @@
 [点击下载](https://github.com/wangchenyan/ponymusic/releases)
 
 ## TODO
+- [ ] 适配 Android 14
 - [x] 在线音乐可以免下载加入我的音乐列表
 - [ ] 在线音乐自动缓存
 - [x] 编辑音乐信息
 
 ## 项目
 ### 公开API
-- 在线音乐：[百度音乐](http://mrasong.com/a/baidu-mp3-api-full)
-- 天气数据：[高德地图](http://lbs.amap.com/)
+- 在线音乐：[NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
 
 ### 开源技术
-- [okhttp-utils](https://github.com/hongyangAndroid/okhttp-utils)
-- [Glide](https://github.com/bumptech/glide)
+- 页面：MVVM
+- 网络：[Retrofit](https://square.github.io/retrofit/)
+- 数据库：[Room](https://developer.android.com/jetpack/androidx/releases/room)
+- 依赖注入：[Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
+- 图片：[glide](https://github.com/bumptech/glide)
+- 统计&崩溃收集：[Firebase](https://firebase.google.com)
+- 路由框架：[wangchenyan/crouter: 支持组件化的 Android 路由框架](https://github.com/wangchenyan/crouter)
+- 歌词控件：[wangchenyan/lrcview: Android beautiful draggable lyric view library 一个优雅的可拖动歌词控件](https://github.com/wangchenyan/lrcview)
+- 启动任务：[wangchenyan/init: Android 启动任务调度](https://github.com/wangchenyan/init)
+- 通用库：[wangchenyan/android-common: 个人使用的 Android 通用库](https://github.com/wangchenyan/android-common)
+- RecyclerView Adapter：[wangchenyan/radapter3: A multitype adapter for Android recyclerview](https://github.com/wangchenyan/radapter3)
 
 ### 关键代码
 黑胶唱片专辑封面绘制流程
 ```
-@Override
-protected void onDraw(Canvas canvas) {
-    // 1.绘制顶部虚线
-    mTopLine.setBounds(0, 0, getWidth(), mTopLineHeight);
-    mTopLine.draw(canvas);
+override fun onDraw(canvas: Canvas) {
+    // 1.绘制封面
+    val cover = coverBitmap
+    if (cover != null) {
+        coverMatrix.setRotate(discRotation, coverCenterPoint.x.toFloat(), coverCenterPoint.y.toFloat())
+        coverMatrix.preTranslate(coverStartPoint.x.toFloat(), coverStartPoint.y.toFloat())
+        coverMatrix.preScale(coverSize.toFloat() / cover.width, coverSize.toFloat() / cover.height)
+        canvas.drawBitmap(cover, coverMatrix, null)
+    }
+
     // 2.绘制黑胶唱片外侧半透明边框
-    mCoverBorder.setBounds(mDiscPoint.x - mCoverBorderWidth, mDiscPoint.y - mCoverBorderWidth,
-            mDiscPoint.x + mDiscBitmap.getWidth() + mCoverBorderWidth, mDiscPoint.y +
-                    mDiscBitmap.getHeight() + mCoverBorderWidth);
-    mCoverBorder.draw(canvas);
+    coverBorder.setBounds(
+        discStartPoint.x - COVER_BORDER_WIDTH,
+        discStartPoint.y - COVER_BORDER_WIDTH,
+        discStartPoint.x + discBitmap.width + COVER_BORDER_WIDTH,
+        discStartPoint.y + discBitmap.height + COVER_BORDER_WIDTH
+    )
+    coverBorder.draw(canvas)
+
     // 3.绘制黑胶
     // 设置旋转中心和旋转角度，setRotate和preTranslate顺序很重要
-    mDiscMatrix.setRotate(mDiscRotation, mDiscCenterPoint.x, mDiscCenterPoint.y);
+    discMatrix.setRotate(discRotation, discCenterPoint.x.toFloat(),discCenterPoint.y.toFloat())
     // 设置图片起始坐标
-    mDiscMatrix.preTranslate(mDiscPoint.x, mDiscPoint.y);
-    canvas.drawBitmap(mDiscBitmap, mDiscMatrix, null);
-    // 4.绘制封面
-    mCoverMatrix.setRotate(mDiscRotation, mCoverCenterPoint.x, mCoverCenterPoint.y);
-    mCoverMatrix.preTranslate(mCoverPoint.x, mCoverPoint.y);
-    canvas.drawBitmap(mCoverBitmap, mCoverMatrix, null);
-    // 5.绘制指针
-    mNeedleMatrix.setRotate(mNeedleRotation, mNeedleCenterPoint.x, mNeedleCenterPoint.y);
-    mNeedleMatrix.preTranslate(mNeedlePoint.x, mNeedlePoint.y);
-    canvas.drawBitmap(mNeedleBitmap, mNeedleMatrix, null);
+    discMatrix.preTranslate(discStartPoint.x.toFloat(), discStartPoint.y.toFloat())
+    canvas.drawBitmap(discBitmap, discMatrix, null)
+
+    // 4.绘制指针
+    needleMatrix.setRotate(needleRotation, needleCenterPoint.x.toFloat(), needleCenterPoint.y.toFloat())
+    needleMatrix.preTranslate(needleStartPoint.x.toFloat(), needleStartPoint.y.toFloat())
+    canvas.drawBitmap(needleBitmap, needleMatrix, null)
 }
 ```
 歌词绘制流程
@@ -150,21 +174,13 @@ protected void onDraw(Canvas canvas) {
 }
 ```
 
-## 截图
-![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/screenshot_01.jpg)
-![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/screenshot_02.jpg)
-![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/screenshot_03.jpg)
-![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/screenshot_04.jpg)
-![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/screenshot_05.jpg)
-![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/screenshot_06.jpg)
-
 ## 关于作者
 掘金：https://juejin.im/user/2313028193754168<br>
 微博：https://weibo.com/wangchenyan1993
 
 ## License
 
-    Copyright 2016 wangchenyan
+    Copyright 2023 wangchenyan
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
