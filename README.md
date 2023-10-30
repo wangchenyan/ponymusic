@@ -10,12 +10,10 @@
 - [Android开源音乐播放器之在线音乐列表自动加载更多](https://juejin.im/post/5c373a336fb9a049b82aaaaf)
 
 ## 效果展示
-视频
-
+### 视频
 [点我跳转](https://www.ixigua.com/7294169212384182291)
 
-截图
-
+### 截图
 ![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/screenshot.jpg)
 
 ## 功能
