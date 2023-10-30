@@ -15,7 +15,6 @@ import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.blankj.utilcode.util.IntentUtils
-import com.blankj.utilcode.util.StringUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -134,8 +133,8 @@ class PlayService : Service() {
     private fun createNotificationChannel() {
         if (isChannelCreated.not() && Permissioner.hasNotificationPermission(this)) {
             isChannelCreated = true
-            val name = StringUtils.getString(R.string.app_name)
-            val descriptionText = "音乐通知栏"
+            val name = "通知栏控制"
+            val descriptionText = "通知栏控制"
             val importance = NotificationManagerCompat.IMPORTANCE_LOW
             val mChannel =
                 NotificationChannelCompat.Builder(NOTIFICATION_ID.toString(), importance)

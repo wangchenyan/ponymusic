@@ -87,6 +87,7 @@ class AudioPlayerImpl @Inject constructor(
             _bufferingPercent.value = percent
         }
         mediaPlayer.setOnErrorListener { mp, what, extra ->
+            Log.e(TAG, "on MediaPlayer error, what: $what, extra: $extra")
             onPlayError()
             true
         }

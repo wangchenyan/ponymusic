@@ -16,24 +16,57 @@
 
 截图
 
-![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/image.jpg)
+![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/screenshot.jpg)
 
-## 简介
-波尼音乐是一款开源 Android 在线音乐播放器。
-- 本地功能
-  - 添加和播放本地音乐文件
-  - 专辑封面显示
-  - 歌词显示，支持拖动歌词调节播放进度
-  - 通知栏控制
-  - 夜间模式
-  - 定时关闭
-- 在线功能
-  - 登录网易云
-  - 同步网易云歌单
-  - 每日推荐
-  - 歌单广场
-  - 排行榜
-  - 搜索歌曲和歌单
+## 功能
+> 后续可能会根据大家的反馈增加或调整功能
+
+### 本地功能
+- 添加和播放本地音乐文件
+- 专辑封面显示
+- 歌词显示，支持拖动歌词调节播放进度
+- 通知栏控制
+- 夜间模式
+- 定时关闭
+
+### 在线功能
+- 登录网易云
+- 同步网易云歌单
+- 每日推荐
+- 歌单广场
+- 排行榜
+- 搜索歌曲和歌单
+
+## 体验
+> 欢迎大家体验，如果发现功能问题或兼容性问题，可以提 [GitHub Issue](https://github.com/wangchenyan/ponymusic/issues)
+
+### 环境要求
+- Android 手机（系统版本为 Android 5.0 及以上）
+- 电脑（非必须）
+
+### 安装步骤
+1. 搭建网易云服务器<br>
+   由于我们使用的是非官方 API，因此需要自行搭建 API 服务器。<br>
+   clone [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi) 服务端项目到本地，根据项目说明安装并运行服务，需要确认电脑和手机处于同一局域网
+2. 安装 APP<br>
+   点击下载[最新安装包](https://github.com/wangchenyan/ponymusic/releases)
+3. 设置域名<br>
+   打开 APP，点击左上角汉堡按钮，打开抽屉，点击「域名设置」，输入步骤1中的地址（包含端口）
+4. 设置完成即可体验
+
+### 没有电脑，如何体验？
+> 其实有一些同仁已经将网易云 API 服务部署到公网了，我们可以直接用🐶。
+>
+> 这里不方便直接贴地址，下面教大家如何找到可以用的服务：
+>
+> 用 Google 搜索「[网易云音乐API](https://www.google.com.hk/search?q=%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90API)」，点击搜索结果链接，如果页面打开后是下图这样（注意：非作者的 github.io 页面），恭喜！你找到了可以直接使用的服务，拷贝地址栏链接，输入到步骤3即可。
+>
+> 如果设置域名后 APP 接口报错，说明这个域名不可用，可以尝试其他结果。
+>
+> ![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/api_page.jpg)
+
+## 下载地址
+[点击下载](https://github.com/wangchenyan/ponymusic/releases)
 
 ## 更新说明
 `v 2.0.0`
@@ -70,31 +103,30 @@
 `v 1.0.0`
 - First Release
 
-## 下载地址
-[点击下载](https://github.com/wangchenyan/ponymusic/releases)
-
 ## TODO
-- [ ] 适配 Android 14
+- [x] 适配 Android 14
 - [x] 在线音乐可以免下载加入我的音乐列表
 - [ ] 在线音乐自动缓存
 - [x] 编辑音乐信息
 
-## 项目
-### 公开API
-- 在线音乐：[NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
+## 依赖
+> 站在巨人的肩膀上
+
+### 在线服务
+- 在线音乐: [Binaryify/NeteaseCloudMusicApi: 网易云音乐 Node.js API service](https://github.com/Binaryify/NeteaseCloudMusicApi)
 
 ### 开源技术
-- 页面：MVVM
-- 网络：[Retrofit](https://square.github.io/retrofit/)
-- 数据库：[Room](https://developer.android.com/jetpack/androidx/releases/room)
-- 依赖注入：[Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
-- 图片：[glide](https://github.com/bumptech/glide)
-- 统计&崩溃收集：[Firebase](https://firebase.google.com)
-- 路由框架：[wangchenyan/crouter: 支持组件化的 Android 路由框架](https://github.com/wangchenyan/crouter)
-- 歌词控件：[wangchenyan/lrcview: Android beautiful draggable lyric view library 一个优雅的可拖动歌词控件](https://github.com/wangchenyan/lrcview)
-- 启动任务：[wangchenyan/init: Android 启动任务调度](https://github.com/wangchenyan/init)
-- 通用库：[wangchenyan/android-common: 个人使用的 Android 通用库](https://github.com/wangchenyan/android-common)
-- RecyclerView Adapter：[wangchenyan/radapter3: A multitype adapter for Android recyclerview](https://github.com/wangchenyan/radapter3)
+- 页面: MVVM
+- 网络: [Retrofit](https://square.github.io/retrofit/)
+- 数据库: [Room](https://developer.android.com/jetpack/androidx/releases/room)
+- 依赖注入: [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
+- 图片: [Glide](https://github.com/bumptech/glide)
+- 统计&崩溃收集: [Firebase](https://firebase.google.com)
+- 路由框架: [wangchenyan/crouter: 支持组件化的 Android 路由框架](https://github.com/wangchenyan/crouter)
+- 歌词控件: [wangchenyan/lrcview: Android beautiful draggable lyric view library](https://github.com/wangchenyan/lrcview)
+- 启动任务: [wangchenyan/init: Android 启动任务调度](https://github.com/wangchenyan/init)
+- 通用库: [wangchenyan/android-common: 个人使用的 Android 通用库](https://github.com/wangchenyan/android-common)
+- RecyclerView Adapter: [wangchenyan/radapter3: A multitype adapter for Android recyclerview](https://github.com/wangchenyan/radapter3)
 
 ### 关键代码
 黑胶唱片专辑封面绘制流程
@@ -178,8 +210,8 @@ protected void onDraw(Canvas canvas) {
 ```
 
 ## 关于作者
-掘金：https://juejin.im/user/2313028193754168<br>
-微博：https://weibo.com/wangchenyan1993
+掘金: https://juejin.im/user/2313028193754168<br>
+微博: https://weibo.com/wangchenyan1993
 
 ## License
 
