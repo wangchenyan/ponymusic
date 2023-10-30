@@ -11,7 +11,7 @@
 
 ## 效果展示
 ### 视频
-[点我跳转](https://www.ixigua.com/7294169212384182291)
+[![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/video_cover.jpg)](https://www.ixigua.com/7294169212384182291)
 
 ### 截图
 ![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/screenshot.jpg)
