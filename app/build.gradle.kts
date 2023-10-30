@@ -5,8 +5,11 @@ plugins {
     alias(libs.plugins.kotlin)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
-    alias(libs.plugins.gms)
-    alias(libs.plugins.crashlytics)
+    if (File("app/google-services.json").exists()) {
+        println("enable gms in app plugins")
+        alias(libs.plugins.gms)
+        alias(libs.plugins.crashlytics)
+    }
     id("kotlin-kapt")
     id("kotlin-parcelize")
     id("auto-register")
@@ -131,8 +134,12 @@ dependencies {
     implementation(libs.room)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt)
-    implementation(libs.crashlytics)
-    implementation(libs.analytics)
+
+    if (File("${project.projectDir}/google-services.json").exists()) {
+        println("enable gms in app dependencies")
+        implementation(libs.crashlytics)
+        implementation(libs.analytics)
+    }
 
     implementation(libs.common)
     ksp(libs.crouter.compiler)
