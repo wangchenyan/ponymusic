@@ -1,21 +1,21 @@
 [versions]
 # android sdk
-compileSdk = "33"
-targetSdk = "33"
+compileSdk = "34"
+targetSdk = "34"
 minSdk = "21"
 # java
 java = "VERSION_1_8"
 jvmTarget = "1.8"
 # plugin
 agp = "7.4.2"
-kotlin = "1.8.20"
-ksp = "1.8.20-1.0.11"
-hilt = "2.44"
+kotlin = "1.9.10"
+ksp = "1.9.10-1.0.13"
+hilt = "2.48.1"
 # sdk
-lifecycle = "2.6.1"
+lifecycle = "2.6.2"
 media = "1.6.0"
-room = "2.5.2"
-common = "1.0.0-beta09"
+room = "2.6.0"
+common = "1.0.0-beta10"
 init = "1.1.0"
 crouter = "2.4.0-beta01"
 
@@ -32,24 +32,24 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 # plugin
 autoRegister = { group = "com.github.wangchenyan", name = "AutoRegister", version = "1.4.3-beta02" }
 # androidx
-coreKtx = { group = "androidx.core", name = "core-ktx", version = "1.10.1" }
+coreKtx = { group = "androidx.core", name = "core-ktx", version = "1.12.0" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.6.1" }
-activityKtx = { group = "androidx.activity", name = "activity-ktx", version = "1.7.2" }
+activityKtx = { group = "androidx.activity", name = "activity-ktx", version = "1.8.0" }
 fragmentKtx = { group = "androidx.fragment", name = "fragment-ktx", version = "1.6.1" }
-material = { group = "com.google.android.material", name = "material", version = "1.9.0" }
+material = { group = "com.google.android.material", name = "material", version = "1.10.0" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version = "2.1.4" }
 coordinatorlayout = { group = "androidx.coordinatorlayout", name = "coordinatorlayout", version = "1.2.0" }
 flexbox = { group = "com.google.android.flexbox", name = "flexbox", version = "3.0.0" }
 cardview = { group = "androidx.cardview", name = "cardview", version = "1.0.0" }
 gridlayout = { group = "androidx.gridlayout", name = "gridlayout", version = "1.0.0" }
 multidex = { group = "androidx.multidex", name = "multidex", version = "2.0.1" }
-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version = "1.3.1" }
+recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version = "1.3.2" }
 lifecycle-viewModel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 lifecycle-liveData = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
 media = { group = "androidx.media", name = "media", version.ref = "media" }
 room = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
-preference = { group = "androidx.preference", name = "preference-ktx", version = "1.2.0" }
+preference = { group = "androidx.preference", name = "preference-ktx", version = "1.2.1" }
 # google
 crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx", version = "18.5.0" }
 analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx", version = "21.4.0" }

@@ -178,7 +178,7 @@ class PlayService : Service() {
                 this,
                 0,
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         val builder = NotificationCompat.Builder(this, NOTIFICATION_ID.toString())
             .setContentIntent(pendingIntent)
@@ -202,22 +202,23 @@ class PlayService : Service() {
         }
         remoteViews.setTextViewText(R.id.tv_title, title)
         remoteViews.setTextViewText(R.id.tv_subtitle, subtitle)
+        val playIconRes: Int
+        val extra: String
+        if (isPlaying) {
+            playIconRes = R.drawable.ic_notification_pause
+            extra = StatusBarReceiver.EXTRA_PAUSE
+        } else {
+            playIconRes = R.drawable.ic_notification_play
+            extra = StatusBarReceiver.EXTRA_PLAY
+        }
         val playIntent = Intent(StatusBarReceiver.ACTION_STATUS_BAR)
-        playIntent.putExtra(
-            StatusBarReceiver.EXTRA,
-            StatusBarReceiver.EXTRA_PLAY_PAUSE
-        )
+        playIntent.putExtra(StatusBarReceiver.EXTRA, extra)
         val playPendingIntent = PendingIntent.getBroadcast(
             this,
             0,
             playIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-        val playIconRes = if (isPlaying) {
-            R.drawable.ic_notification_pause
-        } else {
-            R.drawable.ic_notification_play
-        }
         remoteViews.setImageViewResource(R.id.iv_play_pause, playIconRes)
         remoteViews.setOnClickPendingIntent(R.id.iv_play_pause, playPendingIntent)
         val nextIntent = Intent(StatusBarReceiver.ACTION_STATUS_BAR)
@@ -226,7 +227,7 @@ class PlayService : Service() {
             this,
             1,
             nextIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         remoteViews.setImageViewResource(R.id.iv_next, R.drawable.ic_notification_next)
         remoteViews.setOnClickPendingIntent(R.id.iv_next, nextPendingIntent)

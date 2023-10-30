@@ -74,11 +74,11 @@ class MediaSessionManager(
 
     private val callback: MediaSessionCompat.Callback = object : MediaSessionCompat.Callback() {
         override fun onPlay() {
-            audioPlayer.playPause()
+            audioPlayer.startPlayer()
         }
 
         override fun onPause() {
-            audioPlayer.playPause()
+            audioPlayer.pausePlayer()
         }
 
         override fun onSkipToNext() {

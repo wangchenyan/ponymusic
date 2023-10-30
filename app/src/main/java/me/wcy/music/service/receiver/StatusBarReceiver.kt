@@ -16,11 +16,10 @@ class StatusBarReceiver : BroadcastReceiver() {
     lateinit var audioPlayer: AudioPlayer
 
     override fun onReceive(context: Context, intent: Intent?) {
-        val extra = intent?.getStringExtra(EXTRA)
-        if (extra == EXTRA_NEXT) {
-            audioPlayer.next()
-        } else if (extra == EXTRA_PLAY_PAUSE) {
-            audioPlayer.playPause()
+        when (intent?.getStringExtra(EXTRA)) {
+            EXTRA_NEXT -> audioPlayer.next()
+            EXTRA_PLAY -> audioPlayer.startPlayer()
+            EXTRA_PAUSE -> audioPlayer.pausePlayer()
         }
     }
 
@@ -28,6 +27,7 @@ class StatusBarReceiver : BroadcastReceiver() {
         const val ACTION_STATUS_BAR = "me.wcy.music.STATUS_BAR_ACTIONS"
         const val EXTRA = "extra"
         const val EXTRA_NEXT = "next"
-        const val EXTRA_PLAY_PAUSE = "play_pause"
+        const val EXTRA_PLAY = "play"
+        const val EXTRA_PAUSE = "pause"
     }
 }

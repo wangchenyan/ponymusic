@@ -16,8 +16,8 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import androidx.core.content.res.ResourcesCompat
 import com.blankj.utilcode.util.SizeUtils
+import me.wcy.common.ext.startOrResume
 import me.wcy.music.R
-import me.wcy.music.startOrResume
 import me.wcy.music.utils.ImageUtils
 
 /**

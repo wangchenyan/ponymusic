@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 
     <application
         android:name=".MusicApplication"
@@ -16,7 +18,10 @@
         android:roundIcon="@drawable/ic_launcher_round"
         android:theme="@style/AppTheme">
 
-        <service android:name=".service.PlayService" />
+        <service
+            android:name=".service.PlayService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
 
         <receiver
             android:name=".download.DownloadReceiver"
@@ -56,11 +61,6 @@
             android:name=".main.AboutActivity"
             android:label="@string/menu_about"
             android:screenOrientation="portrait" />
-        <activity
-            android:name="me.wcy.music.main.playlist.CurrentPlaylistActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Popup" />
         <activity
             android:name="me.wcy.music.main.playing.PlayingActivity"
             android:launchMode="singleTop"

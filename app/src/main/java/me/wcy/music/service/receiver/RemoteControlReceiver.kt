@@ -24,20 +24,13 @@ class RemoteControlReceiver : BroadcastReceiver() {
             return
         }
         when (event.keyCode) {
-            KeyEvent.KEYCODE_MEDIA_PLAY,
+            KeyEvent.KEYCODE_MEDIA_PLAY -> audioPlayer.startPlayer()
             KeyEvent.KEYCODE_MEDIA_PAUSE,
-            KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE,
-            KeyEvent.KEYCODE_HEADSETHOOK -> {
-                audioPlayer.playPause()
-            }
+            KeyEvent.KEYCODE_HEADSETHOOK -> audioPlayer.pausePlayer()
 
-            KeyEvent.KEYCODE_MEDIA_NEXT -> {
-                audioPlayer.next()
-            }
-
-            KeyEvent.KEYCODE_MEDIA_PREVIOUS -> {
-                audioPlayer.prev()
-            }
+            KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE -> audioPlayer.playPause()
+            KeyEvent.KEYCODE_MEDIA_NEXT -> audioPlayer.next()
+            KeyEvent.KEYCODE_MEDIA_PREVIOUS -> audioPlayer.prev()
         }
     }
 }

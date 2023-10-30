@@ -17,6 +17,6 @@ class NoisyAudioStreamReceiver : BroadcastReceiver() {
     lateinit var audioPlayer: AudioPlayer
 
     override fun onReceive(context: Context, intent: Intent) {
-        audioPlayer.playPause()
+        audioPlayer.pausePlayer()
     }
 }
