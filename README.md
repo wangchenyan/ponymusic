@@ -9,7 +9,7 @@
 - [Android开源音乐播放器之自动滚动歌词](https://juejin.im/post/5c373a336fb9a049f43b85de)
 - [Android开源音乐播放器之在线音乐列表自动加载更多](https://juejin.im/post/5c373a336fb9a049b82aaaaf)
 
-## 效果展示
+## 展示
 ### 视频
 [![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/video_cover.jpg)](https://www.ixigua.com/7294169212384182291)
 
@@ -62,9 +62,6 @@
 > 如果设置域名后 APP 接口报错，说明这个域名不可用，可以尝试其他结果。
 >
 > ![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/api_page.jpg)
-
-## 下载地址
-[点击下载](https://github.com/wangchenyan/ponymusic/releases)
 
 ## 更新说明
 `v 2.0.0`
