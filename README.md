@@ -99,6 +99,7 @@
 - First Release
 
 ## TODO
+- [ ] 桌面小部件 by [Glance](https://developer.android.com/jetpack/compose/glance/create-app-widget)
 - [x] 适配 Android 14
 - [x] 在线音乐可以免下载加入我的音乐列表
 - [ ] 在线音乐自动缓存
