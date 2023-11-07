@@ -83,43 +83,24 @@ class PlayService : Service() {
     private fun showNotification(isPlaying: Boolean, song: SongEntity) {
         if (checkNotificationPermission()) {
             loadCoverJob?.cancel()
-            if (isPlaying) {
-                startForeground(
-                    NOTIFICATION_ID,
-                    buildNotification(song, null, true)
-                )
-                loadCoverJob = CommonApp.appScope.launch {
-                    val bitmap = ImageUtils.loadBitmap(song.getSmallCover()).data
-                    if (bitmap != null) {
-                        startForeground(
-                            NOTIFICATION_ID,
-                            buildNotification(song, bitmap, true)
-                        )
-                    }
-                }
-            } else {
-                stopForeground(false)
-                NotificationManagerCompat.from(this)
-                    .notify(
+            startForeground(
+                NOTIFICATION_ID,
+                buildNotification(song, null, isPlaying)
+            )
+            loadCoverJob = CommonApp.appScope.launch {
+                val bitmap = ImageUtils.loadBitmap(song.getSmallCover()).data
+                if (bitmap != null) {
+                    startForeground(
                         NOTIFICATION_ID,
-                        buildNotification(song, null, false)
+                        buildNotification(song, bitmap, isPlaying)
                     )
-                loadCoverJob = CommonApp.appScope.launch {
-                    val bitmap = ImageUtils.loadBitmap(song.getSmallCover()).data
-                    if (bitmap != null) {
-                        NotificationManagerCompat.from(this@PlayService)
-                            .notify(
-                                NOTIFICATION_ID,
-                                buildNotification(song, bitmap, false)
-                            )
-                    }
                 }
             }
         }
     }
 
     private fun cancelNotification() {
-        NotificationManagerCompat.from(this).cancel(NOTIFICATION_ID)
+        stopForeground(true)
     }
 
     private fun checkNotificationPermission(): Boolean {
