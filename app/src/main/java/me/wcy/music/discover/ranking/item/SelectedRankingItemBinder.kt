@@ -1,6 +1,7 @@
 package me.wcy.music.discover.ranking.item
 
-import android.view.ViewGroup.MarginLayoutParams
+import android.view.Gravity
+import android.widget.FrameLayout
 import com.blankj.utilcode.util.SizeUtils
 import me.wcy.music.common.bean.PlaylistData
 import me.wcy.music.databinding.ItemSelectedRankingBinding
@@ -20,19 +21,25 @@ class SelectedRankingItemBinder(
         item: PlaylistData,
         position: Int
     ) {
-        viewBinding.root.setOnClickListener {
+        viewBinding.content.setOnClickListener {
             listener.onItemClick(item, position)
         }
         viewBinding.ivPlay.setOnClickListener {
             listener.onPlayClick(item, position)
         }
         val selectedPosition = position - listener.getFirstSelectedPosition()
-        val marginEnd = if (selectedPosition % 3 < 2) SizeUtils.dp2px(10f) else 0
-        val lp = viewBinding.root.layoutParams as MarginLayoutParams
-        if (lp.width != itemWidth || lp.height != itemWidth) {
+        val gravity = when (selectedPosition % 3) {
+            0 -> Gravity.START
+            1 -> Gravity.CENTER_HORIZONTAL
+            2 -> Gravity.END
+            else -> Gravity.START
+        }
+        val lp = viewBinding.content.layoutParams as FrameLayout.LayoutParams
+        if (lp.width != itemWidth || lp.height != itemWidth || lp.gravity != gravity) {
             lp.width = itemWidth
-            lp.height = itemWidth 
-            viewBinding.root.layoutParams = lp
+            lp.height = itemWidth
+            lp.gravity = gravity
+            viewBinding.content.layoutParams = lp
         }
         viewBinding.tvName.text = item.name
         viewBinding.tvUpdateTime.text = item.updateFrequency
