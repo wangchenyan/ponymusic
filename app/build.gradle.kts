@@ -23,8 +23,8 @@ android {
         applicationId = "me.wcy.music"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 2000002
-        versionName = "2.0.0-beta02"
+        versionCode = libs.versions.versionCode.get().toInt()
+        versionName = libs.versions.versionName.get()
 
         multiDexEnabled = true
 
