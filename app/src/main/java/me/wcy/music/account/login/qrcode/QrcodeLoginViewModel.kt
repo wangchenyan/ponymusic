@@ -1,4 +1,4 @@
-package me.wcy.music.account.login
+package me.wcy.music.account.login.qrcode
 
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import me.wcy.common.ext.toUnMutable
 import me.wcy.common.net.apiCall
 import me.wcy.music.account.AccountApi
-import me.wcy.music.account.bean.CheckLoginStatusData
+import me.wcy.music.account.bean.LoginResultData
 import me.wcy.music.account.service.UserService
 import javax.inject.Inject
 
@@ -21,13 +21,13 @@ import javax.inject.Inject
  * Created by wangchenyan.top on 2023/8/28.
  */
 @HiltViewModel
-class LoginViewModel @Inject constructor(
+class QrcodeLoginViewModel @Inject constructor(
     private val userService: UserService
 ) : ViewModel() {
     private var qrCodeKey = ""
     private val _qrCode = MutableStateFlow<Bitmap?>(null)
     val qrCode = _qrCode
-    private val _loginStatus = MutableStateFlow<CheckLoginStatusData?>(null)
+    private val _loginStatus = MutableStateFlow<LoginResultData?>(null)
     val loginStatus = _loginStatus.toUnMutable()
     private var job: Job? = null
 
@@ -41,7 +41,7 @@ class LoginViewModel @Inject constructor(
                 AccountApi.get().getQrCodeKey()
             }
             if (getKeyRes.isSuccessWithData().not()) {
-                _loginStatus.value = CheckLoginStatusData(-1)
+                _loginStatus.value = LoginResultData(-1)
                 return@launch
             }
             val keyData = getKeyRes.getDataOrThrow()
@@ -50,7 +50,7 @@ class LoginViewModel @Inject constructor(
                 AccountApi.get().getLoginQrCode(qrCodeKey)
             }
             if (getQrCodeRes.isSuccessWithData().not()) {
-                _loginStatus.value = CheckLoginStatusData(-1)
+                _loginStatus.value = LoginResultData(-1)
                 return@launch
             }
             val qrCodeData = getQrCodeRes.getDataOrThrow()
@@ -61,15 +61,15 @@ class LoginViewModel @Inject constructor(
                     AccountApi.get().checkLoginStatus(qrCodeKey)
                 }.onSuccess { status ->
                     _loginStatus.value = status
-                    if (status.code == CheckLoginStatusData.STATUS_NOT_SCAN
-                        || status.code == CheckLoginStatusData.STATUS_SCANNING
+                    if (status.code == LoginResultData.STATUS_NOT_SCAN
+                        || status.code == LoginResultData.STATUS_SCANNING
                     ) {
                         delay(3000)
                     } else {
                         return@launch
                     }
                 }.onFailure {
-                    _loginStatus.value = CheckLoginStatusData(-1, it.message ?: "")
+                    _loginStatus.value = LoginResultData(-1, it.message ?: "")
                     return@launch
                 }
             }

@@ -4,10 +4,11 @@ import me.wcy.common.net.NetResult
 import me.wcy.common.net.gson.GsonConverterFactory
 import me.wcy.common.utils.GsonUtils
 import me.wcy.common.utils.ServerTime
-import me.wcy.music.account.bean.CheckLoginStatusData
+import me.wcy.music.account.bean.LoginResultData
 import me.wcy.music.account.bean.LoginStatusData
 import me.wcy.music.account.bean.QrCodeData
 import me.wcy.music.account.bean.QrCodeKeyData
+import me.wcy.music.account.bean.SendCodeResult
 import me.wcy.music.net.HttpClient
 import me.wcy.music.storage.preference.ConfigPreferences
 import retrofit2.Retrofit
@@ -19,6 +20,19 @@ import retrofit2.http.Query
  * Created by wangchenyan.top on 2023/8/25.
  */
 interface AccountApi {
+
+    @GET("captcha/sent")
+    suspend fun sendPhoneCode(
+        @Query("phone") phone: String,
+        @Query("timestamp") timestamp: Long = ServerTime.currentTimeMillis()
+    ): SendCodeResult
+
+    @GET("login/cellphone")
+    suspend fun phoneLogin(
+        @Query("phone") phone: String,
+        @Query("captcha") captcha: String,
+        @Query("timestamp") timestamp: Long = ServerTime.currentTimeMillis()
+    ): LoginResultData
 
     @GET("login/qr/key")
     suspend fun getQrCodeKey(
@@ -36,7 +50,7 @@ interface AccountApi {
         @Query("key") key: String,
         @Query("timestamp") timestamp: Long = ServerTime.currentTimeMillis(),
         @Query("noCookie") noCookie: Boolean = true
-    ): CheckLoginStatusData
+    ): LoginResultData
 
     @POST("login/status")
     suspend fun getLoginStatus(

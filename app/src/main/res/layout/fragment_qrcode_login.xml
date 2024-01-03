@@ -9,10 +9,9 @@
     <me.wcy.common.widget.TitleLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tlTitleText="登录" />
+        app:tlTitleText="扫码登录" />
 
     <LinearLayout
-        android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
@@ -46,5 +45,20 @@
             android:text="使用「网易云音乐APP」扫码登录"
             android:textColor="@color/common_text_h2_color"
             android:textSize="12dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tvPhoneLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="36dp"
+            android:padding="4dp"
+            android:text="手机号登录"
+            android:textColor="@color/common_theme_color"
+            android:textSize="14dp" />
     </LinearLayout>
 </LinearLayout>

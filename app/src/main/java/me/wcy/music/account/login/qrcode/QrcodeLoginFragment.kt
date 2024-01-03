@@ -1,4 +1,4 @@
-package me.wcy.music.account.login
+package me.wcy.music.account.login.qrcode
 
 import android.view.View
 import androidx.core.view.isVisible
@@ -8,22 +8,23 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.wcy.common.ext.viewBindings
-import me.wcy.music.account.bean.CheckLoginStatusData
+import me.wcy.music.account.bean.LoginResultData
+import me.wcy.music.account.login.LoginRouteFragment
 import me.wcy.music.account.service.UserService
 import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.consts.RoutePath
-import me.wcy.music.databinding.FragmentLoginBinding
+import me.wcy.music.databinding.FragmentQrcodeLoginBinding
 import me.wcy.router.annotation.Route
 import javax.inject.Inject
 
 /**
  * Created by wangchenyan.top on 2023/8/28.
  */
-@Route(RoutePath.LOGIN)
+@Route(RoutePath.QRCODE_LOGIN)
 @AndroidEntryPoint
-class LoginFragment : BaseMusicFragment() {
-    private val viewBinding by viewBindings<FragmentLoginBinding>()
-    private val viewModel by viewModels<LoginViewModel>()
+class QrcodeLoginFragment : BaseMusicFragment() {
+    private val viewBinding by viewBindings<FragmentQrcodeLoginBinding>()
+    private val viewModel by viewModels<QrcodeLoginViewModel>()
 
     @Inject
     lateinit var userService: UserService
@@ -35,6 +36,13 @@ class LoginFragment : BaseMusicFragment() {
     override fun onLazyCreate() {
         super.onLazyCreate()
 
+        viewBinding.tvPhoneLogin.setOnClickListener {
+            activity?.apply {
+                setResult(LoginRouteFragment.RESULT_SWITCH_PHONE)
+                finish()
+            }
+        }
+
         loadQrCode()
 
         lifecycleScope.launch {
@@ -45,22 +53,22 @@ class LoginFragment : BaseMusicFragment() {
                     viewBinding.tvStatus.text = "加载中…"
                 } else {
                     when (status.code) {
-                        CheckLoginStatusData.STATUS_NOT_SCAN -> {
+                        LoginResultData.STATUS_NOT_SCAN -> {
                             viewBinding.tvStatus.isVisible = false
                         }
 
-                        CheckLoginStatusData.STATUS_SCANNING -> {
+                        LoginResultData.STATUS_SCANNING -> {
                             viewBinding.tvStatus.isVisible = true
                             viewBinding.tvStatus.text = "「${status.nickname}」授权中"
                         }
 
-                        CheckLoginStatusData.STATUS_SUCCESS -> {
+                        LoginResultData.STATUS_SUCCESS -> {
                             viewBinding.tvStatus.isVisible = true
                             viewBinding.tvStatus.text = status.message
                             getProfile(status.cookie)
                         }
 
-                        CheckLoginStatusData.STATUS_INVALID -> {
+                        LoginResultData.STATUS_INVALID -> {
                             viewBinding.tvStatus.isVisible = true
                             viewBinding.tvStatus.text = "二维码已失效，点击刷新"
                             viewBinding.tvStatus.setOnClickListener {
