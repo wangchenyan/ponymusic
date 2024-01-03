@@ -149,4 +149,5 @@ dependencies {
     implementation(libs.loggingInterceptor)
     implementation(libs.zbar)
     implementation(libs.blurry)
+    implementation(libs.banner)
 }

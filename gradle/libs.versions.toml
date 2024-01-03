@@ -70,3 +70,4 @@ circleimageview = { group = "de.hdodenhof", name = "circleimageview", version = 
 glide = { group = "com.github.bumptech.glide", name = "glide", version = "4.13.2" }
 zbar = { group = "cn.bertsir.zbarLibary", name = "zbarlibary", version = "1.4.2" }
 blurry = { group = "jp.wasabeef", name = "blurry", version = "4.0.1" }
+banner = { group = "io.github.youth5201314", name = "banner", version = "2.2.2" }

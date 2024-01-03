@@ -16,11 +16,13 @@ import me.wcy.music.common.dialog.songmenu.items.ArtistMenuItem
 import me.wcy.music.common.dialog.songmenu.items.CollectMenuItem
 import me.wcy.music.common.dialog.songmenu.items.CommentMenuItem
 import me.wcy.music.consts.Consts
+import me.wcy.music.consts.RoutePath
 import me.wcy.music.search.SearchApi
 import me.wcy.music.search.SearchViewModel
 import me.wcy.music.service.AudioPlayer
 import me.wcy.music.utils.toEntity
 import me.wcy.radapter3.RAdapter
+import me.wcy.router.CRouter
 import javax.inject.Inject
 
 /**
@@ -33,6 +35,7 @@ class SearchSongFragment : SimpleMusicRefreshFragment<SongData>() {
         SearchSongItemBinder(object : OnItemClickListener2<SongData> {
             override fun onItemClick(item: SongData, position: Int) {
                 audioPlayer.addAndPlay(item.toEntity())
+                CRouter.with(context).url(RoutePath.PLAYING).start()
             }
 
             override fun onMoreClick(item: SongData, position: Int) {

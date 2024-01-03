@@ -15,6 +15,8 @@ dependencyResolutionManagement {
         maven("https://maven.aliyun.com/repository/public/")
         maven("https://jitpack.io")
         maven("https://repo1.maven.org/maven2/")
+        // banner
+        maven("https://s01.oss.sonatype.org/content/groups/public")
     }
 }
 include(":app")

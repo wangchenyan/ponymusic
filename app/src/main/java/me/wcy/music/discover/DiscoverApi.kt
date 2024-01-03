@@ -5,6 +5,7 @@ import me.wcy.common.net.gson.GsonConverterFactory
 import me.wcy.common.utils.GsonUtils
 import me.wcy.music.common.bean.LrcDataWrap
 import me.wcy.music.common.bean.SongUrlData
+import me.wcy.music.discover.banner.BannerListData
 import me.wcy.music.discover.playlist.detail.bean.PlaylistDetailData
 import me.wcy.music.discover.playlist.detail.bean.SongListData
 import me.wcy.music.discover.playlist.square.bean.PlaylistListData
@@ -13,6 +14,7 @@ import me.wcy.music.discover.recommend.song.bean.RecommendSongListData
 import me.wcy.music.net.HttpClient
 import me.wcy.music.storage.preference.ConfigPreferences
 import retrofit2.Retrofit
+import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
@@ -61,6 +63,9 @@ interface DiscoverApi {
 
     @POST("toplist")
     suspend fun getRankingList(): PlaylistListData
+
+    @GET("banner?type=2")
+    suspend fun getBannerList(): BannerListData
 
     companion object {
         private val api: DiscoverApi by lazy {

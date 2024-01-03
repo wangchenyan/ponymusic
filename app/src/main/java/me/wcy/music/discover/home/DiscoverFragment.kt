@@ -9,11 +9,17 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
+import com.youth.banner.adapter.BannerImageAdapter
+import com.youth.banner.config.IndicatorConfig
+import com.youth.banner.holder.BannerImageHolder
+import com.youth.banner.indicator.CircleIndicator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import me.wcy.common.ext.load
 import me.wcy.common.ext.toast
 import me.wcy.common.ext.viewBindings
+import me.wcy.common.utils.LaunchUtils
 import me.wcy.common.widget.decoration.SpacingDecoration
 import me.wcy.music.R
 import me.wcy.music.account.service.UserService
@@ -23,6 +29,7 @@ import me.wcy.music.common.bean.PlaylistData
 import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentDiscoverBinding
 import me.wcy.music.discover.DiscoverApi
+import me.wcy.music.discover.banner.BannerData
 import me.wcy.music.discover.home.viewmodel.DiscoverViewModel
 import me.wcy.music.discover.playlist.square.item.PlaylistItemBinder
 import me.wcy.music.discover.ranking.discover.item.DiscoverRankingItemBinder
@@ -76,6 +83,7 @@ class DiscoverFragment : BaseMusicFragment() {
         super.onLazyCreate()
 
         initTitle()
+        initBanner()
         initTopButton()
         initRecommendPlaylist()
         initRankingList()
@@ -98,6 +106,52 @@ class DiscoverFragment : BaseMusicFragment() {
         getTitleLayout()?.getContentView()?.setOnClickListener {
             if (ApiDomainDialog.checkApiDomain(requireContext())) {
                 CRouter.with(requireActivity()).url(RoutePath.SEARCH).start()
+            }
+        }
+    }
+
+    private fun initBanner() {
+        viewBinding.banner.addBannerLifecycleObserver(this)
+            .setIndicator(CircleIndicator(requireContext()))
+            .setIndicatorGravity(IndicatorConfig.Direction.LEFT)
+            .setIndicatorMargins(IndicatorConfig.Margins().apply {
+                leftMargin = SizeUtils.dp2px(28f)
+            })
+            .setAdapter(object : BannerImageAdapter<BannerData>(emptyList()) {
+                override fun onBindView(
+                    holder: BannerImageHolder?,
+                    data: BannerData?,
+                    position: Int,
+                    size: Int
+                ) {
+                    holder?.imageView?.apply {
+                        val padding = SizeUtils.dp2px(16f)
+                        setPadding(padding, 0, padding, 0)
+                        load(data?.pic ?: "", SizeUtils.dp2px(12f))
+                        setOnClickListener {
+                            data ?: return@setOnClickListener
+                            if (data.song != null) {
+                                audioPlayer.addAndPlay(data.song.toEntity())
+                                CRouter.with(context).url(RoutePath.PLAYING).start()
+                            } else if (data.url.isNotEmpty()) {
+                                LaunchUtils.launchBrowser(requireContext(), data.url)
+                            } else if (data.targetId > 0) {
+                                CRouter.with(requireActivity())
+                                    .url(RoutePath.PLAYLIST_DETAIL)
+                                    .extra("id", data.targetId)
+                                    .start()
+                            }
+                        }
+                    }
+                }
+            })
+        lifecycleScope.launch {
+            viewModel.bannerList.collectLatest {
+                viewBinding.banner.isVisible = it.isNotEmpty()
+                viewBinding.bannerPlaceholder.isVisible = it.isEmpty()
+                if (it.isNotEmpty()) {
+                    viewBinding.banner.setDatas(it)
+                }
             }
         }
     }

@@ -12,6 +12,7 @@ import me.wcy.common.ext.toUnMutable
 import me.wcy.music.account.service.UserService
 import me.wcy.music.common.bean.PlaylistData
 import me.wcy.music.discover.DiscoverApi
+import me.wcy.music.discover.banner.BannerData
 import me.wcy.music.storage.preference.ConfigPreferences
 import javax.inject.Inject
 
@@ -20,6 +21,9 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class DiscoverViewModel @Inject constructor() : ViewModel() {
+    private val _bannerList = MutableStateFlow<List<BannerData>>(emptyList())
+    val bannerList = _bannerList.toUnMutable()
+
     private val _recommendPlaylist = MutableStateFlow<List<PlaylistData>>(emptyList())
     val recommendPlaylist = _recommendPlaylist.toUnMutable()
 
@@ -37,7 +41,19 @@ class DiscoverViewModel @Inject constructor() : ViewModel() {
                 }
             }
         }
+        loadBanner()
         loadRankingList()
+    }
+
+    private fun loadBanner() {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                DiscoverApi.get().getBannerList()
+            }.onSuccess {
+                _bannerList.value = it.banners
+            }.onFailure {
+            }
+        }
     }
 
     private fun loadRecommendPlaylist() {
