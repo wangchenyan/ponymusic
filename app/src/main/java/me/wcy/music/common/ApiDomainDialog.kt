@@ -4,6 +4,13 @@ import android.content.Context
 import androidx.core.text.buildSpannedString
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.RegexUtils
+import kotlinx.coroutines.launch
+import me.wcy.music.R
+import me.wcy.music.account.AccountPreference
+import me.wcy.music.databinding.DialogApiDomainBinding
+import me.wcy.music.net.NetCache
+import me.wcy.music.storage.preference.ConfigPreferences
+import top.wangchenyan.common.CommonApp
 import top.wangchenyan.common.ext.getColorEx
 import top.wangchenyan.common.ext.setLink
 import top.wangchenyan.common.ext.showConfirmDialog
@@ -13,10 +20,6 @@ import top.wangchenyan.common.utils.LaunchUtils
 import top.wangchenyan.common.widget.CustomSpan.appendStyle
 import top.wangchenyan.common.widget.dialog.CenterDialog
 import top.wangchenyan.common.widget.dialog.CenterDialogBuilder
-import me.wcy.music.R
-import me.wcy.music.account.AccountPreference
-import me.wcy.music.databinding.DialogApiDomainBinding
-import me.wcy.music.storage.preference.ConfigPreferences
 
 /**
  * Created by wangchenyan.top on 2023/9/18.
@@ -59,6 +62,9 @@ class ApiDomainDialog(private val context: Context) {
                     } else {
                         ConfigPreferences.apiDomain = domain
                         AccountPreference.clear()
+                        CommonApp.appScope.launch {
+                            NetCache.userCache.clear()
+                        }
                         dialog.dismiss()
                         context.showSingleDialog("设置成功，重启后生效") {
                             AppUtils.relaunchApp(true)

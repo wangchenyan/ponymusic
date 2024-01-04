@@ -41,6 +41,9 @@ class MusicApplication : Application() {
                 textColorBlack = { R.color.common_text_h1_color }
                 isTitleCenter = false
             }
+            imageLoaderConfig {
+                placeholderAvatar = R.drawable.ic_launcher_round
+            }
             apiConfig({}) {
                 codeJsonNames = listOf("code")
                 msgJsonNames = listOf("message", "msg")

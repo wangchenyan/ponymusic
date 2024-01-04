@@ -9,11 +9,6 @@ import com.blankj.utilcode.util.SizeUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import top.wangchenyan.common.ext.loadAvatar
-import top.wangchenyan.common.ext.toast
-import top.wangchenyan.common.ext.viewBindings
-import top.wangchenyan.common.widget.decoration.SpacingDecoration
-import top.wangchenyan.common.widget.dialog.BottomItemsDialogBuilder
 import me.wcy.music.R
 import me.wcy.music.account.service.UserService
 import me.wcy.music.common.ApiDomainDialog
@@ -26,6 +21,11 @@ import me.wcy.music.mine.home.viewmodel.MineViewModel
 import me.wcy.music.mine.playlist.UserPlaylistItemBinder
 import me.wcy.radapter3.RAdapter
 import me.wcy.router.CRouter
+import top.wangchenyan.common.ext.loadAvatar
+import top.wangchenyan.common.ext.toast
+import top.wangchenyan.common.ext.viewBindings
+import top.wangchenyan.common.widget.decoration.SpacingDecoration
+import top.wangchenyan.common.widget.dialog.BottomItemsDialogBuilder
 import javax.inject.Inject
 
 /**
@@ -50,6 +50,7 @@ class MineFragment : BaseMusicFragment() {
         initProfile()
         initLocalMusic()
         initPlaylist()
+        viewModel.updatePlaylistFromCache()
     }
 
     override fun onResume() {

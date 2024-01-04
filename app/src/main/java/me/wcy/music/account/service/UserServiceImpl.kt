@@ -4,14 +4,15 @@ import android.app.Activity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
-import top.wangchenyan.common.ext.showConfirmDialog
-import top.wangchenyan.common.ext.toUnMutable
-import top.wangchenyan.common.model.CommonResult
 import me.wcy.music.account.AccountApi
 import me.wcy.music.account.AccountPreference
 import me.wcy.music.account.bean.ProfileData
 import me.wcy.music.consts.RoutePath
+import me.wcy.music.net.NetCache
 import me.wcy.router.CRouter
+import top.wangchenyan.common.ext.showConfirmDialog
+import top.wangchenyan.common.ext.toUnMutable
+import top.wangchenyan.common.model.CommonResult
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -63,6 +64,7 @@ class UserServiceImpl @Inject constructor() : UserService {
     override suspend fun logout() {
         withContext(Dispatchers.IO) {
             AccountPreference.clear()
+            NetCache.userCache.clear()
         }
         _profile.value = null
     }

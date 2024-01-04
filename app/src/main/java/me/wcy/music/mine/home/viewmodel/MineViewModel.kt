@@ -7,12 +7,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import top.wangchenyan.common.ext.toUnMutable
-import top.wangchenyan.common.model.CommonResult
-import top.wangchenyan.common.net.apiCall
 import me.wcy.music.account.service.UserService
 import me.wcy.music.common.bean.PlaylistData
 import me.wcy.music.mine.MineApi
+import me.wcy.music.net.NetCache
+import top.wangchenyan.common.ext.toUnMutable
+import top.wangchenyan.common.model.CommonResult
+import top.wangchenyan.common.net.apiCall
 import javax.inject.Inject
 
 /**
@@ -46,6 +47,17 @@ class MineViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun updatePlaylistFromCache() {
+        viewModelScope.launch {
+            if (userService.isLogin()) {
+                val uid = userService.profile.value?.userId ?: return@launch
+                val cacheList = NetCache.userCache.getJsonArray(CACHE_KEY, PlaylistData::class.java)
+                    ?: return@launch
+                notifyPlaylist(uid, cacheList)
+            }
+        }
+    }
+
     fun updatePlaylist() {
         if (userService.isLogin()) {
             val uid = userService.profile.value?.userId ?: return
@@ -61,12 +73,17 @@ class MineViewModel @Inject constructor() : ViewModel() {
             }
             if (res.getOrNull()?.code == 200) {
                 val list = res.getOrThrow().playlists
-                val mineList = list.filter { it.userId == uid }
-                _likePlaylist.value = mineList.firstOrNull()
-                _myPlaylists.value = mineList.takeLast((mineList.size - 1).coerceAtLeast(0))
-                _collectPlaylists.value = list.filter { it.userId != uid }
+                notifyPlaylist(uid, list)
+                NetCache.userCache.putJson(CACHE_KEY, list)
             }
         }
+    }
+
+    private fun notifyPlaylist(uid: Long, list: List<PlaylistData>) {
+        val mineList = list.filter { it.userId == uid }
+        _likePlaylist.value = mineList.firstOrNull()
+        _myPlaylists.value = mineList.takeLast((mineList.size - 1).coerceAtLeast(0))
+        _collectPlaylists.value = list.filter { it.userId != uid }
     }
 
     suspend fun removeCollect(id: Long): CommonResult<Unit> {
@@ -80,5 +97,9 @@ class MineViewModel @Inject constructor() : ViewModel() {
         } else {
             CommonResult.fail(res.code, res.msg)
         }
+    }
+
+    companion object {
+        private const val CACHE_KEY = "my_playlist"
     }
 }

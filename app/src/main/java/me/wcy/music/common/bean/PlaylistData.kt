@@ -38,6 +38,7 @@ data class PlaylistData(
     @SerializedName("ToplistType")
     val toplistType: String = "",
 ) {
+    @SerializedName("_songList")
     var songList: List<SongData> = emptyList()
 
     fun getSmallCover(): String {
