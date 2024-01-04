@@ -4,8 +4,6 @@ import android.view.View
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import top.wangchenyan.common.ext.viewBindings
-import top.wangchenyan.common.net.apiCall
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.common.OnItemClickListener2
@@ -22,7 +20,10 @@ import me.wcy.music.discover.recommend.song.item.RecommendSongItemBinder
 import me.wcy.music.service.AudioPlayer
 import me.wcy.music.utils.toEntity
 import me.wcy.radapter3.RAdapter
+import me.wcy.router.CRouter
 import me.wcy.router.annotation.Route
+import top.wangchenyan.common.ext.viewBindings
+import top.wangchenyan.common.net.apiCall
 import javax.inject.Inject
 
 /**
@@ -63,6 +64,7 @@ class RecommendSongFragment : BaseMusicFragment() {
             override fun onItemClick(item: SongData, position: Int) {
                 val entityList = adapter.getDataList().map { it.toEntity() }
                 audioPlayer.replaceAll(entityList, entityList[position])
+                CRouter.with(requireContext()).url(RoutePath.PLAYING).start()
             }
 
             override fun onMoreClick(item: SongData, position: Int) {
@@ -82,6 +84,7 @@ class RecommendSongFragment : BaseMusicFragment() {
         viewBinding.tvPlayAll.setOnClickListener {
             val entityList = adapter.getDataList().map { it.toEntity() }
             audioPlayer.replaceAll(entityList, entityList.first())
+            CRouter.with(requireContext()).url(RoutePath.PLAYING).start()
         }
 
         loadData()

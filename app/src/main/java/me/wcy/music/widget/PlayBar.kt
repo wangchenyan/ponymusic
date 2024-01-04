@@ -14,18 +14,18 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import top.wangchenyan.common.CommonApp
-import top.wangchenyan.common.ext.findActivity
-import top.wangchenyan.common.ext.findLifecycleOwner
-import top.wangchenyan.common.ext.getColor
-import top.wangchenyan.common.ext.load
-import top.wangchenyan.common.widget.CustomSpan.appendStyle
 import me.wcy.music.R
 import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.LayoutPlayBarBinding
 import me.wcy.music.main.playlist.CurrentPlaylistFragment
 import me.wcy.music.service.AudioPlayerModule.Companion.audioPlayer
 import me.wcy.router.CRouter
+import top.wangchenyan.common.CommonApp
+import top.wangchenyan.common.ext.findActivity
+import top.wangchenyan.common.ext.findLifecycleOwner
+import top.wangchenyan.common.ext.getColor
+import top.wangchenyan.common.ext.loadAvatar
+import top.wangchenyan.common.widget.CustomSpan.appendStyle
 
 /**
  * Created by wangchenyan.top on 2023/9/4.
@@ -79,7 +79,7 @@ class PlayBar @JvmOverloads constructor(
         audioPlayer.currentSong.observe(lifecycleOwner) { currentSong ->
             if (currentSong != null) {
                 isVisible = true
-                viewBinding.ivCover.load(currentSong.getSmallCover(), true)
+                viewBinding.ivCover.loadAvatar(currentSong.getSmallCover())
                 viewBinding.tvTitle.text = buildSpannedString {
                     append(currentSong.title)
                     appendStyle(

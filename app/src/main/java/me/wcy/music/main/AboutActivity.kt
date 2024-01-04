@@ -6,8 +6,8 @@ import android.os.Bundle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.blankj.utilcode.util.AppUtils
-import top.wangchenyan.common.ui.activity.BaseActivity
 import me.wcy.music.R
+import top.wangchenyan.common.ui.activity.BaseActivity
 
 class AboutActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +43,7 @@ class AboutActivity : BaseActivity() {
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             addPreferencesFromResource(R.xml.preference_about)
-            mVersion.summary = "v " + AppUtils.getAppVersionName()
+            mVersion.summary = AppUtils.getAppVersionName()
             mShare.setOnPreferenceClickListener {
                 share()
                 true

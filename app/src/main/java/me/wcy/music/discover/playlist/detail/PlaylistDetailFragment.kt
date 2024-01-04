@@ -10,10 +10,6 @@ import com.blankj.utilcode.util.SizeUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import top.wangchenyan.common.ext.loadAvatar
-import top.wangchenyan.common.ext.toast
-import top.wangchenyan.common.ext.viewBindings
-import top.wangchenyan.common.utils.StatusBarUtils
 import me.wcy.music.R
 import me.wcy.music.account.service.UserService
 import me.wcy.music.common.BaseMusicFragment
@@ -35,7 +31,12 @@ import me.wcy.music.utils.ConvertUtils
 import me.wcy.music.utils.ImageUtils.loadCover
 import me.wcy.music.utils.toEntity
 import me.wcy.radapter3.RAdapter
+import me.wcy.router.CRouter
 import me.wcy.router.annotation.Route
+import top.wangchenyan.common.ext.loadAvatar
+import top.wangchenyan.common.ext.toast
+import top.wangchenyan.common.ext.viewBindings
+import top.wangchenyan.common.utils.StatusBarUtils
 import javax.inject.Inject
 
 /**
@@ -174,6 +175,7 @@ class PlaylistDetailFragment : BaseMusicFragment() {
             val songList = viewModel.songList.value.map { it.toEntity() }
             if (songList.isNotEmpty()) {
                 audioPlayer.replaceAll(songList, songList.first())
+                CRouter.with(requireContext()).url(RoutePath.PLAYING).start()
             }
         }
 
@@ -182,6 +184,7 @@ class PlaylistDetailFragment : BaseMusicFragment() {
                 val songList = viewModel.songList.value.map { it.toEntity() }
                 if (songList.isNotEmpty()) {
                     audioPlayer.replaceAll(songList, songList[position])
+                    CRouter.with(requireContext()).url(RoutePath.PLAYING).start()
                 }
             }
 

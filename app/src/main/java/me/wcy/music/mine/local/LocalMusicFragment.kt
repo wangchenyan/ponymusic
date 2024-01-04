@@ -7,8 +7,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import top.wangchenyan.common.ext.viewBindings
-import top.wangchenyan.common.permission.Permissioner
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.common.OnItemClickListener2
@@ -20,7 +18,10 @@ import me.wcy.music.service.AudioPlayer
 import me.wcy.music.storage.db.entity.SongEntity
 import me.wcy.music.utils.TimeUtils
 import me.wcy.radapter3.RAdapter
+import me.wcy.router.CRouter
 import me.wcy.router.annotation.Route
+import top.wangchenyan.common.ext.viewBindings
+import top.wangchenyan.common.permission.Permissioner
 import javax.inject.Inject
 
 /**
@@ -63,6 +64,7 @@ class LocalMusicFragment : BaseMusicFragment() {
         adapter.register(LocalSongItemBinder(object : OnItemClickListener2<SongEntity> {
             override fun onItemClick(item: SongEntity, position: Int) {
                 audioPlayer.replaceAll(adapter.getDataList(), item)
+                CRouter.with(requireContext()).url(RoutePath.PLAYING).start()
             }
 
             override fun onMoreClick(item: SongEntity, position: Int) {
@@ -84,6 +86,7 @@ class LocalMusicFragment : BaseMusicFragment() {
 
         viewBinding.tvPlayAll.setOnClickListener {
             audioPlayer.replaceAll(adapter.getDataList(), adapter.getDataList().first())
+            CRouter.with(requireContext()).url(RoutePath.PLAYING).start()
         }
 
         loadData()
