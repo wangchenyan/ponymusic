@@ -4,8 +4,8 @@ import android.view.View
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import me.wcy.common.ext.viewBindings
-import me.wcy.common.net.apiCall
+import top.wangchenyan.common.ext.viewBindings
+import top.wangchenyan.common.net.apiCall
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.common.OnItemClickListener2

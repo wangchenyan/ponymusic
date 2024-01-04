@@ -1,9 +1,9 @@
 package me.wcy.music.mine
 
-import me.wcy.common.net.NetResult
-import me.wcy.common.net.gson.GsonConverterFactory
-import me.wcy.common.utils.GsonUtils
-import me.wcy.common.utils.ServerTime
+import top.wangchenyan.common.net.NetResult
+import top.wangchenyan.common.net.gson.GsonConverterFactory
+import top.wangchenyan.common.utils.GsonUtils
+import top.wangchenyan.common.utils.ServerTime
 import me.wcy.music.discover.playlist.square.bean.PlaylistListData
 import me.wcy.music.net.HttpClient
 import me.wcy.music.storage.preference.ConfigPreferences

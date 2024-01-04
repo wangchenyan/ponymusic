@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import me.wcy.common.ext.toUnMutable
-import me.wcy.common.model.CommonResult
+import top.wangchenyan.common.ext.toUnMutable
+import top.wangchenyan.common.model.CommonResult
 import me.wcy.music.discover.DiscoverApi
 
 /**

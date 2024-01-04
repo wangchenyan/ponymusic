@@ -11,10 +11,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import me.wcy.common.ext.getColorEx
-import me.wcy.common.ext.showConfirmDialog
-import me.wcy.common.ext.viewBindings
-import me.wcy.common.widget.CustomSpan.appendStyle
+import top.wangchenyan.common.ext.getColorEx
+import top.wangchenyan.common.ext.showConfirmDialog
+import top.wangchenyan.common.ext.viewBindings
+import top.wangchenyan.common.widget.CustomSpan.appendStyle
 import me.wcy.music.R
 import me.wcy.music.databinding.FragmentCurrentPlaylistBinding
 import me.wcy.music.main.playing.PlayingActivity

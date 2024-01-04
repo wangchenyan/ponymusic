@@ -4,14 +4,14 @@ import android.app.Application
 import android.content.Intent
 import com.blankj.utilcode.util.ActivityUtils
 import dagger.hilt.android.HiltAndroidApp
-import me.wcy.common.CommonApp
-import me.wcy.common.ext.findActivity
 import me.wcy.music.account.service.UserService
 import me.wcy.music.common.DarkModeService
 import me.wcy.music.common.MusicFragmentContainerActivity
 import me.wcy.music.service.AudioPlayer
 import me.wcy.router.CRouter
 import me.wcy.router.RouterClient
+import top.wangchenyan.common.CommonApp
+import top.wangchenyan.common.ext.findActivity
 import javax.inject.Inject
 
 /**
@@ -40,6 +40,12 @@ class MusicApplication : Application() {
                 textColorAuto = { R.color.common_text_h1_color }
                 textColorBlack = { R.color.common_text_h1_color }
                 isTitleCenter = false
+            }
+            apiConfig({}) {
+                codeJsonNames = listOf("code")
+                msgJsonNames = listOf("message", "msg")
+                dataJsonNames = listOf("data", "result")
+                successCode = 200
             }
         }
         initCRouter()

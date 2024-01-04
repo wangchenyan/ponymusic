@@ -1,9 +1,9 @@
 package me.wcy.music.storage.preference
 
 import com.blankj.utilcode.util.StringUtils
-import me.wcy.common.CommonApp
-import me.wcy.common.storage.IPreferencesFile
-import me.wcy.common.storage.PreferencesFile
+import top.wangchenyan.common.CommonApp
+import top.wangchenyan.common.storage.IPreferencesFile
+import top.wangchenyan.common.storage.PreferencesFile
 import me.wcy.music.R
 import me.wcy.music.common.DarkModeService
 import me.wcy.music.consts.PreferenceName

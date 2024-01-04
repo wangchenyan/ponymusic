@@ -1,7 +1,7 @@
 package me.wcy.music.utils
 
-import me.wcy.common.ext.divide
-import me.wcy.common.ext.format
+import top.wangchenyan.common.ext.divide
+import top.wangchenyan.common.ext.format
 import java.math.RoundingMode
 
 /**

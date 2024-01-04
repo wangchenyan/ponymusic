@@ -1,8 +1,8 @@
 package me.wcy.music.account
 
-import me.wcy.common.CommonApp
-import me.wcy.common.storage.IPreferencesFile
-import me.wcy.common.storage.PreferencesFile
+import top.wangchenyan.common.CommonApp
+import top.wangchenyan.common.storage.IPreferencesFile
+import top.wangchenyan.common.storage.PreferencesFile
 import me.wcy.music.account.bean.ProfileData
 import me.wcy.music.consts.PreferenceName
 

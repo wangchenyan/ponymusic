@@ -26,7 +26,7 @@
         android:background="@color/translucent_black_p50"
         android:orientation="vertical">
 
-        <me.wcy.common.widget.TitleLayout
+        <top.wangchenyan.common.widget.TitleLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tlJustShowStatusBar="true"

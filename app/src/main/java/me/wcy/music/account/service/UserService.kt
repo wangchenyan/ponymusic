@@ -2,7 +2,7 @@ package me.wcy.music.account.service
 
 import android.app.Activity
 import kotlinx.coroutines.flow.StateFlow
-import me.wcy.common.model.CommonResult
+import top.wangchenyan.common.model.CommonResult
 import me.wcy.music.account.bean.ProfileData
 
 /**

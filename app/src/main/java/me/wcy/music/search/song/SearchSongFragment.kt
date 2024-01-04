@@ -5,8 +5,8 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import me.wcy.common.model.CommonResult
-import me.wcy.common.net.apiCall
+import top.wangchenyan.common.model.CommonResult
+import top.wangchenyan.common.net.apiCall
 import me.wcy.music.common.OnItemClickListener2
 import me.wcy.music.common.SimpleMusicRefreshFragment
 import me.wcy.music.common.bean.SongData

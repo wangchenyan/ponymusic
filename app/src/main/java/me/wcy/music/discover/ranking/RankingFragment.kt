@@ -9,7 +9,7 @@ import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import me.wcy.common.ext.viewBindings
+import top.wangchenyan.common.ext.viewBindings
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.common.bean.PlaylistData

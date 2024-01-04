@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.blankj.utilcode.util.AppUtils
-import me.wcy.common.ui.activity.BaseActivity
+import top.wangchenyan.common.ui.activity.BaseActivity
 import me.wcy.music.R
 
 class AboutActivity : BaseActivity() {

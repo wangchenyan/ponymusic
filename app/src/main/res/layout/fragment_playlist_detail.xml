@@ -207,7 +207,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" />
 
-    <me.wcy.common.widget.TitleLayout
+    <top.wangchenyan.common.widget.TitleLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tlBackgroundColor="@color/grey"

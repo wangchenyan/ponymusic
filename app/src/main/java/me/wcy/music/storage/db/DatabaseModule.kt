@@ -5,7 +5,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import me.wcy.common.CommonApp
+import top.wangchenyan.common.CommonApp
 
 /**
  * Created by wangchenyan.top on 2023/7/20.

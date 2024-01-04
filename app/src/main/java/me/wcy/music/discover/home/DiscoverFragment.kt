@@ -16,11 +16,11 @@ import com.youth.banner.indicator.CircleIndicator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import me.wcy.common.ext.load
-import me.wcy.common.ext.toast
-import me.wcy.common.ext.viewBindings
-import me.wcy.common.utils.LaunchUtils
-import me.wcy.common.widget.decoration.SpacingDecoration
+import top.wangchenyan.common.ext.load
+import top.wangchenyan.common.ext.toast
+import top.wangchenyan.common.ext.viewBindings
+import top.wangchenyan.common.utils.LaunchUtils
+import top.wangchenyan.common.widget.decoration.SpacingDecoration
 import me.wcy.music.R
 import me.wcy.music.account.service.UserService
 import me.wcy.music.common.ApiDomainDialog

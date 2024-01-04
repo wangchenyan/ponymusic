@@ -7,7 +7,7 @@ import android.os.Bundle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import dagger.hilt.android.AndroidEntryPoint
-import me.wcy.common.ext.toast
+import top.wangchenyan.common.ext.toast
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicActivity
 import me.wcy.music.common.DarkModeService

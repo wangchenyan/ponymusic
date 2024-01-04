@@ -1,8 +1,8 @@
 package me.wcy.music.search
 
-import me.wcy.common.net.NetResult
-import me.wcy.common.net.gson.GsonConverterFactory
-import me.wcy.common.utils.GsonUtils
+import top.wangchenyan.common.net.NetResult
+import top.wangchenyan.common.net.gson.GsonConverterFactory
+import top.wangchenyan.common.utils.GsonUtils
 import me.wcy.music.net.HttpClient
 import me.wcy.music.search.bean.SearchResultData
 import me.wcy.music.storage.preference.ConfigPreferences

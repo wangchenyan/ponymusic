@@ -6,8 +6,8 @@ import androidx.core.view.get
 import androidx.core.view.isEmpty
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SizeUtils
-import me.wcy.common.ext.context
-import me.wcy.common.widget.CustomSpan.appendStyle
+import top.wangchenyan.common.ext.context
+import top.wangchenyan.common.widget.CustomSpan.appendStyle
 import me.wcy.music.common.bean.PlaylistData
 import me.wcy.music.databinding.ItemOfficialRankingBinding
 import me.wcy.music.databinding.ItemOfficialRankingSongBinding

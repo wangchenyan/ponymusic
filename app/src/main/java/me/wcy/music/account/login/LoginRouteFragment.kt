@@ -1,7 +1,7 @@
 package me.wcy.music.account.login
 
 import android.view.View
-import me.wcy.common.ext.viewBindings
+import top.wangchenyan.common.ext.viewBindings
 import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentLoginRouteBinding

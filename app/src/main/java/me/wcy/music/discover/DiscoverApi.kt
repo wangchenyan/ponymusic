@@ -1,8 +1,5 @@
 package me.wcy.music.discover
 
-import me.wcy.common.net.NetResult
-import me.wcy.common.net.gson.GsonConverterFactory
-import me.wcy.common.utils.GsonUtils
 import me.wcy.music.common.bean.LrcDataWrap
 import me.wcy.music.common.bean.SongUrlData
 import me.wcy.music.discover.banner.BannerListData
@@ -17,6 +14,9 @@ import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
+import top.wangchenyan.common.net.NetResult
+import top.wangchenyan.common.net.gson.GsonConverterFactory
+import top.wangchenyan.common.utils.GsonUtils
 
 /**
  * Created by wangchenyan.top on 2023/9/6.

@@ -19,10 +19,10 @@ import jp.wasabeef.blurry.Blurry
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import me.wcy.common.ext.toast
-import me.wcy.common.ext.viewBindings
-import me.wcy.common.utils.StatusBarUtils
-import me.wcy.common.utils.image.ImageUtils
+import top.wangchenyan.common.ext.toast
+import top.wangchenyan.common.ext.viewBindings
+import top.wangchenyan.common.utils.StatusBarUtils
+import top.wangchenyan.common.utils.image.ImageUtils
 import me.wcy.lrcview.LrcView
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicActivity

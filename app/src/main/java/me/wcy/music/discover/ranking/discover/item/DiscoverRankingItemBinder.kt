@@ -5,7 +5,7 @@ import androidx.core.view.get
 import androidx.core.view.isEmpty
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SizeUtils
-import me.wcy.common.ext.context
+import top.wangchenyan.common.ext.context
 import me.wcy.music.common.bean.PlaylistData
 import me.wcy.music.databinding.ItemDiscoverRankingBinding
 import me.wcy.music.databinding.ItemDiscoverRankingSongBinding

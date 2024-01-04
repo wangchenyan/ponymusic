@@ -2,9 +2,9 @@ package me.wcy.music.discover.playlist.detail.viewmodel
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import me.wcy.common.ext.toUnMutable
-import me.wcy.common.model.CommonResult
-import me.wcy.common.net.apiCall
+import top.wangchenyan.common.ext.toUnMutable
+import top.wangchenyan.common.model.CommonResult
+import top.wangchenyan.common.net.apiCall
 import me.wcy.music.common.bean.PlaylistData
 import me.wcy.music.common.bean.SongData
 import me.wcy.music.discover.DiscoverApi

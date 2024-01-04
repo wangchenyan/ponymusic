@@ -6,8 +6,8 @@ import android.content.pm.PackageManager
 import android.media.audiofx.AudioEffect
 import android.text.TextUtils
 import androidx.core.text.buildSpannedString
-import me.wcy.common.ext.getColorEx
-import me.wcy.common.widget.CustomSpan.appendStyle
+import top.wangchenyan.common.ext.getColorEx
+import top.wangchenyan.common.widget.CustomSpan.appendStyle
 import me.wcy.music.R
 
 /**

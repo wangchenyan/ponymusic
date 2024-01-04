@@ -1,7 +1,7 @@
 package me.wcy.music.search.song
 
 import androidx.core.view.isVisible
-import me.wcy.common.ext.context
+import top.wangchenyan.common.ext.context
 import me.wcy.music.common.OnItemClickListener2
 import me.wcy.music.common.bean.SongData
 import me.wcy.music.databinding.ItemSearchSongBinding

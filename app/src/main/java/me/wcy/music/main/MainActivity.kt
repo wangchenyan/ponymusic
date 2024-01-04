@@ -15,11 +15,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import me.wcy.common.ext.showConfirmDialog
-import me.wcy.common.ext.toast
-import me.wcy.common.ext.viewBindings
-import me.wcy.common.permission.Permissioner
-import me.wcy.common.widget.pager.CustomTabPager
+import top.wangchenyan.common.ext.showConfirmDialog
+import top.wangchenyan.common.ext.toast
+import top.wangchenyan.common.ext.viewBindings
+import top.wangchenyan.common.permission.Permissioner
+import top.wangchenyan.common.widget.pager.CustomTabPager
 import me.wcy.music.R
 import me.wcy.music.account.service.UserService
 import me.wcy.music.common.ApiDomainDialog

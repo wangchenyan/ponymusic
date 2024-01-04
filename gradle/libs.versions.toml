@@ -17,7 +17,7 @@ hilt = "2.48.1"
 lifecycle = "2.6.2"
 media = "1.6.0"
 room = "2.6.0"
-common = "1.0.0-beta10"
+common = "1.0.0-beta12"
 init = "1.1.0"
 crouter = "2.4.0-beta01"
 

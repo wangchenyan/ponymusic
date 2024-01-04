@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <me.wcy.common.widget.TitleLayout
+    <top.wangchenyan.common.widget.TitleLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tlShowBack="false"

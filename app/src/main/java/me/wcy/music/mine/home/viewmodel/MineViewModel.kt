@@ -7,9 +7,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import me.wcy.common.ext.toUnMutable
-import me.wcy.common.model.CommonResult
-import me.wcy.common.net.apiCall
+import top.wangchenyan.common.ext.toUnMutable
+import top.wangchenyan.common.model.CommonResult
+import top.wangchenyan.common.net.apiCall
 import me.wcy.music.account.service.UserService
 import me.wcy.music.common.bean.PlaylistData
 import me.wcy.music.mine.MineApi

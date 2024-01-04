@@ -5,8 +5,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import dagger.hilt.android.AndroidEntryPoint
-import me.wcy.common.model.CommonResult
-import me.wcy.common.widget.decoration.GridSpacingDecoration
+import top.wangchenyan.common.model.CommonResult
+import top.wangchenyan.common.widget.decoration.GridSpacingDecoration
 import me.wcy.music.common.SimpleMusicRefreshFragment
 import me.wcy.music.common.bean.PlaylistData
 import me.wcy.music.consts.Consts

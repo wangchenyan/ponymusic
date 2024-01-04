@@ -11,8 +11,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import me.wcy.common.ext.viewBindings
-import me.wcy.common.widget.pager.TabLayoutPager
+import top.wangchenyan.common.ext.viewBindings
+import top.wangchenyan.common.widget.pager.TabLayoutPager
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.consts.RoutePath

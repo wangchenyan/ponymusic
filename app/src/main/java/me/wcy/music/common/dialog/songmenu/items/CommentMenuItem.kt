@@ -1,7 +1,7 @@
 package me.wcy.music.common.dialog.songmenu.items
 
 import android.view.View
-import me.wcy.common.ext.toast
+import top.wangchenyan.common.ext.toast
 import me.wcy.music.common.bean.SongData
 import me.wcy.music.common.dialog.songmenu.MenuItem
 

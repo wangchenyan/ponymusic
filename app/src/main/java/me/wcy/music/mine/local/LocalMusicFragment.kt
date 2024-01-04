@@ -7,8 +7,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import me.wcy.common.ext.viewBindings
-import me.wcy.common.permission.Permissioner
+import top.wangchenyan.common.ext.viewBindings
+import top.wangchenyan.common.permission.Permissioner
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.common.OnItemClickListener2

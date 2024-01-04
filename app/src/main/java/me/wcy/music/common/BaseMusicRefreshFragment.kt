@@ -1,7 +1,7 @@
 package me.wcy.music.common
 
 import com.kingja.loadsir.callback.Callback
-import me.wcy.common.ui.fragment.BaseRefreshFragment
+import top.wangchenyan.common.ui.fragment.BaseRefreshFragment
 import me.wcy.music.widget.loadsir.SoundWaveLoadingCallback
 
 /**

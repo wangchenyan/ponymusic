@@ -15,10 +15,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import me.wcy.common.CommonApp
-import me.wcy.common.ext.toUnMutable
-import me.wcy.common.ext.toast
-import me.wcy.common.net.apiCall
+import top.wangchenyan.common.CommonApp
+import top.wangchenyan.common.ext.toUnMutable
+import top.wangchenyan.common.ext.toast
+import top.wangchenyan.common.net.apiCall
 import me.wcy.music.discover.DiscoverApi
 import me.wcy.music.ext.registerReceiverCompat
 import me.wcy.music.service.receiver.NoisyAudioStreamReceiver

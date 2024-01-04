@@ -3,7 +3,7 @@ package me.wcy.music.common
 import android.content.Intent
 import android.os.Bundle
 import com.kingja.loadsir.callback.Callback
-import me.wcy.common.ui.activity.BaseActivity
+import top.wangchenyan.common.ui.activity.BaseActivity
 import me.wcy.music.service.PlayService
 import me.wcy.music.widget.loadsir.SoundWaveLoadingCallback
 

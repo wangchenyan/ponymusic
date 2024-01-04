@@ -6,7 +6,7 @@
     android:background="@color/common_theme_color"
     android:orientation="vertical">
 
-    <me.wcy.common.widget.TitleLayout
+    <top.wangchenyan.common.widget.TitleLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tlJustShowStatusBar="true" />

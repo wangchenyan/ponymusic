@@ -1,6 +1,6 @@
 package me.wcy.music.consts
 
-import me.wcy.common.CommonApp
+import top.wangchenyan.common.CommonApp
 import java.io.File
 
 /**

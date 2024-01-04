@@ -6,8 +6,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import me.wcy.common.ext.toUnMutable
-import me.wcy.common.model.CommonResult
+import top.wangchenyan.common.ext.toUnMutable
+import top.wangchenyan.common.model.CommonResult
 import me.wcy.music.account.AccountApi
 import me.wcy.music.account.service.UserService
 import me.wcy.music.net.NetUtils

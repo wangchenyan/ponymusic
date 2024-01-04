@@ -2,7 +2,7 @@ package me.wcy.music.search.playlist
 
 import android.annotation.SuppressLint
 import com.blankj.utilcode.util.SizeUtils
-import me.wcy.common.ext.context
+import top.wangchenyan.common.ext.context
 import me.wcy.music.common.bean.PlaylistData
 import me.wcy.music.databinding.ItemSearchPlaylistBinding
 import me.wcy.music.utils.ConvertUtils

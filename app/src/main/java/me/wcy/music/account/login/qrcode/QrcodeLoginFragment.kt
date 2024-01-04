@@ -7,7 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import me.wcy.common.ext.viewBindings
+import top.wangchenyan.common.ext.viewBindings
 import me.wcy.music.account.bean.LoginResultData
 import me.wcy.music.account.login.LoginRouteFragment
 import me.wcy.music.account.service.UserService

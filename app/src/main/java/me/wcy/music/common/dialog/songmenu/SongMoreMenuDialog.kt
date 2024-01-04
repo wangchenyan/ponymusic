@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import com.blankj.utilcode.util.SizeUtils
-import me.wcy.common.widget.dialog.BottomDialog
-import me.wcy.common.widget.dialog.BottomDialogBuilder
+import top.wangchenyan.common.widget.dialog.BottomDialog
+import top.wangchenyan.common.widget.dialog.BottomDialogBuilder
 import me.wcy.music.common.bean.SongData
 import me.wcy.music.databinding.DialogSongMoreMenuBinding
 import me.wcy.music.databinding.ItemSongMoreMenuBinding

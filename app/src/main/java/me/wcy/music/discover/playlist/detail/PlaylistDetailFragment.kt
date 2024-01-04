@@ -10,10 +10,10 @@ import com.blankj.utilcode.util.SizeUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import me.wcy.common.ext.loadAvatar
-import me.wcy.common.ext.toast
-import me.wcy.common.ext.viewBindings
-import me.wcy.common.utils.StatusBarUtils
+import top.wangchenyan.common.ext.loadAvatar
+import top.wangchenyan.common.ext.toast
+import top.wangchenyan.common.ext.viewBindings
+import top.wangchenyan.common.utils.StatusBarUtils
 import me.wcy.music.R
 import me.wcy.music.account.service.UserService
 import me.wcy.music.common.BaseMusicFragment

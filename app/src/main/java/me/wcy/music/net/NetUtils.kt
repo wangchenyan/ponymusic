@@ -2,7 +2,7 @@ package me.wcy.music.net
 
 import com.blankj.utilcode.util.GsonUtils
 import com.google.gson.JsonObject
-import me.wcy.common.model.CommonResult
+import top.wangchenyan.common.model.CommonResult
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody

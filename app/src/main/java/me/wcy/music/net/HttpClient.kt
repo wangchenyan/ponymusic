@@ -3,8 +3,8 @@ package me.wcy.music.net
 import android.util.Log
 import com.ihsanbal.logging.Level
 import com.ihsanbal.logging.LoggingInterceptor
-import me.wcy.common.CommonApp
-import me.wcy.common.utils.ServerTime
+import top.wangchenyan.common.CommonApp
+import top.wangchenyan.common.utils.ServerTime
 import me.wcy.music.consts.FilePath
 import okhttp3.Cache
 import okhttp3.OkHttpClient

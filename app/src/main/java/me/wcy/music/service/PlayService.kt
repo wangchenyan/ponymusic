@@ -18,9 +18,9 @@ import com.blankj.utilcode.util.IntentUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import me.wcy.common.CommonApp
-import me.wcy.common.permission.Permissioner
-import me.wcy.common.utils.image.ImageUtils
+import top.wangchenyan.common.CommonApp
+import top.wangchenyan.common.permission.Permissioner
+import top.wangchenyan.common.utils.image.ImageUtils
 import me.wcy.music.R
 import me.wcy.music.ext.registerReceiverCompat
 import me.wcy.music.service.receiver.StatusBarReceiver

@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 import android.widget.ImageView
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import me.wcy.common.ext.load
+import top.wangchenyan.common.ext.load
 import me.wcy.music.R
 
 /**
