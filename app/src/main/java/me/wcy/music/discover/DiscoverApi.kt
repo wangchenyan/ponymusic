@@ -32,7 +32,7 @@ interface DiscoverApi {
     @POST("song/url/v1")
     suspend fun getSongUrl(
         @Query("id") id: Long,
-        @Query("level") level: String = "standard",
+        @Query("level") level: String,
     ): NetResult<List<SongUrlData>>
 
     @POST("lyric")

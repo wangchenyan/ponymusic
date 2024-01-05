@@ -33,6 +33,28 @@
         <item>2</item>
     </string-array>
 
+    <string-array name="play_sound_quality_entries">
+        <item>标准</item>
+        <item>较高</item>
+        <item>极高(HQ)</item>
+        <item>无损(SQ)</item>
+        <item>高解析度无损(Hi-Res)🇻</item>
+        <item>高清环绕声(Spatial Audio)🇻</item>
+        <item>沉浸环绕声(Surround Audio)🇸</item>
+        <item>超清母带(Master)🇸</item>
+    </string-array>
+
+    <string-array name="play_sound_quality_entry_values">
+        <item>standard</item>
+        <item>higher</item>
+        <item>exhigh</item>
+        <item>lossless</item>
+        <item>hires</item>
+        <item>jyeffect</item>
+        <item>sky</item>
+        <item>jymaster</item>
+    </string-array>
+
     <string-array name="filter_size_entries">
         <item>不过滤</item>
         <item>100KB</item>

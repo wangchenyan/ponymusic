@@ -1,12 +1,12 @@
 package me.wcy.music.storage.preference
 
 import com.blankj.utilcode.util.StringUtils
-import top.wangchenyan.common.CommonApp
-import top.wangchenyan.common.storage.IPreferencesFile
-import top.wangchenyan.common.storage.PreferencesFile
 import me.wcy.music.R
 import me.wcy.music.common.DarkModeService
 import me.wcy.music.consts.PreferenceName
+import top.wangchenyan.common.CommonApp
+import top.wangchenyan.common.storage.IPreferencesFile
+import top.wangchenyan.common.storage.PreferencesFile
 
 /**
  * SharedPreferences工具类
@@ -14,6 +14,11 @@ import me.wcy.music.consts.PreferenceName
  */
 object ConfigPreferences :
     IPreferencesFile by PreferencesFile(CommonApp.app, PreferenceName.CONFIG, false) {
+
+    var playSoundQuality by IPreferencesFile.StringProperty(
+        StringUtils.getString(R.string.setting_key_play_sound_quality),
+        "standard"
+    )
 
     var filterSize by IPreferencesFile.StringProperty(
         StringUtils.getString(R.string.setting_key_filter_size),

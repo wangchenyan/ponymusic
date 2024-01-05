@@ -7,7 +7,6 @@ import android.os.Bundle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import dagger.hilt.android.AndroidEntryPoint
-import top.wangchenyan.common.ext.toast
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicActivity
 import me.wcy.music.common.DarkModeService
@@ -16,6 +15,7 @@ import me.wcy.music.service.AudioPlayer
 import me.wcy.music.storage.preference.ConfigPreferences
 import me.wcy.music.utils.MusicUtils
 import me.wcy.router.annotation.Route
+import top.wangchenyan.common.ext.toast
 import javax.inject.Inject
 
 @Route("/settings")
@@ -35,6 +35,9 @@ class SettingsActivity : BaseMusicActivity() {
     class SettingsFragment : PreferenceFragmentCompat() {
         private val darkMode: Preference by lazy {
             findPreference(getString(R.string.setting_key_dark_mode))!!
+        }
+        private val playSoundQuality: Preference by lazy {
+            findPreference(getString(R.string.setting_key_play_sound_quality))!!
         }
         private val mSoundEffect: Preference by lazy {
             findPreference(getString(R.string.setting_key_sound_effect))!!
@@ -57,6 +60,7 @@ class SettingsActivity : BaseMusicActivity() {
             addPreferencesFromResource(R.xml.preference_setting)
 
             initDarkMode()
+            initPlaySoundQuality()
             initSoundEffect()
             initFilter()
         }
@@ -76,6 +80,23 @@ class SettingsActivity : BaseMusicActivity() {
                 )
                 val mode = DarkModeService.DarkMode.fromValue(value)
                 darkModeService.setDarkMode(mode)
+                true
+            }
+        }
+
+        private fun initPlaySoundQuality() {
+            playSoundQuality.summary = getSummary(
+                ConfigPreferences.playSoundQuality,
+                R.array.play_sound_quality_entries,
+                R.array.play_sound_quality_entry_values
+            )
+            playSoundQuality.setOnPreferenceChangeListener { preference, newValue ->
+                val value = newValue.toString()
+                playSoundQuality.summary = getSummary(
+                    value,
+                    R.array.play_sound_quality_entries,
+                    R.array.play_sound_quality_entry_values
+                )
                 true
             }
         }

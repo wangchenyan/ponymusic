@@ -15,17 +15,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import top.wangchenyan.common.CommonApp
-import top.wangchenyan.common.ext.toUnMutable
-import top.wangchenyan.common.ext.toast
-import top.wangchenyan.common.net.apiCall
 import me.wcy.music.discover.DiscoverApi
 import me.wcy.music.ext.registerReceiverCompat
 import me.wcy.music.service.receiver.NoisyAudioStreamReceiver
 import me.wcy.music.storage.db.MusicDatabase
 import me.wcy.music.storage.db.entity.SongEntity
 import me.wcy.music.storage.preference.ConfigPreferences
-import java.util.Random
+import top.wangchenyan.common.CommonApp
+import top.wangchenyan.common.ext.toUnMutable
+import top.wangchenyan.common.ext.toast
+import top.wangchenyan.common.net.apiCall
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -182,7 +181,10 @@ class AudioPlayerImpl @Inject constructor(
             realPlay()
         } else {
             getSongUrlJob = launch(Dispatchers.Main.immediate) {
-                val res = apiCall { DiscoverApi.get().getSongUrl(playSong.songId) }
+                val res = apiCall {
+                    DiscoverApi.get()
+                        .getSongUrl(playSong.songId, ConfigPreferences.playSoundQuality)
+                }
                 if (res.isSuccessWithData() && res.getDataOrThrow().isNotEmpty()) {
                     playSong.path = res.getDataOrThrow().first().url
                     realPlay()
@@ -305,7 +307,7 @@ class AudioPlayerImpl @Inject constructor(
         }
         when (_playMode.value) {
             PlayMode.Shuffle -> {
-                play(playlist[Random().nextInt(playlist.size)])
+                play(playlist.random())
             }
 
             PlayMode.Single -> {
@@ -330,7 +332,7 @@ class AudioPlayerImpl @Inject constructor(
         }
         when (_playMode.value) {
             PlayMode.Shuffle -> {
-                play(playlist[Random().nextInt(playlist.size)])
+                play(playlist.random())
             }
 
             PlayMode.Single -> {
