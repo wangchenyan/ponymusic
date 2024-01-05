@@ -3,8 +3,8 @@
 compileSdk = "34"
 targetSdk = "34"
 minSdk = "21"
-versionCode = "2000003"
-versionName = "2.0.0-beta03"
+versionCode = "2010001"
+versionName = "2.1.0-beta01"
 # java
 java = "VERSION_1_8"
 jvmTarget = "1.8"
