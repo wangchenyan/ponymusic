@@ -28,6 +28,7 @@ import me.wcy.music.utils.MusicUtils
 import top.wangchenyan.common.CommonApp
 import top.wangchenyan.common.permission.Permissioner
 import top.wangchenyan.common.utils.image.ImageUtils
+import javax.inject.Inject
 
 /**
  * 音乐播放后台服务
@@ -40,6 +41,9 @@ class PlayService : Service() {
     }
     private var loadCoverJob: Job? = null
     private var isChannelCreated = false
+
+    @Inject
+    lateinit var audioPlayer: AudioPlayer
 
     inner class PlayBinder : Binder() {
         val service: PlayService
@@ -165,10 +169,10 @@ class PlayService : Service() {
         val builder = NotificationCompat.Builder(this, NOTIFICATION_ID.toString())
             .setContentIntent(pendingIntent)
             .setSmallIcon(R.drawable.ic_notification)
-        if (ConfigPreferences.useSystemNotification) {
-            builder.buildSystemNotification(song, cover, isPlaying)
-        } else {
+        if (ConfigPreferences.useCustomNotification) {
             builder.buildCustomNotification(song, cover, isPlaying)
+        } else {
+            builder.buildSystemNotification(song, cover, isPlaying)
         }
         return builder.build()
     }
@@ -185,7 +189,13 @@ class PlayService : Service() {
             )
         )
             .setContentTitle(song.title)
-            .setContentText(MusicUtils.getArtistAndAlbum(song.artist, song.album))
+            .setContentText(song.artist)
+            .setSubText(song.album)
+            .setStyle(
+                androidx.media.app.NotificationCompat.MediaStyle()
+                    .setShowActionsInCompactView(0, 1)
+                    .setMediaSession(audioPlayer.getMediaSession())
+            )
             .apply {
                 if (isPlaying) {
                     addAction(

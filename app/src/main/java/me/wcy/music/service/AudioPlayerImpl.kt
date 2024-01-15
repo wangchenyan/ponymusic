@@ -380,6 +380,8 @@ class AudioPlayerImpl @Inject constructor(
     @MainThread
     override fun getAudioSessionId() = mediaPlayer.audioSessionId
 
+    override fun getMediaSession() = mediaSessionManager.getMediaSession()
+
     override fun setPlayMode(mode: PlayMode) {
         ConfigPreferences.playMode = mode.value
         _playMode.value = mode

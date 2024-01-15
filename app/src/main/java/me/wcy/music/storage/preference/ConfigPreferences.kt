@@ -35,8 +35,8 @@ object ConfigPreferences :
         DarkModeService.DarkMode.Auto.value
     )
 
-    var useSystemNotification by IPreferencesFile.BooleanProperty(
-        StringUtils.getString(R.string.setting_key_use_system_notification),
+    var useCustomNotification by IPreferencesFile.BooleanProperty(
+        StringUtils.getString(R.string.setting_key_use_custom_notification),
         false
     )
 

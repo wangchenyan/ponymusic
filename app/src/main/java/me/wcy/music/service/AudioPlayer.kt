@@ -1,5 +1,6 @@
 package me.wcy.music.service
 
+import android.support.v4.media.session.MediaSessionCompat
 import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.flow.StateFlow
@@ -61,6 +62,8 @@ interface AudioPlayer {
 
     @MainThread
     fun getAudioSessionId(): Int
+
+    fun getMediaSession(): MediaSessionCompat.Token
 
     @MainThread
     fun setPlayMode(mode: PlayMode)

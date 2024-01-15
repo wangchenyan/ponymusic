@@ -6,9 +6,9 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import me.wcy.music.storage.db.entity.SongEntity
 import top.wangchenyan.common.CommonApp
 import top.wangchenyan.common.utils.image.ImageUtils
-import me.wcy.music.storage.db.entity.SongEntity
 
 /**
  * Created by hzwangchenyan on 2017/8/8.
@@ -70,6 +70,10 @@ class MediaSessionManager(
                 }
             }
         }
+    }
+
+    fun getMediaSession(): MediaSessionCompat.Token {
+        return mediaSession.sessionToken
     }
 
     private val callback: MediaSessionCompat.Callback = object : MediaSessionCompat.Callback() {

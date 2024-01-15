@@ -37,8 +37,8 @@ class SettingsActivity : BaseMusicActivity() {
         private val darkMode: Preference by lazy {
             findPreference(getString(R.string.setting_key_dark_mode))!!
         }
-        private val useSystemNotification: SwitchPreference by lazy {
-            findPreference(getString(R.string.setting_key_use_system_notification))!!
+        private val useCustomNotification: SwitchPreference by lazy {
+            findPreference(getString(R.string.setting_key_use_custom_notification))!!
         }
         private val playSoundQuality: Preference by lazy {
             findPreference(getString(R.string.setting_key_play_sound_quality))!!
@@ -90,9 +90,9 @@ class SettingsActivity : BaseMusicActivity() {
         }
 
         private fun initNotificationStyle() {
-            useSystemNotification.isChecked = ConfigPreferences.useSystemNotification
-            useSystemNotification.setOnPreferenceChangeListener { preference, newValue ->
-                ConfigPreferences.useSystemNotification = newValue == true
+            useCustomNotification.isChecked = ConfigPreferences.useCustomNotification
+            useCustomNotification.setOnPreferenceChangeListener { preference, newValue ->
+                ConfigPreferences.useCustomNotification = newValue == true
                 true
             }
         }
