@@ -10,6 +10,11 @@
             android:key="@string/setting_key_dark_mode"
             android:summary="跟随系统"
             android:title="外观" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/setting_key_use_system_notification"
+            android:title="使用系统风格通知栏" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/play">

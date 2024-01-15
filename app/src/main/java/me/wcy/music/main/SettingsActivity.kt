@@ -6,6 +6,7 @@ import android.media.audiofx.AudioEffect
 import android.os.Bundle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreference
 import dagger.hilt.android.AndroidEntryPoint
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicActivity
@@ -36,6 +37,9 @@ class SettingsActivity : BaseMusicActivity() {
         private val darkMode: Preference by lazy {
             findPreference(getString(R.string.setting_key_dark_mode))!!
         }
+        private val useSystemNotification: SwitchPreference by lazy {
+            findPreference(getString(R.string.setting_key_use_system_notification))!!
+        }
         private val playSoundQuality: Preference by lazy {
             findPreference(getString(R.string.setting_key_play_sound_quality))!!
         }
@@ -60,6 +64,7 @@ class SettingsActivity : BaseMusicActivity() {
             addPreferencesFromResource(R.xml.preference_setting)
 
             initDarkMode()
+            initNotificationStyle()
             initPlaySoundQuality()
             initSoundEffect()
             initFilter()
@@ -80,6 +85,14 @@ class SettingsActivity : BaseMusicActivity() {
                 )
                 val mode = DarkModeService.DarkMode.fromValue(value)
                 darkModeService.setDarkMode(mode)
+                true
+            }
+        }
+
+        private fun initNotificationStyle() {
+            useSystemNotification.isChecked = ConfigPreferences.useSystemNotification
+            useSystemNotification.setOnPreferenceChangeListener { preference, newValue ->
+                ConfigPreferences.useSystemNotification = newValue == true
                 true
             }
         }

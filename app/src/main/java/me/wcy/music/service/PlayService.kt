@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
@@ -18,14 +19,15 @@ import com.blankj.utilcode.util.IntentUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import top.wangchenyan.common.CommonApp
-import top.wangchenyan.common.permission.Permissioner
-import top.wangchenyan.common.utils.image.ImageUtils
 import me.wcy.music.R
 import me.wcy.music.ext.registerReceiverCompat
 import me.wcy.music.service.receiver.StatusBarReceiver
 import me.wcy.music.storage.db.entity.SongEntity
+import me.wcy.music.storage.preference.ConfigPreferences
 import me.wcy.music.utils.MusicUtils
+import top.wangchenyan.common.CommonApp
+import top.wangchenyan.common.permission.Permissioner
+import top.wangchenyan.common.utils.image.ImageUtils
 
 /**
  * 音乐播放后台服务
@@ -163,15 +165,54 @@ class PlayService : Service() {
         val builder = NotificationCompat.Builder(this, NOTIFICATION_ID.toString())
             .setContentIntent(pendingIntent)
             .setSmallIcon(R.drawable.ic_notification)
-            .setCustomContentView(getRemoteViews(song, cover, isPlaying))
+        if (ConfigPreferences.useSystemNotification) {
+            builder.buildSystemNotification(song, cover, isPlaying)
+        } else {
+            builder.buildCustomNotification(song, cover, isPlaying)
+        }
         return builder.build()
     }
 
-    private fun getRemoteViews(
+    private fun NotificationCompat.Builder.buildSystemNotification(
         song: SongEntity,
         cover: Bitmap?,
         isPlaying: Boolean
-    ): RemoteViews {
+    ) {
+        this.setLargeIcon(
+            cover ?: BitmapFactory.decodeResource(
+                resources,
+                R.drawable.ic_default_cover
+            )
+        )
+            .setContentTitle(song.title)
+            .setContentText(MusicUtils.getArtistAndAlbum(song.artist, song.album))
+            .apply {
+                if (isPlaying) {
+                    addAction(
+                        R.drawable.ic_notification_pause,
+                        "暂停",
+                        getActionIntent(REQUEST_CODE_PAUSE, StatusBarReceiver.EXTRA_PAUSE)
+                    )
+                } else {
+                    addAction(
+                        R.drawable.ic_notification_play,
+                        "播放",
+                        getActionIntent(REQUEST_CODE_PLAY, StatusBarReceiver.EXTRA_PLAY)
+                    )
+                }
+            }
+            .addAction(
+                R.drawable.ic_notification_next,
+                "下一曲",
+                getActionIntent(REQUEST_CODE_NEXT, StatusBarReceiver.EXTRA_NEXT)
+            )
+    }
+
+    private fun NotificationCompat.Builder.buildCustomNotification(
+        song: SongEntity,
+        cover: Bitmap?,
+        isPlaying: Boolean
+    ) {
         val title = song.title
         val subtitle = MusicUtils.getArtistAndAlbum(song.artist, song.album)
         val remoteViews = RemoteViews(packageName, R.layout.notification)
@@ -183,35 +224,36 @@ class PlayService : Service() {
         remoteViews.setTextViewText(R.id.tv_title, title)
         remoteViews.setTextViewText(R.id.tv_subtitle, subtitle)
         val playIconRes: Int
+        val requestCode: Int
         val extra: String
         if (isPlaying) {
             playIconRes = R.drawable.ic_notification_pause
+            requestCode = REQUEST_CODE_PAUSE
             extra = StatusBarReceiver.EXTRA_PAUSE
         } else {
             playIconRes = R.drawable.ic_notification_play
+            requestCode = REQUEST_CODE_PLAY
             extra = StatusBarReceiver.EXTRA_PLAY
         }
-        val playIntent = Intent(StatusBarReceiver.ACTION_STATUS_BAR)
-        playIntent.putExtra(StatusBarReceiver.EXTRA, extra)
-        val playPendingIntent = PendingIntent.getBroadcast(
-            this,
-            0,
-            playIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
         remoteViews.setImageViewResource(R.id.iv_play_pause, playIconRes)
-        remoteViews.setOnClickPendingIntent(R.id.iv_play_pause, playPendingIntent)
-        val nextIntent = Intent(StatusBarReceiver.ACTION_STATUS_BAR)
-        nextIntent.putExtra(StatusBarReceiver.EXTRA, StatusBarReceiver.EXTRA_NEXT)
-        val nextPendingIntent = PendingIntent.getBroadcast(
-            this,
-            1,
-            nextIntent,
+        remoteViews.setOnClickPendingIntent(R.id.iv_play_pause, getActionIntent(requestCode, extra))
+        remoteViews.setImageViewResource(R.id.iv_next, R.drawable.ic_notification_next)
+        remoteViews.setOnClickPendingIntent(
+            R.id.iv_next,
+            getActionIntent(REQUEST_CODE_NEXT, StatusBarReceiver.EXTRA_NEXT)
+        )
+        this.setCustomContentView(remoteViews)
+    }
+
+    private fun getActionIntent(requestCode: Int, extra: String): PendingIntent {
+        return PendingIntent.getBroadcast(
+            this@PlayService,
+            requestCode,
+            Intent(StatusBarReceiver.ACTION_STATUS_BAR).apply {
+                putExtra(StatusBarReceiver.EXTRA, extra)
+            },
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-        remoteViews.setImageViewResource(R.id.iv_next, R.drawable.ic_notification_next)
-        remoteViews.setOnClickPendingIntent(R.id.iv_next, nextPendingIntent)
-        return remoteViews
     }
 
     companion object {
@@ -219,6 +261,9 @@ class PlayService : Service() {
 
         private const val TAG = "Service"
         private const val NOTIFICATION_ID = 0x111
+        private const val REQUEST_CODE_PLAY = 0
+        private const val REQUEST_CODE_PAUSE = 1
+        private const val REQUEST_CODE_NEXT = 2
         private const val ACTION_SHOW_NOTIFICATION = "me.wcy.music.ACTION_SHOW_NOTIFICATION"
         private const val ACTION_CANCEL_NOTIFICATION = "me.wcy.music.ACTION_CANCEL_NOTIFICATION"
 

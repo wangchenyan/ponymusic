@@ -35,6 +35,11 @@ object ConfigPreferences :
         DarkModeService.DarkMode.Auto.value
     )
 
+    var useSystemNotification by IPreferencesFile.BooleanProperty(
+        StringUtils.getString(R.string.setting_key_use_system_notification),
+        false
+    )
+
     var playMode: Int by IPreferencesFile.IntProperty("play_mode", 0)
 
     var currentSongId: String by IPreferencesFile.StringProperty("current_song_id", "")
