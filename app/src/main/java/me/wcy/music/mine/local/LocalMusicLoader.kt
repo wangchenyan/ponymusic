@@ -24,16 +24,14 @@ class LocalMusicLoader {
         MediaStore.Audio.Media.DURATION,
     )
     private val sortOrder = "${MediaStore.Audio.Media.DATE_MODIFIED} DESC"
-    private val selection = "${MediaStore.Audio.Media.MIME_TYPE} = ?"
-    private val selectionArgs = arrayOf("audio/mpeg")
 
     fun load(context: Context): List<SongEntity> {
         val result = mutableListOf<SongEntity>()
         val query = context.contentResolver.query(
             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
             projection,
-            selection,
-            selectionArgs,
+            null,
+            null,
             sortOrder
         )
 

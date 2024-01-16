@@ -26,7 +26,7 @@
             android:drawableTint="@color/common_theme_color"
             android:gravity="center_vertical"
             android:paddingHorizontal="16dp"
-            android:text="播放全部(3)"
+            android:text="播放全部"
             android:textColor="@color/common_text_h1_color"
             android:textSize="16dp"
             android:textStyle="bold" />

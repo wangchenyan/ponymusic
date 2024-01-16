@@ -102,6 +102,7 @@ class LocalMusicFragment : BaseMusicFragment() {
                     }
                     if (songList.isNotEmpty()) {
                         showLoadSirSuccess()
+                        viewBinding.tvPlayAll.text = "播放全部(${songList.size})"
                         adapter.refresh(songList)
                     } else {
                         showLoadSirEmpty(getString(R.string.no_local_music))
