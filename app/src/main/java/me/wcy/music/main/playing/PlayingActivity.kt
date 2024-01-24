@@ -19,10 +19,6 @@ import jp.wasabeef.blurry.Blurry
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import top.wangchenyan.common.ext.toast
-import top.wangchenyan.common.ext.viewBindings
-import top.wangchenyan.common.utils.StatusBarUtils
-import top.wangchenyan.common.utils.image.ImageUtils
 import me.wcy.lrcview.LrcView
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicActivity
@@ -37,8 +33,13 @@ import me.wcy.music.storage.LrcCache
 import me.wcy.music.storage.db.entity.SongEntity
 import me.wcy.music.utils.TimeUtils
 import me.wcy.router.annotation.Route
+import top.wangchenyan.common.ext.toast
+import top.wangchenyan.common.ext.viewBindings
+import top.wangchenyan.common.utils.StatusBarUtils
+import top.wangchenyan.common.utils.image.ImageUtils
 import java.io.File
 import javax.inject.Inject
+import kotlin.math.abs
 
 /**
  * Created by wangchenyan.top on 2023/9/4.
@@ -51,7 +52,7 @@ class PlayingActivity : BaseMusicActivity() {
     @Inject
     lateinit var audioPlayer: AudioPlayer
 
-    private val mAudioManager by lazy {
+    private val audioManager by lazy {
         getSystemService(Context.AUDIO_SERVICE) as AudioManager
     }
 
@@ -61,7 +62,7 @@ class PlayingActivity : BaseMusicActivity() {
 
     private var loadLrcJob: Job? = null
 
-    private var mLastProgress = 0
+    private var lastProgress = 0
     private var isDraggingProgress = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,8 +95,8 @@ class PlayingActivity : BaseMusicActivity() {
     }
 
     private fun initVolume() {
-        viewBinding.sbVolume.max = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
-        viewBinding.sbVolume.progress = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+        viewBinding.sbVolume.max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+        viewBinding.sbVolume.progress = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
         val filter = IntentFilter(VOLUME_CHANGED_ACTION)
         registerReceiverCompat(volumeReceiver, filter)
     }
@@ -152,10 +153,9 @@ class PlayingActivity : BaseMusicActivity() {
         }
         viewBinding.sbProgress.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (Math.abs(progress - mLastProgress) >= DateUtils.SECOND_IN_MILLIS) {
-                    viewBinding.tvCurrentTime.text =
-                        TimeUtils.formatMs(progress.toLong())
-                    mLastProgress = progress
+                if (abs(progress - lastProgress) >= DateUtils.SECOND_IN_MILLIS) {
+                    viewBinding.tvCurrentTime.text = TimeUtils.formatMs(progress.toLong())
+                    lastProgress = progress
                 }
             }
 
@@ -188,7 +188,7 @@ class PlayingActivity : BaseMusicActivity() {
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 seekBar ?: return
-                mAudioManager.setStreamVolume(
+                audioManager.setStreamVolume(
                     AudioManager.STREAM_MUSIC,
                     seekBar.progress,
                     AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE
@@ -202,11 +202,11 @@ class PlayingActivity : BaseMusicActivity() {
             if (song != null) {
                 viewBinding.tvTitle.text = song.title
                 viewBinding.tvArtist.text = song.artist
+                viewBinding.sbProgress.max = song.duration.toInt()
                 viewBinding.sbProgress.progress = audioPlayer.playProgress.value.toInt()
                 viewBinding.sbProgress.secondaryProgress = 0
-                viewBinding.sbProgress.max = song.duration.toInt()
-                mLastProgress = 0
-                viewBinding.tvCurrentTime.setText(R.string.play_time_start)
+                lastProgress = 0
+                viewBinding.tvCurrentTime.text = TimeUtils.formatMs(audioPlayer.playProgress.value)
                 viewBinding.tvTotalTime.text = TimeUtils.formatMs(song.duration)
                 updateCover(song)
                 updateLrc(song)
@@ -297,7 +297,7 @@ class PlayingActivity : BaseMusicActivity() {
         }
     }
 
-    private fun loadLrc(path: String?) {
+    private fun loadLrc(path: String) {
         val file = File(path)
         viewBinding.lrcView.loadLrc(file)
     }
@@ -332,8 +332,7 @@ class PlayingActivity : BaseMusicActivity() {
 
     private val volumeReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            viewBinding.sbVolume.progress =
-                mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+            viewBinding.sbVolume.progress = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
         }
     }
 
