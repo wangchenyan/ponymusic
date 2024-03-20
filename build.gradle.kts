@@ -14,5 +14,7 @@ plugins {
 buildscript {
     dependencies {
         classpath(libs.autoRegister)
+        // fix r8 build error
+        classpath(libs.r8)
     }
 }

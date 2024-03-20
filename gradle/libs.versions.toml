@@ -33,6 +33,7 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 [libraries]
 # plugin
 autoRegister = { group = "com.github.wangchenyan", name = "AutoRegister", version = "1.4.3" }
+r8 = { group = "com.android.tools", name = "r8", version = "8.3.37" }
 # androidx
 coreKtx = { group = "androidx.core", name = "core-ktx", version = "1.12.0" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.6.1" }

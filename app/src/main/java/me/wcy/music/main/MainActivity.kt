@@ -15,11 +15,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import top.wangchenyan.common.ext.showConfirmDialog
-import top.wangchenyan.common.ext.toast
-import top.wangchenyan.common.ext.viewBindings
-import top.wangchenyan.common.permission.Permissioner
-import top.wangchenyan.common.widget.pager.CustomTabPager
 import me.wcy.music.R
 import me.wcy.music.account.service.UserService
 import me.wcy.music.common.ApiDomainDialog
@@ -34,6 +29,11 @@ import me.wcy.music.service.PlayService
 import me.wcy.music.utils.QuitTimer
 import me.wcy.music.utils.TimeUtils
 import me.wcy.router.CRouter
+import top.wangchenyan.common.ext.showConfirmDialog
+import top.wangchenyan.common.ext.toast
+import top.wangchenyan.common.ext.viewBindings
+import top.wangchenyan.common.permission.Permissioner
+import top.wangchenyan.common.widget.pager.CustomTabPager
 import javax.inject.Inject
 
 /**
@@ -61,7 +61,7 @@ class MainActivity : BaseMusicActivity() {
         setContentView(viewBinding.root)
 
         CustomTabPager(lifecycle, supportFragmentManager, viewBinding.viewPager).apply {
-            NaviTab.ALL.forEach {
+            NaviTab.ALL.onEach {
                 val tabItem = getTabItem(it.icon, it.name)
                 addFragment(it.newFragment(), tabItem.root)
             }
