@@ -9,16 +9,14 @@ import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.Point
 import android.graphics.drawable.Drawable
-import android.os.Handler
-import android.os.Looper
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
 import androidx.core.content.res.ResourcesCompat
 import com.blankj.utilcode.util.SizeUtils
-import top.wangchenyan.common.ext.startOrResume
 import me.wcy.music.R
 import me.wcy.music.utils.ImageUtils
+import top.wangchenyan.common.ext.startOrResume
 
 /**
  * 专辑封面
@@ -29,10 +27,6 @@ class AlbumCoverView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
-    private val mainHandler by lazy {
-        Handler(Looper.getMainLooper())
-    }
-
     private val coverBorder: Drawable by lazy {
         ResourcesCompat.getDrawable(resources, R.drawable.bg_playing_cover_border, null)!!
     }
@@ -87,7 +81,7 @@ class AlbumCoverView @JvmOverloads constructor(
     }
 
     private fun initSize() {
-        val unit = Math.min(width, height) / 8
+        val unit = width.coerceAtMost(height).coerceAtMost(SizeUtils.dp2px(450f)) / 8
 
         needleBitmap = ImageUtils.resizeImage(needleBitmap, unit * 2, (unit * 3.33).toInt())
         needleStartPoint.x = (width / 2 - needleBitmap.width / 5.5f).toInt()
