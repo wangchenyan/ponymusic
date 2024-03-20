@@ -3,7 +3,7 @@ package me.wcy.music.discover.playlist.square.item
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SizeUtils
 import me.wcy.music.common.bean.PlaylistData
-import me.wcy.music.databinding.ItemPlaylistBinding
+import me.wcy.music.databinding.ItemDiscoverPlaylistBinding
 import me.wcy.music.utils.ConvertUtils
 import me.wcy.music.utils.ImageUtils.loadCover
 import me.wcy.radapter3.RItemBinder
@@ -15,10 +15,10 @@ class PlaylistItemBinder(
     private val itemWidth: Int,
     private val showPlayButton: Boolean,
     private val listener: OnItemClickListener
-) : RItemBinder<ItemPlaylistBinding, PlaylistData>() {
+) : RItemBinder<ItemDiscoverPlaylistBinding, PlaylistData>() {
 
     override fun onBind(
-        viewBinding: ItemPlaylistBinding,
+        viewBinding: ItemDiscoverPlaylistBinding,
         item: PlaylistData,
         position: Int
     ) {

@@ -129,7 +129,7 @@
                 android:clipToPadding="false"
                 android:paddingHorizontal="16dp"
                 tools:itemCount="1"
-                tools:listitem="@layout/item_playlist" />
+                tools:listitem="@layout/item_discover_playlist" />
 
             <TextView
                 android:id="@+id/tvRankingList"

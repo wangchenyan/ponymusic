@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hjq.shape.layout.ShapeLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="bottom"
+    android:minHeight="300dp"
+    android:orientation="vertical"
+    app:shape_solidColor="@color/card_bg"
+    app:shape_topLeftRadius="16dp"
+    app:shape_topRightRadius="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="16dp"
+        android:text="收藏到歌单"
+        android:textColor="@color/common_text_h1_color"
+        android:textSize="18dp"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_divider_size"
+        android:layout_marginHorizontal="16dp"
+        android:background="@color/common_divider" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginVertical="16dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_user_playlist" />
+</com.hjq.shape.layout.ShapeLinearLayout>

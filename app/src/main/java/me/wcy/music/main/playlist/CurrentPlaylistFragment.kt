@@ -11,10 +11,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import top.wangchenyan.common.ext.getColorEx
-import top.wangchenyan.common.ext.showConfirmDialog
-import top.wangchenyan.common.ext.viewBindings
-import top.wangchenyan.common.widget.CustomSpan.appendStyle
 import me.wcy.music.R
 import me.wcy.music.databinding.FragmentCurrentPlaylistBinding
 import me.wcy.music.main.playing.PlayingActivity
@@ -22,6 +18,10 @@ import me.wcy.music.service.AudioPlayer
 import me.wcy.music.service.PlayMode
 import me.wcy.music.storage.db.entity.SongEntity
 import me.wcy.radapter3.RAdapter
+import top.wangchenyan.common.ext.getColorEx
+import top.wangchenyan.common.ext.showConfirmDialog
+import top.wangchenyan.common.ext.viewBindings
+import top.wangchenyan.common.widget.CustomSpan.appendStyle
 import javax.inject.Inject
 
 /**
@@ -59,9 +59,6 @@ class CurrentPlaylistFragment : BottomSheetDialogFragment() {
     }
 
     private fun initView() {
-        viewBinding.root.setOnClickListener {
-            dismissAllowingStateLoss()
-        }
         viewBinding.llPlayMode.setOnClickListener {
             switchPlayMode()
         }

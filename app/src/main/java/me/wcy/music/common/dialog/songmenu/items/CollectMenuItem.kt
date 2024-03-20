@@ -1,10 +1,12 @@
 package me.wcy.music.common.dialog.songmenu.items
 
 import android.view.View
+import androidx.fragment.app.FragmentActivity
 import kotlinx.coroutines.CoroutineScope
 import me.wcy.music.common.bean.SongData
 import me.wcy.music.common.dialog.songmenu.MenuItem
-import top.wangchenyan.common.ext.toast
+import me.wcy.music.mine.collect.CollectSongFragment
+import top.wangchenyan.common.ext.findActivity
 
 /**
  * Created by wangchenyan.top on 2023/10/11.
@@ -17,6 +19,10 @@ class CollectMenuItem(
         get() = "收藏到歌单"
 
     override fun onClick(view: View) {
-        toast("敬请期待")
+        val activity = view.context.findActivity()
+        if (activity is FragmentActivity) {
+            CollectSongFragment.newInstance(songData.id)
+                .show(activity.supportFragmentManager, CollectSongFragment.TAG)
+        }
     }
 }

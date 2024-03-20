@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="bottom"
+    android:minHeight="300dp"
     android:orientation="vertical"
     app:shape_solidColor="@color/card_bg"
     app:shape_topLeftRadius="16dp"
@@ -72,8 +73,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/common_divider_size"
-        android:background="@color/common_divider"
-        android:paddingHorizontal="16dp" />
+        android:layout_marginHorizontal="16dp"
+        android:background="@color/common_divider" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
