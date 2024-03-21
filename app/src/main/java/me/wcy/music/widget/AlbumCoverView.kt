@@ -81,7 +81,7 @@ class AlbumCoverView @JvmOverloads constructor(
     }
 
     private fun initSize() {
-        val unit = width.coerceAtMost(height).coerceAtMost(SizeUtils.dp2px(450f)) / 8
+        val unit = width.coerceAtMost(height) / 8
 
         needleBitmap = ImageUtils.resizeImage(needleBitmap, unit * 2, (unit * 3.33).toInt())
         needleStartPoint.x = (width / 2 - needleBitmap.width / 5.5f).toInt()

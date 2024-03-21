@@ -8,6 +8,7 @@ import me.wcy.music.account.service.UserService
 import me.wcy.music.common.DarkModeService
 import me.wcy.music.common.MusicFragmentContainerActivity
 import me.wcy.music.service.AudioPlayer
+import me.wcy.music.service.likesong.LikeSongProcessor
 import me.wcy.router.CRouter
 import me.wcy.router.RouterClient
 import top.wangchenyan.common.CommonApp
@@ -28,6 +29,9 @@ class MusicApplication : Application() {
 
     @Inject
     lateinit var darkModeService: DarkModeService
+
+    @Inject
+    lateinit var likeSongProcessor: LikeSongProcessor
 
     override fun onCreate() {
         super.onCreate()
@@ -53,6 +57,7 @@ class MusicApplication : Application() {
         }
         initCRouter()
         darkModeService.init()
+        likeSongProcessor
     }
 
     private fun initCRouter() {

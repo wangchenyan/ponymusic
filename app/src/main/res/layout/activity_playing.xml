@@ -82,45 +82,115 @@
             android:layout_marginTop="16dp"
             android:layout_weight="1">
 
-            <me.wcy.music.widget.AlbumCoverView
-                android:id="@+id/albumCoverView"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clAlbumCover"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingHorizontal="16dp"
-                android:visibility="gone" />
+                android:layout_height="match_parent">
+
+                <me.wcy.music.widget.AlbumCoverView
+                    android:id="@+id/albumCoverView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="20dp"
+                    android:paddingHorizontal="16dp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintBottom_toTopOf="@+id/llActions"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_max="450dp" />
+
+                <LinearLayout
+                    android:id="@+id/llActions"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="32dp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_max="450dp">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:id="@+id/ivLike"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:paddingVertical="2dp"
+                        android:src="@drawable/ic_favorite_selector" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:id="@+id/ivDownload"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:paddingVertical="2dp"
+                        android:src="@drawable/ic_download"
+                        app:tint="@color/translucent_white_p80" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
                 android:id="@+id/lrcLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
+                    android:layout_height="wrap_content">
 
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_volume"
-                        app:tint="@color/translucent_white_p80" />
-
-                    <SeekBar
-                        android:id="@+id/sbVolume"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:maxHeight="2dp"
-                        android:minHeight="2dp"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
-                        android:progressDrawable="@drawable/bg_playing_volume_progress"
-                        android:thumb="@drawable/ic_playing_volume_progress_thumb" />
-                </LinearLayout>
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintWidth_max="450dp">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_volume"
+                            app:tint="@color/translucent_white_p80" />
+
+                        <SeekBar
+                            android:id="@+id/sbVolume"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxHeight="2dp"
+                            android:minHeight="2dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:progressDrawable="@drawable/bg_playing_volume_progress"
+                            android:thumb="@drawable/ic_playing_volume_progress_thumb" />
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <me.wcy.lrcview.LrcView
                     android:id="@+id/lrcView"
@@ -138,91 +208,115 @@
             </LinearLayout>
         </FrameLayout>
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="26dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingHorizontal="16dp">
+            android:layout_marginTop="20dp">
 
-            <TextView
-                android:id="@+id/tvCurrentTime"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/llProgress"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/play_time_start"
-                android:textColor="@color/white"
-                android:textSize="10dp" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_max="450dp">
 
-            <SeekBar
-                android:id="@+id/sbProgress"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:maxHeight="2dp"
-                android:minHeight="2dp"
-                android:progressDrawable="@drawable/bg_playing_playback_progress"
-                android:thumb="@drawable/ic_playing_playback_progress_thumb" />
+                <TextView
+                    android:id="@+id/tvCurrentTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/play_time_start"
+                    android:textColor="@color/white"
+                    android:textSize="10dp" />
 
-            <TextView
-                android:id="@+id/tvTotalTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/play_time_start"
-                android:textColor="@color/translucent_white_p50"
-                android:textSize="10dp" />
-        </LinearLayout>
+                <SeekBar
+                    android:id="@+id/sbProgress"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:maxHeight="2dp"
+                    android:minHeight="2dp"
+                    android:progressDrawable="@drawable/bg_playing_playback_progress"
+                    android:thumb="@drawable/ic_playing_playback_progress_thumb" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="24dp"
-            android:paddingHorizontal="32dp">
+                <TextView
+                    android:id="@+id/tvTotalTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/play_time_start"
+                    android:textColor="@color/translucent_white_p50"
+                    android:textSize="10dp" />
+            </LinearLayout>
 
-            <ImageView
-                android:id="@+id/ivMode"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_play_mode_level_list"
-                app:tint="@color/translucent_white_p80" />
-
-            <ImageView
-                android:id="@+id/ivPrev"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/ivPlay"
-                android:src="@drawable/ic_previous"
-                app:tint="@color/translucent_white_p80" />
-
-            <ImageView
-                android:id="@+id/ivPlay"
-                android:layout_width="56dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:layout_centerInParent="true"
-                android:layout_marginHorizontal="28dp"
-                android:src="@drawable/ic_playing_play_pause_selector"
-                app:tint="@color/translucent_white_p80" />
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="24dp"
+                android:orientation="horizontal"
+                android:paddingHorizontal="32dp"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/llProgress"
+                app:layout_constraintWidth_max="450dp">
 
-            <ImageView
-                android:id="@+id/ivNext"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/ivPlay"
-                android:src="@drawable/ic_next"
-                app:tint="@color/translucent_white_p80" />
+                <ImageView
+                    android:id="@+id/ivMode"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:paddingVertical="8dp"
+                    android:src="@drawable/ic_play_mode_level_list"
+                    app:tint="@color/translucent_white_p80" />
 
-            <ImageView
-                android:id="@+id/ivPlaylist"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_playlist"
-                app:tint="@color/translucent_white_p80" />
-        </RelativeLayout>
+                <ImageView
+                    android:id="@+id/ivPrev"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:paddingVertical="16dp"
+                    android:src="@drawable/ic_previous"
+                    app:tint="@color/translucent_white_p80" />
+
+                <ImageView
+                    android:id="@+id/ivPlay"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_playing_play_pause_selector"
+                    app:tint="@color/translucent_white_p80" />
+
+                <ImageView
+                    android:id="@+id/ivNext"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:paddingVertical="16dp"
+                    android:src="@drawable/ic_next"
+                    app:tint="@color/translucent_white_p80" />
+
+                <ImageView
+                    android:id="@+id/ivPlaylist"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:paddingVertical="16dp"
+                    android:src="@drawable/ic_playlist"
+                    app:tint="@color/translucent_white_p80" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
             android:id="@+id/navigationBarPlaceholder"

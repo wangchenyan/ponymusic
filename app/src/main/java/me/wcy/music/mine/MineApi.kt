@@ -3,6 +3,7 @@ package me.wcy.music.mine
 import me.wcy.music.discover.playlist.square.bean.PlaylistListData
 import me.wcy.music.mine.collect.song.bean.CollectSongResult
 import me.wcy.music.net.HttpClient
+import me.wcy.music.service.likesong.bean.LikeSongListData
 import me.wcy.music.storage.preference.ConfigPreferences
 import retrofit2.Retrofit
 import retrofit2.http.POST
@@ -49,6 +50,27 @@ interface MineApi {
         @Query("op") op: String = "add",
         @Query("timestamp") timestamp: Long = ServerTime.currentTimeMillis()
     ): CollectSongResult
+
+    /**
+     * 喜欢音乐
+     * @param id 歌曲 id
+     * @param like 默认为 true 即喜欢 , 若传 false, 则取消喜欢
+     */
+    @POST("like")
+    suspend fun likeSong(
+        @Query("id") id: Long,
+        @Query("like") like: Boolean = true,
+        @Query("timestamp") timestamp: Long = ServerTime.currentTimeMillis()
+    ): NetResult<Any>
+
+    /**
+     * 喜欢音乐列表
+     */
+    @POST("likelist")
+    suspend fun getMyLikeSongList(
+        @Query("uid") uid: Long,
+        @Query("timestamp") timestamp: Long = ServerTime.currentTimeMillis()
+    ): LikeSongListData
 
     companion object {
         private val api: MineApi by lazy {

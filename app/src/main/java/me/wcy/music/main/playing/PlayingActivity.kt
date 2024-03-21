@@ -28,6 +28,7 @@ import me.wcy.music.discover.DiscoverApi
 import me.wcy.music.ext.registerReceiverCompat
 import me.wcy.music.main.playlist.CurrentPlaylistFragment
 import me.wcy.music.service.AudioPlayer
+import me.wcy.music.service.likesong.LikeSongProcessor
 import me.wcy.music.service.PlayMode
 import me.wcy.music.storage.LrcCache
 import me.wcy.music.storage.db.entity.SongEntity
@@ -52,6 +53,9 @@ class PlayingActivity : BaseMusicActivity() {
     @Inject
     lateinit var audioPlayer: AudioPlayer
 
+    @Inject
+    lateinit var likeSongProcessor: LikeSongProcessor
+
     private val audioManager by lazy {
         getSystemService(Context.AUDIO_SERVICE) as AudioManager
     }
@@ -73,6 +77,7 @@ class PlayingActivity : BaseMusicActivity() {
         initVolume()
         initCover()
         initLrc()
+        initActions()
         initPlayControl()
         initData()
         switchCoverLrc(true)
@@ -103,7 +108,7 @@ class PlayingActivity : BaseMusicActivity() {
 
     private fun initCover() {
         viewBinding.albumCoverView.initNeedle(audioPlayer.playState.value.isPlaying)
-        viewBinding.albumCoverView.setOnClickListener {
+        viewBinding.clAlbumCover.setOnClickListener {
             switchCoverLrc(false)
         }
     }
@@ -121,6 +126,20 @@ class PlayingActivity : BaseMusicActivity() {
         }
         viewBinding.lrcView.setOnTapListener { view: LrcView?, x: Float, y: Float ->
             switchCoverLrc(true)
+        }
+    }
+
+    private fun initActions() {
+        viewBinding.ivLike.setOnClickListener {
+            lifecycleScope.launch {
+                val song = audioPlayer.currentSong.value ?: return@launch
+                val res = likeSongProcessor.like(this@PlayingActivity, song.songId)
+                if (res.isSuccess()) {
+                    updateLikeState(song)
+                } else {
+                    toast(res.msg)
+                }
+            }
         }
     }
 
@@ -218,6 +237,7 @@ class PlayingActivity : BaseMusicActivity() {
                     viewBinding.ivPlay.isSelected = false
                     viewBinding.albumCoverView.pause()
                 }
+                updateLikeState(song)
             } else {
                 finish()
             }
@@ -307,7 +327,7 @@ class PlayingActivity : BaseMusicActivity() {
     }
 
     private fun switchCoverLrc(showCover: Boolean) {
-        viewBinding.albumCoverView.isVisible = showCover
+        viewBinding.clAlbumCover.isVisible = showCover
         viewBinding.lrcLayout.isVisible = showCover.not()
     }
 
@@ -319,6 +339,10 @@ class PlayingActivity : BaseMusicActivity() {
         }
         toast(mode.nameRes)
         audioPlayer.setPlayMode(mode)
+    }
+
+    private fun updateLikeState(song: SongEntity) {
+        viewBinding.ivLike.isSelected = likeSongProcessor.isLiked(song.songId)
     }
 
     override fun getNavigationBarColor(): Int {
