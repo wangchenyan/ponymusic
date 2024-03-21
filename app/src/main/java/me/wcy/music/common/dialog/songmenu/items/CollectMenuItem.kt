@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentActivity
 import kotlinx.coroutines.CoroutineScope
 import me.wcy.music.common.bean.SongData
 import me.wcy.music.common.dialog.songmenu.MenuItem
-import me.wcy.music.mine.collect.CollectSongFragment
+import me.wcy.music.mine.collect.song.CollectSongFragment
 import top.wangchenyan.common.ext.findActivity
 
 /**

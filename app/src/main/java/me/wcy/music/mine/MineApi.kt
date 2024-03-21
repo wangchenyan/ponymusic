@@ -1,15 +1,16 @@
 package me.wcy.music.mine
 
-import top.wangchenyan.common.net.NetResult
-import top.wangchenyan.common.net.gson.GsonConverterFactory
-import top.wangchenyan.common.utils.GsonUtils
-import top.wangchenyan.common.utils.ServerTime
 import me.wcy.music.discover.playlist.square.bean.PlaylistListData
+import me.wcy.music.mine.collect.song.bean.CollectSongResult
 import me.wcy.music.net.HttpClient
 import me.wcy.music.storage.preference.ConfigPreferences
 import retrofit2.Retrofit
 import retrofit2.http.POST
 import retrofit2.http.Query
+import top.wangchenyan.common.net.NetResult
+import top.wangchenyan.common.net.gson.GsonConverterFactory
+import top.wangchenyan.common.utils.GsonUtils
+import top.wangchenyan.common.utils.ServerTime
 
 /**
  * Created by wangchenyan.top on 2023/9/26.
@@ -34,6 +35,20 @@ interface MineApi {
         @Query("t") t: Int,
         @Query("timestamp") timestamp: Long = ServerTime.currentTimeMillis()
     ): NetResult<Any>
+
+    /**
+     * 对歌单添加歌曲
+     * @param op 从歌单增加单曲为 add, 删除为 del
+     * @param pid 歌单 id
+     * @param tracks 歌曲 id,可多个,用逗号隔开
+     */
+    @POST("playlist/tracks")
+    suspend fun collectSong(
+        @Query("pid") pid: Long,
+        @Query("tracks") tracks: String,
+        @Query("op") op: String = "add",
+        @Query("timestamp") timestamp: Long = ServerTime.currentTimeMillis()
+    ): CollectSongResult
 
     companion object {
         private val api: MineApi by lazy {

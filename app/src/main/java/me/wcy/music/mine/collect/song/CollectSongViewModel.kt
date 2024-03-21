@@ -1,4 +1,4 @@
-package me.wcy.music.mine.collect
+package me.wcy.music.mine.collect.song
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,6 +34,22 @@ class CollectSongViewModel @Inject constructor() : ViewModel() {
             CommonResult.success(list)
         } else {
             CommonResult.fail(playlistData?.code ?: -1)
+        }
+    }
+
+    suspend fun collectSong(pid: Long): CommonResult<Unit> {
+        val res = kotlin.runCatching {
+            MineApi.get().collectSong(pid, songId.toString())
+        }
+        return if (res.isSuccess) {
+            val body = res.getOrThrow().body
+            if (body.code == 200) {
+                CommonResult.success(Unit)
+            } else {
+                CommonResult.fail(body.code, body.message)
+            }
+        } else {
+            CommonResult.fail(msg = res.exceptionOrNull()?.message)
         }
     }
 }

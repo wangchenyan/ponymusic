@@ -1,4 +1,4 @@
-package me.wcy.music.mine.collect
+package me.wcy.music.mine.collect.song
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -71,8 +71,7 @@ class CollectSongFragment : BottomSheetDialogFragment() {
                 true,
                 object : UserPlaylistItemBinder.OnItemClickListener {
                     override fun onItemClick(item: PlaylistData) {
-                        toast("接口走丢了…")
-                        dismissAllowingStateLoss()
+                        collectSong(item.id)
                     }
 
                     override fun onMoreClick(item: PlaylistData) {
@@ -88,6 +87,18 @@ class CollectSongFragment : BottomSheetDialogFragment() {
         lifecycleScope.launch {
             viewModel.myPlaylists.collectLatest {
                 adapter.refresh(it)
+            }
+        }
+    }
+
+    private fun collectSong(pid: Long) {
+        lifecycleScope.launch {
+            val res = viewModel.collectSong(pid)
+            if (res.isSuccess()) {
+                toast("操作成功")
+                dismissAllowingStateLoss()
+            } else {
+                toast(res.msg)
             }
         }
     }
