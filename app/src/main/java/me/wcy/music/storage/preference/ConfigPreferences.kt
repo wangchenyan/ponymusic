@@ -20,6 +20,11 @@ object ConfigPreferences :
         "standard"
     )
 
+    var downloadSoundQuality by IPreferencesFile.StringProperty(
+        StringUtils.getString(R.string.setting_key_download_sound_quality),
+        "standard"
+    )
+
     var filterSize by IPreferencesFile.StringProperty(
         StringUtils.getString(R.string.setting_key_filter_size),
         "0"

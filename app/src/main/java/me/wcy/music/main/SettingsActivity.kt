@@ -43,13 +43,16 @@ class SettingsActivity : BaseMusicActivity() {
         private val playSoundQuality: Preference by lazy {
             findPreference(getString(R.string.setting_key_play_sound_quality))!!
         }
-        private val mSoundEffect: Preference by lazy {
+        private val soundEffect: Preference by lazy {
             findPreference(getString(R.string.setting_key_sound_effect))!!
         }
-        private val mFilterSize: Preference by lazy {
+        private val downloadSoundQuality: Preference by lazy {
+            findPreference(getString(R.string.setting_key_download_sound_quality))!!
+        }
+        private val filterSize: Preference by lazy {
             findPreference(getString(R.string.setting_key_filter_size))!!
         }
-        private val mFilterTime: Preference by lazy {
+        private val filterTime: Preference by lazy {
             findPreference(getString(R.string.setting_key_filter_time))!!
         }
 
@@ -67,6 +70,7 @@ class SettingsActivity : BaseMusicActivity() {
             initNotificationStyle()
             initPlaySoundQuality()
             initSoundEffect()
+            initDownloadSoundQuality()
             initFilter()
         }
 
@@ -78,7 +82,7 @@ class SettingsActivity : BaseMusicActivity() {
             )
             darkMode.setOnPreferenceChangeListener { preference, newValue ->
                 val value = newValue.toString()
-                mFilterSize.summary = getSummary(
+                filterSize.summary = getSummary(
                     value,
                     R.array.dark_mode_entries,
                     R.array.dark_mode_values
@@ -100,36 +104,53 @@ class SettingsActivity : BaseMusicActivity() {
         private fun initPlaySoundQuality() {
             playSoundQuality.summary = getSummary(
                 ConfigPreferences.playSoundQuality,
-                R.array.play_sound_quality_entries,
-                R.array.play_sound_quality_entry_values
+                R.array.sound_quality_entries,
+                R.array.sound_quality_entry_values
             )
             playSoundQuality.setOnPreferenceChangeListener { preference, newValue ->
                 val value = newValue.toString()
                 playSoundQuality.summary = getSummary(
                     value,
-                    R.array.play_sound_quality_entries,
-                    R.array.play_sound_quality_entry_values
+                    R.array.sound_quality_entries,
+                    R.array.sound_quality_entry_values
                 )
                 true
             }
         }
 
         private fun initSoundEffect() {
-            mSoundEffect.setOnPreferenceClickListener {
+            soundEffect.setOnPreferenceClickListener {
                 startEqualizer()
                 true
             }
         }
 
+        private fun initDownloadSoundQuality() {
+            downloadSoundQuality.summary = getSummary(
+                ConfigPreferences.downloadSoundQuality,
+                R.array.sound_quality_entries,
+                R.array.sound_quality_entry_values
+            )
+            downloadSoundQuality.setOnPreferenceChangeListener { preference, newValue ->
+                val value = newValue.toString()
+                downloadSoundQuality.summary = getSummary(
+                    value,
+                    R.array.sound_quality_entries,
+                    R.array.sound_quality_entry_values
+                )
+                true
+            }
+        }
+
         private fun initFilter() {
-            mFilterSize.summary = getSummary(
+            filterSize.summary = getSummary(
                 ConfigPreferences.filterSize,
                 R.array.filter_size_entries,
                 R.array.filter_size_entry_values
             )
-            mFilterSize.setOnPreferenceChangeListener { preference, newValue ->
+            filterSize.setOnPreferenceChangeListener { preference, newValue ->
                 val value = newValue.toString()
-                mFilterSize.summary = getSummary(
+                filterSize.summary = getSummary(
                     value,
                     R.array.filter_size_entries,
                     R.array.filter_size_entry_values
@@ -137,14 +158,14 @@ class SettingsActivity : BaseMusicActivity() {
                 true
             }
 
-            mFilterTime.summary = getSummary(
+            filterTime.summary = getSummary(
                 ConfigPreferences.filterTime,
                 R.array.filter_time_entries,
                 R.array.filter_time_entry_values
             )
-            mFilterTime.setOnPreferenceChangeListener { preference, newValue ->
+            filterTime.setOnPreferenceChangeListener { preference, newValue ->
                 val value = newValue.toString()
-                mFilterTime.summary = getSummary(
+                filterTime.summary = getSummary(
                     value,
                     R.array.filter_time_entries,
                     R.array.filter_time_entry_values

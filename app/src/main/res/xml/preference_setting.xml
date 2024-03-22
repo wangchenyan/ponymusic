@@ -22,8 +22,8 @@
         <ListPreference
             android:defaultValue="standard"
             android:dialogTitle="🇻需要VIP 🇸需要SVIP"
-            android:entries="@array/play_sound_quality_entries"
-            android:entryValues="@array/play_sound_quality_entry_values"
+            android:entries="@array/sound_quality_entries"
+            android:entryValues="@array/sound_quality_entry_values"
             android:key="@string/setting_key_play_sound_quality"
             android:summary="标准"
             android:title="在线播放音质" />
@@ -31,6 +31,18 @@
         <Preference
             android:key="@string/setting_key_sound_effect"
             android:title="@string/sound_effect" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="下载">
+
+        <ListPreference
+            android:defaultValue="standard"
+            android:dialogTitle="🇻需要VIP 🇸需要SVIP"
+            android:entries="@array/sound_quality_entries"
+            android:entryValues="@array/sound_quality_entry_values"
+            android:key="@string/setting_key_download_sound_quality"
+            android:summary="标准"
+            android:title="下载音质" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="文件过滤">

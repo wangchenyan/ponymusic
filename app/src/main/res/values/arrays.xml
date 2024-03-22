@@ -33,7 +33,7 @@
         <item>2</item>
     </string-array>
 
-    <string-array name="play_sound_quality_entries">
+    <string-array name="sound_quality_entries">
         <item>标准</item>
         <item>较高</item>
         <item>极高(HQ)</item>
@@ -44,7 +44,7 @@
         <item>超清母带(Master)🇸</item>
     </string-array>
 
-    <string-array name="play_sound_quality_entry_values">
+    <string-array name="sound_quality_entry_values">
         <item>standard</item>
         <item>higher</item>
         <item>exhigh</item>

@@ -28,14 +28,17 @@ import me.wcy.music.discover.DiscoverApi
 import me.wcy.music.ext.registerReceiverCompat
 import me.wcy.music.main.playlist.CurrentPlaylistFragment
 import me.wcy.music.service.AudioPlayer
-import me.wcy.music.service.likesong.LikeSongProcessor
 import me.wcy.music.service.PlayMode
+import me.wcy.music.service.likesong.LikeSongProcessor
 import me.wcy.music.storage.LrcCache
 import me.wcy.music.storage.db.entity.SongEntity
+import me.wcy.music.storage.preference.ConfigPreferences
 import me.wcy.music.utils.TimeUtils
 import me.wcy.router.annotation.Route
 import top.wangchenyan.common.ext.toast
 import top.wangchenyan.common.ext.viewBindings
+import top.wangchenyan.common.net.apiCall
+import top.wangchenyan.common.utils.LaunchUtils
 import top.wangchenyan.common.utils.StatusBarUtils
 import top.wangchenyan.common.utils.image.ImageUtils
 import java.io.File
@@ -135,7 +138,22 @@ class PlayingActivity : BaseMusicActivity() {
                 val song = audioPlayer.currentSong.value ?: return@launch
                 val res = likeSongProcessor.like(this@PlayingActivity, song.songId)
                 if (res.isSuccess()) {
-                    updateLikeState(song)
+                    updateOnlineActionsState(song)
+                } else {
+                    toast(res.msg)
+                }
+            }
+        }
+        viewBinding.ivDownload.setOnClickListener {
+            lifecycleScope.launch {
+                val song = audioPlayer.currentSong.value ?: return@launch
+                val res = apiCall {
+                    DiscoverApi.get()
+                        .getSongUrl(song.songId, ConfigPreferences.downloadSoundQuality)
+                }
+                if (res.isSuccessWithData() && res.getDataOrThrow().isNotEmpty()) {
+                    val url = res.getDataOrThrow().first().url
+                    LaunchUtils.launchBrowser(this@PlayingActivity, url)
                 } else {
                     toast(res.msg)
                 }
@@ -237,7 +255,7 @@ class PlayingActivity : BaseMusicActivity() {
                     viewBinding.ivPlay.isSelected = false
                     viewBinding.albumCoverView.pause()
                 }
-                updateLikeState(song)
+                updateOnlineActionsState(song)
             } else {
                 finish()
             }
@@ -341,7 +359,8 @@ class PlayingActivity : BaseMusicActivity() {
         audioPlayer.setPlayMode(mode)
     }
 
-    private fun updateLikeState(song: SongEntity) {
+    private fun updateOnlineActionsState(song: SongEntity) {
+        viewBinding.llActions.isVisible = song.isLocal().not()
         viewBinding.ivLike.isSelected = likeSongProcessor.isLiked(song.songId)
     }
 
