@@ -33,7 +33,7 @@ class LikeSongProcessorImpl @Inject constructor(
         }
     }
 
-    private fun updateLikeSongList() {
+    override fun updateLikeSongList() {
         if (userService.isLogin().not()) return
         launch {
             val res = runCatching {

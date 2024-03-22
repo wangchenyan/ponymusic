@@ -108,39 +108,14 @@ class MineFragment : BaseMusicFragment() {
 
     @SuppressLint("SetTextI18n")
     private fun initPlaylist() {
-        val listener = object : UserPlaylistItemBinder.OnItemClickListener {
-            override fun onItemClick(item: PlaylistData) {
-                CRouter.with(requireActivity())
-                    .url(RoutePath.PLAYLIST_DETAIL)
-                    .extra("id", item.id)
-                    .start()
-            }
-
-            override fun onMoreClick(item: PlaylistData) {
-                BottomItemsDialogBuilder(requireActivity())
-                    .items(listOf("删除"))
-                    .onClickListener { dialog, which ->
-                        lifecycleScope.launch {
-                            showLoading()
-                            val res = viewModel.removeCollect(item.id)
-                            dismissLoading()
-                            if (res.isSuccess().not()) {
-                                toast(res.msg)
-                            }
-                        }
-                    }
-                    .build()
-                    .show()
-            }
-        }
         val likePlaylistAdapter = RAdapter<PlaylistData>().apply {
-            register(UserPlaylistItemBinder(true, listener))
+            register(UserPlaylistItemBinder(true, ItemClickListener(true, isLike = true)))
         }
         val myPlaylistAdapter = RAdapter<PlaylistData>().apply {
-            register(UserPlaylistItemBinder(true, listener))
+            register(UserPlaylistItemBinder(true, ItemClickListener(true, isLike = false)))
         }
         val collectPlaylistAdapter = RAdapter<PlaylistData>().apply {
-            register(UserPlaylistItemBinder(false, listener))
+            register(UserPlaylistItemBinder(false, ItemClickListener(false, isLike = false)))
         }
 
         val spacingDecoration = SpacingDecoration(SizeUtils.dp2px(10f))
@@ -177,6 +152,35 @@ class MineFragment : BaseMusicFragment() {
                 viewBinding.tvCollectPlaylist.text = "收藏歌单(${collectPlaylists.size})"
                 collectPlaylistAdapter.refresh(collectPlaylists)
             }
+        }
+    }
+
+    inner class ItemClickListener(private val isMine: Boolean, private val isLike: Boolean) :
+        UserPlaylistItemBinder.OnItemClickListener {
+        override fun onItemClick(item: PlaylistData) {
+            CRouter.with(requireActivity())
+                .url(RoutePath.PLAYLIST_DETAIL)
+                .extra("id", item.id)
+                .extra("realtime_data", isMine)
+                .extra("is_like", isLike)
+                .start()
+        }
+
+        override fun onMoreClick(item: PlaylistData) {
+            BottomItemsDialogBuilder(requireActivity())
+                .items(listOf("删除"))
+                .onClickListener { dialog, which ->
+                    lifecycleScope.launch {
+                        showLoading()
+                        val res = viewModel.removeCollect(item.id)
+                        dismissLoading()
+                        if (res.isSuccess().not()) {
+                            toast(res.msg)
+                        }
+                    }
+                }
+                .build()
+                .show()
         }
     }
 }

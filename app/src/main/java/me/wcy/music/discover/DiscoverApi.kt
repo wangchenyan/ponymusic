@@ -49,6 +49,7 @@ interface DiscoverApi {
     suspend fun getPlaylistSongList(
         @Query("id") id: Long,
         @Query("limit") limit: Long? = null,
+        @Query("timestamp") timestamp: Long? = null
     ): SongListData
 
     @POST("playlist/hot")

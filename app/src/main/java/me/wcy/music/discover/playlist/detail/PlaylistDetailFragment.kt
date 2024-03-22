@@ -77,12 +77,14 @@ class PlaylistDetailFragment : BaseMusicFragment() {
         super.onLazyCreate()
 
         val id = getRouteArguments().getLongExtra("id", 0)
+        val realtimeData = getRouteArguments().getBooleanExtra("realtime_data", false)
+        val isLike = getRouteArguments().getBooleanExtra("is_like", false)
         if (id <= 0) {
             finish()
             return
         }
 
-        viewModel.init(id)
+        viewModel.init(id, realtimeData, isLike)
 
         initTitle()
         initPlaylistInfo()
@@ -197,7 +199,9 @@ class PlaylistDetailFragment : BaseMusicFragment() {
                 )
                 val playlistData = viewModel.playlistData.value
                 if (playlistData != null && playlistData.creator.userId == userService.getUserId()) {
-                    items.add(DeletePlaylistSongMenuItem(playlistData, item))
+                    items.add(DeletePlaylistSongMenuItem(playlistData, item) {
+                        viewModel.removeSong(it)
+                    })
                 }
                 SongMoreMenuDialog(requireActivity(), item)
                     .setItems(items)
