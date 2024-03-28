@@ -40,11 +40,6 @@ object ConfigPreferences :
         DarkModeService.DarkMode.Auto.value
     )
 
-    var useCustomNotification by IPreferencesFile.BooleanProperty(
-        StringUtils.getString(R.string.setting_key_use_custom_notification),
-        false
-    )
-
     var playMode: Int by IPreferencesFile.IntProperty("play_mode", 0)
 
     var currentSongId: String by IPreferencesFile.StringProperty("current_song_id", "")

@@ -17,8 +17,8 @@ import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentRecommendSongBinding
 import me.wcy.music.discover.DiscoverApi
 import me.wcy.music.discover.recommend.song.item.RecommendSongItemBinder
-import me.wcy.music.service.AudioPlayer
-import me.wcy.music.utils.toEntity
+import me.wcy.music.service.PlayerController
+import me.wcy.music.utils.toMediaItem
 import me.wcy.radapter3.RAdapter
 import me.wcy.router.CRouter
 import me.wcy.router.annotation.Route
@@ -38,7 +38,7 @@ class RecommendSongFragment : BaseMusicFragment() {
     }
 
     @Inject
-    lateinit var audioPlayer: AudioPlayer
+    lateinit var playerController: PlayerController
 
     override fun getRootView(): View {
         return viewBinding.root
@@ -62,8 +62,8 @@ class RecommendSongFragment : BaseMusicFragment() {
 
         adapter.register(RecommendSongItemBinder(object : OnItemClickListener2<SongData> {
             override fun onItemClick(item: SongData, position: Int) {
-                val entityList = adapter.getDataList().map { it.toEntity() }
-                audioPlayer.replaceAll(entityList, entityList[position])
+                val entityList = adapter.getDataList().map { it.toMediaItem() }
+                playerController.replaceAll(entityList, entityList[position])
                 CRouter.with(requireContext()).url(RoutePath.PLAYING).start()
             }
 
@@ -82,8 +82,8 @@ class RecommendSongFragment : BaseMusicFragment() {
         }))
         viewBinding.recyclerView.adapter = adapter
         viewBinding.tvPlayAll.setOnClickListener {
-            val entityList = adapter.getDataList().map { it.toEntity() }
-            audioPlayer.replaceAll(entityList, entityList.first())
+            val entityList = adapter.getDataList().map { it.toMediaItem() }
+            playerController.replaceAll(entityList, entityList.first())
             CRouter.with(requireContext()).url(RoutePath.PLAYING).start()
         }
 

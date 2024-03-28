@@ -6,13 +6,12 @@ import android.media.audiofx.AudioEffect
 import android.os.Bundle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreference
 import dagger.hilt.android.AndroidEntryPoint
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicActivity
 import me.wcy.music.common.DarkModeService
 import me.wcy.music.consts.PreferenceName
-import me.wcy.music.service.AudioPlayer
+import me.wcy.music.service.PlayerController
 import me.wcy.music.storage.preference.ConfigPreferences
 import me.wcy.music.utils.MusicUtils
 import me.wcy.router.annotation.Route
@@ -37,9 +36,6 @@ class SettingsActivity : BaseMusicActivity() {
         private val darkMode: Preference by lazy {
             findPreference(getString(R.string.setting_key_dark_mode))!!
         }
-        private val useCustomNotification: SwitchPreference by lazy {
-            findPreference(getString(R.string.setting_key_use_custom_notification))!!
-        }
         private val playSoundQuality: Preference by lazy {
             findPreference(getString(R.string.setting_key_play_sound_quality))!!
         }
@@ -57,7 +53,7 @@ class SettingsActivity : BaseMusicActivity() {
         }
 
         @Inject
-        lateinit var player: AudioPlayer
+        lateinit var playerController: PlayerController
 
         @Inject
         lateinit var darkModeService: DarkModeService
@@ -67,7 +63,6 @@ class SettingsActivity : BaseMusicActivity() {
             addPreferencesFromResource(R.xml.preference_setting)
 
             initDarkMode()
-            initNotificationStyle()
             initPlaySoundQuality()
             initSoundEffect()
             initDownloadSoundQuality()
@@ -89,14 +84,6 @@ class SettingsActivity : BaseMusicActivity() {
                 )
                 val mode = DarkModeService.DarkMode.fromValue(value)
                 darkModeService.setDarkMode(mode)
-                true
-            }
-        }
-
-        private fun initNotificationStyle() {
-            useCustomNotification.isChecked = ConfigPreferences.useCustomNotification
-            useCustomNotification.setOnPreferenceChangeListener { preference, newValue ->
-                ConfigPreferences.useCustomNotification = newValue == true
                 true
             }
         }
@@ -183,7 +170,7 @@ class SettingsActivity : BaseMusicActivity() {
                 intent.putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
                 intent.putExtra(
                     AudioEffect.EXTRA_AUDIO_SESSION,
-                    player.getAudioSessionId()
+                    playerController.getAudioSessionId()
                 )
                 try {
                     startActivity(intent)

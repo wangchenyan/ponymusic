@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="setting_key_dark_mode">dark_mode</string>
-    <string name="setting_key_use_custom_notification">use_custom_notification</string>
     <string name="setting_key_play_sound_quality">play_sound_quality</string>
     <string name="setting_key_download_sound_quality">download_sound_quality</string>
     <string name="setting_key_sound_effect">sound_effect</string>

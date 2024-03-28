@@ -14,9 +14,10 @@ import me.wcy.music.common.dialog.songmenu.SimpleMenuItem
 import me.wcy.music.common.dialog.songmenu.SongMoreMenuDialog
 import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentLocalMusicBinding
-import me.wcy.music.service.AudioPlayer
+import me.wcy.music.service.PlayerController
 import me.wcy.music.storage.db.entity.SongEntity
 import me.wcy.music.utils.TimeUtils
+import me.wcy.music.utils.toMediaItem
 import me.wcy.radapter3.RAdapter
 import me.wcy.router.CRouter
 import me.wcy.router.annotation.Route
@@ -39,7 +40,7 @@ class LocalMusicFragment : BaseMusicFragment() {
     }
 
     @Inject
-    lateinit var audioPlayer: AudioPlayer
+    lateinit var playerController: PlayerController
 
     override fun getRootView(): View {
         return viewBinding.root
@@ -63,7 +64,8 @@ class LocalMusicFragment : BaseMusicFragment() {
 
         adapter.register(LocalSongItemBinder(object : OnItemClickListener2<SongEntity> {
             override fun onItemClick(item: SongEntity, position: Int) {
-                audioPlayer.replaceAll(adapter.getDataList(), item)
+                val mediaList = adapter.getDataList().map { it.toMediaItem() }
+                playerController.replaceAll(mediaList, mediaList[position])
                 CRouter.with(requireContext()).url(RoutePath.PLAYING).start()
             }
 
@@ -85,7 +87,8 @@ class LocalMusicFragment : BaseMusicFragment() {
         viewBinding.recyclerView.adapter = adapter
 
         viewBinding.tvPlayAll.setOnClickListener {
-            audioPlayer.replaceAll(adapter.getDataList(), adapter.getDataList().first())
+            val mediaList = adapter.getDataList().map { it.toMediaItem() }
+            playerController.replaceAll(mediaList, mediaList.first())
             CRouter.with(requireContext()).url(RoutePath.PLAYING).start()
         }
 

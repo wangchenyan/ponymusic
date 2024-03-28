@@ -1,13 +1,18 @@
 package me.wcy.music
 
 import android.app.Application
+import android.content.ComponentName
 import android.content.Intent
+import androidx.media3.session.MediaController
+import androidx.media3.session.SessionToken
 import com.blankj.utilcode.util.ActivityUtils
+import com.google.common.util.concurrent.MoreExecutors
 import dagger.hilt.android.HiltAndroidApp
 import me.wcy.music.account.service.UserService
 import me.wcy.music.common.DarkModeService
 import me.wcy.music.common.MusicFragmentContainerActivity
-import me.wcy.music.service.AudioPlayer
+import me.wcy.music.service.MusicService
+import me.wcy.music.service.PlayServiceModule
 import me.wcy.music.service.likesong.LikeSongProcessor
 import me.wcy.router.CRouter
 import me.wcy.router.RouterClient
@@ -23,9 +28,6 @@ import javax.inject.Inject
 class MusicApplication : Application() {
     @Inject
     lateinit var userService: UserService
-
-    @Inject
-    lateinit var audioPlayer: AudioPlayer
 
     @Inject
     lateinit var darkModeService: DarkModeService
@@ -57,7 +59,15 @@ class MusicApplication : Application() {
         }
         initCRouter()
         darkModeService.init()
-        likeSongProcessor
+        likeSongProcessor.init()
+
+        val sessionToken =
+            SessionToken(this, ComponentName(this, MusicService::class.java))
+        val mediaControllerFuture = MediaController.Builder(this, sessionToken).buildAsync()
+        mediaControllerFuture.addListener({
+            val player = mediaControllerFuture.get()
+            PlayServiceModule.setPlayer(player)
+        }, MoreExecutors.directExecutor())
     }
 
     private fun initCRouter() {

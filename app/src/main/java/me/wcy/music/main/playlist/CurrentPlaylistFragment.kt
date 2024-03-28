@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.text.buildSpannedString
 import androidx.lifecycle.lifecycleScope
+import androidx.media3.common.MediaItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.ActivityUtils
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -13,11 +14,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import me.wcy.music.R
+import me.wcy.music.common.OnItemClickListener2
 import me.wcy.music.databinding.FragmentCurrentPlaylistBinding
 import me.wcy.music.main.playing.PlayingActivity
-import me.wcy.music.service.AudioPlayer
 import me.wcy.music.service.PlayMode
-import me.wcy.music.storage.db.entity.SongEntity
+import me.wcy.music.service.PlayerController
 import me.wcy.radapter3.RAdapter
 import top.wangchenyan.common.ext.getColorEx
 import top.wangchenyan.common.ext.showConfirmDialog
@@ -31,11 +32,11 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CurrentPlaylistFragment : BottomSheetDialogFragment() {
     private val viewBinding by viewBindings<FragmentCurrentPlaylistBinding>()
-    private val adapter by lazy { RAdapter<SongEntity>() }
+    private val adapter by lazy { RAdapter<MediaItem>() }
     private val layoutManager by lazy { LinearLayoutManager(requireContext()) }
 
     @Inject
-    lateinit var audioPlayer: AudioPlayer
+    lateinit var playerController: PlayerController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,26 +67,38 @@ class CurrentPlaylistFragment : BottomSheetDialogFragment() {
         }
         viewBinding.btnClear.setOnClickListener {
             showConfirmDialog(message = "确认清空播放列表？") {
-                audioPlayer.clearPlaylist()
+                playerController.clearPlaylist()
                 dismissAllowingStateLoss()
                 ActivityUtils.finishActivity(PlayingActivity::class.java)
             }
         }
 
-        adapter.register(CurrentPlaylistItemBinder(audioPlayer))
+        adapter.register(
+            CurrentPlaylistItemBinder(
+                playerController,
+                object : OnItemClickListener2<MediaItem> {
+                    override fun onItemClick(item: MediaItem, position: Int) {
+                        playerController.play(item.mediaId)
+                    }
+
+                    override fun onMoreClick(item: MediaItem, position: Int) {
+                        playerController.delete(item)
+                    }
+                })
+        )
         viewBinding.recyclerView.layoutManager = layoutManager
         viewBinding.recyclerView.adapter = adapter
     }
 
     private fun initData() {
         lifecycleScope.launch {
-            audioPlayer.playMode.collectLatest { playMode ->
+            playerController.playMode.collectLatest { playMode ->
                 viewBinding.ivMode.setImageLevel(playMode.value)
                 viewBinding.tvPlayMode.setText(playMode.nameRes)
             }
         }
 
-        audioPlayer.playlist.observe(this) { playlist ->
+        playerController.playlist.observe(this) { playlist ->
             playlist ?: return@observe
             val size = playlist.size
             viewBinding.tvTitle.text = buildSpannedString {
@@ -100,11 +113,11 @@ class CurrentPlaylistFragment : BottomSheetDialogFragment() {
             }
             adapter.refresh(playlist)
         }
-        audioPlayer.currentSong.observe(this) { song ->
+        playerController.currentSong.observe(this) { song ->
             adapter.notifyDataSetChanged()
-            val playlist = audioPlayer.playlist.value
+            val playlist = playerController.playlist.value
             if (playlist?.isNotEmpty() == true && song != null) {
-                val index = playlist.indexOf(song)
+                val index = playlist.indexOfFirst { it.mediaId == song.mediaId }
                 if (index == 0) {
                     layoutManager.scrollToPosition(index)
                 } else if (index > 0) {
@@ -115,12 +128,12 @@ class CurrentPlaylistFragment : BottomSheetDialogFragment() {
     }
 
     private fun switchPlayMode() {
-        val mode = when (audioPlayer.playMode.value) {
+        val mode = when (playerController.playMode.value) {
             PlayMode.Loop -> PlayMode.Shuffle
             PlayMode.Shuffle -> PlayMode.Single
             PlayMode.Single -> PlayMode.Loop
         }
-        audioPlayer.setPlayMode(mode)
+        playerController.setPlayMode(mode)
     }
 
     companion object {

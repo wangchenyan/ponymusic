@@ -1,9 +1,11 @@
 package me.wcy.music.storage
 
+import androidx.media3.common.MediaItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import me.wcy.music.consts.FilePath
-import me.wcy.music.storage.db.entity.SongEntity
+import me.wcy.music.utils.getSongId
+import me.wcy.music.utils.isLocal
 import java.io.File
 
 /**
@@ -14,15 +16,15 @@ object LrcCache {
     /**
      * 获取歌词路径
      */
-    fun getLrcFilePath(music: SongEntity): String? {
+    fun getLrcFilePath(music: MediaItem): String? {
         if (music.isLocal()) {
-            val audioFile = File(music.path)
+            val audioFile = File(music.localConfiguration?.uri?.toString() ?: "")
             val lrcFile = File(audioFile.parent, "${audioFile.nameWithoutExtension}.lrc")
             if (lrcFile.exists()) {
                 return lrcFile.path
             }
         } else {
-            val lrcFile = File(FilePath.lrcDir, music.songId.toString())
+            val lrcFile = File(FilePath.lrcDir, music.getSongId().toString())
             if (lrcFile.exists()) {
                 return lrcFile.path
             }
@@ -30,9 +32,9 @@ object LrcCache {
         return null
     }
 
-    suspend fun saveLrcFile(music: SongEntity, content: String): File {
+    suspend fun saveLrcFile(music: MediaItem, content: String): File {
         return withContext(Dispatchers.IO) {
-            File(FilePath.lrcDir, music.songId.toString()).also {
+            File(FilePath.lrcDir, music.getSongId().toString()).also {
                 it.writeText(content)
             }
         }

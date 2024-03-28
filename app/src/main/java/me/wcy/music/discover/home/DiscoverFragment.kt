@@ -16,11 +16,6 @@ import com.youth.banner.indicator.CircleIndicator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import top.wangchenyan.common.ext.load
-import top.wangchenyan.common.ext.toast
-import top.wangchenyan.common.ext.viewBindings
-import top.wangchenyan.common.utils.LaunchUtils
-import top.wangchenyan.common.widget.decoration.SpacingDecoration
 import me.wcy.music.R
 import me.wcy.music.account.service.UserService
 import me.wcy.music.common.ApiDomainDialog
@@ -34,11 +29,16 @@ import me.wcy.music.discover.home.viewmodel.DiscoverViewModel
 import me.wcy.music.discover.playlist.square.item.PlaylistItemBinder
 import me.wcy.music.discover.ranking.discover.item.DiscoverRankingItemBinder
 import me.wcy.music.main.MainActivity
-import me.wcy.music.service.AudioPlayer
+import me.wcy.music.service.PlayerController
 import me.wcy.music.storage.preference.ConfigPreferences
-import me.wcy.music.utils.toEntity
+import me.wcy.music.utils.toMediaItem
 import me.wcy.radapter3.RAdapter
 import me.wcy.router.CRouter
+import top.wangchenyan.common.ext.load
+import top.wangchenyan.common.ext.toast
+import top.wangchenyan.common.ext.viewBindings
+import top.wangchenyan.common.utils.LaunchUtils
+import top.wangchenyan.common.widget.decoration.SpacingDecoration
 import javax.inject.Inject
 
 /**
@@ -60,7 +60,7 @@ class DiscoverFragment : BaseMusicFragment() {
     lateinit var userService: UserService
 
     @Inject
-    lateinit var audioPlayer: AudioPlayer
+    lateinit var playerController: PlayerController
 
     override fun getRootView(): View {
         return viewBinding.root
@@ -131,7 +131,7 @@ class DiscoverFragment : BaseMusicFragment() {
                         setOnClickListener {
                             data ?: return@setOnClickListener
                             if (data.song != null) {
-                                audioPlayer.addAndPlay(data.song.toEntity())
+                                playerController.addAndPlay(data.song.toMediaItem())
                                 CRouter.with(context).url(RoutePath.PLAYING).start()
                             } else if (data.url.isNotEmpty()) {
                                 LaunchUtils.launchBrowser(requireContext(), data.url)
@@ -285,8 +285,8 @@ class DiscoverFragment : BaseMusicFragment() {
             }.onSuccess { songListData ->
                 dismissLoading()
                 if (songListData.code == 200 && songListData.songs.isNotEmpty()) {
-                    val songs = songListData.songs.map { it.toEntity() }
-                    audioPlayer.replaceAll(songs, songs.getOrElse(songPosition) { songs[0] })
+                    val songs = songListData.songs.map { it.toMediaItem() }
+                    playerController.replaceAll(songs, songs.getOrElse(songPosition) { songs[0] })
                 }
             }.onFailure {
                 dismissLoading()

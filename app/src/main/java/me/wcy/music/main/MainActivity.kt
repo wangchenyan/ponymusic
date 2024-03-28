@@ -9,7 +9,6 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
-import com.blankj.utilcode.util.AppUtils
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -19,20 +18,19 @@ import me.wcy.music.R
 import me.wcy.music.account.service.UserService
 import me.wcy.music.common.ApiDomainDialog
 import me.wcy.music.common.BaseMusicActivity
-import me.wcy.music.common.DarkModeService
 import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.ActivityMainBinding
 import me.wcy.music.databinding.NavigationHeaderBinding
 import me.wcy.music.databinding.TabItemBinding
-import me.wcy.music.service.AudioPlayer
-import me.wcy.music.service.PlayService
+import me.wcy.music.service.MusicService
+import me.wcy.music.service.PlayServiceModule
+import me.wcy.music.service.PlayServiceModule.playerController
 import me.wcy.music.utils.QuitTimer
 import me.wcy.music.utils.TimeUtils
 import me.wcy.router.CRouter
 import top.wangchenyan.common.ext.showConfirmDialog
 import top.wangchenyan.common.ext.toast
 import top.wangchenyan.common.ext.viewBindings
-import top.wangchenyan.common.permission.Permissioner
 import top.wangchenyan.common.widget.pager.CustomTabPager
 import javax.inject.Inject
 
@@ -50,28 +48,26 @@ class MainActivity : BaseMusicActivity() {
     @Inject
     lateinit var userService: UserService
 
-    @Inject
-    lateinit var audioPlayer: AudioPlayer
-
-    @Inject
-    lateinit var darkModeService: DarkModeService
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(viewBinding.root)
 
-        CustomTabPager(lifecycle, supportFragmentManager, viewBinding.viewPager).apply {
-            NaviTab.ALL.onEach {
-                val tabItem = getTabItem(it.icon, it.name)
-                addFragment(it.newFragment(), tabItem.root)
+        PlayServiceModule.isPlayerReady.observe(this) { isReady ->
+            if (isReady) {
+                setContentView(viewBinding.root)
+
+                CustomTabPager(lifecycle, supportFragmentManager, viewBinding.viewPager).apply {
+                    NaviTab.ALL.onEach {
+                        val tabItem = getTabItem(it.icon, it.name)
+                        addFragment(it.newFragment(), tabItem.root)
+                    }
+                    setScrollable(false)
+                    setup()
+                }
+
+                initDrawer()
+                parseIntent()
             }
-            setScrollable(false)
-            setup()
         }
-
-        initDrawer()
-        checkNotificationPermission()
-        parseIntent()
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -102,18 +98,10 @@ class MainActivity : BaseMusicActivity() {
         }
     }
 
-    private fun checkNotificationPermission() {
-        if (Permissioner.hasNotificationPermission(this).not()) {
-            showConfirmDialog(message = "为了提供通知栏控制能力，请开启通知栏权限") {
-                Permissioner.requestNotificationPermission(this@MainActivity, null)
-            }
-        }
-    }
-
     private fun parseIntent() {
         val intent = intent
-        if (intent.hasExtra(PlayService.EXTRA_NOTIFICATION)) {
-            if (audioPlayer.currentSong.value != null) {
+        if (intent.hasExtra(MusicService.EXTRA_NOTIFICATION)) {
+            if (application.playerController().currentSong.value != null) {
                 CRouter.with(this).url(RoutePath.PLAYING).start()
             }
             setIntent(Intent())
@@ -149,7 +137,7 @@ class MainActivity : BaseMusicActivity() {
                 }
 
                 R.id.action_exit -> {
-                    AppUtils.exitApp()
+                    exitApp()
                     return true
                 }
 
@@ -163,7 +151,7 @@ class MainActivity : BaseMusicActivity() {
     }
 
     private val onTimerListener = object : QuitTimer.OnTimerListener {
-        override fun onTimer(remain: Long) {
+        override fun onTick(remain: Long) {
             if (timerItem == null) {
                 timerItem = viewBinding.navigationView.menu.findItem(R.id.action_timer)
             }
@@ -173,6 +161,10 @@ class MainActivity : BaseMusicActivity() {
             } else {
                 TimeUtils.formatTime("$title(mm:ss)", remain)
             }
+        }
+
+        override fun onTimeEnd() {
+            exitApp()
         }
     }
 
@@ -201,6 +193,11 @@ class MainActivity : BaseMusicActivity() {
                 userService.logout()
             }
         }
+    }
+
+    private fun exitApp() {
+        application.playerController().stop()
+        finish()
     }
 
     private fun getTabItem(@DrawableRes icon: Int, text: CharSequence): TabItemBinding {

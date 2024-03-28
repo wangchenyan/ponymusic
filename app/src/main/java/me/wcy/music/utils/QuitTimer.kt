@@ -3,7 +3,6 @@ package me.wcy.music.utils
 import android.os.Handler
 import android.os.Looper
 import android.text.format.DateUtils
-import com.blankj.utilcode.util.AppUtils
 
 /**
  * Created by hzwangchenyan on 2017/8/8.
@@ -21,7 +20,7 @@ class QuitTimer(private val listener: OnTimerListener) {
             handler.post(mQuitRunnable)
         } else {
             timerRemain = 0
-            listener.onTimer(timerRemain)
+            listener.onTick(timerRemain)
         }
     }
 
@@ -33,10 +32,10 @@ class QuitTimer(private val listener: OnTimerListener) {
         override fun run() {
             timerRemain -= DateUtils.SECOND_IN_MILLIS
             if (timerRemain > 0) {
-                listener.onTimer(timerRemain)
+                listener.onTick(timerRemain)
                 handler.postDelayed(this, DateUtils.SECOND_IN_MILLIS)
             } else {
-                AppUtils.exitApp()
+                listener.onTimeEnd()
             }
         }
     }
@@ -45,6 +44,8 @@ class QuitTimer(private val listener: OnTimerListener) {
         /**
          * 更新定时停止播放时间
          */
-        fun onTimer(remain: Long)
+        fun onTick(remain: Long)
+
+        fun onTimeEnd()
     }
 }

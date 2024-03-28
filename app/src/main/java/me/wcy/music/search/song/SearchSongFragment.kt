@@ -5,8 +5,6 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import top.wangchenyan.common.model.CommonResult
-import top.wangchenyan.common.net.apiCall
 import me.wcy.music.common.OnItemClickListener2
 import me.wcy.music.common.SimpleMusicRefreshFragment
 import me.wcy.music.common.bean.SongData
@@ -19,10 +17,12 @@ import me.wcy.music.consts.Consts
 import me.wcy.music.consts.RoutePath
 import me.wcy.music.search.SearchApi
 import me.wcy.music.search.SearchViewModel
-import me.wcy.music.service.AudioPlayer
-import me.wcy.music.utils.toEntity
+import me.wcy.music.service.PlayerController
+import me.wcy.music.utils.toMediaItem
 import me.wcy.radapter3.RAdapter
 import me.wcy.router.CRouter
+import top.wangchenyan.common.model.CommonResult
+import top.wangchenyan.common.net.apiCall
 import javax.inject.Inject
 
 /**
@@ -34,7 +34,7 @@ class SearchSongFragment : SimpleMusicRefreshFragment<SongData>() {
     private val itemBinder by lazy {
         SearchSongItemBinder(object : OnItemClickListener2<SongData> {
             override fun onItemClick(item: SongData, position: Int) {
-                audioPlayer.addAndPlay(item.toEntity())
+                playerController.addAndPlay(item.toMediaItem())
                 CRouter.with(context).url(RoutePath.PLAYING).start()
             }
 
@@ -56,7 +56,7 @@ class SearchSongFragment : SimpleMusicRefreshFragment<SongData>() {
     }
 
     @Inject
-    lateinit var audioPlayer: AudioPlayer
+    lateinit var playerController: PlayerController
 
     override fun isShowTitle(): Boolean {
         return false

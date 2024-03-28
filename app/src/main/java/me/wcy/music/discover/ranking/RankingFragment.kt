@@ -9,7 +9,6 @@ import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import top.wangchenyan.common.ext.viewBindings
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.common.bean.PlaylistData
@@ -20,13 +19,14 @@ import me.wcy.music.discover.ranking.item.OfficialRankingItemBinder
 import me.wcy.music.discover.ranking.item.RankingTitleItemBinding
 import me.wcy.music.discover.ranking.item.SelectedRankingItemBinder
 import me.wcy.music.discover.ranking.viewmodel.RankingViewModel
-import me.wcy.music.service.AudioPlayer
-import me.wcy.music.utils.toEntity
+import me.wcy.music.service.PlayerController
+import me.wcy.music.utils.toMediaItem
 import me.wcy.radapter3.RAdapter
 import me.wcy.radapter3.RItemBinder
 import me.wcy.radapter3.RTypeMapper
 import me.wcy.router.CRouter
 import me.wcy.router.annotation.Route
+import top.wangchenyan.common.ext.viewBindings
 import javax.inject.Inject
 
 /**
@@ -40,7 +40,7 @@ class RankingFragment : BaseMusicFragment() {
     private val adapter by lazy { RAdapter<Any>() }
 
     @Inject
-    lateinit var audioPlayer: AudioPlayer
+    lateinit var playerController: PlayerController
 
     override fun getRootView(): View {
         return viewBinding.root
@@ -157,8 +157,8 @@ class RankingFragment : BaseMusicFragment() {
             }.onSuccess { songListData ->
                 dismissLoading()
                 if (songListData.code == 200 && songListData.songs.isNotEmpty()) {
-                    val songs = songListData.songs.map { it.toEntity() }
-                    audioPlayer.replaceAll(songs, songs[0])
+                    val songs = songListData.songs.map { it.toMediaItem() }
+                    playerController.replaceAll(songs, songs[0])
                 }
             }.onFailure {
                 dismissLoading()

@@ -70,8 +70,13 @@ class LocalMusicLoader {
                 val album = cursor.getString(albumColumn)
                 val albumId = cursor.getLong(albumIdColumn)
 
-                val artworkUri = Uri.parse("content://media/external/audio/albumart")
-                val albumCover = ContentUris.withAppendedId(artworkUri, albumId)
+                val albumCover = ContentUris.withAppendedId(
+                    MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+                    albumId
+                )
+
+                val uri =
+                    Uri.withAppendedPath(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id.toString())
 
                 val path = cursor.getString(dataColumn)
                 val fileName = cursor.getString(displayNameColumn)

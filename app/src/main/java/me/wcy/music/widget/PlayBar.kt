@@ -18,7 +18,9 @@ import me.wcy.music.R
 import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.LayoutPlayBarBinding
 import me.wcy.music.main.playlist.CurrentPlaylistFragment
-import me.wcy.music.service.AudioPlayerModule.Companion.audioPlayer
+import me.wcy.music.service.PlayServiceModule.playerController
+import me.wcy.music.utils.getDuration
+import me.wcy.music.utils.getSmallCover
 import me.wcy.router.CRouter
 import top.wangchenyan.common.CommonApp
 import top.wangchenyan.common.ext.findActivity
@@ -34,8 +36,8 @@ class PlayBar @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : FrameLayout(context, attrs) {
     private val viewBinding: LayoutPlayBarBinding
-    private val audioPlayer by lazy {
-        CommonApp.app.audioPlayer()
+    private val playerController by lazy {
+        CommonApp.app.playerController()
     }
     private val rotateAnimator: ObjectAnimator
 
@@ -61,10 +63,10 @@ class PlayBar @JvmOverloads constructor(
             CRouter.with(context).url(RoutePath.PLAYING).start()
         }
         viewBinding.ivPlay.setOnClickListener {
-            audioPlayer.playPause()
+            playerController.playPause()
         }
         viewBinding.ivNext.setOnClickListener {
-            audioPlayer.next()
+            playerController.next()
         }
         viewBinding.ivPlaylist.setOnClickListener {
             val activity = context.findActivity()
@@ -76,26 +78,26 @@ class PlayBar @JvmOverloads constructor(
     }
 
     private fun initData(lifecycleOwner: LifecycleOwner) {
-        audioPlayer.currentSong.observe(lifecycleOwner) { currentSong ->
+        playerController.currentSong.observe(lifecycleOwner) { currentSong ->
             if (currentSong != null) {
                 isVisible = true
-                viewBinding.ivCover.loadAvatar(currentSong.getSmallCover())
+                viewBinding.ivCover.loadAvatar(currentSong.mediaMetadata.getSmallCover())
                 viewBinding.tvTitle.text = buildSpannedString {
-                    append(currentSong.title)
+                    append(currentSong.mediaMetadata.title)
                     appendStyle(
-                        " - ${currentSong.artist}",
+                        " - ${currentSong.mediaMetadata.artist}",
                         color = getColor(R.color.common_text_h2_color)
                     )
                 }
-                viewBinding.progressBar.max = currentSong.duration.toInt()
-                viewBinding.progressBar.progress = audioPlayer.playProgress.value.toInt()
+                viewBinding.progressBar.max = currentSong.mediaMetadata.getDuration().toInt()
+                viewBinding.progressBar.progress = playerController.playProgress.value.toInt()
             } else {
                 isVisible = false
             }
         }
 
         lifecycleOwner.lifecycleScope.launch {
-            audioPlayer.playState.collectLatest { playState ->
+            playerController.playState.collectLatest { playState ->
                 val isPlaying = playState.isPreparing || playState.isPlaying
                 viewBinding.ivPlay.isSelected = isPlaying
                 if (isPlaying) {
@@ -113,7 +115,7 @@ class PlayBar @JvmOverloads constructor(
         }
 
         lifecycleOwner.lifecycleScope.launch {
-            audioPlayer.playProgress.collectLatest {
+            playerController.playProgress.collectLatest {
                 viewBinding.progressBar.progress = it.toInt()
             }
         }

@@ -26,10 +26,10 @@ import me.wcy.music.databinding.FragmentPlaylistDetailBinding
 import me.wcy.music.databinding.ItemPlaylistTagBinding
 import me.wcy.music.discover.playlist.detail.item.PlaylistSongItemBinder
 import me.wcy.music.discover.playlist.detail.viewmodel.PlaylistViewModel
-import me.wcy.music.service.AudioPlayer
+import me.wcy.music.service.PlayerController
 import me.wcy.music.utils.ConvertUtils
 import me.wcy.music.utils.ImageUtils.loadCover
-import me.wcy.music.utils.toEntity
+import me.wcy.music.utils.toMediaItem
 import me.wcy.radapter3.RAdapter
 import me.wcy.router.CRouter
 import me.wcy.router.annotation.Route
@@ -54,7 +54,7 @@ class PlaylistDetailFragment : BaseMusicFragment() {
     lateinit var userService: UserService
 
     @Inject
-    lateinit var audioPlayer: AudioPlayer
+    lateinit var playerController: PlayerController
 
     override fun getRootView(): View {
         return viewBinding.root
@@ -174,18 +174,18 @@ class PlaylistDetailFragment : BaseMusicFragment() {
 
     private fun initSongList() {
         viewBinding.llPlayAll.setOnClickListener {
-            val songList = viewModel.songList.value.map { it.toEntity() }
+            val songList = viewModel.songList.value.map { it.toMediaItem() }
             if (songList.isNotEmpty()) {
-                audioPlayer.replaceAll(songList, songList.first())
+                playerController.replaceAll(songList, songList.first())
                 CRouter.with(requireContext()).url(RoutePath.PLAYING).start()
             }
         }
 
         adapter.register(PlaylistSongItemBinder(object : OnItemClickListener2<SongData> {
             override fun onItemClick(item: SongData, position: Int) {
-                val songList = viewModel.songList.value.map { it.toEntity() }
+                val songList = viewModel.songList.value.map { it.toMediaItem() }
                 if (songList.isNotEmpty()) {
-                    audioPlayer.replaceAll(songList, songList[position])
+                    playerController.replaceAll(songList, songList[position])
                     CRouter.with(requireContext()).url(RoutePath.PLAYING).start()
                 }
             }
