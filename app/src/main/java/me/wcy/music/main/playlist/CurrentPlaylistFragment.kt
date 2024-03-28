@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.text.buildSpannedString
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.ActivityUtils
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,6 +32,7 @@ import javax.inject.Inject
 class CurrentPlaylistFragment : BottomSheetDialogFragment() {
     private val viewBinding by viewBindings<FragmentCurrentPlaylistBinding>()
     private val adapter by lazy { RAdapter<SongEntity>() }
+    private val layoutManager by lazy { LinearLayoutManager(requireContext()) }
 
     @Inject
     lateinit var audioPlayer: AudioPlayer
@@ -71,6 +73,7 @@ class CurrentPlaylistFragment : BottomSheetDialogFragment() {
         }
 
         adapter.register(CurrentPlaylistItemBinder(audioPlayer))
+        viewBinding.recyclerView.layoutManager = layoutManager
         viewBinding.recyclerView.adapter = adapter
     }
 
@@ -97,8 +100,17 @@ class CurrentPlaylistFragment : BottomSheetDialogFragment() {
             }
             adapter.refresh(playlist)
         }
-        audioPlayer.currentSong.observe(this) {
+        audioPlayer.currentSong.observe(this) { song ->
             adapter.notifyDataSetChanged()
+            val playlist = audioPlayer.playlist.value
+            if (playlist?.isNotEmpty() == true && song != null) {
+                val index = playlist.indexOf(song)
+                if (index == 0) {
+                    layoutManager.scrollToPosition(index)
+                } else if (index > 0) {
+                    layoutManager.scrollToPosition(index - 1)
+                }
+            }
         }
     }
 
