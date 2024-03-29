@@ -137,6 +137,7 @@
 - 在线音乐: [Binaryify/NeteaseCloudMusicApi: 网易云音乐 Node.js API service](https://github.com/Binaryify/NeteaseCloudMusicApi)
 
 ### 开源技术
+- 播放器：Media3 + ExoPlayer
 - 页面: MVVM
 - 网络: [Retrofit](https://square.github.io/retrofit/)
 - 数据库: [Room](https://developer.android.com/jetpack/androidx/releases/room)
@@ -149,94 +150,13 @@
 - 通用库: [wangchenyan/android-common: 个人使用的 Android 通用库](https://github.com/wangchenyan/android-common)
 - RecyclerView Adapter: [wangchenyan/radapter3: A multitype adapter for Android recyclerview](https://github.com/wangchenyan/radapter3)
 
-### 关键代码
-黑胶唱片专辑封面绘制流程
-```
-override fun onDraw(canvas: Canvas) {
-    // 1.绘制封面
-    val cover = coverBitmap
-    if (cover != null) {
-        coverMatrix.setRotate(discRotation, coverCenterPoint.x.toFloat(), coverCenterPoint.y.toFloat())
-        coverMatrix.preTranslate(coverStartPoint.x.toFloat(), coverStartPoint.y.toFloat())
-        coverMatrix.preScale(coverSize.toFloat() / cover.width, coverSize.toFloat() / cover.height)
-        canvas.drawBitmap(cover, coverMatrix, null)
-    }
-
-    // 2.绘制黑胶唱片外侧半透明边框
-    coverBorder.setBounds(
-        discStartPoint.x - COVER_BORDER_WIDTH,
-        discStartPoint.y - COVER_BORDER_WIDTH,
-        discStartPoint.x + discBitmap.width + COVER_BORDER_WIDTH,
-        discStartPoint.y + discBitmap.height + COVER_BORDER_WIDTH
-    )
-    coverBorder.draw(canvas)
-
-    // 3.绘制黑胶
-    // 设置旋转中心和旋转角度，setRotate和preTranslate顺序很重要
-    discMatrix.setRotate(discRotation, discCenterPoint.x.toFloat(),discCenterPoint.y.toFloat())
-    // 设置图片起始坐标
-    discMatrix.preTranslate(discStartPoint.x.toFloat(), discStartPoint.y.toFloat())
-    canvas.drawBitmap(discBitmap, discMatrix, null)
-
-    // 4.绘制指针
-    needleMatrix.setRotate(needleRotation, needleCenterPoint.x.toFloat(), needleCenterPoint.y.toFloat())
-    needleMatrix.preTranslate(needleStartPoint.x.toFloat(), needleStartPoint.y.toFloat())
-    canvas.drawBitmap(needleBitmap, needleMatrix, null)
-}
-```
-歌词绘制流程
-```
-@Override
-protected void onDraw(Canvas canvas) {
-    super.onDraw(canvas);
-    // 中心Y坐标
-    float centerY = getHeight() / 2 + mTextSize / 2 + mAnimOffset;
-
-    // 无歌词文件
-    if (!hasLrc()) {
-        float centerX = (getWidth() - mCurrentPaint.measureText(label)) / 2;
-        canvas.drawText(label, centerX, centerY, mCurrentPaint);
-        return;
-    }
-
-    // 画当前行
-    String currStr = mLrcTexts.get(mCurrentLine);
-    float currX = (getWidth() - mCurrentPaint.measureText(currStr)) / 2;
-    canvas.drawText(currStr, currX, centerY, mCurrentPaint);
-
-    // 画当前行上面的
-    for (int i = mCurrentLine - 1; i >= 0; i--) {
-        String upStr = mLrcTexts.get(i);
-        float upX = (getWidth() - mNormalPaint.measureText(upStr)) / 2;
-        float upY = centerY - (mTextSize + mDividerHeight) * (mCurrentLine - i);
-        // 超出屏幕停止绘制
-        if (upY - mTextSize < 0) {
-            break;
-        }
-        canvas.drawText(upStr, upX, upY, mNormalPaint);
-    }
-
-    // 画当前行下面的
-    for (int i = mCurrentLine + 1; i < mLrcTimes.size(); i++) {
-        String downStr = mLrcTexts.get(i);
-        float downX = (getWidth() - mNormalPaint.measureText(downStr)) / 2;
-        float downY = centerY + (mTextSize + mDividerHeight) * (i - mCurrentLine);
-        // 超出屏幕停止绘制
-        if (downY > getHeight()) {
-            break;
-        }
-        canvas.drawText(downStr, downX, downY, mNormalPaint);
-    }
-}
-```
-
 ## 关于作者
 掘金: https://juejin.im/user/2313028193754168<br>
 微博: https://weibo.com/wangchenyan1993
 
 ## License
 
-    Copyright 2023 wangchenyan
+    Copyright 2024 wangchenyan
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
