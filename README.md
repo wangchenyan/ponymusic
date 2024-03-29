@@ -20,6 +20,7 @@
 > 后续可能会根据大家的反馈增加或调整功能
 
 ### 本地功能
+- 基于 Media3 + ExoPlayer 构建播放能力
 - 添加和播放本地音乐文件
 - 专辑封面显示
 - 歌词显示，支持拖动歌词调节播放进度
@@ -69,6 +70,10 @@
 > ![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/api_page.jpg)
 
 ## 更新说明
+`2.3.0`
+- 播放器内核升级为 Media3 + ExoPlayer
+- 修复歌单内歌曲超过1000首加载失败的问题
+
 `2.2.0`
 - 增加添加歌曲到歌单
 - 播放页增加喜欢歌曲和下载歌曲
