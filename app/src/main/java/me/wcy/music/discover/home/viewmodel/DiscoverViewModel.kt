@@ -104,7 +104,7 @@ class DiscoverViewModel @Inject constructor(
                 rankingList.forEach {
                     val d = async {
                         val songListRes = kotlin.runCatching {
-                            DiscoverApi.get().getPlaylistSongList(it.id, 3)
+                            DiscoverApi.get().getPlaylistSongList(it.id, limit = 3)
                         }
                         if (songListRes.getOrNull()?.code == 200) {
                             it.songList = songListRes.getOrThrow().songs

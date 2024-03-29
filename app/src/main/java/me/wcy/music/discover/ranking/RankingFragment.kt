@@ -153,7 +153,7 @@ class RankingFragment : BaseMusicFragment() {
         lifecycleScope.launch {
             showLoading()
             kotlin.runCatching {
-                DiscoverApi.get().getPlaylistSongList(playlistData.id)
+                DiscoverApi.getFullPlaylistSongList(playlistData.id)
             }.onSuccess { songListData ->
                 dismissLoading()
                 if (songListData.code == 200 && songListData.songs.isNotEmpty()) {

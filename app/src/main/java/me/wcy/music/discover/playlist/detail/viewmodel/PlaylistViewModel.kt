@@ -44,7 +44,7 @@ class PlaylistViewModel @Inject constructor() : ViewModel() {
         }
         val songListRes = kotlin.runCatching {
             val timestamp = if (realtimeData) ServerTime.currentTimeMillis() else null
-            DiscoverApi.get().getPlaylistSongList(playlistId, timestamp = timestamp)
+            DiscoverApi.getFullPlaylistSongList(playlistId, timestamp = timestamp)
         }
         return if (detailRes.isSuccess.not() || detailRes.getOrThrow().code != 200) {
             CommonResult.fail(msg = detailRes.exceptionOrNull()?.message)

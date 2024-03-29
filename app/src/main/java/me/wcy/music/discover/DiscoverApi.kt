@@ -1,6 +1,9 @@
 package me.wcy.music.discover
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import me.wcy.music.common.bean.LrcDataWrap
+import me.wcy.music.common.bean.SongData
 import me.wcy.music.common.bean.SongUrlData
 import me.wcy.music.discover.banner.BannerListData
 import me.wcy.music.discover.playlist.detail.bean.PlaylistDetailData
@@ -48,7 +51,8 @@ interface DiscoverApi {
     @POST("playlist/track/all")
     suspend fun getPlaylistSongList(
         @Query("id") id: Long,
-        @Query("limit") limit: Long? = null,
+        @Query("limit") limit: Int? = null,
+        @Query("offset") offset: Int? = null,
         @Query("timestamp") timestamp: Long? = null
     ): SongListData
 
@@ -69,6 +73,8 @@ interface DiscoverApi {
     suspend fun getBannerList(): BannerListData
 
     companion object {
+        private const val SONG_LIST_LIMIT = 800
+
         private val api: DiscoverApi by lazy {
             val retrofit = Retrofit.Builder()
                 .baseUrl(ConfigPreferences.apiDomain)
@@ -79,5 +85,29 @@ interface DiscoverApi {
         }
 
         fun get(): DiscoverApi = api
+
+        suspend fun getFullPlaylistSongList(id: Long, timestamp: Long? = null): SongListData {
+            return withContext(Dispatchers.IO) {
+                var offset = 0
+                val list = mutableListOf<SongData>()
+                while (true) {
+                    val songList = get().getPlaylistSongList(
+                        id,
+                        limit = SONG_LIST_LIMIT,
+                        offset = offset,
+                        timestamp = timestamp
+                    )
+                    if (songList.code != 200) {
+                        throw Exception("code = ${songList.code}")
+                    }
+                    if (songList.songs.isEmpty()) {
+                        break
+                    }
+                    list.addAll(songList.songs)
+                    offset = list.size
+                }
+                return@withContext SongListData(200, list)
+            }
+        }
     }
 }

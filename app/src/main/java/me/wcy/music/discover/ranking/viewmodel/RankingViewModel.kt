@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import me.wcy.music.discover.DiscoverApi
 import top.wangchenyan.common.ext.toUnMutable
 import top.wangchenyan.common.model.CommonResult
-import me.wcy.music.discover.DiscoverApi
 
 /**
  * Created by wangchenyan.top on 2023/10/25.
@@ -31,7 +31,7 @@ class RankingViewModel : ViewModel() {
                 officialList.forEach {
                     val d = async {
                         val songListRes = kotlin.runCatching {
-                            DiscoverApi.get().getPlaylistSongList(it.id, 3)
+                            DiscoverApi.get().getPlaylistSongList(it.id, limit = 3)
                         }
                         if (songListRes.getOrNull()?.code == 200) {
                             it.songList = songListRes.getOrThrow().songs

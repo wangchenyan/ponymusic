@@ -155,6 +155,7 @@ class PlaylistDetailFragment : BaseMusicFragment() {
                 viewBinding.tvName.text = playlistData.name
                 viewBinding.ivCreatorAvatar.loadAvatar(playlistData.creator.avatarUrl)
                 viewBinding.tvCreatorName.text = playlistData.creator.nickname
+                viewBinding.tvSongCount.text = "(${playlistData.trackCount})"
 
                 viewBinding.flTags.removeAllViews()
                 playlistData.tags.forEach { tag ->
