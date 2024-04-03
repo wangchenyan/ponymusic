@@ -43,7 +43,7 @@
     </LinearLayout>
 
     <FrameLayout
-        android:id="@+id/ivPlay"
+        android:id="@+id/flPlay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
@@ -59,12 +59,23 @@
             app:trackThickness="2dp" />
 
         <ImageView
+            android:id="@+id/ivPlay"
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_gravity="center"
             android:contentDescription="@null"
             android:src="@drawable/ic_play_bar_play_pause_selector"
             app:tint="@color/common_text_h1_color" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/loadingProgress"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            app:indicatorColor="@color/common_theme_color"
+            app:indicatorSize="22dp"
+            app:trackThickness="1.5dp" />
     </FrameLayout>
 
     <ImageView

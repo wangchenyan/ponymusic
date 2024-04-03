@@ -271,7 +271,6 @@
                     android:id="@+id/ivMode"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"
                     android:layout_weight="1"
                     android:paddingVertical="8dp"
                     android:src="@drawable/ic_play_mode_level_list"
@@ -281,26 +280,39 @@
                     android:id="@+id/ivPrev"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"
                     android:layout_weight="1"
                     android:paddingVertical="16dp"
                     android:src="@drawable/ic_previous"
                     app:tint="@color/translucent_white_p80" />
 
-                <ImageView
-                    android:id="@+id/ivPlay"
+                <FrameLayout
+                    android:id="@+id/flPlay"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:src="@drawable/ic_playing_play_pause_selector"
-                    app:tint="@color/translucent_white_p80" />
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/ivPlay"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_playing_play_pause_selector"
+                        app:tint="@color/translucent_white_p80" />
+
+                    <com.google.android.material.progressindicator.CircularProgressIndicator
+                        android:id="@+id/loadingProgress"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:indeterminate="true"
+                        app:indicatorColor="@color/common_theme_color"
+                        app:indicatorSize="48dp"
+                        app:trackThickness="2dp" />
+                </FrameLayout>
 
                 <ImageView
                     android:id="@+id/ivNext"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"
                     android:layout_weight="1"
                     android:paddingVertical="16dp"
                     android:src="@drawable/ic_next"
@@ -310,7 +322,6 @@
                     android:id="@+id/ivPlaylist"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"
                     android:layout_weight="1"
                     android:paddingVertical="16dp"
                     android:src="@drawable/ic_playlist"

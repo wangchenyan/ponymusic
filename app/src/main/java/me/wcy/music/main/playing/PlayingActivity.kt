@@ -29,6 +29,7 @@ import me.wcy.music.discover.DiscoverApi
 import me.wcy.music.ext.registerReceiverCompat
 import me.wcy.music.main.playlist.CurrentPlaylistFragment
 import me.wcy.music.service.PlayMode
+import me.wcy.music.service.PlayState
 import me.wcy.music.service.PlayerController
 import me.wcy.music.service.likesong.LikeSongProcessor
 import me.wcy.music.storage.LrcCache
@@ -180,7 +181,7 @@ class PlayingActivity : BaseMusicActivity() {
         viewBinding.ivMode.setOnClickListener {
             switchPlayMode()
         }
-        viewBinding.ivPlay.setOnClickListener {
+        viewBinding.flPlay.setOnClickListener {
             playerController.playPause()
         }
         viewBinding.ivPrev.setOnClickListener {
@@ -253,14 +254,7 @@ class PlayingActivity : BaseMusicActivity() {
                 updateCover(song)
                 updateLrc(song)
                 viewBinding.albumCoverView.reset()
-                val playState = playerController.playState.value
-                if (playState.isPlaying || playState.isPreparing) {
-                    viewBinding.ivPlay.isSelected = true
-                    viewBinding.albumCoverView.start()
-                } else {
-                    viewBinding.ivPlay.isSelected = false
-                    viewBinding.albumCoverView.pause()
-                }
+                updatePlayState(playerController.playState.value)
                 updateOnlineActionsState(song)
             } else {
                 finish()
@@ -269,13 +263,7 @@ class PlayingActivity : BaseMusicActivity() {
 
         lifecycleScope.launch {
             playerController.playState.collectLatest { playState ->
-                if (playState.isPlaying) {
-                    viewBinding.ivPlay.isSelected = true
-                    viewBinding.albumCoverView.start()
-                } else {
-                    viewBinding.ivPlay.isSelected = false
-                    viewBinding.albumCoverView.pause()
-                }
+                updatePlayState(playState)
             }
         }
 
@@ -364,6 +352,31 @@ class PlayingActivity : BaseMusicActivity() {
         }
         toast(mode.nameRes)
         playerController.setPlayMode(mode)
+    }
+
+    private fun updatePlayState(playState: PlayState) {
+        when (playState) {
+            PlayState.Preparing -> {
+                viewBinding.flPlay.isEnabled = false
+                viewBinding.ivPlay.isSelected = false
+                viewBinding.loadingProgress.isVisible = true
+                viewBinding.albumCoverView.pause()
+            }
+
+            PlayState.Playing -> {
+                viewBinding.flPlay.isEnabled = true
+                viewBinding.ivPlay.isSelected = true
+                viewBinding.loadingProgress.isVisible = false
+                viewBinding.albumCoverView.start()
+            }
+
+            else -> {
+                viewBinding.flPlay.isEnabled = true
+                viewBinding.ivPlay.isSelected = false
+                viewBinding.loadingProgress.isVisible = false
+                viewBinding.albumCoverView.pause()
+            }
+        }
     }
 
     private fun updateOnlineActionsState(song: MediaItem) {

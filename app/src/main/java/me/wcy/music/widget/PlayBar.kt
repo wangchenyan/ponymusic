@@ -19,6 +19,7 @@ import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.LayoutPlayBarBinding
 import me.wcy.music.main.playlist.CurrentPlaylistFragment
 import me.wcy.music.service.PlayServiceModule.playerController
+import me.wcy.music.service.PlayState
 import me.wcy.music.utils.getDuration
 import me.wcy.music.utils.getSmallCover
 import me.wcy.router.CRouter
@@ -62,7 +63,7 @@ class PlayBar @JvmOverloads constructor(
         viewBinding.root.setOnClickListener {
             CRouter.with(context).url(RoutePath.PLAYING).start()
         }
-        viewBinding.ivPlay.setOnClickListener {
+        viewBinding.flPlay.setOnClickListener {
             playerController.playPause()
         }
         viewBinding.ivNext.setOnClickListener {
@@ -98,9 +99,27 @@ class PlayBar @JvmOverloads constructor(
 
         lifecycleOwner.lifecycleScope.launch {
             playerController.playState.collectLatest { playState ->
-                val isPlaying = playState.isPreparing || playState.isPlaying
-                viewBinding.ivPlay.isSelected = isPlaying
-                if (isPlaying) {
+                when (playState) {
+                    PlayState.Preparing -> {
+                        viewBinding.flPlay.isEnabled = false
+                        viewBinding.ivPlay.isSelected = false
+                        viewBinding.loadingProgress.isVisible = true
+                    }
+
+                    PlayState.Playing -> {
+                        viewBinding.flPlay.isEnabled = true
+                        viewBinding.ivPlay.isSelected = true
+                        viewBinding.loadingProgress.isVisible = false
+                    }
+
+                    else -> {
+                        viewBinding.flPlay.isEnabled = true
+                        viewBinding.ivPlay.isSelected = false
+                        viewBinding.loadingProgress.isVisible = false
+                    }
+                }
+
+                if (playState.isPlaying) {
                     if (rotateAnimator.isPaused) {
                         rotateAnimator.resume()
                     } else if (rotateAnimator.isStarted.not()) {
