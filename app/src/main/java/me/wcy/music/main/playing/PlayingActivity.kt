@@ -36,6 +36,7 @@ import me.wcy.music.storage.LrcCache
 import me.wcy.music.storage.preference.ConfigPreferences
 import me.wcy.music.utils.TimeUtils
 import me.wcy.music.utils.getDuration
+import me.wcy.music.utils.getLargeCover
 import me.wcy.music.utils.getSongId
 import me.wcy.music.utils.isLocal
 import me.wcy.router.annotation.Route
@@ -289,7 +290,7 @@ class PlayingActivity : BaseMusicActivity() {
     private fun updateCover(song: MediaItem) {
         viewBinding.albumCoverView.setCoverBitmap(defaultCoverBitmap)
         viewBinding.ivPlayingBg.setImageResource(R.drawable.bg_playing_default)
-        ImageUtils.loadBitmap(song.mediaMetadata.artworkUri.toString()) {
+        ImageUtils.loadBitmap(song.getLargeCover()) {
             if (it.isSuccessWithData()) {
                 val bitmap = it.getDataOrThrow()
                 viewBinding.albumCoverView.setCoverBitmap(bitmap)

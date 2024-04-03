@@ -6,6 +6,8 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import me.wcy.music.common.bean.SongData
 import me.wcy.music.storage.db.entity.SongEntity
+import me.wcy.music.utils.MusicUtils.asLargeCover
+import me.wcy.music.utils.MusicUtils.asSmallCover
 import top.wangchenyan.common.CommonApp
 
 /**
@@ -15,9 +17,10 @@ import top.wangchenyan.common.CommonApp
 const val SCHEME_NETEASE = "netease"
 const val PARAM_ID = "id"
 const val EXTRA_DURATION = "duration"
+const val EXTRA_FILE_PATH = "file_path"
 const val EXTRA_FILE_NAME = "file_name"
 const val EXTRA_FILE_SIZE = "file_size"
-const val EXTRA_SMALL_COVER = "small_cover"
+const val EXTRA_BASE_COVER = "base_cover"
 
 fun SongData.getSimpleArtist(): String {
     return ar.joinToString("/") { it.name }
@@ -26,7 +29,7 @@ fun SongData.getSimpleArtist(): String {
 fun SongEntity.toMediaItem(): MediaItem {
     return MediaItem.Builder()
         .setMediaId(uniqueId)
-        .setUri(path)
+        .setUri(uri)
         .setMediaMetadata(
             MediaMetadata.Builder()
                 .setTitle(title)
@@ -34,8 +37,9 @@ fun SongEntity.toMediaItem(): MediaItem {
                 .setAlbumTitle(album)
                 .setAlbumArtist(artist)
                 .setArtworkUri(Uri.parse(getLargeCover()))
-                .setSmallCover(getSmallCover())
+                .setBaseCover(albumCover)
                 .setDuration(duration)
+                .setFilePath(path)
                 .setFileName(fileName)
                 .setFileSize(fileSize)
                 .build()
@@ -52,9 +56,10 @@ fun MediaItem.toSongEntity(): SongEntity {
         artistId = 0,
         album = mediaMetadata.albumTitle?.toString() ?: "",
         albumId = 0,
-        albumCover = mediaMetadata.artworkUri?.toString() ?: "",
+        albumCover = mediaMetadata.getBaseCover() ?: "",
         duration = mediaMetadata.getDuration(),
-        path = localConfiguration?.uri?.toString() ?: "",
+        uri = localConfiguration?.uri?.toString() ?: "",
+        path = mediaMetadata.getFilePath(),
         fileName = mediaMetadata.getFileName(),
         fileSize = mediaMetadata.getFileSize()
     )
@@ -76,7 +81,7 @@ fun SongData.toMediaItem(): MediaItem {
                 .setAlbumTitle(al.name)
                 .setAlbumArtist(getSimpleArtist())
                 .setArtworkUri(Uri.parse(al.getLargeCover()))
-                .setSmallCover(al.getSmallCover())
+                .setBaseCover(al.picUrl)
                 .setDuration(dt)
                 .build()
         )
@@ -109,6 +114,16 @@ fun MediaMetadata.getDuration(): Long {
     return extras?.getLong(EXTRA_DURATION) ?: 0
 }
 
+fun MediaMetadata.Builder.setFilePath(value: String) = apply {
+    val extras = build().extras ?: bundleOf()
+    extras.putString(EXTRA_FILE_PATH, value)
+    setExtras(extras)
+}
+
+fun MediaMetadata.getFilePath(): String {
+    return extras?.getString(EXTRA_FILE_PATH) ?: ""
+}
+
 fun MediaMetadata.Builder.setFileName(name: String) = apply {
     val extras = build().extras ?: bundleOf()
     extras.putString(EXTRA_FILE_NAME, name)
@@ -129,12 +144,30 @@ fun MediaMetadata.getFileSize(): Long {
     return extras?.getLong(EXTRA_FILE_SIZE) ?: 0
 }
 
-fun MediaMetadata.Builder.setSmallCover(value: String) = apply {
+fun MediaMetadata.Builder.setBaseCover(value: String) = apply {
     val extras = build().extras ?: bundleOf()
-    extras.putString(EXTRA_SMALL_COVER, value)
+    extras.putString(EXTRA_BASE_COVER, value)
     setExtras(extras)
 }
 
-fun MediaMetadata.getSmallCover(): String {
-    return extras?.getString(EXTRA_SMALL_COVER) ?: ""
+fun MediaMetadata.getBaseCover(): String? {
+    return extras?.getString(EXTRA_BASE_COVER)
+}
+
+fun MediaItem.getSmallCover(): String {
+    val baseCover = mediaMetadata.getBaseCover()
+    return if (isLocal()) {
+        baseCover ?: ""
+    } else {
+        baseCover?.asSmallCover() ?: ""
+    }
+}
+
+fun MediaItem.getLargeCover(): String {
+    val baseCover = mediaMetadata.getBaseCover()
+    return if (isLocal()) {
+        baseCover ?: ""
+    } else {
+        baseCover?.asLargeCover() ?: ""
+    }
 }

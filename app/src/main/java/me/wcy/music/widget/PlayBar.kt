@@ -82,7 +82,7 @@ class PlayBar @JvmOverloads constructor(
         playerController.currentSong.observe(lifecycleOwner) { currentSong ->
             if (currentSong != null) {
                 isVisible = true
-                viewBinding.ivCover.loadAvatar(currentSong.mediaMetadata.getSmallCover())
+                viewBinding.ivCover.loadAvatar(currentSong.getSmallCover())
                 viewBinding.tvTitle.text = buildSpannedString {
                     append(currentSong.mediaMetadata.title)
                     appendStyle(

@@ -108,6 +108,12 @@ class PlayerControllerImpl(
             val playlist = withContext(Dispatchers.IO) {
                 db.playlistDao()
                     .queryAll()
+                    .onEach {
+                        // 兼容老版本数据库
+                        if (it.uri.isEmpty()) {
+                            it.uri = it.path
+                        }
+                    }
                     .map { it.toMediaItem() }
             }
             if (playlist.isNotEmpty()) {

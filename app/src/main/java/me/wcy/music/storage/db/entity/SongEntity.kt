@@ -54,6 +54,10 @@ data class SongEntity(
     val duration: Long = 0,
 
     // 播放地址
+    @ColumnInfo("uri", defaultValue = "")
+    var uri: String = "",
+
+    // [本地]文件路径
     @ColumnInfo("path")
     var path: String = "",
 

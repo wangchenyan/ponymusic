@@ -4,6 +4,7 @@ import androidx.media3.common.MediaItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import me.wcy.music.consts.FilePath
+import me.wcy.music.utils.getFilePath
 import me.wcy.music.utils.getSongId
 import me.wcy.music.utils.isLocal
 import java.io.File
@@ -18,7 +19,7 @@ object LrcCache {
      */
     fun getLrcFilePath(music: MediaItem): String? {
         if (music.isLocal()) {
-            val audioFile = File(music.localConfiguration?.uri?.toString() ?: "")
+            val audioFile = File(music.mediaMetadata.getFilePath())
             val lrcFile = File(audioFile.parent, "${audioFile.nameWithoutExtension}.lrc")
             if (lrcFile.exists()) {
                 return lrcFile.path

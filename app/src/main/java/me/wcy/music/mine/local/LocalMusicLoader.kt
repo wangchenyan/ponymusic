@@ -88,6 +88,7 @@ class LocalMusicLoader {
                     albumId = albumId,
                     albumCover = albumCover.toString(),
                     duration = duration,
+                    uri = uri.toString(),
                     path = path,
                     fileName = fileName,
                     fileSize = fileSize,
