@@ -6,35 +6,33 @@ minSdk = "21"
 versionCode = "2030001"
 versionName = "2.3.0-beta01"
 # java
-java = "VERSION_1_8"
-jvmTarget = "1.8"
+java = "VERSION_17"
 # plugin
-agp = "7.4.2"
+agp = "8.4.1"
 kotlin = "1.9.10"
 ksp = "1.9.10-1.0.13"
 hilt = "2.48.1"
 # sdk
-media3 = "1.3.0"
-room = "2.6.0"
+media3 = "1.3.1"
+room = "2.6.1"
 common = "1.0.0-beta12"
-crouter = "2.4.0-beta01"
+crouter = "3.0.0-alpha02"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-gms = { id = "com.google.gms.google-services", version = "4.4.0" }
-crashlytics = { id = "com.google.firebase.crashlytics", version = "2.9.5" }
+gms = { id = "com.google.gms.google-services", version = "4.4.2" }
+crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.1" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 
 [libraries]
 # plugin
-autoRegister = { group = "com.github.wangchenyan", name = "AutoRegister", version = "1.4.3" }
-r8 = { group = "com.android.tools", name = "r8", version = "8.3.37" }
+crouter-plugin = { group = "com.github.wangchenyan.crouter", name = "crouter-plugin", version.ref = "crouter" }
 # androidx
-appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.6.1" }
-material = { group = "com.google.android.material", name = "material", version = "1.10.0" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.7.0" }
+material = { group = "com.google.android.material", name = "material", version = "1.12.0" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version = "2.1.4" }
 flexbox = { group = "com.google.android.flexbox", name = "flexbox", version = "3.0.0" }
 media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3" }
@@ -45,13 +43,13 @@ room = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 preference = { group = "androidx.preference", name = "preference-ktx", version = "1.2.1" }
 # google
-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx", version = "18.5.0" }
-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx", version = "21.4.0" }
+crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx", version = "19.0.1" }
+analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx", version = "22.0.1" }
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 # wangchenyan
 common = { group = "com.github.wangchenyan", name = "android-common", version.ref = "common" }
-crouter-compiler = { group = "com.github.wangchenyan.crouter", name = "crouter-compiler", version.ref = "crouter" }
+crouter-processor = { group = "com.github.wangchenyan.crouter", name = "crouter-processor", version.ref = "crouter" }
 crouter-api = { group = "com.github.wangchenyan.crouter", name = "crouter-api", version.ref = "crouter" }
 lrcview = { group = "com.github.wangchenyan", name = "lrcview", version = "2.2.1" }
 # open source

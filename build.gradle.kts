@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.kotlin) apply false
     alias(libs.plugins.ksp) apply false
     if (File("app/google-services.json").exists()) {
-        println("enable gms in root plugins")
+        println("Enable gms in root plugins")
         alias(libs.plugins.gms) apply false
         alias(libs.plugins.crashlytics) apply false
     }
@@ -13,8 +13,6 @@ plugins {
 
 buildscript {
     dependencies {
-        classpath(libs.autoRegister)
-        // fix r8 build error
-        classpath(libs.r8)
+        classpath(libs.crouter.plugin)
     }
 }

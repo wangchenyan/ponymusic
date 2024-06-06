@@ -6,13 +6,13 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     if (File("app/google-services.json").exists()) {
-        println("enable gms in app plugins")
+        println("Enable gms in app plugins")
         alias(libs.plugins.gms)
         alias(libs.plugins.crashlytics)
     }
     id("kotlin-kapt")
     id("kotlin-parcelize")
-    id("auto-register")
+    id("crouter-plugin")
 }
 
 android {
@@ -109,19 +109,6 @@ ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
 }
 
-autoregister {
-    registerInfo = listOf(
-        // crouter 注解收集
-        mapOf(
-            "scanInterface" to "me.wcy.router.annotation.RouteLoader",
-            "codeInsertToClassName" to "me.wcy.router.RouteSet",
-            "codeInsertToMethodName" to "init",
-            "registerMethodName" to "register",
-            "include" to listOf("me/wcy/router/annotation/loader/.*")
-        )
-    )
-}
-
 dependencies {
     implementation(libs.appcompat)
     implementation(libs.constraintlayout)
@@ -139,13 +126,13 @@ dependencies {
     implementation(libs.hilt)
 
     if (File("${project.projectDir}/google-services.json").exists()) {
-        println("enable gms in app dependencies")
+        println("Enable gms in app dependencies")
         implementation(libs.crashlytics)
         implementation(libs.analytics)
     }
 
     implementation(libs.common)
-    ksp(libs.crouter.compiler)
+    ksp(libs.crouter.processor)
     implementation(libs.crouter.api)
     implementation(libs.lrcview)
 
