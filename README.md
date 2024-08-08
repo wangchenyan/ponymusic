@@ -130,6 +130,10 @@
 - [ ] 在线音乐自动缓存
 - [x] 编辑音乐信息
 
+## Liked it?
+如果你觉得该项目对你有帮助，欢迎给它一个 star⭐️
+[![Stargazers over time](https://starchart.cc/wangchenyan/ponymusic.svg?variant=adaptive)](https://starchart.cc/wangchenyan/ponymusic)
+
 ## 依赖
 > 站在巨人的肩膀上
 
