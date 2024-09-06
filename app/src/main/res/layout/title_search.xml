@@ -20,4 +20,4 @@
     app:shape_radius="100dp"
     app:shape_solidColor="@color/card_bg"
     app:shape_strokeColor="@color/common_divider"
-    app:shape_strokeWidth="1dp" />
+    app:shape_strokeSize="1dp" />

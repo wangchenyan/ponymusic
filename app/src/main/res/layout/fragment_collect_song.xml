@@ -8,8 +8,8 @@
     android:minHeight="300dp"
     android:orientation="vertical"
     app:shape_solidColor="@color/card_bg"
-    app:shape_topLeftRadius="16dp"
-    app:shape_topRightRadius="16dp">
+    app:shape_radiusInTopLeft="16dp"
+    app:shape_radiusInTopRight="16dp">
 
     <TextView
         android:layout_width="match_parent"

@@ -8,8 +8,8 @@
     android:minHeight="300dp"
     android:orientation="vertical"
     app:shape_solidColor="@color/card_bg"
-    app:shape_topLeftRadius="16dp"
-    app:shape_topRightRadius="16dp">
+    app:shape_radiusInTopLeft="16dp"
+    app:shape_radiusInTopRight="16dp">
 
     <TextView
         android:id="@+id/tvTitle"
@@ -39,7 +39,7 @@
             android:paddingHorizontal="10dp"
             app:shape_radius="100dp"
             app:shape_strokeColor="@color/common_divider"
-            app:shape_strokeWidth="1dp">
+            app:shape_strokeSize="1dp">
 
             <ImageView
                 android:id="@+id/ivMode"

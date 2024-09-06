@@ -34,9 +34,9 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:paddingBottom="16dp"
-                    app:shape_angle="-90"
-                    app:shape_endColor="@color/grey"
-                    app:shape_startColor="@color/grey_800">
+                    app:shape_solidGradientOrientation="topToBottom"
+                    app:shape_solidGradientEndColor="@color/grey"
+                    app:shape_solidGradientStartColor="@color/grey_800">
 
                     <View
                         android:id="@+id/titlePlaceholder"
@@ -166,8 +166,8 @@
                     android:orientation="horizontal"
                     android:paddingHorizontal="16dp"
                     app:shape_solidColor="@color/common_background_color"
-                    app:shape_topLeftRadius="12dp"
-                    app:shape_topRightRadius="12dp">
+                    app:shape_radiusInTopLeft="12dp"
+                    app:shape_radiusInTopRight="12dp">
 
                     <TextView
                         android:layout_width="wrap_content"

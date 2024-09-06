@@ -22,7 +22,7 @@
         android:textSize="14dp"
         app:shape_radius="4dp"
         app:shape_strokeColor="@color/common_divider"
-        app:shape_strokeWidth="1dp" />
+        app:shape_strokeSize="1dp" />
 
     <TextView
         android:id="@+id/tvDoc"

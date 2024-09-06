@@ -12,7 +12,7 @@
     app:shape_radius="16dp"
     app:shape_solidColor="@color/card_bg"
     app:shape_strokeColor="@color/common_divider"
-    app:shape_strokeWidth="@dimen/common_divider_size">
+    app:shape_strokeSize="@dimen/common_divider_size">
 
     <LinearLayout
         android:layout_width="match_parent"

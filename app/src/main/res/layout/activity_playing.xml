@@ -15,9 +15,9 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_gravity="bottom"
-        app:shape_angle="-90"
-        app:shape_endColor="@color/translucent_black_p50"
-        app:shape_startColor="@color/transparent" />
+        app:shape_solidGradientOrientation="topToBottom"
+        app:shape_solidGradientEndColor="@color/translucent_black_p50"
+        app:shape_solidGradientStartColor="@color/transparent" />
 
     <LinearLayout
         android:id="@+id/llContent"
