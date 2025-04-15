@@ -51,7 +51,7 @@
 ### 安装步骤
 1. 搭建网易云服务器<br>
    由于我们使用的是非官方 API，因此需要自行搭建 API 服务器。<br>
-   clone [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi) 服务端项目到本地，根据项目说明安装并运行服务，需要确认电脑和手机处于同一局域网
+   打开服务端项目 [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi) (或 [NeteaseCloudMusicApiBackup](NeteaseCloudMusicApiBackup)) 主页，根据项目说明安装并运行服务，需要确认电脑和手机处于同一局域网
 2. 安装 APP<br>
    点击下载[最新安装包](https://github.com/wangchenyan/ponymusic/releases)
 3. 设置域名<br>
