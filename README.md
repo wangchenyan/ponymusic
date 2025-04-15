@@ -124,7 +124,7 @@
 - First Release
 
 ## TODO
-- [ ] 桌面小部件 by [Glance](https://developer.android.com/jetpack/compose/glance/create-app-widget)
+- [ ] 桌面小部件 with [Glance](https://developer.android.com/jetpack/compose/glance/create-app-widget)
 - [x] 适配 Android 14
 - [x] 在线音乐可以免下载加入我的音乐列表
 - [ ] 在线音乐自动缓存
@@ -150,7 +150,6 @@
 - 统计&崩溃收集: [Firebase](https://firebase.google.com)
 - 路由框架: [wangchenyan/crouter: 支持组件化的 Android 路由框架](https://github.com/wangchenyan/crouter)
 - 歌词控件: [wangchenyan/lrcview: Android beautiful draggable lyric view library](https://github.com/wangchenyan/lrcview)
-- 启动任务: [wangchenyan/init: Android 启动任务调度](https://github.com/wangchenyan/init)
 - 通用库: [wangchenyan/android-common: 个人使用的 Android 通用库](https://github.com/wangchenyan/android-common)
 - RecyclerView Adapter: [wangchenyan/radapter3: A multitype adapter for Android recyclerview](https://github.com/wangchenyan/radapter3)
 
