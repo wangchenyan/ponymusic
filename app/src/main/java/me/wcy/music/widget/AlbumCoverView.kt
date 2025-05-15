@@ -17,6 +17,7 @@ import com.blankj.utilcode.util.SizeUtils
 import me.wcy.music.R
 import me.wcy.music.utils.ImageUtils
 import top.wangchenyan.common.ext.startOrResume
+import kotlin.math.min
 
 /**
  * 专辑封面
@@ -81,7 +82,7 @@ class AlbumCoverView @JvmOverloads constructor(
     }
 
     private fun initSize() {
-        val unit = width.coerceAtMost(height) / 8
+        val unit = min(width / 8, height / 9)
 
         needleBitmap = ImageUtils.resizeImage(needleBitmap, unit * 2, (unit * 3.33).toInt())
         needleStartPoint.x = (width / 2 - needleBitmap.width / 5.5f).toInt()
