@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,14 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/bg_playing_default" />
+        tools:src="@drawable/bg_playing_default" />
 
     <com.hjq.shape.view.ShapeView
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_gravity="bottom"
-        app:shape_solidGradientOrientation="topToBottom"
         app:shape_solidGradientEndColor="@color/translucent_black_p50"
+        app:shape_solidGradientOrientation="topToBottom"
         app:shape_solidGradientStartColor="@color/transparent" />
 
     <LinearLayout

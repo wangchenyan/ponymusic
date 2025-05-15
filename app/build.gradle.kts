@@ -75,6 +75,10 @@ android {
         sourceCompatibility = JavaVersion.valueOf(libs.versions.java.get())
         targetCompatibility = JavaVersion.valueOf(libs.versions.java.get())
     }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.valueOf(libs.versions.java.get()).toString()
+    }
 }
 
 fun getLocalValue(key: String): String {
@@ -132,6 +136,7 @@ dependencies {
     }
 
     implementation(libs.common)
+    // implementation(project(":common"))
     ksp(libs.crouter.processor)
     implementation(libs.crouter.api)
     implementation(libs.lrcview)

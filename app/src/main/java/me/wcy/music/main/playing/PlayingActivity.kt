@@ -4,17 +4,22 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.AudioManager
+import android.os.Build
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.util.Log
+import android.view.ViewGroup.LayoutParams
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.MediaItem
-import com.gyf.immersionbar.ImmersionBar
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.blurry.Blurry
 import kotlinx.coroutines.Job
@@ -42,9 +47,9 @@ import me.wcy.music.utils.isLocal
 import me.wcy.router.annotation.Route
 import top.wangchenyan.common.ext.toast
 import top.wangchenyan.common.ext.viewBindings
+import top.wangchenyan.common.insets.WindowInsetsUtils.getNavigationBarHeight
 import top.wangchenyan.common.net.apiCall
 import top.wangchenyan.common.utils.LaunchUtils
-import top.wangchenyan.common.utils.StatusBarUtils
 import top.wangchenyan.common.utils.image.ImageUtils
 import java.io.File
 import javax.inject.Inject
@@ -71,6 +76,16 @@ class PlayingActivity : BaseMusicActivity() {
     private val defaultCoverBitmap by lazy {
         BitmapFactory.decodeResource(resources, R.drawable.bg_playing_default_cover)
     }
+    private val defaultBgBitmap by lazy {
+        BitmapFactory.decodeResource(resources, R.drawable.bg_playing_default,
+            BitmapFactory.Options().apply {
+                inPreferredConfig = Bitmap.Config.RGB_565
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    outConfig = Bitmap.Config.RGB_565
+                }
+            }
+        )
+    }
 
     private var loadLrcJob: Job? = null
 
@@ -81,6 +96,11 @@ class PlayingActivity : BaseMusicActivity() {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
 
+        configWindowInsets {
+            fillNavBar = false
+            fillDisplayCutout = false
+        }
+
         initTitle()
         initVolume()
         initCover()
@@ -89,16 +109,6 @@ class PlayingActivity : BaseMusicActivity() {
         initPlayControl()
         initData()
         switchCoverLrc(true)
-    }
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        if (StatusBarUtils.isSupportStatusBarTransparent()) {
-            ImmersionBar.with(this)
-                .transparentNavigationBar()
-                .navigationBarDarkIcon(false)
-                .init()
-        }
     }
 
     private fun initTitle() {
@@ -120,6 +130,7 @@ class PlayingActivity : BaseMusicActivity() {
         viewBinding.clAlbumCover.setOnClickListener {
             switchCoverLrc(false)
         }
+        setDefaultCover()
     }
 
     private fun initLrc() {
@@ -175,9 +186,15 @@ class PlayingActivity : BaseMusicActivity() {
             }
         }
 
-        val lp = viewBinding.navigationBarPlaceholder.layoutParams
-        lp.height = ImmersionBar.getNavigationBarHeight(this)
-        viewBinding.navigationBarPlaceholder.layoutParams = lp
+        viewBinding.navigationBarPlaceholder.updateLayoutParams<LayoutParams> {
+            height = getNavigationBarHeight()
+        }
+        ViewCompat.setOnApplyWindowInsetsListener(viewBinding.navigationBarPlaceholder) { v, insets ->
+            viewBinding.navigationBarPlaceholder.updateLayoutParams<LayoutParams> {
+                height = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+            }
+            insets
+        }
 
         viewBinding.ivMode.setOnClickListener {
             switchPlayMode()
@@ -288,8 +305,7 @@ class PlayingActivity : BaseMusicActivity() {
     }
 
     private fun updateCover(song: MediaItem) {
-        viewBinding.albumCoverView.setCoverBitmap(defaultCoverBitmap)
-        viewBinding.ivPlayingBg.setImageResource(R.drawable.bg_playing_default)
+        setDefaultCover()
         ImageUtils.loadBitmap(song.getLargeCover()) {
             if (it.isSuccessWithData()) {
                 val bitmap = it.getDataOrThrow()
@@ -297,6 +313,11 @@ class PlayingActivity : BaseMusicActivity() {
                 Blurry.with(this).sampling(10).from(bitmap).into(viewBinding.ivPlayingBg)
             }
         }
+    }
+
+    private fun setDefaultCover() {
+        viewBinding.albumCoverView.setCoverBitmap(defaultCoverBitmap)
+        viewBinding.ivPlayingBg.setImageBitmap(defaultBgBitmap)
     }
 
     private fun updateLrc(song: MediaItem) {
@@ -385,13 +406,11 @@ class PlayingActivity : BaseMusicActivity() {
         viewBinding.ivLike.isSelected = likeSongProcessor.isLiked(song.getSongId())
     }
 
-    override fun getNavigationBarColor(): Int {
-        return R.color.black
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(volumeReceiver)
+        defaultCoverBitmap.recycle()
+        defaultBgBitmap.recycle()
     }
 
     private val volumeReceiver: BroadcastReceiver = object : BroadcastReceiver() {

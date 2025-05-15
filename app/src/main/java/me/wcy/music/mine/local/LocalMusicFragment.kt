@@ -21,6 +21,7 @@ import me.wcy.music.utils.toMediaItem
 import me.wcy.radapter3.RAdapter
 import me.wcy.router.CRouter
 import me.wcy.router.annotation.Route
+import top.wangchenyan.common.ext.getColor
 import top.wangchenyan.common.ext.viewBindings
 import top.wangchenyan.common.permission.Permissioner
 import javax.inject.Inject
@@ -61,6 +62,10 @@ class LocalMusicFragment : BaseMusicFragment() {
 
     override fun onLazyCreate() {
         super.onLazyCreate()
+
+        configWindowInsets {
+            navBarColor = getColor(R.color.play_bar_bg)
+        }
 
         adapter.register(LocalSongItemBinder(object : OnItemClickListener2<SongEntity> {
             override fun onItemClick(item: SongEntity, position: Int) {
@@ -115,9 +120,5 @@ class LocalMusicFragment : BaseMusicFragment() {
                 showLoadSirError(getString(R.string.no_permission_storage))
             }
         }
-    }
-
-    override fun getNavigationBarColor(): Int {
-        return R.color.play_bar_bg
     }
 }

@@ -1,7 +1,7 @@
 [versions]
 # android sdk
-compileSdk = "34"
-targetSdk = "34"
+compileSdk = "36"
+targetSdk = "36"
 minSdk = "21"
 versionCode = "2030001"
 versionName = "2.3.0-beta01"
@@ -9,13 +9,13 @@ versionName = "2.3.0-beta01"
 java = "VERSION_17"
 # plugin
 agp = "8.5.2"
-kotlin = "1.9.10"
-ksp = "1.9.10-1.0.13"
+kotlin = "1.9.25"
+ksp = "1.9.25-1.0.20"
 hilt = "2.48.1"
 # sdk
 media3 = "1.4.1"
 room = "2.6.1"
-common = "1.0.2-beta02"
+common = "1.0.2"
 crouter = "3.0.0-beta01"
 
 [plugins]

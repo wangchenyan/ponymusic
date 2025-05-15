@@ -26,6 +26,7 @@ import me.wcy.radapter3.RItemBinder
 import me.wcy.radapter3.RTypeMapper
 import me.wcy.router.CRouter
 import me.wcy.router.annotation.Route
+import top.wangchenyan.common.ext.getColor
 import top.wangchenyan.common.ext.viewBindings
 import javax.inject.Inject
 
@@ -61,6 +62,10 @@ class RankingFragment : BaseMusicFragment() {
 
     override fun onLazyCreate() {
         super.onLazyCreate()
+
+        configWindowInsets {
+            navBarColor = getColor(R.color.play_bar_bg)
+        }
 
         initView()
         initDataObserver()
@@ -164,9 +169,5 @@ class RankingFragment : BaseMusicFragment() {
                 dismissLoading()
             }
         }
-    }
-
-    override fun getNavigationBarColor(): Int {
-        return R.color.play_bar_bg
     }
 }

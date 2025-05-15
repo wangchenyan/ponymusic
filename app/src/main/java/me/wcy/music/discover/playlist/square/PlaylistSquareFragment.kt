@@ -7,14 +7,15 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import top.wangchenyan.common.ext.viewBindings
-import top.wangchenyan.common.widget.pager.TabLayoutPager
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.consts.RoutePath
 import me.wcy.music.databinding.FragmentPlaylistSpuareBinding
 import me.wcy.music.discover.playlist.square.viewmodel.PlaylistSquareViewModel
 import me.wcy.router.annotation.Route
+import top.wangchenyan.common.ext.getColor
+import top.wangchenyan.common.ext.viewBindings
+import top.wangchenyan.common.widget.pager.TabLayoutPager
 
 /**
  * Created by wangchenyan.top on 2023/9/26.
@@ -45,6 +46,11 @@ class PlaylistSquareFragment : BaseMusicFragment() {
 
     override fun onLazyCreate() {
         super.onLazyCreate()
+
+        configWindowInsets {
+            navBarColor = getColor(R.color.play_bar_bg)
+        }
+
         initTab()
         loadTagList()
     }
@@ -83,9 +89,5 @@ class PlaylistSquareFragment : BaseMusicFragment() {
                 showLoadSirError(res.msg)
             }
         }
-    }
-
-    override fun getNavigationBarColor(): Int {
-        return R.color.play_bar_bg
     }
 }

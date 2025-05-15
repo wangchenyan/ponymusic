@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.SizeUtils
@@ -33,10 +34,11 @@ import me.wcy.music.utils.toMediaItem
 import me.wcy.radapter3.RAdapter
 import me.wcy.router.CRouter
 import me.wcy.router.annotation.Route
+import top.wangchenyan.common.ext.getColor
 import top.wangchenyan.common.ext.loadAvatar
 import top.wangchenyan.common.ext.toast
 import top.wangchenyan.common.ext.viewBindings
-import top.wangchenyan.common.utils.StatusBarUtils
+import top.wangchenyan.common.insets.WindowInsetsUtils.getStatusBarHeight
 import javax.inject.Inject
 
 /**
@@ -84,6 +86,10 @@ class PlaylistDetailFragment : BaseMusicFragment() {
             return
         }
 
+        configWindowInsets {
+            navBarColor = getColor(R.color.play_bar_bg)
+        }
+
         viewModel.init(id, realtimeData, isLike)
 
         initTitle()
@@ -122,14 +128,13 @@ class PlaylistDetailFragment : BaseMusicFragment() {
             }
         }
 
-        StatusBarUtils.getStatusBarHeight(requireActivity()) {
-            (viewBinding.titlePlaceholder.layoutParams as ViewGroup.MarginLayoutParams).apply {
+        view?.getStatusBarHeight {
+            viewBinding.titlePlaceholder.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 topMargin = it
-                viewBinding.titlePlaceholder.requestLayout()
             }
-            viewBinding.toolbarPlaceholder.layoutParams.height =
-                requireContext().resources.getDimensionPixelSize(R.dimen.common_title_bar_size) + it
-            viewBinding.toolbarPlaceholder.requestLayout()
+            viewBinding.toolbarPlaceholder.updateLayoutParams<ViewGroup.LayoutParams> {
+                height = resources.getDimensionPixelSize(R.dimen.common_title_bar_size) + it
+            }
         }
 
         viewBinding.appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
@@ -230,9 +235,5 @@ class PlaylistDetailFragment : BaseMusicFragment() {
         }
         collectMenu?.isVisible = true
         collectMenu?.isSelected = playlistData.subscribed
-    }
-
-    override fun getNavigationBarColor(): Int {
-        return R.color.play_bar_bg
     }
 }

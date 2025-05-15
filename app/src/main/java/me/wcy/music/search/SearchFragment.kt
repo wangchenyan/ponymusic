@@ -11,8 +11,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import top.wangchenyan.common.ext.viewBindings
-import top.wangchenyan.common.widget.pager.TabLayoutPager
 import me.wcy.music.R
 import me.wcy.music.common.BaseMusicFragment
 import me.wcy.music.consts.RoutePath
@@ -22,6 +20,9 @@ import me.wcy.music.databinding.TitleSearchBinding
 import me.wcy.music.search.playlist.SearchPlaylistFragment
 import me.wcy.music.search.song.SearchSongFragment
 import me.wcy.router.annotation.Route
+import top.wangchenyan.common.ext.getColor
+import top.wangchenyan.common.ext.viewBindings
+import top.wangchenyan.common.widget.pager.TabLayoutPager
 
 /**
  * Created by wangchenyan.top on 2023/9/20.
@@ -44,6 +45,11 @@ class SearchFragment : BaseMusicFragment() {
 
     override fun onLazyCreate() {
         super.onLazyCreate()
+
+        configWindowInsets {
+            fillIme = true
+            navBarColor = getColor(R.color.play_bar_bg)
+        }
 
         initTitle()
         initTab()
@@ -119,9 +125,5 @@ class SearchFragment : BaseMusicFragment() {
             return true
         }
         return super.onInterceptBackEvent()
-    }
-
-    override fun getNavigationBarColor(): Int {
-        return R.color.play_bar_bg
     }
 }

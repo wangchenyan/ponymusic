@@ -22,6 +22,7 @@ import me.wcy.music.utils.toMediaItem
 import me.wcy.radapter3.RAdapter
 import me.wcy.router.CRouter
 import me.wcy.router.annotation.Route
+import top.wangchenyan.common.ext.getColor
 import top.wangchenyan.common.ext.viewBindings
 import top.wangchenyan.common.net.apiCall
 import javax.inject.Inject
@@ -59,6 +60,10 @@ class RecommendSongFragment : BaseMusicFragment() {
 
     override fun onLazyCreate() {
         super.onLazyCreate()
+
+        configWindowInsets {
+            navBarColor = getColor(R.color.play_bar_bg)
+        }
 
         adapter.register(RecommendSongItemBinder(object : OnItemClickListener2<SongData> {
             override fun onItemClick(item: SongData, position: Int) {
@@ -101,9 +106,5 @@ class RecommendSongFragment : BaseMusicFragment() {
                 showLoadSirError(res.msg)
             }
         }
-    }
-
-    override fun getNavigationBarColor(): Int {
-        return R.color.play_bar_bg
     }
 }

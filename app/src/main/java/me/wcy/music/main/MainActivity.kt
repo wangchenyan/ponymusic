@@ -28,6 +28,7 @@ import me.wcy.music.service.PlayServiceModule.playerController
 import me.wcy.music.utils.QuitTimer
 import me.wcy.music.utils.TimeUtils
 import me.wcy.router.CRouter
+import top.wangchenyan.common.ext.getColorEx
 import top.wangchenyan.common.ext.showConfirmDialog
 import top.wangchenyan.common.ext.toast
 import top.wangchenyan.common.ext.viewBindings
@@ -67,6 +68,10 @@ class MainActivity : BaseMusicActivity() {
                 initDrawer()
                 parseIntent()
             }
+        }
+
+        configWindowInsets {
+            navBarColor = getColorEx(R.color.tab_bg)
         }
     }
 
@@ -205,10 +210,6 @@ class MainActivity : BaseMusicActivity() {
         binding.ivIcon.setImageResource(icon)
         binding.tvTitle.text = text
         return binding
-    }
-
-    override fun getNavigationBarColor(): Int {
-        return R.color.tab_bg
     }
 
     override fun onDestroy() {

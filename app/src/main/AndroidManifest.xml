@@ -38,29 +38,23 @@
             android:name=".main.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait">
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".common.MusicFragmentContainerActivity"
-            android:screenOrientation="portrait" />
+        <activity android:name=".common.MusicFragmentContainerActivity" />
         <activity
             android:name=".main.SettingsActivity"
-            android:label="@string/menu_setting"
-            android:screenOrientation="portrait" />
+            android:label="@string/menu_setting" />
         <activity
             android:name=".main.AboutActivity"
-            android:label="@string/menu_about"
-            android:screenOrientation="portrait" />
+            android:label="@string/menu_about" />
         <activity
             android:name="me.wcy.music.main.playing.PlayingActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Popup" />
     </application>
 
