@@ -60,52 +60,52 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_recommend"
                     android:drawablePadding="2dp"
-                    android:drawableTint="@color/common_theme_color"
                     android:gravity="center_horizontal"
                     android:text="每日推荐"
                     android:textColor="@color/common_text_h1_color"
-                    android:textSize="12dp" />
+                    android:textSize="12dp"
+                    app:drawableTint="@color/common_theme_color"
+                    app:drawableTopCompat="@drawable/ic_recommend" />
 
                 <TextView
                     android:id="@+id/btnPrivateFm"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_radio"
                     android:drawablePadding="2dp"
-                    android:drawableTint="@color/common_theme_color"
                     android:gravity="center_horizontal"
                     android:text="私人漫游"
                     android:textColor="@color/common_text_h1_color"
-                    android:textSize="12dp" />
+                    android:textSize="12dp"
+                    app:drawableTint="@color/common_theme_color"
+                    app:drawableTopCompat="@drawable/ic_radio" />
 
                 <TextView
                     android:id="@+id/btnRecommendPlaylist"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_discovery_playlist"
                     android:drawablePadding="2dp"
-                    android:drawableTint="@color/common_theme_color"
                     android:gravity="center_horizontal"
                     android:text="歌单"
                     android:textColor="@color/common_text_h1_color"
-                    android:textSize="12dp" />
+                    android:textSize="12dp"
+                    app:drawableTint="@color/common_theme_color"
+                    app:drawableTopCompat="@drawable/ic_discovery_playlist" />
 
                 <TextView
                     android:id="@+id/btnRank"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_discovery_rank"
                     android:drawablePadding="2dp"
-                    android:drawableTint="@color/common_theme_color"
                     android:gravity="center_horizontal"
                     android:text="排行榜"
                     android:textColor="@color/common_text_h1_color"
-                    android:textSize="12dp" />
+                    android:textSize="12dp"
+                    app:drawableTint="@color/common_theme_color"
+                    app:drawableTopCompat="@drawable/ic_discovery_rank" />
             </LinearLayout>
 
             <TextView
@@ -114,12 +114,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
-                android:drawableEnd="@drawable/ic_arrow_right"
-                android:drawableTint="@color/common_text_h1_color"
                 android:text="推荐歌单"
                 android:textColor="@color/common_text_h1_color"
                 android:textSize="17dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:drawableEndCompat="@drawable/ic_arrow_right"
+                app:drawableTint="@color/common_text_h1_color" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvRecommendPlaylist"
@@ -137,12 +137,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
-                android:drawableEnd="@drawable/ic_arrow_right"
-                android:drawableTint="@color/common_text_h1_color"
                 android:text="排行榜"
                 android:textColor="@color/common_text_h1_color"
                 android:textSize="17dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:drawableEndCompat="@drawable/ic_arrow_right"
+                app:drawableTint="@color/common_text_h1_color" />
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/vpRankingList"

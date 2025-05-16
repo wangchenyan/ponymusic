@@ -73,13 +73,13 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableStart="@drawable/ic_local_music"
                     android:drawablePadding="8dp"
-                    android:drawableTint="@color/common_theme_color"
                     android:gravity="center_vertical"
                     android:text="本地音乐"
                     android:textColor="@color/common_text_h1_color"
-                    android:textSize="16dp" />
+                    android:textSize="16dp"
+                    app:drawableStartCompat="@drawable/ic_local_music"
+                    app:drawableTint="@color/common_theme_color" />
 
                 <ImageView
                     android:layout_width="wrap_content"

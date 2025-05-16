@@ -34,8 +34,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:paddingBottom="16dp"
-                    app:shape_solidGradientOrientation="topToBottom"
                     app:shape_solidGradientEndColor="@color/grey"
+                    app:shape_solidGradientOrientation="topToBottom"
                     app:shape_solidGradientStartColor="@color/grey_800">
 
                     <View
@@ -165,20 +165,20 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingHorizontal="16dp"
-                    app:shape_solidColor="@color/common_background_color"
                     app:shape_radiusInTopLeft="12dp"
-                    app:shape_radiusInTopRight="12dp">
+                    app:shape_radiusInTopRight="12dp"
+                    app:shape_solidColor="@color/common_background_color">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/ic_play_circle"
                         android:drawablePadding="10dp"
-                        android:drawableTint="@color/common_theme_color"
                         android:text="播放全部"
                         android:textColor="@color/common_text_h1_color"
                         android:textSize="16dp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        app:drawableStartCompat="@drawable/ic_play_circle"
+                        app:drawableTint="@color/common_theme_color" />
 
                     <TextView
                         android:id="@+id/tvSongCount"

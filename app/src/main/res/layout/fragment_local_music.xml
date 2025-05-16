@@ -21,15 +21,15 @@
             android:id="@+id/tvPlayAll"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:drawableStart="@drawable/ic_play_circle"
             android:drawablePadding="10dp"
-            android:drawableTint="@color/common_theme_color"
             android:gravity="center_vertical"
             android:paddingHorizontal="16dp"
             android:text="播放全部"
             android:textColor="@color/common_text_h1_color"
             android:textSize="16dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:drawableStartCompat="@drawable/ic_play_circle"
+            app:drawableTint="@color/common_theme_color" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"

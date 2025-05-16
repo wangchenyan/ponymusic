@@ -17,12 +17,12 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="16dp"
-        android:drawableEnd="@drawable/ic_arrow_right"
-        android:drawableTint="@color/common_text_h1_color"
         android:singleLine="true"
         android:textColor="@color/common_text_h1_color"
         android:textSize="17dp"
         android:textStyle="bold"
+        app:drawableEndCompat="@drawable/ic_arrow_right"
+        app:drawableTint="@color/common_text_h1_color"
         tools:text="飙升榜" />
 
     <LinearLayout
