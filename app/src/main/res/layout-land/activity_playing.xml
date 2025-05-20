@@ -5,26 +5,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/ivPlayingBg"
+    <FrameLayout
+        android:id="@+id/flBackground"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        tools:src="@drawable/bg_playing_default" />
+        android:layout_height="match_parent">
 
-    <com.hjq.shape.view.ShapeView
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_gravity="bottom"
-        app:shape_solidGradientEndColor="@color/translucent_black_p50"
-        app:shape_solidGradientOrientation="topToBottom"
-        app:shape_solidGradientStartColor="@color/transparent" />
+        <ImageView
+            android:id="@+id/ivPlayingBg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/bg_playing_default" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/translucent_black_p50" />
+
+        <com.hjq.shape.view.ShapeView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_gravity="bottom"
+            app:shape_solidGradientEndColor="@color/translucent_black_p50"
+            app:shape_solidGradientOrientation="topToBottom"
+            app:shape_solidGradientStartColor="@color/transparent" />
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/llContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/translucent_black_p50"
         android:orientation="vertical">
 
         <include
@@ -103,6 +113,18 @@
                     app:lrcTextSize="16dp"
                     app:lrcTimelineColor="@color/translucent_white_p50"
                     app:lrcTimelineTextColor="#CCFFFFFF" />
+
+                <ImageView
+                    android:id="@+id/ivLrcTopMask"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    app:layout_constraintTop_toTopOf="@+id/lrcView" />
+
+                <ImageView
+                    android:id="@+id/ivLrcBottomMask"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/lrcView" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </LinearLayout>

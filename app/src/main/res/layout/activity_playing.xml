@@ -5,26 +5,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/ivPlayingBg"
+    <FrameLayout
+        android:id="@+id/flBackground"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        tools:src="@drawable/bg_playing_default" />
+        android:layout_height="match_parent">
 
-    <com.hjq.shape.view.ShapeView
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_gravity="bottom"
-        app:shape_solidGradientEndColor="@color/translucent_black_p50"
-        app:shape_solidGradientOrientation="topToBottom"
-        app:shape_solidGradientStartColor="@color/transparent" />
+        <ImageView
+            android:id="@+id/ivPlayingBg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/bg_playing_default" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/translucent_black_p50" />
+
+        <com.hjq.shape.view.ShapeView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_gravity="bottom"
+            app:shape_solidGradientEndColor="@color/translucent_black_p50"
+            app:shape_solidGradientOrientation="topToBottom"
+            app:shape_solidGradientStartColor="@color/transparent" />
+    </FrameLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/llContent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/translucent_black_p50">
+        android:layout_height="match_parent">
 
         <include
             android:id="@+id/titleLayout"
@@ -33,7 +43,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <FrameLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/flCoverLrc"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -48,35 +58,48 @@
             <me.wcy.music.widget.AlbumCoverView
                 android:id="@+id/albumCoverView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <LinearLayout
-                android:id="@+id/lrcLayout"
-                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible" />
 
-                <include
-                    android:id="@+id/volumeLayout"
-                    layout="@layout/activity_playing_volume" />
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/lrcLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:constraint_referenced_ids="volumeLayout,lrcView,ivLrcTopMask,ivLrcBottomMask" />
 
-                <me.wcy.lrcview.LrcView
-                    android:id="@+id/lrcView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:lrcAnimationDuration="1000"
-                    app:lrcCurrentTextColor="@color/white"
-                    app:lrcDividerHeight="24dp"
-                    app:lrcNormalTextColor="@color/translucent_white_p50"
-                    app:lrcPadding="40dp"
-                    app:lrcTextSize="16dp"
-                    app:lrcTimelineColor="@color/translucent_white_p50"
-                    app:lrcTimelineTextColor="#CCFFFFFF" />
-            </LinearLayout>
-        </FrameLayout>
+            <include
+                android:id="@+id/volumeLayout"
+                layout="@layout/activity_playing_volume" />
+
+            <me.wcy.lrcview.LrcView
+                android:id="@+id/lrcView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/volumeLayout"
+                app:lrcAnimationDuration="1000"
+                app:lrcCurrentTextColor="@color/white"
+                app:lrcDividerHeight="24dp"
+                app:lrcNormalTextColor="@color/translucent_white_p50"
+                app:lrcPadding="40dp"
+                app:lrcTextSize="16dp"
+                app:lrcTimelineColor="@color/translucent_white_p50"
+                app:lrcTimelineTextColor="#CCFFFFFF" />
+
+            <ImageView
+                android:id="@+id/ivLrcTopMask"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                app:layout_constraintTop_toTopOf="@+id/lrcView" />
+
+            <ImageView
+                android:id="@+id/ivLrcBottomMask"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                app:layout_constraintBottom_toBottomOf="@+id/lrcView" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <include
             android:id="@+id/controlLayout"

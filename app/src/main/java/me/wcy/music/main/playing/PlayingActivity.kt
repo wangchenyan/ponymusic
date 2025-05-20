@@ -12,10 +12,12 @@ import android.os.Build
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.util.Log
+import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
@@ -39,6 +41,7 @@ import me.wcy.music.service.PlayerController
 import me.wcy.music.service.likesong.LikeSongProcessor
 import me.wcy.music.storage.LrcCache
 import me.wcy.music.storage.preference.ConfigPreferences
+import me.wcy.music.utils.ImageUtils.transAlpha
 import me.wcy.music.utils.TimeUtils
 import me.wcy.music.utils.getDuration
 import me.wcy.music.utils.getLargeCover
@@ -76,7 +79,9 @@ class PlayingActivity : BaseMusicActivity() {
         BitmapFactory.decodeResource(resources, R.drawable.bg_playing_default_cover)
     }
     private val defaultBgBitmap by lazy {
-        BitmapFactory.decodeResource(resources, R.drawable.bg_playing_default,
+        BitmapFactory.decodeResource(
+            resources,
+            R.drawable.bg_playing_default,
             BitmapFactory.Options().apply {
                 inPreferredConfig = Bitmap.Config.RGB_565
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -334,6 +339,7 @@ class PlayingActivity : BaseMusicActivity() {
                 val bitmap = it.getDataOrThrow()
                 viewBinding.albumCoverView.setCoverBitmap(bitmap)
                 Blurry.with(this).sampling(10).from(bitmap).into(viewBinding.ivPlayingBg)
+                updateLrcMask()
             }
         }
     }
@@ -341,6 +347,31 @@ class PlayingActivity : BaseMusicActivity() {
     private fun setDefaultCover() {
         viewBinding.albumCoverView.setCoverBitmap(defaultCoverBitmap)
         viewBinding.ivPlayingBg.setImageBitmap(defaultBgBitmap)
+        updateLrcMask()
+    }
+
+    private fun updateLrcMask() {
+        updateLrcMask(viewBinding.ivLrcTopMask, true)
+        updateLrcMask(viewBinding.ivLrcBottomMask, false)
+    }
+
+    private fun updateLrcMask(maskView: ImageView, topToBottom: Boolean) {
+        maskView.doOnLayout {
+            val bitmap = com.blankj.utilcode.util.ImageUtils.view2Bitmap(viewBinding.flBackground)
+            val location = IntArray(2)
+            maskView.getLocationOnScreen(location)
+            val clippedBitmap = com.blankj.utilcode.util.ImageUtils.clip(
+                bitmap,
+                location[0],
+                location[1],
+                maskView.width,
+                maskView.height,
+                true
+            )
+            val alphaBitmap = clippedBitmap.transAlpha(topToBottom)
+            clippedBitmap.recycle()
+            maskView.setImageBitmap(alphaBitmap)
+        }
     }
 
     private fun updateLrc(song: MediaItem) {
