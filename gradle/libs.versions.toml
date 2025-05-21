@@ -51,7 +51,7 @@ hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", v
 common = { group = "com.github.wangchenyan", name = "android-common", version.ref = "common" }
 crouter-processor = { group = "com.github.wangchenyan.crouter", name = "crouter-processor", version.ref = "crouter" }
 crouter-api = { group = "com.github.wangchenyan.crouter", name = "crouter-api", version.ref = "crouter" }
-lrcview = { group = "com.github.wangchenyan", name = "lrcview", version = "2.2.1" }
+lrcview = { group = "com.github.wangchenyan", name = "lrcview", version = "2.2.2" }
 # open source
 loggingInterceptor = { group = "com.github.ihsanbal", name = "LoggingInterceptor", version = "3.1.0" }
 zbar = { group = "cn.bertsir.zbarLibary", name = "zbarlibary", version = "1.4.2" }
