@@ -22,6 +22,7 @@
     <color name="common_dialog_background_color" tools:override="true">@color/white</color>
     <color name="common_text_h1_color" tools:override="true">#202020</color>
     <color name="common_text_h2_color" tools:override="true">@color/grey</color>
+    <color name="common_text_theme" tools:override="true">@color/common_theme_color</color>
     <color name="common_divider" tools:override="true">@color/grey_100</color>
 
     <color name="tab_bg">@color/white</color>
