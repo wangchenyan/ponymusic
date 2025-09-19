@@ -359,7 +359,7 @@ class PlayingActivity : BaseMusicActivity() {
         maskView.doOnLayout {
             val bitmap = com.blankj.utilcode.util.ImageUtils.view2Bitmap(viewBinding.flBackground)
             val location = IntArray(2)
-            maskView.getLocationOnScreen(location)
+            maskView.getLocationInWindow(location)
             val clippedBitmap = com.blankj.utilcode.util.ImageUtils.clip(
                 bitmap,
                 location[0],
