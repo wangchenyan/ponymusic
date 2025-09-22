@@ -1,4 +1,5 @@
 <resources>
     <dimen name="play_bar_height">48dp</dimen>
+    <dimen name="playlist_item_max_width">144dp</dimen>
     <dimen name="page_content_max_width">480dp</dimen>
 </resources>

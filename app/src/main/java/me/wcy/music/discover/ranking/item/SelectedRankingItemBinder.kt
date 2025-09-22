@@ -1,6 +1,5 @@
 package me.wcy.music.discover.ranking.item
 
-import android.view.Gravity
 import android.widget.FrameLayout
 import com.blankj.utilcode.util.SizeUtils
 import me.wcy.music.common.bean.PlaylistData
@@ -13,6 +12,7 @@ import kotlin.reflect.KClass
  * Created by wangchenyan.top on 2023/10/24.
  */
 class SelectedRankingItemBinder(
+    private val spanCount: Int,
     private val itemWidth: Int,
     private val listener: OnItemClickListener
 ) : RItemBinder<ItemSelectedRankingBinding, PlaylistData>() {
@@ -28,17 +28,12 @@ class SelectedRankingItemBinder(
             listener.onPlayClick(item, position)
         }
         val selectedPosition = position - listener.getFirstSelectedPosition()
-        val gravity = when (selectedPosition % 3) {
-            0 -> Gravity.START
-            1 -> Gravity.CENTER_HORIZONTAL
-            2 -> Gravity.END
-            else -> Gravity.START
-        }
+        val marginEnd = if (selectedPosition != spanCount - 1) SizeUtils.dp2px(10f) else 0
         val lp = viewBinding.content.layoutParams as FrameLayout.LayoutParams
-        if (lp.width != itemWidth || lp.height != itemWidth || lp.gravity != gravity) {
+        if (lp.width != itemWidth || lp.height != itemWidth || lp.marginEnd != marginEnd) {
             lp.width = itemWidth
             lp.height = itemWidth
-            lp.gravity = gravity
+            lp.marginEnd = marginEnd
             viewBinding.content.layoutParams = lp
         }
         viewBinding.tvName.text = item.name

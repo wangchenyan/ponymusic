@@ -43,6 +43,19 @@ class RankingFragment : BaseMusicFragment() {
     @Inject
     lateinit var playerController: PlayerController
 
+    private val spanCount: Int by lazy {
+        val containerWidth = ScreenUtils.getAppScreenWidth() - SizeUtils.dp2px(32f)
+        val itemWidth = resources.getDimensionPixelSize(R.dimen.playlist_item_max_width)
+        val itemSpace = SizeUtils.dp2px(10f)
+        val count = containerWidth / (itemWidth + itemSpace)
+        count.coerceAtLeast(3)
+    }
+    private val itemWidth: Int by lazy {
+        val containerWidth = ScreenUtils.getAppScreenWidth() - SizeUtils.dp2px(32f)
+        val itemSpace = SizeUtils.dp2px(10f)
+        (containerWidth - itemSpace * (spanCount - 1)) / spanCount
+    }
+
     override fun getRootView(): View {
         return viewBinding.root
     }
@@ -85,7 +98,6 @@ class RankingFragment : BaseMusicFragment() {
     }
 
     private fun initView() {
-        val itemWidth = (ScreenUtils.getAppScreenWidth() - SizeUtils.dp2px(52f)) / 3
         adapter.register(PlaylistData::class, object : RTypeMapper<PlaylistData> {
             private val officialItemBinder = OfficialRankingItemBinder(object :
                 OfficialRankingItemBinder.OnItemClickListener {
@@ -97,7 +109,9 @@ class RankingFragment : BaseMusicFragment() {
                     playPlaylist(item)
                 }
             })
-            private val selectedItemBinder = SelectedRankingItemBinder(itemWidth,
+            private val selectedItemBinder = SelectedRankingItemBinder(
+                spanCount,
+                itemWidth,
                 object : SelectedRankingItemBinder.OnItemClickListener {
                     override fun onItemClick(item: PlaylistData, position: Int) {
                         openRankingDetail(item)
@@ -122,21 +136,22 @@ class RankingFragment : BaseMusicFragment() {
             }
         })
         adapter.register(RankingTitleItemBinding())
-        viewBinding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 3).apply {
-            spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    val dataList = viewModel.rankingList.value ?: return 1
-                    val item = dataList.getOrNull(position) ?: return 1
-                    return if (item is RankingViewModel.TitleData
-                        || (item is PlaylistData && item.toplistType.isNotEmpty())
-                    ) {
-                        3
-                    } else {
-                        1
+        viewBinding.recyclerView.layoutManager =
+            GridLayoutManager(requireContext(), spanCount).apply {
+                spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                    override fun getSpanSize(position: Int): Int {
+                        val dataList = viewModel.rankingList.value ?: return 1
+                        val item = dataList.getOrNull(position) ?: return 1
+                        return if (item is RankingViewModel.TitleData
+                            || (item is PlaylistData && item.toplistType.isNotEmpty())
+                        ) {
+                            this@RankingFragment.spanCount
+                        } else {
+                            1
+                        }
                     }
                 }
             }
-        }
         viewBinding.recyclerView.adapter = adapter
     }
 
