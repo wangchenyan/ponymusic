@@ -35,97 +35,100 @@
         android:id="@+id/llContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
-        <include
-            android:id="@+id/titleLayout"
-            layout="@layout/activity_playing_title" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:orientation="horizontal">
+            android:layout_weight="1"
+            android:paddingVertical="16dp">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
+            <include
+                android:id="@+id/titleLayout"
+                layout="@layout/activity_playing_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_max="@dimen/page_content_max_width" />
 
-                <me.wcy.music.widget.AlbumCoverView
-                    android:id="@+id/albumCoverView"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginBottom="16dp"
-                    app:layout_constrainedWidth="true"
-                    app:layout_constraintBottom_toTopOf="@+id/controlLayout"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_max="450dp" />
+            <me.wcy.music.widget.AlbumCoverView
+                android:id="@+id/albumCoverView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toTopOf="@+id/controlLayout"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/titleLayout"
+                app:layout_constraintWidth_max="@dimen/page_content_max_width" />
 
-                <include
-                    android:id="@+id/controlLayout"
-                    layout="@layout/activity_playing_control"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constrainedWidth="true"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintWidth_max="450dp" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <include
+                android:id="@+id/controlLayout"
+                layout="@layout/activity_playing_control"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintWidth_max="@dimen/page_content_max_width" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/lrcLayout"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/lrcLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingVertical="16dp">
 
-                <include
-                    android:id="@+id/volumeLayout"
-                    layout="@layout/activity_playing_volume"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constrainedWidth="true"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_max="450dp" />
+            <include
+                android:id="@+id/volumeLayout"
+                layout="@layout/activity_playing_volume"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_max="@dimen/page_content_max_width" />
 
-                <me.wcy.lrcview.LrcView
-                    android:id="@+id/lrcView"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="16dp"
-                    app:layout_constrainedWidth="true"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/volumeLayout"
-                    app:layout_constraintWidth_max="450dp"
-                    app:lrcAnimationDuration="1000"
-                    app:lrcCurrentTextColor="@color/white"
-                    app:lrcDividerHeight="24dp"
-                    app:lrcNormalTextColor="@color/translucent_white_p50"
-                    app:lrcPadding="40dp"
-                    app:lrcTextSize="16dp"
-                    app:lrcTimelineColor="@color/translucent_white_p50"
-                    app:lrcTimelineTextColor="#CCFFFFFF" />
+            <me.wcy.lrcview.LrcView
+                android:id="@+id/lrcView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/volumeLayout"
+                app:layout_constraintWidth_max="@dimen/page_content_max_width"
+                app:lrcAnimationDuration="1000"
+                app:lrcCurrentTextColor="@color/white"
+                app:lrcDividerHeight="24dp"
+                app:lrcNormalTextColor="@color/translucent_white_p50"
+                app:lrcPadding="40dp"
+                app:lrcTextSize="16dp"
+                app:lrcTimelineColor="@color/translucent_white_p50"
+                app:lrcTimelineTextColor="#CCFFFFFF" />
 
-                <ImageView
-                    android:id="@+id/ivLrcTopMask"
-                    android:layout_width="match_parent"
-                    android:layout_height="36dp"
-                    app:layout_constraintTop_toTopOf="@+id/lrcView" />
+            <ImageView
+                android:id="@+id/ivLrcTopMask"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                app:layout_constraintTop_toTopOf="@+id/lrcView" />
 
-                <ImageView
-                    android:id="@+id/ivLrcBottomMask"
-                    android:layout_width="match_parent"
-                    android:layout_height="36dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/lrcView" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </LinearLayout>
+            <ImageView
+                android:id="@+id/ivLrcBottomMask"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                app:layout_constraintBottom_toBottomOf="@+id/lrcView" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 </FrameLayout>

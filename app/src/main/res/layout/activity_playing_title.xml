@@ -10,36 +10,9 @@
         android:id="@+id/ivClose"
         android:layout_width="@dimen/common_title_bar_size"
         android:layout_height="@dimen/common_title_bar_size"
+        android:layout_marginStart="8dp"
         android:padding="4dp"
         android:scaleType="fitXY"
         android:src="@drawable/ic_arrow_down"
         app:tint="@color/translucent_white_p80" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:text="曲目"
-            android:textColor="@color/translucent_white_p80"
-            android:textSize="16dp" />
-
-        <TextView
-            android:id="@+id/tvArtist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:text="艺术家"
-            android:textColor="@color/grey"
-            android:textSize="12dp" />
-    </LinearLayout>
 </FrameLayout>

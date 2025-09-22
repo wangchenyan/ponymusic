@@ -286,8 +286,8 @@ class PlayingActivity : BaseMusicActivity() {
     private fun initData() {
         playerController.currentSong.observe(this) { song ->
             if (song != null) {
-                viewBinding.titleLayout.tvTitle.text = song.mediaMetadata.title
-                viewBinding.titleLayout.tvArtist.text = song.mediaMetadata.artist
+                viewBinding.controlLayout.tvTitle.text = song.mediaMetadata.title
+                viewBinding.controlLayout.tvArtist.text = song.mediaMetadata.artist
                 viewBinding.controlLayout.sbProgress.max = song.mediaMetadata.getDuration().toInt()
                 viewBinding.controlLayout.sbProgress.progress =
                     playerController.playProgress.value.toInt()

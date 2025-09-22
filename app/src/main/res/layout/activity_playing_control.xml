@@ -4,48 +4,66 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingHorizontal="24dp">
 
     <LinearLayout
         android:id="@+id/llActions"
         android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:orientation="horizontal"
-        android:paddingHorizontal="32dp">
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-        <View
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="曲目"
+                android:textColor="@color/translucent_white_p80"
+                android:textSize="17dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvArtist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="艺术家"
+                android:textColor="@color/grey"
+                android:textSize="12dp" />
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/ivLike"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:paddingVertical="2dp"
+            android:paddingVertical="8dp"
+            android:paddingEnd="10dp"
+            android:scaleType="fitEnd"
             android:src="@drawable/ic_favorite_selector" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
 
         <ImageView
             android:id="@+id/ivDownload"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:paddingVertical="2dp"
+            android:paddingVertical="8dp"
+            android:scaleType="fitEnd"
             android:src="@drawable/ic_download"
             app:tint="@color/translucent_white_p80" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
     </LinearLayout>
 
     <LinearLayout
@@ -54,42 +72,53 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="16dp">
-
-        <TextView
-            android:id="@+id/tvCurrentTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/play_time_start"
-            android:textColor="@color/white"
-            android:textSize="10dp" />
+        android:orientation="vertical">
 
         <SeekBar
             android:id="@+id/sbProgress"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:maxHeight="2dp"
             android:minHeight="2dp"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
             android:progressDrawable="@drawable/bg_playing_playback_progress"
             android:thumb="@drawable/ic_playing_playback_progress_thumb" />
 
-        <TextView
-            android:id="@+id/tvTotalTime"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/play_time_start"
-            android:textColor="@color/translucent_white_p50"
-            android:textSize="10dp" />
+            android:layout_marginTop="6dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvCurrentTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/play_time_start"
+                android:textColor="@color/white"
+                android:textSize="10dp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tvTotalTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/play_time_start"
+                android:textColor="@color/translucent_white_p50"
+                android:textSize="10dp" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_marginTop="16dp"
-        android:orientation="horizontal"
-        android:paddingHorizontal="32dp">
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/ivMode"
@@ -97,6 +126,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:paddingVertical="8dp"
+            android:scaleType="fitStart"
             android:src="@drawable/ic_play_mode_level_list"
             app:tint="@color/translucent_white_p80" />
 
@@ -106,6 +136,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:paddingVertical="16dp"
+            android:paddingStart="10dp"
+            android:scaleType="fitStart"
             android:src="@drawable/ic_previous"
             app:tint="@color/translucent_white_p80" />
 
@@ -139,6 +171,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:paddingVertical="16dp"
+            android:paddingEnd="10dp"
+            android:scaleType="fitEnd"
             android:src="@drawable/ic_next"
             app:tint="@color/translucent_white_p80" />
 
@@ -148,6 +182,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:paddingVertical="16dp"
+            android:scaleType="fitEnd"
             android:src="@drawable/ic_playlist"
             app:tint="@color/translucent_white_p80" />
     </LinearLayout>
