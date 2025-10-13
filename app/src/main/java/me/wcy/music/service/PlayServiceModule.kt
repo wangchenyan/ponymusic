@@ -2,7 +2,7 @@ package me.wcy.music.service
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import androidx.media3.common.Player
+import androidx.media3.session.MediaController
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.EntryPoint
@@ -18,13 +18,13 @@ import top.wangchenyan.common.ext.toUnMutable
 @Module
 @InstallIn(SingletonComponent::class)
 object PlayServiceModule {
-    private var player: Player? = null
+    private var player: MediaController? = null
     private var playerController: PlayerController? = null
 
     private val _isPlayerReady = MutableLiveData(false)
     val isPlayerReady = _isPlayerReady.toUnMutable()
 
-    fun setPlayer(player: Player) {
+    fun setPlayer(player: MediaController) {
         this.player = player
         _isPlayerReady.value = true
     }

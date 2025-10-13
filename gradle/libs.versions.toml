@@ -42,6 +42,7 @@ media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "medi
 room = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 preference = { group = "androidx.preference", name = "preference-ktx", version = "1.2.1" }
+glance = { group = "androidx.glance", name = "glance-appwidget", version = "1.1.1" }
 # google
 crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx", version = "19.0.3" }
 analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx", version = "22.1.0" }

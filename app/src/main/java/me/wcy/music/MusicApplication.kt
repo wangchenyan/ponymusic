@@ -9,6 +9,7 @@ import com.blankj.utilcode.util.ActivityUtils
 import com.google.common.util.concurrent.MoreExecutors
 import dagger.hilt.android.HiltAndroidApp
 import me.wcy.music.account.service.UserService
+import me.wcy.music.appwidget.WidgetRepository
 import me.wcy.music.common.DarkModeService
 import me.wcy.music.common.MusicFragmentContainerActivity
 import me.wcy.music.service.MusicService
@@ -67,6 +68,7 @@ class MusicApplication : Application() {
         mediaControllerFuture.addListener({
             val player = mediaControllerFuture.get()
             PlayServiceModule.setPlayer(player)
+            WidgetRepository.init(this)
         }, MoreExecutors.directExecutor())
     }
 

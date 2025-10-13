@@ -6,9 +6,11 @@ import android.content.pm.PackageManager
 import android.media.audiofx.AudioEffect
 import android.text.TextUtils
 import androidx.core.text.buildSpannedString
+import com.blankj.utilcode.util.IntentUtils
+import me.wcy.music.R
+import me.wcy.music.service.MusicService.Companion.EXTRA_NOTIFICATION
 import top.wangchenyan.common.ext.getColorEx
 import top.wangchenyan.common.widget.CustomSpan.appendStyle
-import me.wcy.music.R
 
 /**
  * 歌曲工具类
@@ -66,6 +68,16 @@ object MusicUtils {
 
     fun String.asLargeCover(): String {
         return appendImageSize(800)
+    }
+
+    fun getStartPlayingPageIntent(context: Context): Intent {
+        return IntentUtils.getLaunchAppIntent(context.packageName).apply {
+            putExtra(EXTRA_NOTIFICATION, true)
+            action = Intent.ACTION_VIEW
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
     }
 
     private fun String.appendImageSize(size: Int): String {

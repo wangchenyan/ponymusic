@@ -9,6 +9,7 @@
     <string name="local_music">本地音乐</string>
     <string name="online_music">在线音乐</string>
     <string name="unknown">未知</string>
+    <string name="no_playing_song">暂无歌曲</string>
     <string name="delete_music">删除%s？</string>
     <string name="setting_ringtone_success">设置铃声成功</string>
     <string name="no_local_music">暂无本地音乐</string>

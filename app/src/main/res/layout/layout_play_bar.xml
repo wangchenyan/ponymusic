@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="无音乐"
+            android:text="@string/no_playing_song"
             android:textColor="@color/common_text_h1_color"
             android:textSize="15dp" />
     </LinearLayout>

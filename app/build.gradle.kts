@@ -46,6 +46,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        compose = true
     }
 
     signingConfigs {
@@ -78,6 +79,10 @@ android {
 
     kotlinOptions {
         jvmTarget = JavaVersion.valueOf(libs.versions.java.get()).toString()
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.15"
     }
 }
 
@@ -123,6 +128,7 @@ dependencies {
     implementation(libs.media3.ui)
     implementation(libs.preference)
     implementation(libs.flexbox)
+    implementation(libs.glance)
 
     ksp(libs.room.compiler)
     implementation(libs.room)

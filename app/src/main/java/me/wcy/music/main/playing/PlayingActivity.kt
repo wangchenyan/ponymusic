@@ -41,7 +41,7 @@ import me.wcy.music.service.PlayerController
 import me.wcy.music.service.likesong.LikeSongProcessor
 import me.wcy.music.storage.LrcCache
 import me.wcy.music.storage.preference.ConfigPreferences
-import me.wcy.music.utils.ImageUtils.transAlpha
+import me.wcy.music.utils.BitmapUtils.transAlpha
 import me.wcy.music.utils.TimeUtils
 import me.wcy.music.utils.getDuration
 import me.wcy.music.utils.getLargeCover

@@ -7,6 +7,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.session.MediaController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -26,9 +27,12 @@ import top.wangchenyan.common.ext.toast
  * Created by wangchenyan.top on 2024/3/27.
  */
 class PlayerControllerImpl(
-    private val player: Player,
+    private val player: MediaController,
     private val db: MusicDatabase,
 ) : PlayerController, CoroutineScope by MainScope() {
+
+    override val mediaController: MediaController
+        get() = player
 
     private val _playlist = MutableLiveData(emptyList<MediaItem>())
     override val playlist = _playlist.toUnMutable()
