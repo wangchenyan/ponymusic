@@ -79,21 +79,23 @@ class PlayBar @JvmOverloads constructor(
     }
 
     private fun initData(lifecycleOwner: LifecycleOwner) {
-        playerController.currentSong.observe(lifecycleOwner) { currentSong ->
-            if (currentSong != null) {
-                isVisible = true
-                viewBinding.ivCover.loadAvatar(currentSong.getSmallCover())
-                viewBinding.tvTitle.text = buildSpannedString {
-                    append(currentSong.mediaMetadata.title)
-                    appendStyle(
-                        " - ${currentSong.mediaMetadata.artist}",
-                        color = getColor(R.color.common_text_h2_color)
-                    )
+        lifecycleOwner.lifecycleScope.launch {
+            playerController.currentSong.collectLatest { currentSong ->
+                if (currentSong != null) {
+                    isVisible = true
+                    viewBinding.ivCover.loadAvatar(currentSong.getSmallCover())
+                    viewBinding.tvTitle.text = buildSpannedString {
+                        append(currentSong.mediaMetadata.title)
+                        appendStyle(
+                            " - ${currentSong.mediaMetadata.artist}",
+                            color = getColor(R.color.common_text_h2_color)
+                        )
+                    }
+                    viewBinding.progressBar.max = currentSong.mediaMetadata.getDuration().toInt()
+                    viewBinding.progressBar.progress = playerController.playProgress.value.toInt()
+                } else {
+                    isVisible = false
                 }
-                viewBinding.progressBar.max = currentSong.mediaMetadata.getDuration().toInt()
-                viewBinding.progressBar.progress = playerController.playProgress.value.toInt()
-            } else {
-                isVisible = false
             }
         }
 

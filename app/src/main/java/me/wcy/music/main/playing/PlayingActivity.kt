@@ -20,7 +20,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.media3.common.MediaItem
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.blurry.Blurry
@@ -284,26 +286,32 @@ class PlayingActivity : BaseMusicActivity() {
     }
 
     private fun initData() {
-        playerController.currentSong.observe(this) { song ->
-            if (song != null) {
-                viewBinding.controlLayout.tvTitle.text = song.mediaMetadata.title
-                viewBinding.controlLayout.tvArtist.text = song.mediaMetadata.artist
-                viewBinding.controlLayout.sbProgress.max = song.mediaMetadata.getDuration().toInt()
-                viewBinding.controlLayout.sbProgress.progress =
-                    playerController.playProgress.value.toInt()
-                viewBinding.controlLayout.sbProgress.secondaryProgress = 0
-                lastProgress = 0
-                viewBinding.controlLayout.tvCurrentTime.text =
-                    TimeUtils.formatMs(playerController.playProgress.value)
-                viewBinding.controlLayout.tvTotalTime.text =
-                    TimeUtils.formatMs(song.mediaMetadata.getDuration())
-                updateCover(song)
-                updateLrc(song)
-                viewBinding.albumCoverView.reset()
-                updatePlayState(playerController.playState.value)
-                updateOnlineActionsState(song)
-            } else {
-                finish()
+        val onSongUpdate: (MediaItem) -> Unit = { song ->
+            viewBinding.controlLayout.tvTitle.text = song.mediaMetadata.title
+            viewBinding.controlLayout.tvArtist.text = song.mediaMetadata.artist
+            viewBinding.controlLayout.sbProgress.max = song.mediaMetadata.getDuration().toInt()
+            viewBinding.controlLayout.sbProgress.progress =
+                playerController.playProgress.value.toInt()
+            viewBinding.controlLayout.sbProgress.secondaryProgress = 0
+            viewBinding.controlLayout.tvCurrentTime.text =
+                TimeUtils.formatMs(playerController.playProgress.value)
+            viewBinding.controlLayout.tvTotalTime.text =
+                TimeUtils.formatMs(song.mediaMetadata.getDuration())
+            updateCover(song)
+            updateLrc(song)
+            viewBinding.albumCoverView.reset()
+            updatePlayState(playerController.playState.value)
+            updateOnlineActionsState(song)
+        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                playerController.currentSong.collectLatest { song ->
+                    if (song != null) {
+                        onSongUpdate(song)
+                    } else {
+                        finish()
+                    }
+                }
             }
         }
 

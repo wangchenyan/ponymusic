@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.text.buildSpannedString
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.media3.common.MediaItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.ActivityUtils
@@ -98,30 +100,38 @@ class CurrentPlaylistFragment : BottomSheetDialogFragment() {
             }
         }
 
-        playerController.playlist.observe(this) { playlist ->
-            playlist ?: return@observe
-            val size = playlist.size
-            viewBinding.tvTitle.text = buildSpannedString {
-                append("当前播放")
-                if (size > 0) {
-                    appendStyle(
-                        "($size)",
-                        color = context.getColorEx(R.color.common_text_h2_color),
-                        isBold = true
-                    )
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                playerController.playlist.collectLatest { playlist ->
+                    val size = playlist.size
+                    viewBinding.tvTitle.text = buildSpannedString {
+                        append("当前播放")
+                        if (size > 0) {
+                            appendStyle(
+                                "($size)",
+                                color = context.getColorEx(R.color.common_text_h2_color),
+                                isBold = true
+                            )
+                        }
+                    }
+                    adapter.refresh(playlist)
                 }
             }
-            adapter.refresh(playlist)
         }
-        playerController.currentSong.observe(this) { song ->
-            adapter.notifyDataSetChanged()
-            val playlist = playerController.playlist.value
-            if (playlist?.isNotEmpty() == true && song != null) {
-                val index = playlist.indexOfFirst { it.mediaId == song.mediaId }
-                if (index == 0) {
-                    layoutManager.scrollToPosition(index)
-                } else if (index > 0) {
-                    layoutManager.scrollToPosition(index - 1)
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                playerController.currentSong.collectLatest { song ->
+                    adapter.notifyDataSetChanged()
+                    val playlist = playerController.playlist.value
+                    if (playlist.isNotEmpty() && song != null) {
+                        val index = playlist.indexOfFirst { it.mediaId == song.mediaId }
+                        if (index == 0) {
+                            layoutManager.scrollToPosition(index)
+                        } else if (index > 0) {
+                            layoutManager.scrollToPosition(index - 1)
+                        }
+                    }
                 }
             }
         }

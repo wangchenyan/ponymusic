@@ -45,24 +45,24 @@ object WidgetRepository : CoroutineScope by MainScope() {
         state = WidgetState()
             .copy(application, playerController.currentSong.value)
             .copy(playerController.playState.value)
-        playerController.currentSong.observeForever {
-            val newState = state.copy(application, it)
-            if (state != newState) {
-                state = newState
-                loadCoverJob?.cancel()
-                launch {
-                    _coverBitmapFlow.emit(null)
-                    _bgBitmapFlow.emit(null)
+        launch {
+            playerController.currentSong.collectLatest {
+                val newState = state.copy(application, it)
+                if (state != newState) {
+                    state = newState
+                    loadCoverJob?.cancel()
+                    _coverBitmapFlow.value = null
+                    _bgBitmapFlow.value = null
                     MusicAppWidget().updateState(application, state)
-                }
-                loadCoverJob = launch {
-                    val result = ImageUtils.loadBitmap(state.album)
-                    if (result.isSuccessWithData()) {
-                        val bitmap = result.getDataOrThrow()
-                        val bgBitmap = bitmap.blur(application)
-                        _coverBitmapFlow.emit(bitmap)
-                        _bgBitmapFlow.emit(bgBitmap)
-                        MusicAppWidget().updateState(application, state)
+                    loadCoverJob = launch {
+                        val result = ImageUtils.loadBitmap(state.album)
+                        if (result.isSuccessWithData()) {
+                            val bitmap = result.getDataOrThrow()
+                            val bgBitmap = bitmap.blur(application)
+                            _coverBitmapFlow.value = bitmap
+                            _bgBitmapFlow.value = bgBitmap
+                            MusicAppWidget().updateState(application, state)
+                        }
                     }
                 }
             }

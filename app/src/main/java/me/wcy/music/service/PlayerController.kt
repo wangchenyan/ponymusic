@@ -1,7 +1,6 @@
 package me.wcy.music.service
 
 import androidx.annotation.MainThread
-import androidx.lifecycle.LiveData
 import androidx.media3.common.MediaItem
 import androidx.media3.session.MediaController
 import kotlinx.coroutines.flow.StateFlow
@@ -11,8 +10,8 @@ import kotlinx.coroutines.flow.StateFlow
  */
 interface PlayerController {
     val mediaController: MediaController
-    val playlist: LiveData<List<MediaItem>>
-    val currentSong: LiveData<MediaItem?>
+    val playlist: StateFlow<List<MediaItem>>
+    val currentSong: StateFlow<MediaItem?>
     val playState: StateFlow<PlayState>
     val playProgress: StateFlow<Long>
     val bufferingPercent: StateFlow<Int>
