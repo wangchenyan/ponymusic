@@ -4,61 +4,54 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="10dp">
+    tools:layout_height="100dp"
+    tools:layout_width="100dp">
 
-    <FrameLayout
-        android:id="@+id/content"
+    <ImageView
+        android:id="@+id/ivCover"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_height="100dp"
-        tools:layout_width="100dp">
+        android:src="@drawable/ic_default_cover" />
 
-        <ImageView
-            android:id="@+id/ivCover"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_default_cover" />
+    <com.hjq.shape.view.ShapeTextView
+        android:id="@+id/tvName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="2dp"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="14dp"
+        app:shape_radiusInTopLeft="6dp"
+        app:shape_radiusInTopRight="6dp"
+        app:shape_solidGradientEndColor="@color/transparent"
+        app:shape_solidGradientOrientation="topToBottom"
+        app:shape_solidGradientStartColor="@color/translucent_black_p50"
+        tools:text="飙升榜" />
 
-        <com.hjq.shape.view.ShapeTextView
-            android:id="@+id/tvName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="2dp"
-            android:singleLine="true"
-            android:textColor="@color/white"
-            android:textSize="14dp"
-            app:shape_solidGradientOrientation="topToBottom"
-            app:shape_solidGradientEndColor="@color/transparent"
-            app:shape_solidGradientStartColor="@color/translucent_black_p50"
-            app:shape_radiusInTopLeft="6dp"
-            app:shape_radiusInTopRight="6dp"
-            tools:text="飙升榜" />
+    <com.hjq.shape.view.ShapeTextView
+        android:id="@+id/tvUpdateTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="2dp"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="10dp"
+        app:shape_radiusInBottomLeft="6dp"
+        app:shape_radiusInBottomRight="6dp"
+        app:shape_solidGradientEndColor="@color/translucent_black_p50"
+        app:shape_solidGradientOrientation="topToBottom"
+        app:shape_solidGradientStartColor="@color/transparent"
+        tools:text="更新时间" />
 
-        <com.hjq.shape.view.ShapeTextView
-            android:id="@+id/tvUpdateTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="2dp"
-            android:singleLine="true"
-            android:textColor="@color/white"
-            android:textSize="10dp"
-            app:shape_solidGradientOrientation="topToBottom"
-            app:shape_radiusInBottomLeft="6dp"
-            app:shape_radiusInBottomRight="6dp"
-            app:shape_solidGradientEndColor="@color/translucent_black_p50"
-            app:shape_solidGradientStartColor="@color/transparent"
-            tools:text="更新时间" />
-
-        <ImageView
-            android:id="@+id/ivPlay"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="6dp"
-            android:alpha="0.8"
-            android:src="@drawable/ic_play" />
-    </FrameLayout>
+    <ImageView
+        android:id="@+id/ivPlay"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="6dp"
+        android:alpha="0.8"
+        android:src="@drawable/ic_play" />
 </FrameLayout>

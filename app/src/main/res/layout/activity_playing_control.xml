@@ -52,7 +52,8 @@
             android:paddingVertical="8dp"
             android:paddingEnd="10dp"
             android:scaleType="fitEnd"
-            android:src="@drawable/ic_favorite_selector" />
+            android:src="@drawable/ic_favorite_selector"
+            app:tint="@color/translucent_white_p80" />
 
         <ImageView
             android:id="@+id/ivDownload"

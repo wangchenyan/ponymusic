@@ -18,6 +18,7 @@ import me.wcy.music.discover.DiscoverApi
 import me.wcy.music.discover.ranking.item.OfficialRankingItemBinder
 import me.wcy.music.discover.ranking.item.RankingTitleItemBinding
 import me.wcy.music.discover.ranking.item.SelectedRankingItemBinder
+import me.wcy.music.discover.ranking.item.SelectedRankingSpacingDecoration
 import me.wcy.music.discover.ranking.viewmodel.RankingViewModel
 import me.wcy.music.service.PlayerController
 import me.wcy.music.utils.toMediaItem
@@ -110,7 +111,6 @@ class RankingFragment : BaseMusicFragment() {
                 }
             })
             private val selectedItemBinder = SelectedRankingItemBinder(
-                spanCount,
                 itemWidth,
                 object : SelectedRankingItemBinder.OnItemClickListener {
                     override fun onItemClick(item: PlaylistData, position: Int) {
@@ -119,11 +119,6 @@ class RankingFragment : BaseMusicFragment() {
 
                     override fun onPlayClick(item: PlaylistData, position: Int) {
                         playPlaylist(item)
-                    }
-
-                    override fun getFirstSelectedPosition(): Int {
-                        val dataList = viewModel.rankingList.value ?: return -1
-                        return dataList.indexOfFirst { it is PlaylistData && it.toplistType.isEmpty() }
                     }
                 })
 
@@ -152,6 +147,13 @@ class RankingFragment : BaseMusicFragment() {
                     }
                 }
             }
+        val spacing = SizeUtils.dp2px(10f)
+        viewBinding.recyclerView.addItemDecoration(
+            SelectedRankingSpacingDecoration(spacing, spacing) {
+                viewModel.rankingList.value.orEmpty().indexOfFirst {
+                    it is PlaylistData && it.toplistType.isEmpty()
+                }
+            })
         viewBinding.recyclerView.adapter = adapter
     }
 
