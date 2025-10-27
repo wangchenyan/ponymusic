@@ -3,6 +3,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     if (File("app/google-services.json").exists()) {
@@ -10,7 +11,6 @@ plugins {
         alias(libs.plugins.gms)
         alias(libs.plugins.crashlytics)
     }
-    id("kotlin-kapt")
     id("kotlin-parcelize")
     id("crouter-plugin")
 }
@@ -104,11 +104,6 @@ fun getLocalValue(key: String, quot: Boolean): String {
     return value
 }
 
-kapt {
-    // For hilt: Allow references to generated code
-    correctErrorTypes = true
-}
-
 ksp {
     arg("moduleName", project.name)
     // crouter 默认 scheme
@@ -132,7 +127,7 @@ dependencies {
 
     ksp(libs.room.compiler)
     implementation(libs.room)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
     implementation(libs.hilt)
 
     if (File("${project.projectDir}/google-services.json").exists()) {

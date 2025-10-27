@@ -2,19 +2,19 @@
 # android sdk
 compileSdk = "36"
 targetSdk = "36"
-minSdk = "21"
+minSdk = "23"
 versionCode = "2030001"
 versionName = "2.3.0-beta01"
 # java
 java = "VERSION_17"
 # plugin
 agp = "8.5.2"
-kotlin = "1.9.25"
-ksp = "1.9.25-1.0.20"
-hilt = "2.48.1"
+kotlin = "2.1.0"
+ksp = "2.1.0-1.0.29"
+hilt = "2.57.1"
 # sdk
-media3 = "1.4.1"
-room = "2.6.1"
+media3 = "1.8.0"
+room = "2.8.3"
 common = "1.0.2"
 crouter = "3.0.0-beta01"
 
@@ -22,8 +22,9 @@ crouter = "3.0.0-beta01"
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-gms = { id = "com.google.gms.google-services", version = "4.4.2" }
-crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.2" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+gms = { id = "com.google.gms.google-services", version = "4.4.4" }
+crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.6" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 
@@ -31,21 +32,21 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 # plugin
 crouter-plugin = { group = "com.github.wangchenyan.crouter", name = "crouter-plugin", version.ref = "crouter" }
 # androidx
-appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.7.0" }
-material = { group = "com.google.android.material", name = "material", version = "1.12.0" }
-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version = "2.1.4" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.7.1" }
+material = { group = "com.google.android.material", name = "material", version = "1.13.0" }
+constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version = "2.2.1" }
 flexbox = { group = "com.google.android.flexbox", name = "flexbox", version = "3.0.0" }
 media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3" }
 media3-datasource-okhttp = { group = "androidx.media3", name = "media3-datasource-okhttp", version.ref = "media3" }
 media3-session = { group = "androidx.media3", name = "media3-session", version.ref = "media3" }
 media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "media3" }
-room = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 preference = { group = "androidx.preference", name = "preference-ktx", version = "1.2.1" }
 glance = { group = "androidx.glance", name = "glance-appwidget", version = "1.1.1" }
 # google
-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx", version = "19.0.3" }
-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx", version = "22.1.0" }
+crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx", version = "19.4.4" }
+analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx", version = "22.5.0" }
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 # wangchenyan

@@ -27,7 +27,6 @@ class MusicService : MediaSessionService() {
     override fun onCreate() {
         super.onCreate()
 
-        @OptIn(UnstableApi::class)
         player = ExoPlayer.Builder(applicationContext)
             // 自动处理音频焦点
             .setAudioAttributes(AudioAttributes.DEFAULT, true)
