@@ -11,7 +11,7 @@
 
 ## 展示
 ### 视频
-[![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/video_cover.jpg)](https://www.ixigua.com/7294169212384182291)
+[![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/video_cover.jpg)](https://www.bilibili.com/video/BV1rXy8BeEb5/)
 
 ### 截图
 ![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/screenshot.jpg)
@@ -25,6 +25,7 @@
 - 专辑封面显示
 - 歌词显示，支持拖动歌词调节播放进度
 - 通知栏控制
+- 桌面小组件
 - 夜间模式
 - 定时关闭
 
@@ -73,6 +74,11 @@
    打开波尼音乐APP，输入域名 `http://localhost:3000/` 并重启即可
 
 ## 更新说明
+`2.4.0`
+- 新增桌面小组件（Powered by [Glance](https://developer.android.com/develop/ui/compose/glance)）
+- 新增横屏模式（大屏设备效果更好）
+- 适配 Android 16
+
 `2.3.0`
 - 播放器内核升级为 Media3 + ExoPlayer
 - 修复歌单内歌曲超过1000首加载失败的问题
@@ -127,7 +133,7 @@
 - First Release
 
 ## TODO
-- [ ] 桌面小部件 with [Glance](https://developer.android.com/jetpack/compose/glance/create-app-widget)
+- [x] 桌面小组件 with [Glance](https://developer.android.com/develop/ui/compose/glance)
 - [x] 适配 Android 14
 - [x] 在线音乐可以免下载加入我的音乐列表
 - [ ] 在线音乐自动缓存

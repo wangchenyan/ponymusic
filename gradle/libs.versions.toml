@@ -3,8 +3,8 @@
 compileSdk = "36"
 targetSdk = "36"
 minSdk = "23"
-versionCode = "2030001"
-versionName = "2.3.0-beta01"
+versionCode = "2040001"
+versionName = "2.4.0-beta01"
 # java
 java = "VERSION_17"
 # plugin
