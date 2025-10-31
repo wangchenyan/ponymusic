@@ -15,6 +15,7 @@
 
 ### 截图
 ![](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/screenshot.jpg)
+![桌面小组件](https://raw.githubusercontent.com/wangchenyan/ponymusic/master/art/app_widget.png)
 
 ## 功能
 > 后续可能会根据大家的反馈增加或调整功能
@@ -46,7 +47,7 @@
 > 欢迎大家体验，如果发现功能问题或兼容性问题，可以提 [GitHub Issue](https://github.com/wangchenyan/ponymusic/issues)
 
 ### 环境要求
-- Android 手机（系统版本为 Android 5.0 及以上）
+- Android 手机（系统版本为 Android 6.0 及以上）
 - 电脑（非必须）
 
 ### 安装步骤
